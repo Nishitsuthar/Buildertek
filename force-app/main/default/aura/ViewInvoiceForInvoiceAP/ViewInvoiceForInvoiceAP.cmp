@@ -1,0 +1,69 @@
+<aura:component controller="ViewInvoiceForInvoiceAPController"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader"
+                access="global">
+    <aura:attribute name="record" type="Object" />
+    <aura:attribute name="invoice" type="Object" />
+    <aura:attribute name="invoiceLines" type="String" />
+    <aura:attribute name="ProposalImages" type="Proposal_Images__c[]" />
+    <aura:attribute name="error" type="String" />
+    <aura:attribute name="Header" type="String" />
+    <aura:attribute name="invoiceMemo" type="String" default=""/>
+    <aura:attribute name="templates" type="List" default="[]" />
+    <aura:attribute name="selectedTemplate" type="String" default="" />
+    <aura:attribute name="templatefolderName" type="String" />
+    <aura:attribute name="isTemplateSelected" type="Boolean" default="false" />
+    <aura:attribute name="Spinner" type="Boolean" default="false" />
+    <aura:attribute name="selectedToContact" type="sObject[]" default="[]" />
+    <aura:attribute name="selectedCcContact" type="sObject[]" default="[]" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <aura:html tag="style">
+        .cuf-content {
+        padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }       
+        .slds-modal__content{
+        overflow-y:hidden !important;
+        height:unset !important;
+        max-height:unset !important;
+        }
+    </aura:html>
+    <force:recordData aura:id="forceRecordCmp" recordId="{!v.recordId}"
+                      fields="buildertek__Project__r.Name, buildertek__Auto_Number__c, buildertek__Total_Amount_Tax__c, buildertek__Amount__c, buildertek__Tax_Rate__c, buildertek__Total_Amount_Tax__c"
+                      targetRecord="{!v.record}" targetFields="{!v.invoice}" targetError="{!v.error}" />
+    
+    <ltng:require styles="{!$Resource.ModalPreviewCSS}" />
+    <div class="slds-modal__header" style="font-size:17px;">
+        Select Template
+    </div>
+    <div class="scrollable">
+        <div class="slds-modal__content">
+            <div class="slds slds-scope">
+                <aura:if isTrue="{!v.Spinner}">
+                    <div aura:id="spinnerId" class="slds-spinner_container">
+                        <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                            <span class="slds-assistive-text">Loading</span>
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
+                        </div>
+                    </div>
+                </aura:if>
+                <div class="slds-p-around--large">
+                    <aura:if isTrue="{!!v.isTemplateSelected}">
+                        <lightning:select name="templates" label="Select Template" aura:id="template"
+                                          value="{!v.selectedTemplate}" onchange="{!c.preiewEmailTemplate}">
+                            <option text="None" value="--None--" />
+                            <aura:iteration items="{!v.templates}" var="temp">
+                                <option text="{!temp.Name}" value="{!temp.Id}" />
+                            </aura:iteration>
+                        </lightning:select>
+                    </aura:if>
+                </div>
+                <div class="slds-col modal-footer slds-modal__footer slds-buttoncustom">
+                    <button class="slds-button slds-button--neutral" onclick="{!c.closeModel}">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>
