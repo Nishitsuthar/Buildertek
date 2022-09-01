@@ -379,6 +379,7 @@
     },
     addPO : function (component, event, helper) {
         var selectedRecs = component.get('v.selectedRecs');
+		console.log('v.selectedRecs ==> ',{selectedRecs});
 		if (selectedRecs.length > 0) {
 			var BudgetIds = [];
 			var rowData;

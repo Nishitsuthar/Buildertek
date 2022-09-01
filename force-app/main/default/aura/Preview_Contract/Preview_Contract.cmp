@@ -190,7 +190,12 @@
     	<button class="slds-button slds-button--brand" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.Acceptandclose}">Accept and Close</button>
         <button class="slds-button slds-button--brand" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.AcceptandsendEmail}">Accept and Send Email</button>
     	<button class="slds-button slds-button--brand" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.sendEmail}">Send Email</button>
-        <button class="slds-button slds-button--neutral" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.closeModel}" >Cancel</button>
+        <aura:if isTrue="{!v.isTemplateSelected}">
+            <button class="slds-button slds-button--neutral" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.preview}" >Cancel</button>
+            <aura:set attribute="else">
+                <button class="slds-button slds-button--neutral" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.closeModel}" >Cancel</button>
+            </aura:set>
+        </aura:if>
       </footer>
     </div>
     </div>

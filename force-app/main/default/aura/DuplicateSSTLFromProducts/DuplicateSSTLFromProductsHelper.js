@@ -247,7 +247,47 @@
                         component.set('v.sstlines',result.SSTLTotalRecords);
                        // component.set('v.selectionSheetTakeOffLines', helper.groupRecords(result.selectionSheetTakeOffLines));
                        // component.set('v.selectionSheetTakeOffLines', helper.groupRecords1(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields")));
+                       console.log('takeoffline==='+result.selectionSheetTakeOffLines);
                    		 component.set('v.selectionSheetTakeOffLines', helper.groupRecords2(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields"),'frombomline'));
+                           //added for soting Selected Products by Takeoff line 26th August,2022
+                            var selectionSheetTakeOffLines = component.get("v.selectionSheetTakeOffLines");
+                            var totalList = [];
+                            var sortList = [];
+                            for(var s of selectionSheetTakeOffLines){
+                                for(var ss of s.groupedRecordsTmp){
+                                    totalList.push(ss);
+                                }
+                            }
+                            console.log({totalList});
+                            
+                            let x = totalList.sort(( a, b ) => {
+                                console.log({a});
+                                console.log({b});
+                                console.log('--.--.--.--');
+                                var sa;
+                                a.forEach(ele => {
+                                    if(ele.Key == "buildertek__Takeoff_Line__r"){
+                                        sa = ele.Value;
+                                    }
+                                });
+                                var sb;
+                                b.forEach(ele => {
+                                    if(ele.Key == "buildertek__Takeoff_Line__r"){
+                                        sb = ele.Value;
+                                    }
+                                });
+                                
+                                
+                                  if ( sa < sb ){
+                                    return -1;
+                                  }
+                                  if ( sa > sb ){
+                                    return 1;
+                                  }
+                                  return 0;
+                                });
+                                component.set("v.sortedselectionSheetTakeOffLines",x);
+                            
                     }
                 }
                 component.set("v.isSpinner", false);
@@ -262,7 +302,7 @@
                         component.set("v.fieldNameApiMap",result)
                         var neList = []
                         neList = Object.values(result)
-                        console.log(neList)
+                        console.log('neList==='+neList)
                         component.set("v.fieldNameApiList",neList)
                         component.set("v.isSpinner",false)
                     }
@@ -281,7 +321,7 @@
                         component.set("v.fieldProductNameApiMap",result)
                         var neList = []
                         neList = Object.values(result)
-                        console.log(neList)
+                        console.log('neList 1===='+neList)
                         component.set("v.fieldProductNameApiList",neList)
                         component.set("v.isSpinner",false)
                     }
@@ -299,7 +339,7 @@
                         component.set("v.fieldBOMLineNameApiMap",result)
                         var neList = []
                         neList = Object.values(result)
-                        console.log(neList)
+                        console.log('neList 2=='+neList)
                         component.set("v.fieldBOMLineNameApiList",neList)
                         component.set("v.isSpinner",false)
                     }
@@ -352,6 +392,46 @@
                        // component.set('v.selectionSheetTakeOffLines', helper.groupRecords(result.selectionSheetTakeOffLines));
                        // component.set('v.selectionSheetTakeOffLines', helper.groupRecords1(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields")));
                      component.set('v.selectionSheetTakeOffLines', helper.groupRecords2(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields"),'frombomline'));
+
+                     //added for soting Selected Products by Takeoff line 26th August,2022
+                     var selectionSheetTakeOffLines = component.get("v.selectionSheetTakeOffLines");
+                     var totalList = [];
+                     var sortList = [];
+                     for(var s of selectionSheetTakeOffLines){
+                         for(var ss of s.groupedRecordsTmp){
+                             totalList.push(ss);
+                         }
+                     }
+                     console.log({totalList});
+                     
+                     let x = totalList.sort(( a, b ) => {
+                         console.log({a});
+                         console.log({b});
+                         console.log('--.--.--.--');
+                         var sa;
+                         a.forEach(ele => {
+                             if(ele.Key == "buildertek__Takeoff_Line__r"){
+                                 sa = ele.Value;
+                             }
+                         });
+                         var sb;
+                         b.forEach(ele => {
+                             if(ele.Key == "buildertek__Takeoff_Line__r"){
+                                 sb = ele.Value;
+                             }
+                         });
+                         
+                         
+                           if ( sa < sb ){
+                             return -1;
+                           }
+                           if ( sa > sb ){
+                             return 1;
+                           }
+                           return 0;
+                         });
+                         component.set("v.sortedselectionSheetTakeOffLines",x);
+                     
                     }
                 }
                 component.set("v.isSpinner", false);
@@ -559,6 +639,7 @@
          let recordMap = new Map();
         console.log('data>>>>',data);
          if(fromvar == 'fromtakeoffline'){
+             console.log('inside If---');
              for (var i in data) {
                  //buildertek__Categories__c
                  //Created Key with (#*&)
@@ -593,6 +674,7 @@
                  }*/
              }
          }else{
+             console.log('Inside Else===');
              for (var i in data) {
                  //Created Key with (#*&)
                  if (data[i].buildertek__Category__r != undefined) {
@@ -611,10 +693,13 @@
                  }
              }
          }
-         
+         console.log('recordMap==');
+         console.log({recordMap});
          var result = Array.from(recordMap.entries());
+         console.log('result=='+result);
          var  filteredTakeOffLineList = component.get('v.slectedcheckBoxtakeoffline');
          for (var i in result) {
+             console.log('in For==');
              //alert(i);
              var obj = {};
              obj.groupId = result[i][0].split('(#*&)')[0];
@@ -632,6 +717,7 @@
              //alert('arrkeys '+i+arrkeys);
              var takeoffrec
              for (var j in obj.groupedRecords) {
+                 console.log('inside inner for loop');
                  //alert(obj.groupedRecords[j].Name);
                  obj.groupedRecords[j].isSelected = false;
                  takeoffrec = obj.groupedRecords[j]
@@ -720,15 +806,43 @@
                  }
                  mainList.push(newList);                 
              }
-             
+             console.log('mainList==');
+             console.log({mainList});
              obj.groupedRecordsTmp = mainList;
              
              
              
              listOfRecords.push(obj);
          }
+         
          console.log('listOfRecords:::::::',listOfRecords);
-         return listOfRecords;
+         var TestList = [];
+         for (var val of listOfRecords) {
+            console.log('test++'+val.groupedRecords);
+            for (var value of val.groupedRecords) {
+                console.log({value});
+                TestList.push(value);
+            }
+        }
+        console.log('TestList:::::::');
+        console.log({TestList});
+        //  TestList.sort((a, b) => a.groupedRecords.Name.localeCompare(b.groupedRecords.Name));
+
+        // TestList.sort((a,b) => (a.buildertek__Takeoff_Line__r > b.buildertek__Takeoff_Line__r) ? 1 : ((b.buildertek__Takeoff_Line__r > a.buildertek__Takeoff_Line__r) ? -1 : 0))
+        console.log('TestList af:::::::');
+        // for (var val of TestList) {
+        //     console.log('innnn===');
+        //     var a = val.buildertek__Takeoff_Line__r.Name;
+        //     console.log({a});
+        // }
+        TestList.sort(function(a,b){
+            console.log('recordtype 1==='+a.buildertek__Takeoff_Line__r);
+            // console.log('a Name==='+Object.entries(a.buildertek__Takeoff_Line__r).Name);
+            // console.log('Name 2==='+b.buildertek__Takeoff_Line__r['Name']);
+            // return object.entries(a.buildertek__Takeoff_Line__r).Name.toLowerCase().localeCompare(Object.entries(b.buildertek__Takeoff_Line__r).Name.toLowerCase());
+           });
+        console.log({TestList});
+        return listOfRecords;
      },
     
     
@@ -925,6 +1039,45 @@
                    // component.set('v.selectionSheetTakeOffLines', helper.groupRecords(result.selectionSheetTakeOffLines));
                   // component.set('v.selectionSheetTakeOffLines', helper.groupRecords1(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields")));
                    component.set('v.selectionSheetTakeOffLines', helper.groupRecords2(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields")),'frombomline'); 
+
+                   //added for soting Selected Products by Takeoff line 26th August,2022
+                   var selectionSheetTakeOffLines = component.get("v.selectionSheetTakeOffLines");
+                   var totalList = [];
+                   var sortList = [];
+                   for(var s of selectionSheetTakeOffLines){
+                       for(var ss of s.groupedRecordsTmp){
+                           totalList.push(ss);
+                       }
+                   }
+                   console.log({totalList});
+                   
+                   let x = totalList.sort(( a, b ) => {
+                       console.log({a});
+                       console.log({b});
+                       console.log('--.--.--.--');
+                       var sa;
+                       a.forEach(ele => {
+                           if(ele.Key == "buildertek__Takeoff_Line__r"){
+                               sa = ele.Value;
+                           }
+                       });
+                       var sb;
+                       b.forEach(ele => {
+                           if(ele.Key == "buildertek__Takeoff_Line__r"){
+                               sb = ele.Value;
+                           }
+                       });
+                       
+                       
+                         if ( sa < sb ){
+                           return -1;
+                         }
+                         if ( sa > sb ){
+                           return 1;
+                         }
+                         return 0;
+                       });
+                       component.set("v.sortedselectionSheetTakeOffLines",x);
                 }
                 var slectedcheckBoxtakeoffline = [];
                 component.set('v.slectedcheckBoxtakeoffline',slectedcheckBoxtakeoffline);
@@ -935,6 +1088,8 @@
                // $A.get('e.force:refreshView').fire();
                 
             } else {
+                var slectedcheckBoxtakeoffline = [];
+
                 helper.showToast(component, event, helper, 'Error!', 'Something went wrong!', 'error');
                 console.log('Error');
                 component.set('v.slectedcheckBoxtakeoffline',slectedcheckBoxtakeoffline);
@@ -968,6 +1123,45 @@
                    // component.set('v.selectionSheetTakeOffLines', helper.groupRecords(result.selectionSheetTakeOffLines));
                   // component.set('v.selectionSheetTakeOffLines', helper.groupRecords1(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields")));
                    component.set('v.selectionSheetTakeOffLines', helper.groupRecords2(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields")),'frombomline'); 
+
+                   //added for soting Selected Products by Takeoff line 26th August,2022
+                   var selectionSheetTakeOffLines = component.get("v.selectionSheetTakeOffLines");
+                   var totalList = [];
+                   var sortList = [];
+                   for(var s of selectionSheetTakeOffLines){
+                       for(var ss of s.groupedRecordsTmp){
+                           totalList.push(ss);
+                       }
+                   }
+                   console.log({totalList});
+                   
+                   let x = totalList.sort(( a, b ) => {
+                       console.log({a});
+                       console.log({b});
+                       console.log('--.--.--.--');
+                       var sa;
+                       a.forEach(ele => {
+                           if(ele.Key == "buildertek__Takeoff_Line__r"){
+                               sa = ele.Value;
+                           }
+                       });
+                       var sb;
+                       b.forEach(ele => {
+                           if(ele.Key == "buildertek__Takeoff_Line__r"){
+                               sb = ele.Value;
+                           }
+                       });
+                       
+                       
+                         if ( sa < sb ){
+                           return -1;
+                         }
+                         if ( sa > sb ){
+                           return 1;
+                         }
+                         return 0;
+                       });
+                       component.set("v.sortedselectionSheetTakeOffLines",x);
                 }
                 var slectedcheckBoxtakeoffline = [];
                 component.set('v.slectedcheckBoxtakeoffline',slectedcheckBoxtakeoffline);
@@ -979,6 +1173,8 @@
                 component.set("v.isSpinner", false);
                                 
             } else {
+                var slectedcheckBoxtakeoffline = [];
+
                 helper.showToast(component, event, helper, 'Error!', 'Something went wrong!', 'error');
                 console.log('Error');
                 component.set('v.slectedcheckBoxtakeoffline',slectedcheckBoxtakeoffline);
@@ -1171,6 +1367,46 @@
                         //component.set('v.selectionSheetTakeOffLines', helper.groupRecords(result.selectionSheetTakeOffLines));
                         //component.set('v.selectionSheetTakeOffLines', helper.groupRecords1(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields")));
                         component.set('v.selectionSheetTakeOffLines', helper.groupRecords2(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields"),'frombomline'));
+                        
+                        
+                        //added for soting Selected Products by Takeoff line 26th August,2022
+                        var selectionSheetTakeOffLines = component.get("v.selectionSheetTakeOffLines");
+                        var totalList = [];
+                        var sortList = [];
+                        for(var s of selectionSheetTakeOffLines){
+                            for(var ss of s.groupedRecordsTmp){
+                                totalList.push(ss);
+                            }
+                        }
+                        console.log({totalList});
+                        
+                        let x = totalList.sort(( a, b ) => {
+                            console.log({a});
+                            console.log({b});
+                            console.log('--.--.--.--');
+                            var sa;
+                            a.forEach(ele => {
+                                if(ele.Key == "buildertek__Takeoff_Line__r"){
+                                    sa = ele.Value;
+                                }
+                            });
+                            var sb;
+                            b.forEach(ele => {
+                                if(ele.Key == "buildertek__Takeoff_Line__r"){
+                                    sb = ele.Value;
+                                }
+                            });
+                            
+                            
+                              if ( sa < sb ){
+                                return -1;
+                              }
+                              if ( sa > sb ){
+                                return 1;
+                              }
+                              return 0;
+                            });
+                            component.set("v.sortedselectionSheetTakeOffLines",x);
                     }
                 }
                 component.set("v.isSpinner", false);
@@ -1327,6 +1563,46 @@
                         //component.set('v.selectionSheetTakeOffLines', helper.groupRecords(result.selectionSheetTakeOffLines));
                         //component.set('v.selectionSheetTakeOffLines', helper.groupRecords1(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields")));
                         component.set('v.selectionSheetTakeOffLines', helper.groupRecords2(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields"),'frombomline'));
+                        
+
+                        //added for soting Selected Products by Takeoff line 26th August,2022
+                        var selectionSheetTakeOffLines = component.get("v.selectionSheetTakeOffLines");
+                        var totalList = [];
+                        var sortList = [];
+                        for(var s of selectionSheetTakeOffLines){
+                            for(var ss of s.groupedRecordsTmp){
+                                totalList.push(ss);
+                            }
+                        }
+                        console.log({totalList});
+                        
+                        let x = totalList.sort(( a, b ) => {
+                            console.log({a});
+                            console.log({b});
+                            console.log('--.--.--.--');
+                            var sa;
+                            a.forEach(ele => {
+                                if(ele.Key == "buildertek__Takeoff_Line__r"){
+                                    sa = ele.Value;
+                                }
+                            });
+                            var sb;
+                            b.forEach(ele => {
+                                if(ele.Key == "buildertek__Takeoff_Line__r"){
+                                    sb = ele.Value;
+                                }
+                            });
+                            
+                            
+                              if ( sa < sb ){
+                                return -1;
+                              }
+                              if ( sa > sb ){
+                                return 1;
+                              }
+                              return 0;
+                            });
+                            component.set("v.sortedselectionSheetTakeOffLines",x);
                     }
                     // helper.setPriceBookAndProducts(component, event, helper,filteredTakeOffLines);
                 }
@@ -1470,6 +1746,46 @@
                      component.set('v.sstlines',result.SSTLTotalRecords);
                     //component.set('v.selectionSheetTakeOffLines', helper.groupRecords1(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields")));
                     component.set('v.selectionSheetTakeOffLines', helper.groupRecords2(result.selectionSheetTakeOffLines,component,component.get("v.bomLineselectedFields"),'frombomline'));
+                    
+
+                    //added for soting Selected Products by Takeoff line 26th August,2022
+                    var selectionSheetTakeOffLines = component.get("v.selectionSheetTakeOffLines");
+                    var totalList = [];
+                    var sortList = [];
+                    for(var s of selectionSheetTakeOffLines){
+                        for(var ss of s.groupedRecordsTmp){
+                            totalList.push(ss);
+                        }
+                    }
+                    console.log({totalList});
+                    
+                    let x = totalList.sort(( a, b ) => {
+                        console.log({a});
+                        console.log({b});
+                        console.log('--.--.--.--');
+                        var sa;
+                        a.forEach(ele => {
+                            if(ele.Key == "buildertek__Takeoff_Line__r"){
+                                sa = ele.Value;
+                            }
+                        });
+                        var sb;
+                        b.forEach(ele => {
+                            if(ele.Key == "buildertek__Takeoff_Line__r"){
+                                sb = ele.Value;
+                            }
+                        });
+                        
+                        
+                          if ( sa < sb ){
+                            return -1;
+                          }
+                          if ( sa > sb ){
+                            return 1;
+                          }
+                          return 0;
+                        });
+                        component.set("v.sortedselectionSheetTakeOffLines",x);
                 }
                 component.set('v.selectionSheetTakeOffLinesToDelete', '');
                 component.set("v.isSpinner", false);
@@ -1529,10 +1845,16 @@
                     component.set("v.productselectedFieldsLength",result.productselectedFields.split(',').length)
                     component.set("v.productselectedFields",result.productselectedFields);
                     // bom line data
+                    console.log('result.bomLineFieldSettings==');
+                    var test = result.bomLineFieldSettings;
+                    console.log({test});
                     component.set("v.bomLineFieldsSettings",result.bomLineFieldSettings);
                     var bomSelectedFieldsLength = result.bomLineselectedFields.split(',').length
                     bomSelectedFieldsLength = bomSelectedFieldsLength+2;
                     component.set("v.bomLineselectedFieldsLength",bomSelectedFieldsLength)
+                    console.log('result.bomLineselectedField===');
+                    var Test = result.bomLineselectedFields;
+                    console.log({Test});
                     component.set("v.bomLineselectedFields",result.bomLineselectedFields);
                 }
                     

@@ -439,7 +439,7 @@ continutionSheet.Name =*/
                                                     SUM(buildertek__Work_Completed__c) workCompleted,
                                                     SUM(buildertek__Material_Presently_Stored__c) materialStored,
                                                     SUM(buildertek__Total__c) totalWork,
-                                                    SUM(buildertek__G_C__c) gcTotal,
+                                                    SUM(buildertek__New_G_C__c) gcTotal,
                                                     SUM(buildertek__Balance_To_Finish__c) balanceTotal,
                                                     buildertek__SOV_Continuation_Sheet__c
                                                     FROM buildertek__SOV_Continuation_Sheet_Lines__c
@@ -456,6 +456,7 @@ continutionSheet.Name =*/
                 cd.workcompletedTotal = (Decimal)groupedResults[0].get('workCompleted');
                 cd.materialsStoredTotal = (Decimal)groupedResults[0].get('materialStored');
                 cd.totalCompletedStored = (Decimal)groupedResults[0].get('totalWork');
+                
                 // cd.gcTotal = (Decimal)groupedResults[0].get('gcTotal');
                 cd.gcTotal = ( (Decimal)groupedResults[0].get('totalWork') / (Decimal)groupedResults[0].get('scheduleValue') ) * 100;
                 cd.balanceTotal = (Decimal)groupedResults[0].get('balanceTotal');
@@ -617,6 +618,7 @@ continutionSheet.Name =*/
         @AuraEnabled public Decimal workcompletedTotal;
         @AuraEnabled public Decimal materialsStoredTotal;
         @AuraEnabled public Decimal totalCompletedStored;
+        @AuraEnabled public Decimal materialStroredFromPrev;
         @AuraEnabled public Decimal gcTotal;
         @AuraEnabled public Decimal balanceTotal;
         @AuraEnabled public Boolean isApplication;
@@ -2728,6 +2730,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                         }
                         continuationSheetLines.buildertek__Material_Presently_Stored__c = 0;
                         continuationSheetLines.buildertek__Item_No__c=itemInc;
+                        continuationSheetLines.buildertek__Is_Created_In_This_App__c = true;
                         continuationSheetLinesList.add(continuationSheetLines);
                         itemInc++;
                         system.debug(continuationSheetLinesList);
@@ -2762,6 +2765,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                         }
                         continuationSheetLines.buildertek__Material_Presently_Stored__c = 0;
                         continuationSheetLines.buildertek__Item_No__c=itemInc;
+                        continuationSheetLines.buildertek__Is_Created_In_This_App__c = true;
                         continuationSheetLinesList.add(continuationSheetLines);
                         itemInc++;
                         system.debug(continuationSheetLinesList);

@@ -438,3 +438,11 @@
     white-space: nowrap;
     font-size: 20px;
 }
+
+.THIS.mymodal .slds-modal__content{
+    background: #e6ee6e !important; 
+}
+
+.THIS.mymodal .slds-modal__header{
+    background: #e22319 !important; 
+}

@@ -443,6 +443,7 @@ public class ClonePaymentApp {
                                                                              buildertek__Vendor_Total__c,
                                                                              buildertek__Vendor_G_C__c,
                                                                              buildertek__Change_Order__c,
+                                                                             buildertek__Is_Created_In_This_App__c,
                                                                              buildertek__Vendor_Balance_To_Finish__c,
                                                                              buildertek__Change_Order_Payment_Tracking__c
                                                                              FROM buildertek__SOV_Continuation_Sheet_Lines__c WHERE buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__c =: sovPaymentAppRec.Id AND (buildertek__Status__c = 'Accepted')];
@@ -456,6 +457,7 @@ public class ClonePaymentApp {
                         cslCopy.buildertek__Budget_Grouping__c =  csl[i].buildertek__Budget_Grouping__c;
                         cslCopy.buildertek__Vendor_Material_Presently_Stored__c =  0;
                         cslCopy.buildertek__Material_Presently_Stored__c =  0;
+                         cslCopy.buildertek__Is_Created_In_This_App__c =  false;
                         cslCopy.buildertek__Grouping__c =  csl[i].buildertek__Grouping__c;
                         cslCopy.buildertek__Grouping2__c =  csl[i].buildertek__Grouping2__c;
                         cslCopy.buildertek__Item_No__c = csl[i].buildertek__Item_No__c;
@@ -505,6 +507,7 @@ public class ClonePaymentApp {
                                                                              buildertek__Vendor_Material_Presently_Stored__c,
                                                                              buildertek__Total__c, 
                                                                              buildertek__New_G_C__c, 
+                                                                             buildertek__Is_Created_In_This_App__c,
                                                                              buildertek__Balance_To_Finish__c,
                                                                              buildertek__Vendor_Sheet_line_Id__c,
                                                                              buildertek__SOV_Continuation_Sheet__c,
@@ -629,6 +632,7 @@ public class ClonePaymentApp {
                                                                              buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.buildertek__Status__c,
                                                                              buildertek__Change_Order_Payment_Tracking__c,
                                                                              buildertek__Old_Tracking_Id__c,
+                                                        buildertek__Is_Created_In_This_App__c,
                                                                              buildertek__Change_Order__c
                                                                              FROM buildertek__SOV_Continuation_Sheet_Lines__c WHERE buildertek__Vendor_Sheet_line_Id__c IN: CompletedAPARConSheetLines AND buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.recordtype.name = 'AR' AND buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__c =: sovPaymentAppRec.Id];
                     
@@ -655,6 +659,7 @@ public class ClonePaymentApp {
                                 ARAPCompletedcslCopy.buildertek__Vendor_Material_Presently_Stored__c = 0;
                                 
                                 ARAPCompletedcslCopy.buildertek__Material_Presently_Stored__c = 0;
+                               ARAPCompletedcslCopy.buildertek__Is_Created_In_This_App__c = false;
                                 
                                 ARAPCompletedcslCopy.buildertek__Status__c = 'Pending';
                                 ARAPCompletedcslCopy.buildertek__Work_Completed__c = 0 ;
@@ -704,6 +709,7 @@ public class ClonePaymentApp {
                                                                               buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.buildertek__Status__c,
                                                                               buildertek__Change_Order_Payment_Tracking__c,
                                                                               buildertek__Old_Tracking_Id__c,
+                                                                              buildertek__Is_Created_In_This_App__c,
                                                                               buildertek__Change_Order__c
                                                                               FROM buildertek__SOV_Continuation_Sheet_Lines__c WHERE  buildertek__Vendor_Sheet_line_Id__c IN: prevVendorSheetLineIds AND buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.recordtype.name = 'AP'];
                     
@@ -742,6 +748,7 @@ public class ClonePaymentApp {
                                         buildertek__Balance_To_Finish__c,
                                         buildertek__Vendor_Sheet_line_Id__c,
                                         buildertek__SOV_Continuation_Sheet__c,
+                                        buildertek__Is_Created_In_This_App__c,
                                         buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.buildertek__Status__c,
                                         buildertek__Change_Order_Payment_Tracking__c,
                                         buildertek__Old_Tracking_Id__c,
@@ -759,7 +766,7 @@ public class ClonePaymentApp {
                         NewcslCopy.buildertek__Status__c = 'Pending';
                         NewcslCopy.buildertek__Vendor_Material_Presently_Stored__c = NewCOcslList[i].buildertek__Vendor_Material_Presently_Stored__c;
                         NewcslCopy.buildertek__Material_Presently_Stored__c = NewCOcslList[i].buildertek__Material_Presently_Stored__c;
-                        
+                        NewcslCopy.buildertek__Is_Created_In_This_App__c = false;
                         NewcslCopy.buildertek__Budget_Grouping__c =  NewCOcslList[i].buildertek__Budget_Grouping__c;
                         NewcslCopy.buildertek__Grouping__c =  NewCOcslList[i].buildertek__Grouping__c;
                         NewcslCopy.buildertek__Grouping2__c =  NewCOcslList[i].buildertek__Grouping2__c;
@@ -796,7 +803,7 @@ public class ClonePaymentApp {
                             cslCopy.buildertek__Status__c = 'Pending';
                             cslCopy.buildertek__Vendor_Material_Presently_Stored__c = NewVendorConnectionMap.get(csl[i].buildertek__Vendor_Sheet_line_Id__c).buildertek__Vendor_Material_Presently_Stored__c;
                             cslCopy.buildertek__Material_Presently_Stored__c = NewVendorConnectionMap.get(csl[i].buildertek__Vendor_Sheet_line_Id__c).buildertek__Material_Presently_Stored__c;
-                            
+                            cslCopy.buildertek__Is_Created_In_This_App__c = false;
                             cslCopy.buildertek__Budget_Grouping__c =   NewVendorConnectionMap.get(csl[i].buildertek__Vendor_Sheet_line_Id__c).buildertek__Budget_Grouping__c;
                             cslCopy.buildertek__Grouping__c = NewVendorConnectionMap.get(csl[i].buildertek__Vendor_Sheet_line_Id__c).buildertek__Grouping__c;
                             cslCopy.buildertek__Grouping2__c = NewVendorConnectionMap.get(csl[i].buildertek__Vendor_Sheet_line_Id__c).buildertek__Grouping2__c;
@@ -831,7 +838,7 @@ public class ClonePaymentApp {
                                 ARcslCopy.buildertek__Work_Completed_from_Previous_Application__c = ARcslCopy.buildertek__Work_Completed_from_Previous_Application__c + ARcslCopy.buildertek__Work_Completed__c + ARcslCopy.buildertek__Material_Presently_Stored__c;
                                 ARcslCopy.buildertek__Vendor_Material_Presently_Stored__c = 0;
                                 ARcslCopy.buildertek__Material_Presently_Stored__c = 0;
-                                
+                                ARcslCopy.buildertek__Is_Created_In_This_App__c = false;
                                 ARcslCopy.buildertek__Work_Completed__c = 0;
                                 ARcslCopy.buildertek__Status__c = 'Pending';
                                 //  ARcslCopy.buildertek__Item_No__c=itemInc;
@@ -859,7 +866,7 @@ public class ClonePaymentApp {
                                 ARcslCopy.buildertek__Vendor_Material_Presently_Stored__c = 0;
                                 
                                 ARcslCopy.buildertek__Material_Presently_Stored__c = 0;
-                                
+                                ARcslCopy.buildertek__Is_Created_In_This_App__c = false;
                                 ARcslCopy.buildertek__Status__c = 'Pending';
                                 ARcslCopy.buildertek__Work_Completed__c = 0 ;
                                 if(isCOEnable== true){

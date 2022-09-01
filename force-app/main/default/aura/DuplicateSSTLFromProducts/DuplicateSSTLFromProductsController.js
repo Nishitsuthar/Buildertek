@@ -661,13 +661,20 @@
     },
     
     onClickOpenDeleteModal: function (component, event, helper) {
+        console.log('delete called==');
         component.set('v.deleteConfirmationBody', 'Are you sure you want Delete this Product ?');
         component.set('v.isDeleteModal', !component.get('v.isDeleteModal'));
         if (component.get('v.isDeleteModal')) {
-            var selectionSheetTakeOffLines = component.get('v.selectionSheetTakeOffLines');
+            // var selectionSheetTakeOffLines = component.get('v.selectionSheetTakeOffLines');
             var groupIndex = event.getSource().get("v.alternativeText").split('-')[0];
             var index = event.getSource().get("v.alternativeText").split('-')[1];
-            component.set('v.selectionSheetTakeOffLinesToDelete', selectionSheetTakeOffLines[groupIndex].groupedRecords[index].Id);
+            // component.set('v.selectionSheetTakeOffLinesToDelete', selectionSheetTakeOffLines[groupIndex].groupedRecords[index].Id);
+            
+            var sortedselectionSheetTakeOffLines = component.get('v.sortedselectionSheetTakeOffLines');
+            var recId = sortedselectionSheetTakeOffLines[groupIndex][0].Id;
+            console.log('groupindex[0].Id=='+recId);
+            component.set('v.selectionSheetTakeOffLinesToDelete', recId);
+        
         } else {
             component.set("v.isSpinner", true);
             var productPageNumber = component.get("v.productPageNumber");
@@ -1503,18 +1510,60 @@
     },    
     
     
+    // selectRfq: function (component, event, helper) {
+    //     var checkbox = event.getSource();
+    //     var takeOffLinesList = component.get('v.selectionSheetTakeOffLines');
+    //     console.log('takeOffLinesList', takeOffLinesList);
+        
+        
+    //     var groupIndex = event.getSource().get("v.name").split('-')[0];
+    //     var recordIndex = event.getSource().get("v.name").split('-')[1];
+    //     console.log('recordIndex', recordIndex);
+    //     console.log('groupIndex', groupIndex);
+    //     console.log('groupIndex', groupIndex);
+    //     var recId = takeOffLinesList[groupIndex].groupedRecords[recordIndex].Id
+    //     //component.set("v.selectedIndexValues",indexVal);
+    //     var selectedRfqIds = component.get("v.selectedProdIds");
+    //     var getAllId = component.find("checkRFQ");
+    //     if(checkbox.get("v.checked")){
+    //         if(selectedRfqIds.indexOf(recId) == -1){
+    //             selectedRfqIds.push(recId);
+    //         }
+            
+    //     }else{
+    //         /*if(component.find("headCheckRFQ").get("v.checked")){
+    //             component.find("headCheckRFQ").set("v.checked",false);
+    //         }*/
+    //         if(selectedRfqIds.indexOf(recId) > -1){
+    //             var index = selectedRfqIds.indexOf(recId);
+    //             selectedRfqIds.splice(index,1);
+                
+    //         }
+    //     }
+    //     console.log(selectedRfqIds);
+    //     component.set("v.selectedProdIds",selectedRfqIds);
+    // },
+
+
     selectRfq: function (component, event, helper) {
+        console.log
         var checkbox = event.getSource();
-        var takeOffLinesList = component.get('v.selectionSheetTakeOffLines');
-        console.log('takeOffLinesList', takeOffLinesList);
+        // var takeOffLinesList = component.get('v.selectionSheetTakeOffLines');
+        var sortedselectionSheetTakeOffLines = component.get('v.sortedselectionSheetTakeOffLines');
+        // console.log('takeOffLinesList', takeOffLinesList);
         
         
         var groupIndex = event.getSource().get("v.name").split('-')[0];
         var recordIndex = event.getSource().get("v.name").split('-')[1];
         console.log('recordIndex', recordIndex);
         console.log('groupIndex', groupIndex);
-        console.log('groupIndex', groupIndex);
-        var recId = takeOffLinesList[groupIndex].groupedRecords[recordIndex].Id
+        // var testrecId = takeOffLinesList[groupIndex].groupedRecords[recordIndex].Id;
+        // console.log('testrecId=='+testrecId);
+
+        console.log('sortedselectionSheetTakeOffLines==');
+        console.log({sortedselectionSheetTakeOffLines});
+        var recId = sortedselectionSheetTakeOffLines[groupIndex][0].Id;
+        console.log('recId=='+recId);
         //component.set("v.selectedIndexValues",indexVal);
         var selectedRfqIds = component.get("v.selectedProdIds");
         var getAllId = component.find("checkRFQ");
@@ -1536,6 +1585,8 @@
         console.log(selectedRfqIds);
         component.set("v.selectedProdIds",selectedRfqIds);
     },
+
+
     
     
     selectAllRfq : function (component, event, helper) {

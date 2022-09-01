@@ -103,7 +103,7 @@ public  without sharing class PaymentApplicationController {
             }
             sheetLineList=[SELECT buildertek__Description_of_Work__c,buildertek__Item_No__c, buildertek__Scheduled_Value__c, buildertek__Work_Completed__c,
                            Id, Name, buildertek__Work_Completed_from_Previous_Application__c,buildertek__Sheet_Item_No__c,buildertek__Grouping__c,
-                           buildertek__Grouping2__c,buildertek__Budget_Grouping__c,
+                           buildertek__Grouping2__c,buildertek__Budget_Grouping__c,buildertek__New_G_C__c,
                            buildertek__Material_Presently_Stored__c, buildertek__Total__c, buildertek__G_C__c, buildertek__Balance_To_Finish__c,buildertek__Balance_to_Pay__c,
                            buildertek__SOV_Continuation_Sheet__c,buildertek__Retainage__c,buildertek__percent1__c,buildertek__percent2__c,buildertek__percent3__c,buildertek__less10_hold_back__c, buildertek__New_Retainage__c,buildertek__Vendor_Work_Completed_This_Period__c,buildertek__Vendor_Material_Presently_Stored__c,buildertek__Vendor_Total__c,buildertek__Vendor_G_C__c,buildertek__Vendor_Balance_To_Finish__c FROM buildertek__SOV_Continuation_Sheet_Lines__c where buildertek__SOV_Continuation_Sheet__c in : sheetIds];
             
@@ -126,12 +126,13 @@ public  without sharing class PaymentApplicationController {
                 cd.workcompletedTotal = (Decimal)groupedResults[0].get('workCompleted');
                 cd.materialsStoredTotal = (Decimal)groupedResults[0].get('materialStored');
                 cd.totalCompletedStored = (Decimal)groupedResults[0].get('totalWork');
+                cd.totalWorkBy10 = ((Decimal)groupedResults[0].get('totalWork'))/10;
                 // cd.gcTotal = (Decimal)groupedResults[0].get('gcTotal');
                 cd.gcTotal = ( (Decimal)groupedResults[0].get('totalWork') / (Decimal)groupedResults[0].get('scheduleValue') ) * 100;
                 cd.balanceTotal = (Decimal)groupedResults[0].get('balanceTotal');
-                                cd.materialsStoredTotal10 =  ((Decimal)groupedResults[0].get('materialStored'))/10;
-                                       cd.workcompletedTotal10 =     ( (Decimal)groupedResults[0].get('workCompleted'))/10;     
-
+                cd.materialsStoredTotal10 =  ((Decimal)groupedResults[0].get('materialStored'))/10;
+                cd.workcompletedTotal10 =    ( ( (Decimal)groupedResults[0].get('workCompleted'))+( (Decimal)groupedResults[0].get('fromPrevApp')))/10;     
+                
                 system.debug('cdcddddddddddddddddddddddddddddddd'+cd);
             }
             
@@ -175,6 +176,16 @@ public  without sharing class PaymentApplicationController {
                                 wrapVal.workcompletedTotal1= wrapVal.workcompletedTotal1;
                             }
                         }
+                        
+                        
+                        if(wrapval!=null && wrapVal.gcVal!=null){
+                            if(sheetLine.buildertek__New_G_C__c != null){
+                                wrapVal.gcVal=wrapVal.gcVal+sheetLine.buildertek__New_G_C__c;
+                            }else{
+                                wrapVal.gcVal=wrapVal.gcVal;
+                            }
+                        }
+                        
                         
                         if(wrapval!=null && wrapVal.materialsStoredTotal1!=null){
                             if(sheetLine.buildertek__percent3__c != null){
@@ -220,6 +231,10 @@ public  without sharing class PaymentApplicationController {
                             wrap.workcompletedTotal1=sheetLine.buildertek__Work_Completed__c;
                         }
                         
+                        if(sheetLine.buildertek__New_G_C__c != null){
+                            wrap.gcVal=sheetLine.buildertek__New_G_C__c;
+                        }
+                        
                         wrap.materialsStoredTotal1=sheetLine.buildertek__Material_Presently_Stored__c;
                         wrap.totalCompletedStored1=sheetLine.buildertek__Total__c;
                         wrap.balancetofinsh1=sheetLine.buildertek__New_Retainage__c;
@@ -263,6 +278,15 @@ public  without sharing class PaymentApplicationController {
                             }
                         }
                         
+                        if(wrapval!=null && wrapVal.gcVal!=null){
+                            if(sheetLine.buildertek__New_G_C__c != null){
+                                wrapVal.gcVal=wrapVal.gcVal+sheetLine.buildertek__New_G_C__c;
+                            }else{
+                                wrapVal.gcVal=wrapVal.gcVal;
+                            }
+                        }
+                        
+                        
                         if(wrapval!=null && wrapVal.workFromPrevAppTotal1!=null)
                             wrapVal.workFromPrevAppTotal1 = wrapval.workFromPrevAppTotal1 + sheetLine.buildertek__Work_Completed_from_Previous_Application__c;
                         wrapVal.groupVal = 'No Grouping';
@@ -273,6 +297,16 @@ public  without sharing class PaymentApplicationController {
                                 wrapVal.workcompletedTotal1= wrapVal.workcompletedTotal1;
                             }
                         }
+                        
+                        
+                         if(wrapval!=null && wrapVal.gcVal!=null){
+                            if(sheetLine.buildertek__New_G_C__c != null){
+                                wrapVal.gcVal=wrapVal.gcVal+sheetLine.buildertek__New_G_C__c;
+                            }else{
+                                wrapVal.gcVal=wrapVal.gcVal;
+                            }
+                        }
+                        
                         
                         system.debug(wrapval);
                         system.debug(wrapVal.materialsStoredTotal1);
@@ -325,6 +359,10 @@ public  without sharing class PaymentApplicationController {
                             wrap.workcompletedTotal1=sheetLine.buildertek__Work_Completed__c;
                         }
                         
+                        if(sheetLine.buildertek__New_G_C__c != null){
+                            wrap.gcVal=sheetLine.buildertek__New_G_C__c;
+                        }
+                        
                         wrap.materialsStoredTotal1=sheetLine.buildertek__Material_Presently_Stored__c;
                         wrap.totalCompletedStored1=sheetLine.buildertek__Total__c;
                         wrap.balancetofinsh1=sheetLine.buildertek__New_Retainage__c;
@@ -372,6 +410,15 @@ public  without sharing class PaymentApplicationController {
                             
                         }
                         
+                        if(wrapval!=null && wrapVal.gcVal!=null){
+                            if(sheetLine.buildertek__New_G_C__c != null){
+                                wrapVal.gcVal=wrapVal.gcVal+sheetLine.buildertek__New_G_C__c;
+                            }else{
+                                wrapVal.gcVal=wrapVal.gcVal;
+                            }
+                        }
+                        
+                        
                         if(wrapval!=null && wrapVal.materialsStoredTotal1!=null)
                             wrapVal.materialsStoredTotal1=wrapVal.materialsStoredTotal1+sheetLine.buildertek__Material_Presently_Stored__c;
                         if(wrapval!=null && wrapVal.totalCompletedStored1!=null)
@@ -409,6 +456,10 @@ public  without sharing class PaymentApplicationController {
                             wrap.workcompletedTotal1=sheetLine.buildertek__Work_Completed__c;
                         }
                         
+                        if(sheetLine.buildertek__New_G_C__c != null){
+                            wrap.gcVal=sheetLine.buildertek__New_G_C__c;
+                        }
+                        
                         if(sheetLine.buildertek__percent3__c!=null){
                             wrap.materialsStoredTotal1=sheetLine.buildertek__Material_Presently_Stored__c;
                         }
@@ -424,14 +475,14 @@ public  without sharing class PaymentApplicationController {
                         calcMap.put(sheetLine.buildertek__Budget_Grouping__c,wrap);
                         wrapList.add(wrap);
                         System.debug('wrapList----------'+wrapList);
-                                                System.debug('CalMap =========== '+calcMap);
-
+                        System.debug('CalMap =========== '+calcMap);
+                        
                     }
                 }   
             }
             
             system.debug('sheetLineGrpMap***********'+sheetLineGrpMap.size());
-               System.debug('CalMap =========== '+calcMap);
+            System.debug('CalMap =========== '+calcMap);
             for(buildertek__SOV_Continuation_Sheet_Lines__c line :sheetLineList){
                 if(line.buildertek__Scheduled_Value__c != null){
                     scheduleValue +=line.buildertek__Scheduled_Value__c;
@@ -490,6 +541,7 @@ public  without sharing class PaymentApplicationController {
         public Decimal balancetofinsh1{set;get;}
         public Decimal retainage1{set;get;}
         public String groupVal{set;get;}
+        public Decimal gcVal{set;get;}  
         
     }
     
@@ -506,8 +558,9 @@ public  without sharing class PaymentApplicationController {
         public Boolean isApplication{set;get;}
         public String projectId{set;get;}
         public Decimal materialsStoredTotal10{set;get;}
-                 public Decimal workcompletedTotal10{set;get;}
-
+        public Decimal workcompletedTotal10{set;get;}
+        public Decimal totalWorkBy10{set;get;}
+        
     }
     
 }

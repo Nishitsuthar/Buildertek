@@ -4,6 +4,8 @@ public class PaymentApplicationTriggerHandler {
     
     public static Boolean blnSkipPayAppForEmail = false;
     
+     public static Boolean blnSkipPayAppForupdateOriginal = false;
+    
     
     public void beforeInsert(List<buildertek__SOV_Payment_Application__c> NewApp){
         Set<Id> projectId=new Set<Id>();
@@ -118,11 +120,11 @@ public class PaymentApplicationTriggerHandler {
                 paymentRec.buildertek__Amount_Certified__c = paymentRec.buildertek__Current_Payment_Due__c;
                 
                 /* if(paymentRec.buildertek__Status__c == 'Customer Accepted' && paymentRec.RecordType.Name == 'AR'){
-                    paymentRec.buildertek__Amount_Certified__c = paymentRec.buildertek__Current_Payment_Due__c;
-                    paymentRec.buildertek__Certified_Date__c = Date.today();
-                }else if(paymentRec.buildertek__Status__c == 'Company Accepted' && paymentRec.RecordType.Name == 'AP'){
-                    paymentRec.buildertek__Amount_Certified__c = paymentRec.buildertek__Current_Payment_Due__c;
-                }*/
+paymentRec.buildertek__Amount_Certified__c = paymentRec.buildertek__Current_Payment_Due__c;
+paymentRec.buildertek__Certified_Date__c = Date.today();
+}else if(paymentRec.buildertek__Status__c == 'Company Accepted' && paymentRec.RecordType.Name == 'AP'){
+paymentRec.buildertek__Amount_Certified__c = paymentRec.buildertek__Current_Payment_Due__c;
+}*/
             }                    
         }  
         
@@ -237,67 +239,67 @@ public class PaymentApplicationTriggerHandler {
         
         if(PaymentApplicationTriggerHandler.blnSkipPayAppForEmail == false){
             system.debug('send mails---->');
-        List<Account> accList = [Select Id,buildertek__Email_Address__c from Account Where Id IN:vendorrecordIds];
+            List<Account> accList = [Select Id,buildertek__Email_Address__c from Account Where Id IN:vendorrecordIds];
             for(Account ac:accList){
-            vendorMap.put(ac.Id,ac.buildertek__Email_Address__c);
-        }
-        
-        
-        
-        EmailTemplate et = [SELECT Id,Subject, Body FROM EmailTemplate WHERE name ='Payment App Reject Notification' limit 1];
-        List<contact> conlist = [select id,name, Email from contact where Email != null limit 1];
-        for(buildertek__SOV_Payment_Application__c sov:newPayment){
+                vendorMap.put(ac.Id,ac.buildertek__Email_Address__c);
+            }
             
-            system.debug('oldmapvalue------->'+oldPaymetnMap.get(sov.Id).buildertek__Status__c);
-            if(oldPaymetnMap.get(sov.Id).buildertek__Status__c != 'Company Rejected'){
-                if(sov.buildertek__Status__c == 'Company Rejected'){
-                string EmaiValue = vendorMap.get(sov.buildertek__Owner_Account__c);
+            
+            
+            EmailTemplate et = [SELECT Id,Subject, Body FROM EmailTemplate WHERE name ='Payment App Reject Notification' limit 1];
+            List<contact> conlist = [select id,name, Email from contact where Email != null limit 1];
+            for(buildertek__SOV_Payment_Application__c sov:newPayment){
                 
-                if(EmaiValue != null && EmaiValue != ''){
-                    system.debug('@@@@@@@@@@'+EmaiValue);
-                    string htmlbody = '';
-                    List<Messaging.SingleEmailMessage> lstMsgs = new List<Messaging.SingleEmailMessage>();
-                    Messaging.SingleEmailMessage msg = new Messaging.SingleEmailMessage();
-                    msg.setTemplateId(et.Id);
-                    msg.setWhatId(sov.Id);
-                    msg.setTargetObjectId(conlist[0].Id);
-                    msg.toAddresses = new String[] { EmaiValue };
-                        //msg.setToAddresses(new list<string>{EmaiValue});
-                        lstMsgs.add(msg);
-                    //Messaging.sendEmail(lstMsgs);
-                    Savepoint sp = Database.setSavepoint();
-                    Messaging.sendEmail(lstMsgs);
-                    Database.rollback(sp);
-                    
-                    
-                    Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-                    email.setToAddresses(new list<string>{EmaiValue});
-                    email.setSubject(lstMsgs[0].Subject);
-                    //email.setPlainTextBody(emailBody);
-                    email.setHtmlBody(lstMsgs[0].getHTMLBody());
-                    
-                    if(PaymentApplicationTriggerHandler.blnSkipPayAppForEmail == false){
-                        system.debug('send mails---->');
-                        if(email != null){
-                             Messaging.sendEmail(new Messaging.SingleEmailMessage[] {email});
+                system.debug('oldmapvalue------->'+oldPaymetnMap.get(sov.Id).buildertek__Status__c);
+                if(oldPaymetnMap.get(sov.Id).buildertek__Status__c != 'Company Rejected'){
+                    if(sov.buildertek__Status__c == 'Company Rejected'){
+                        string EmaiValue = vendorMap.get(sov.buildertek__Owner_Account__c);
+                        
+                        if(EmaiValue != null && EmaiValue != ''){
+                            system.debug('@@@@@@@@@@'+EmaiValue);
+                            string htmlbody = '';
+                            List<Messaging.SingleEmailMessage> lstMsgs = new List<Messaging.SingleEmailMessage>();
+                            Messaging.SingleEmailMessage msg = new Messaging.SingleEmailMessage();
+                            msg.setTemplateId(et.Id);
+                            msg.setWhatId(sov.Id);
+                            msg.setTargetObjectId(conlist[0].Id);
+                            msg.toAddresses = new String[] { EmaiValue };
+                                //msg.setToAddresses(new list<string>{EmaiValue});
+                                lstMsgs.add(msg);
+                            //Messaging.sendEmail(lstMsgs);
+                            Savepoint sp = Database.setSavepoint();
+                            Messaging.sendEmail(lstMsgs);
+                            Database.rollback(sp);
+                            
+                            
+                            Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+                            email.setToAddresses(new list<string>{EmaiValue});
+                            email.setSubject(lstMsgs[0].Subject);
+                            //email.setPlainTextBody(emailBody);
+                            email.setHtmlBody(lstMsgs[0].getHTMLBody());
+                            
+                            if(PaymentApplicationTriggerHandler.blnSkipPayAppForEmail == false){
+                                system.debug('send mails---->');
+                                if(email != null){
+                                    Messaging.sendEmail(new Messaging.SingleEmailMessage[] {email});
+                                }
+                                
+                                PaymentApplicationTriggerHandler.blnSkipPayAppForEmail = true;
+                            }
+                            
+                            
+                            
+                            
+                            
+                        }else{
+                            //sov.addError('Vendor Email Should not be null');
                         }
-                       
-                        PaymentApplicationTriggerHandler.blnSkipPayAppForEmail = true;
                     }
                     
+                    // Code to send email notification to vendor when payapp status changes to company Rejected  END
                     
-                    
-                    
-                    
-                }else{
-                    //sov.addError('Vendor Email Should not be null');
                 }
             }
-                
-                // Code to send email notification to vendor when payapp status changes to company Rejected  END
-                
-            }
-        }
             PaymentApplicationTriggerHandler.blnSkipPayAppForEmail = true;
         }
         
@@ -743,9 +745,9 @@ conlst.add(con);*/
         if(!idsWithdata.isEmpty()){
             PayApps = [select id, name from buildertek__SOV_Payment_Application__c where Id IN:idsWithdata];
             for(buildertek__SOV_Payment_Application__c payApprec :PayApps){
-                 CoPayMap.put(payApprec.Id,payApprec.Id);
+                CoPayMap.put(payApprec.Id,payApprec.Id);
             }
-           
+            
             
         }
         
@@ -754,15 +756,15 @@ conlst.add(con);*/
             for(buildertek__Change_Order__c NCO : colistNew){
                 buildertek__Change_Order__c co1 = new buildertek__Change_Order__c();
                 co1.Id = NCO.id;
-               
+                
                 if(NCO.buildertek__Old_Payment_Application_Id__c != null && NCO.buildertek__Old_Payment_Application_Id__c != ''){
                     if(CoPayMap.get(NCO.buildertek__Old_Payment_Application_Id__c) != null){
                         co1.buildertek__Payment_Application_G702__c = NCO.buildertek__Old_Payment_Application_Id__c;
-                         ColietToUpdate.add(co1);
+                        ColietToUpdate.add(co1);
                     }
                     
                 }
-               
+                
             }
         }
         
@@ -778,7 +780,7 @@ conlst.add(con);*/
                                                                               buildertek__Vendor_Sheet_line_Id__c
                                                                               from buildertek__SOV_Continuation_Sheet_Lines__c
                                                                               where buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__c IN: oldPaymetnMap.keySet()  AND (buildertek__Vendor_Sheet_line_Id__c = null OR buildertek__Vendor_Sheet_line_Id__c = '')
-                                                                            LIMIT 10000  ];
+                                                                              LIMIT 10000  ];
         
         
         List<buildertek__Change_Order__c> changeOrderIds = new List<buildertek__Change_Order__c>();
@@ -792,9 +794,9 @@ conlst.add(con);*/
                 newCO.buildertek__Is_CO_Imported__c = false;
                 system.debug('testydqdw----->'+csLine.buildertek__Change_Order__r.buildertek__Old_Payment_Application_Id__c);
                 system.debug('test changeorder----->'+csLine.buildertek__Change_Order__c);
-               /* if(csLine.buildertek__Change_Order__r.buildertek__Old_Payment_Application_Id__c != null || csLine.buildertek__Change_Order__r.buildertek__Old_Payment_Application_Id__c != ''){
-                    newCO.buildertek__Payment_Application_G702__c =  csLine.buildertek__Change_Order__r.buildertek__Old_Payment_Application_Id__c;
-                }*/
+                /* if(csLine.buildertek__Change_Order__r.buildertek__Old_Payment_Application_Id__c != null || csLine.buildertek__Change_Order__r.buildertek__Old_Payment_Application_Id__c != ''){
+newCO.buildertek__Payment_Application_G702__c =  csLine.buildertek__Change_Order__r.buildertek__Old_Payment_Application_Id__c;
+}*/
                 if(csLine.buildertek__Change_Order__c != null){
                     
                     if(!coidSet.contains(csLine.buildertek__Change_Order__c)){
@@ -863,7 +865,7 @@ conlst.add(con);*/
                 }
             }
         }
-   
+        
         List<String> ImportedpaymentIds = new List<String>();
         for(buildertek__SOV_Payment_Application__c payment:PaymentToDelete) {
             system.debug('****'+payment.buildertek__Imported_Payment_IDs__c);
@@ -890,49 +892,49 @@ conlst.add(con);*/
     
     public void updateSheetLinesStatusWhenPaymentAppStatusChanges(List<buildertek__SOV_Payment_Application__c> oldPayment, List<buildertek__SOV_Payment_Application__c> newPayment,Map<Id, buildertek__SOV_Payment_Application__c> oldPaymetnMap, Map<Id, buildertek__SOV_Payment_Application__c> newPaymentMap){
         
-    /*    List<buildertek__SOV_Continuation__c> ConsheetList = new List<buildertek__SOV_Continuation__c>();
-        List<buildertek__SOV_Continuation_Sheet_Lines__c> ConSheetLineList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
-        List<String> ConSheetIds = new List<String>();
-        
-        ConsheetList = [select Id, Name, buildertek__SOV_Payment_Application__c from buildertek__SOV_Continuation__c where buildertek__SOV_Payment_Application__c IN:newPayment];
-        
-        if(ConsheetList.size() > 0){
-            for(buildertek__SOV_Continuation__c cons: ConsheetList){
-                ConSheetIds.add(cons.Id);
-            }
-            ConSheetLineList = [select Id, Name, buildertek__SOV_Continuation_Sheet__c, buildertek__Status__c from buildertek__SOV_Continuation_Sheet_Lines__c where buildertek__SOV_Continuation_Sheet__c IN:ConSheetIds];
-        }
-        
-        List<buildertek__SOV_Continuation_Sheet_Lines__c> ConSheetLineListTOUpdate = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
-        if(ConSheetLineList.size() > 0){
-            for(buildertek__SOV_Payment_Application__c PA : newPayment){
-                if(PA.buildertek__Status__c == 'Company Accepted'){
-                    for(buildertek__SOV_Continuation_Sheet_Lines__c col : ConSheetLineList){
-                        buildertek__SOV_Continuation_Sheet_Lines__c coline = new buildertek__SOV_Continuation_Sheet_Lines__c();
-                        coline.Id = col.Id;
-                        coline.buildertek__Status__c = 'Accepted';
-                        ConSheetLineListTOUpdate.add(coline);
-                    }
-                }else if(PA.buildertek__Status__c == 'Customer Accepted'){
-                    for(buildertek__SOV_Continuation_Sheet_Lines__c col : ConSheetLineList){
-                        buildertek__SOV_Continuation_Sheet_Lines__c coline = new buildertek__SOV_Continuation_Sheet_Lines__c();
-                        coline.Id = col.Id;
-                        coline.buildertek__Status__c = 'Accepted';
-                        ConSheetLineListTOUpdate.add(coline);
-                    }
-                }
-            }
-        }
-        
-        if(ConSheetLineListTOUpdate.size() > 0){
-            PaymentApplicationTriggerHandler.blnSkipPayAppInsertTrigger = true;
-            update ConSheetLineListTOUpdate;
-            PaymentApplicationTriggerHandler.blnSkipPayAppInsertTrigger = false;  
-        }
-        */
+        /*    List<buildertek__SOV_Continuation__c> ConsheetList = new List<buildertek__SOV_Continuation__c>();
+List<buildertek__SOV_Continuation_Sheet_Lines__c> ConSheetLineList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
+List<String> ConSheetIds = new List<String>();
+
+ConsheetList = [select Id, Name, buildertek__SOV_Payment_Application__c from buildertek__SOV_Continuation__c where buildertek__SOV_Payment_Application__c IN:newPayment];
+
+if(ConsheetList.size() > 0){
+for(buildertek__SOV_Continuation__c cons: ConsheetList){
+ConSheetIds.add(cons.Id);
+}
+ConSheetLineList = [select Id, Name, buildertek__SOV_Continuation_Sheet__c, buildertek__Status__c from buildertek__SOV_Continuation_Sheet_Lines__c where buildertek__SOV_Continuation_Sheet__c IN:ConSheetIds];
+}
+
+List<buildertek__SOV_Continuation_Sheet_Lines__c> ConSheetLineListTOUpdate = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
+if(ConSheetLineList.size() > 0){
+for(buildertek__SOV_Payment_Application__c PA : newPayment){
+if(PA.buildertek__Status__c == 'Company Accepted'){
+for(buildertek__SOV_Continuation_Sheet_Lines__c col : ConSheetLineList){
+buildertek__SOV_Continuation_Sheet_Lines__c coline = new buildertek__SOV_Continuation_Sheet_Lines__c();
+coline.Id = col.Id;
+coline.buildertek__Status__c = 'Accepted';
+ConSheetLineListTOUpdate.add(coline);
+}
+}else if(PA.buildertek__Status__c == 'Customer Accepted'){
+for(buildertek__SOV_Continuation_Sheet_Lines__c col : ConSheetLineList){
+buildertek__SOV_Continuation_Sheet_Lines__c coline = new buildertek__SOV_Continuation_Sheet_Lines__c();
+coline.Id = col.Id;
+coline.buildertek__Status__c = 'Accepted';
+ConSheetLineListTOUpdate.add(coline);
+}
+}
+}
+}
+
+if(ConSheetLineListTOUpdate.size() > 0){
+PaymentApplicationTriggerHandler.blnSkipPayAppInsertTrigger = true;
+update ConSheetLineListTOUpdate;
+PaymentApplicationTriggerHandler.blnSkipPayAppInsertTrigger = false;  
+}
+*/
         
     }
     
-    
+
     
 }

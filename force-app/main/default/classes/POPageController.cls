@@ -9,6 +9,7 @@ public class POPageController {
         offset = (pageNumber - 1) * pageSize;
         Integer totalRecords = 0;
         Integer recordEnd = pageSize * pageNumber;
+        string orgCurr = UserInfo.getDefaultCurrency();
         
         String query = 'Select COUNT() FROM buildertek__Purchase_Order__c';
         if(poFilter != ''){
@@ -160,6 +161,7 @@ public class POPageController {
             MasterBudgetsClassRecord.recordStart = offset + 1;
             MasterBudgetsClassRecord.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
             MasterBudgetsClassRecord.totalRecords = totalRecords; 
+            MasterBudgetsClassRecord.orgCurr = orgCurr;
             
             List<POInnerClass> POInnerClassList = new List<POInnerClass>();
             List<POLinesWrapper> POLinesList = new List<POLinesWrapper>(); 
@@ -173,7 +175,7 @@ public class POPageController {
                         POLinesWrapper POLi = new POLinesWrapper();
                         if(poLineFilter != '' && poLineFilter != null){
                             if(lines.buildertek__Description__c != null && lines.buildertek__Description__c != ''){
-                                if(lines.buildertek__Description__c.toLowercase().contains(poLineFilter.toLowercase())){
+                                if(lines.Name.toLowercase().contains(poLineFilter.toLowercase())){
                                     POLi.RecordId = lines.Id;
                                     POLi.Name = lines.Name;
                                     system.debug('innerif'+lines.buildertek__Description__c);
@@ -185,6 +187,7 @@ public class POPageController {
                                     POLi.TotalPrice = lines.buildertek__Total_Price__c ;
                                     POLi.TotalCost = lines.buildertek__Total_Amount_Tax__c;
                                     POLi.expanded = false;
+                                    POLi.PORow = false;
                                     POLi.poLineCheck = false;
                                     POLinesList .add(POLi); 
                                 }
@@ -201,10 +204,31 @@ public class POPageController {
                             POLi.TotalPrice = lines.buildertek__Total_Price__c ;
                             POLi.TotalCost = lines.buildertek__Total_Amount_Tax__c;
                             POLi.expanded = false;
+                            POLi.PORow = false;
                             POLi.poLineCheck = false;
                             POLinesList .add(POLi);  
                         }
                         
+                    }
+
+                    if (POLinesList.size() > 0) {
+                        POLinesWrapper POLi1 = new POLinesWrapper();
+                        POLi1.coastType =  'PO Total';
+                        POLi1.coastValue = PO1.buildertek__PO_Total__c;
+                        POLi1.PORow = true;
+                        POLinesList.add(POLi1);  
+    
+                        POLinesWrapper POLi2 = new POLinesWrapper();
+                        POLi2.coastType =  'Paid Amount';
+                        POLi2.coastValue = PO1.buildertek__Paid_Amount__c;
+                        POLi2.PORow = true;
+                        POLinesList.add(POLi2); 
+    
+                        POLinesWrapper POLi3 = new POLinesWrapper();
+                        POLi3.coastType =  'PO Balance';
+                        POLi3.coastValue = PO1.buildertek__PO_Balance__c;
+                        POLi3.PORow = true;
+                        POLinesList.add(POLi3); 
                     }
                     
                     POInnerClassRecord.poLinesWrapper = POLinesList;
@@ -228,7 +252,7 @@ public class POPageController {
             MasterBudgetsClassList.add(MasterBudgetsClassRecord); 
             
         }
-        
+
         return  MasterBudgetsClassList;   
     }
     
@@ -266,6 +290,8 @@ public class POPageController {
         
         @AuraEnabled
         public Integer recordEnd {get;set;}
+
+        @AuraEnabled public String orgCurr;
         
     }
     
@@ -293,6 +319,10 @@ public class POPageController {
         @AuraEnabled public decimal TaxRate;
         @AuraEnabled public decimal TotalPrice;
         @AuraEnabled public Boolean expanded;
+        @AuraEnabled public Boolean PORow;
+        @AuraEnabled public String coastType;
+        @AuraEnabled public decimal coastValue;
+
         @AuraEnabled public String groupName {get;set;}
         
         @AuraEnabled
@@ -660,8 +690,10 @@ public class POPageController {
         if(!poList.isEmpty()){
             
             // Step 0: Create a master list to hold the emails we'll send
-            List<Messaging.SingleEmailMessage> mails = 
-                new List<Messaging.SingleEmailMessage>();
+            List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
+
+            Map<Id, List<ContentVersion>> conDocMap = new Map<Id, List<ContentVersion>>();
+            List<ContentVersion> cvList = new List<ContentVersion>();
             
             for (buildertek__Purchase_Order__c myContact : poList) {
                 if (myContact.buildertek__Vendor__c != null && myContact.buildertek__Vendor__r.buildertek__Email_Address__c != null) {
@@ -712,6 +744,7 @@ public class POPageController {
                     
                     blob pdfPageBlob = pagePdf.getContentAsPDF();
                     List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
+
                     if(filedata != null && filedata != '' && filedata != '[]'){
                         for(Innerclass i:inn){
                             system.debug('myContact.id------->'+myContact.id);
@@ -723,6 +756,16 @@ public class POPageController {
                                 efa.setBody(EncodingUtil.base64Decode(i.fileContent)); 
                                 //efa.setContentType('application/pdf');
                                 fileAttachments.add(efa);
+
+                                // Below code for saving Document into Files section.
+                                ContentVersion contentVersion = new ContentVersion(Title = i.fileName, PathOnClient = i.fileName, VersionData = EncodingUtil.base64Decode(i.fileContent), IsMajorVersion = true);
+                                cvList.add(contentVersion);
+
+                                if(!conDocMap.containsKey(myContact.Id)){
+                                    conDocMap.put(myContact.Id, new List<ContentVersion>());
+                                }
+                                conDocMap.get(myContact.Id).add(contentVersion);
+
                             }
                         }
                     }
@@ -734,10 +777,43 @@ public class POPageController {
             }
             // Step 6: Send all emails in the master list
             Messaging.sendEmail(mails);
-            
-            
             msgCls.Status = 'Success';
             msgCls.Message = 'Email sent to selected Vendors successfully';
+
+            System.debug('Started-----');
+            if(cvList.size() > 0) {
+                cvList = new List<ContentVersion>();
+                for(Id ids : conDocMap.keySet()){
+                    List<ContentVersion> cvl = new List<ContentVersion>();
+                    cvl = conDocMap.get(ids);
+                    insert cvl;
+                    cvList.addAll(cvl);
+                    conDocMap.put(ids, cvl);
+                }
+                List<ContentVersion> documents = [SELECT Id, Title, ContentDocumentId FROM ContentVersion WHERE Id IN :cvList];
+                List<ContentDocumentLink> cdlList = new List<ContentDocumentLink>();
+
+                for(buildertek__Purchase_Order__c myContact : poList) {
+                    List<ContentVersion> cvlinklist = new List<ContentVersion>();
+                    cvlinklist = conDocMap.get(myContact.Id);
+                    for(Integer i=0; i<documents.size(); i++){
+                        for(ContentVersion cvl : cvlinklist) {
+                            if(cvl.Id == documents[i].Id){
+                                ContentDocumentLink cdl = new ContentDocumentLink();
+                                cdl.LinkedEntityId = myContact.Id;
+                                cdl.ContentDocumentId = documents[i].ContentDocumentId;
+                                cdl.ShareType = 'V';
+                                cdl.Visibility = 'AllUsers';
+                                cdlList.add(cdl);
+                                System.debug('ContentDocumentLink Added.');
+                            }
+                        }
+                    }
+                }
+                if(cdlList.size() > 0){
+                    insert cdlList;
+                }
+            }
             
         }else{
             msgCls.Status = 'Failed';

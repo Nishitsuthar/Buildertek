@@ -12,7 +12,8 @@
         
         var projectValue = component.get("v.searchProjectFilter");
    
-        
+        component.find("checkContractors").set("v.value", false);
+
         var action = component.get("c.getMasterBudgets");
         action.setParams({
             recId : component.get("v.recordId"),
@@ -38,6 +39,7 @@
                     component.set("v.TotalRecords", result[0].totalRecords);
                     component.set("v.RecordStart", result[0].recordStart);
                     component.set("v.RecordEnd", result[0].recordEnd);
+                    component.set("v.orgCurr", result[0].orgCurr);
                    
                     var  poLineFilter = component.get("v.searchDescriptionFilter");
                     var poFilter = component.get("v.searchItemFilter");
@@ -50,8 +52,9 @@
                     
                    
                     component.set('v.PaginationList', result);
-                console.log(JSON.stringify(result));
-                component.set("v.Spinner", false);
+                    console.log({result});
+                    // console.log(JSON.stringify(result));
+                    component.set("v.Spinner", false);
                     
                 }else{
                     component.set("v.Spinner", false);

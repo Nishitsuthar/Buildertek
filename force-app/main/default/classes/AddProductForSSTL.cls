@@ -1633,6 +1633,7 @@ public with sharing class AddProductForSSTL{
             String query = '';
             String fields= '';
             String filter = '';
+            
             List<buildertek__Select_Sheet__c> bomLines = new List<buildertek__Select_Sheet__c>();
             Map<Id,buildertek__Project_Takeoff_Lines__c> takeOfflineMap = new Map<Id,buildertek__Project_Takeoff_Lines__c>();
             //List<buildertek__Project_Takeoff_Lines__c> finalTOLlist = new List<buildertek__Project_Takeoff_Lines__c>();
@@ -1863,6 +1864,10 @@ public with sharing class AddProductForSSTL{
                                                 buildertek__Vendor__c
                                                 FROM Product2
                                                 WHERE Id IN :productIdList];
+                  list<pricebook2> PriceListt;
+                              PriceListt = [select Id, Name
+                                           from pricebook2
+                                           Where Id =: selectPriceBook AND buildertek__BT_Visible__c = true];
                   system.debug('products size ----> '+productList.size());
                   system.debug('productList for vendor'+productList);
                   List<buildertek__Select_Sheet__c> selectionList = new List<buildertek__Select_Sheet__c>();
@@ -1895,6 +1900,7 @@ public with sharing class AddProductForSSTL{
                               SSTL.buildertek__Quantity__c = takeoffLineItem.buildertek__Quantity__c;//quantityMap.get(product.buildertek__Product_Type__c);
                               SSTL.buildertek__Service_Category__c = takeoffLineItem.buildertek__TL_SERVICE_CATEGORY__c;
                               SSTL.buildertek__BL_SERVICE_CATEGORY__c = takeoffLineItem.buildertek__TL_SERVICE_CATEGORY__c;
+                              //SSTL.buildertek__BT_Price_Book__c = PriceListt[0].Id;
                               selectionList.add(SSTL);
                               system.debug(SSTL.buildertek__Build_Phase__c);
                               //}
@@ -1925,6 +1931,31 @@ public with sharing class AddProductForSSTL{
                   
                   if (selectionList.size() > 0){
                       system.debug('selectionList size -----> '+selectionList.size());
+                      system.debug('selectionList buildertek__BT_Price_Book__c -----> '+selectionList[0].buildertek__BT_Price_Book__c);
+                      //selectionList[0].buildertek__BT_Price_Book__c = PriceListt[0].Id;
+                      
+                     
+                      System.debug('<selectPriceBook>==>'+selectPriceBook);
+                      if(selectPriceBook != null && selectPriceBook != ''){
+                          List<buildertek__Project_Takeoff_Lines__c> TakeofLinesToUpdate = new List<buildertek__Project_Takeoff_Lines__c>();
+                          System.debug('<takeOffLineList>'+takeOffLineList);
+                          for(buildertek__Project_Takeoff_Lines__c TakeOfLines: [SELECT id, name, buildertek__Price_Book__c FROM buildertek__Project_Takeoff_Lines__c WHERE Id IN: takeOffLineList]){
+                              System.debug('<TakeOfLines> '+TakeOfLines);
+                              System.debug('<TakeOfLines.buildertek__Price_Book__c> '+TakeOfLines.buildertek__Price_Book__c);
+                              //if(TakeOfLines.buildertek__Price_Book__c == null || TakeOfLines.buildertek__Price_Book__c == ''){
+                                  System.debug(PriceListt.size()+'<>'+PriceListt[0].Id);
+                                TakeOfLines.buildertek__Price_Book__c = PriceListt[0].Id;
+                                
+                                TakeofLinesToUpdate.add(TakeOfLines);   
+                              //}
+                          }
+                          if(TakeofLinesToUpdate.size() > 0){
+                                update TakeofLinesToUpdate;
+                          }
+                      }
+                      
+                     
+                      
                       insert selectionList;
                       
                       // update BOM Line with pricebook values
@@ -1975,6 +2006,7 @@ public with sharing class AddProductForSSTL{
                                       }  
                                       if(selectionList1.size() > 0){
                                           update selectionList1;
+                                          System.debug(selectionList1);
                                       }
                                   }else {
                                       parentBOMCurrency =  'USD';
@@ -2013,6 +2045,7 @@ public with sharing class AddProductForSSTL{
                                           }  
                                           if(selectionList1.size() > 0){
                                               update selectionList1;
+                                              System.debug(selectionList1);
                                           }
                                       }
                                   }
@@ -2042,6 +2075,7 @@ public with sharing class AddProductForSSTL{
                                   }  
                                   if(selectionList1.size() > 0){
                                       update selectionList1;
+                                      System.debug(selectionList1);
                                   }
                               }
                           }
@@ -3256,6 +3290,8 @@ public with sharing class AddProductForSSTL{
              
              system.debug(fields);
              string suppressrecord = 'Yes';
+            //  System.debug('takeOffId=='+takeOffId);
+             System.debug('takeOsuppressrecordffId=='+suppressrecord);
              query = query+fields+' FROM buildertek__Project_Takeoff_Lines__c WHERE buildertek__Project_Takeoff__c =:takeOffId AND buildertek__Suppress_Record__c !=: suppressrecord ';
              
              //query = 'Select Id,Name,buildertek__Project_Takeoff__c,buildertek__Categories__c, buildertek__Categories__r.Name, buildertek__Trade_Type__c, buildertek__Trade_Type__r.Name,buildertek__Location__c, buildertek__Product_Type__c, buildertek__Product_Type__r.Name,buildertek__Quantity__c,buildertek__Build_Phase__c,buildertek__Build_Phase__r.Name,createddate,lastmodifieddate FROM buildertek__Project_Takeoff_Lines__c WHERE buildertek__Project_Takeoff__c =:takeOffId ';
@@ -3297,7 +3333,7 @@ public with sharing class AddProductForSSTL{
                         }*/
              query += filter;
              //query = isFieldExist ? query.replace('WHERE  AND', ' WHERE ') : query.replace('WHERE ', '');
-            query += ' ORDER BY  Name ASC NULLS LAST , buildertek__Trade_Type__r.Name ASC NULLS LAST , buildertek__Categories__r.Name ASC NULLS LAST, buildertek__Product_Type__r.Name ASC NULLS LAST, buildertek__Location__c ASC NULLS LAST, buildertek__Quantity__c ASC NULLS LAST';
+            query += ' ORDER BY  Name ASC NULLS LAST , buildertek__Trade_Type__r.Name ASC NULLS LAST , buildertek__Categories__r.Name ASC NULLS LAST,  buildertek__Location__c ASC NULLS LAST, buildertek__Quantity__c ASC NULLS LAST';
             // query += ' ORDER BY  Name ASC ';
              query += ' LIMIT : pageSize OFFSET : offset';
              system.debug('query:11::' + query);

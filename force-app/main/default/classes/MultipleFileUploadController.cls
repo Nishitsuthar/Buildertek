@@ -1,32 +1,32 @@
 public with sharing class MultipleFileUploadController{
-	@AuraEnabled
-	public static List<ContentDocument> getAllFilesOnsObjectRecord(Id sObjectId){
-		List<ContentDocument> contentDocumentListToReturn = new List<ContentDocument>();
-		List<ContentDocumentLink> contentDocLinkOnsObjectList = new List<ContentDocumentLink>();
+	// @AuraEnabled
+	// public static List<ContentDocument> getAllFilesOnsObjectRecord(Id sObjectId){
+	// 	List<ContentDocument> contentDocumentListToReturn = new List<ContentDocument>();
+	// 	List<ContentDocumentLink> contentDocLinkOnsObjectList = new List<ContentDocumentLink>();
 
-		contentDocLinkOnsObjectList = [Select id, ContentDocumentId, LinkedEntityId
-		                               From ContentDocumentLink
-		                               Where LinkedEntityId = :sObjectId];
-		Set<Id> contentDocIdSet = new Set<Id>();
+	// 	contentDocLinkOnsObjectList = [Select id, ContentDocumentId, LinkedEntityId
+	// 	                               From ContentDocumentLink
+	// 	                               Where LinkedEntityId = :sObjectId];
+	// 	Set<Id> contentDocIdSet = new Set<Id>();
 
-		if (contentDocLinkOnsObjectList != null && !contentDocLinkOnsObjectList.isEmpty()){
-			for (ContentDocumentLink conDocLink : contentDocLinkOnsObjectList){
-				contentDocIdSet.add(conDocLink.ContentDocumentId);
-			}
-		}
+	// 	if (contentDocLinkOnsObjectList != null && !contentDocLinkOnsObjectList.isEmpty()){
+	// 		for (ContentDocumentLink conDocLink : contentDocLinkOnsObjectList){
+	// 			contentDocIdSet.add(conDocLink.ContentDocumentId);
+	// 		}
+	// 	}
 
-		if (contentDocIdSet != null && !contentDocIdSet.isEmpty()){
-			contentDocumentListToReturn = [Select Id, Title
-			                               From ContentDocument
-			                               Where ID IN :contentDocIdSet];
-		}
+	// 	if (contentDocIdSet != null && !contentDocIdSet.isEmpty()){
+	// 		contentDocumentListToReturn = [Select Id, Title
+	// 		                               From ContentDocument
+	// 		                               Where ID IN :contentDocIdSet];
+	// 	}
 
-		if (contentDocumentListToReturn != null && !contentDocumentListToReturn.isEmpty()){
-			return contentDocumentListToReturn;
-		} else{
-			return null;
-		}
-	}
+	// 	if (contentDocumentListToReturn != null && !contentDocumentListToReturn.isEmpty()){
+	// 		return contentDocumentListToReturn;
+	// 	} else{
+	// 		return null;
+	// 	}
+	// }
 
 	@AuraEnabled
 	public static void deleteFiles(String filesIdArrStr){

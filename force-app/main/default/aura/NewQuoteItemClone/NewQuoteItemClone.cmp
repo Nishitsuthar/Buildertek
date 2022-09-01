@@ -1116,6 +1116,11 @@
                                         <!--<br />
                                     <br />-->
                                     </aura:iteration>
+                                    <aura:if isTrue="{!empty(v.TotalRecords.groups)}">
+                                        <div class="slds-col slds-size_6-of-12 slds-float_right" style = "font-size: 10px; height:1.5rem;" >
+                                            <lightning:button variant="neutral" label="Add Quote Line" name="{!groupIndex}" title="Add Quote Line" class="addBudgetLineStyle" onclick="{!c.addProductFromGroup}"  />
+                                        </div>
+                                    </aura:if>
                                 </tbody>
                             </table>
                         </div>

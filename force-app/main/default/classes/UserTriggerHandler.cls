@@ -206,10 +206,17 @@ upsert groupMembersToInsert;
     @future
     public static void giveShareAccessToSOV(List<String> userIds, List<String> VendorIds){
         
+        system.debug('userIds------>'+userIds);
+        
+        system.debug('VendorIds----->'+VendorIds);
+        
+        
         string strQry = 'SELECT Id, Username, LastName, FirstName, Name, ContactId, AccountId,Email,buildertek__Account_Id__c, isPortalEnabled '+
             'FROM User Where Id IN:userIds';    
         list<User> usersList = Database.query(strQry);
         
+        
+        system.debug('usersList------->'+usersList);
         
         list<buildertek__Schedule_of_Values__c>  SOVRec = new list<buildertek__Schedule_of_Values__c>();
         if(VendorIds.size() > 0){

@@ -12,6 +12,7 @@
      <aura:attribute name="recordList" type="Select_Sheet__c[]" />
     <aura:attribute name="productsToAdd" type="List" default="[]" />
     <aura:attribute name="selectionSheetTakeOffLines" type="List" default="[]" />
+    <aura:attribute name="sortedselectionSheetTakeOffLines" type="List" default="[]" />
     <aura:attribute name="takeOffLinesToDelete" type="List" default="[]" />
     <aura:attribute name="recordId" type="String" />
     <aura:attribute name="productId" type="String" default="" />
@@ -976,7 +977,7 @@
                                                 </aura:if> -->
                                             </aura:iteration>
                                     </tr>
-                                    <aura:iteration items="{!v.selectionSheetTakeOffLines}" var="rec"
+                                    <aura:iteration items="{!v.sortedselectionSheetTakeOffLines}" var="row"
                                                     indexVar="groupIndex">
                                         <!-- <tr class="groupHeader" style = "font-size: 0.9rem;">
                                             <td>
@@ -1051,7 +1052,7 @@
                                             
                                         </tr> -->
                                         
-                                        <aura:iteration items="{!rec.groupedRecordsTmp}" var="row" indexVar="index">
+                                        <!-- <aura:iteration items="{!rec.groupedRecordsTmp}" var="row" indexVar="index"> -->
                                             
                                             <tr style = "font-size: 0.7rem;" >
                                                <!-- <aura:iteration items="{!row}" var="checkBoxVar" indexVar ="checkBoxIndex">
@@ -1139,7 +1140,7 @@
                                                 </aura:iteration>
                                                 
                                             </tr>
-                                        </aura:iteration>
+                                        <!-- </aura:iteration> -->
                                         
                                         
                                         <!-- <aura:iteration items="{!rec.groupedRecords}" var="row" indexVar="index">

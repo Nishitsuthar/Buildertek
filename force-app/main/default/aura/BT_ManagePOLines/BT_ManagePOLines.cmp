@@ -155,6 +155,7 @@
     <aura:attribute name="servCatVsExtendedCostMap" type="List"  />
     <aura:attribute name="totalInstallCost" type="String" />
     <aura:attribute name="totalProposalAmount" type="String" />
+    <aura:attribute name="buildPhaseName" type="String"/>
     
     <lightning:navigation aura:id="goToPrevious" />
     
@@ -634,7 +635,6 @@
                             {!groupItem.groupName}
                         </div>
                         <div id="{!groupItem.groupName+'_'+groupIndex}" class="customDataTable" style="overflow-y:auto;overflow-x:scroll;"><!-- aura:id = "tableByGroup" aura:id="poTable"-->
-                            
                             <aura:if isTrue="{!v.massUpdateEnable}">
                                 <div style = "background-color:white;" >
                                     <table  class="slds-table slds-table--bordered">

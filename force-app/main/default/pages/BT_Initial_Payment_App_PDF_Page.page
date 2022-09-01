@@ -306,12 +306,12 @@ content: counter(pages);
                         <td width="100%" align="left">
                             <div class="a" style="font-size:10.5px">
                             4. TOTAL COMPLETED TO DATE<br/>
-                            <div style="margin-left:20px">(Column E on Sheet 2)</div>
+                            <div style="margin-left:20px">(Column G on Sheet 2)</div>
                             </div> 
                         </td> 
                         <td width="100%" align="right">
                          <div class="a" style="font-size:10.5px">
-                            <u> <apex:outputField value="{!paymentApp.Total_Completed__c}" /></u>
+                            <u> <apex:outputField value="{!paymentApp.Total_Completed_and_Stored_To_Date__c}" /></u>
                             </div> 
                          </td>
                     </tr>
@@ -320,14 +320,14 @@ content: counter(pages);
                             <div class="a" style="font-size:10.5px">
                             5. HOLDBACK:<br/>
                             <div style="margin-left:20px">a. ___10 % of Completed Work</div><br/>
-                            <div style="margin-left:30px">(Column E on Sheet 2)</div>
+                            <div style="margin-left:30px">(Column D + E on Sheet 2)</div>
                             </div> 
                         </td> 
                         <td width="100%" align="right">
                          <div class="a" style="font-size:10.5px">
                          <u> 
                          <apex:outputText value="{!CurrencyCode} {0, number, ###,###,###,##0.00}" >
-                                        <apex:param value="{!balancetofinsh}" />
+                                        <apex:param value="{!cd.workcompletedTotal10}" />
                                         </apex:outputText>
                          </u>
                             <!--u> <apex:outputField value="{!paymentApp.Total_Retainage__c}" /></u-->

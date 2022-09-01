@@ -257,6 +257,7 @@
 
                 window.setTimeout(
                     $A.getCallback(function () {
+                        location.reload();
                         history.go(-1);
                     }), 2000
                 );

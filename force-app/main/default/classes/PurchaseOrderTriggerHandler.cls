@@ -291,40 +291,49 @@ PurchaseOrderDAO.isUpdatePurchaseOrder = true;
             if(BudgetItemList.size()>0){
                 
                 system.debug('BudgetItemList.size()----->'+BudgetItemList.size());
-                
+
+                List<buildertek__PO_Item_To_Budget_Item_Link__c> poLink = [SELECT Id, Name, buildertek__Approved_PO__c FROM buildertek__PO_Item_To_Budget_Item_Link__c WHERE buildertek__PO_Item__c =: purchaseOrderItem[0].Id];
+
                 for(buildertek__Purchase_Order__c purchaseRec : newPurchaseOrders){
                     
                     system.debug('121212212=========>'+oldPurchaseOrdersMap.get( purchaseRec.Id ).buildertek__Budget_Line__c);
                     system.debug('21212121===========>'+newPurchaseOrdersMap.get( purchaseRec.Id ).buildertek__Budget_Line__c);
                     
-                if( oldPurchaseOrdersMap.get( purchaseRec.Id ).buildertek__Budget_Line__c != newPurchaseOrdersMap.get( purchaseRec.Id ).buildertek__Budget_Line__c )
-                {
-                    
-                    system.debug('working');
-                    List<buildertek__PO_Item_To_Budget_Item_Link__c>  budgetItemLinkRecs= new List<buildertek__PO_Item_To_Budget_Item_Link__c>();
-                    
-                    system.debug('---------------------c1111');
-                    
-                    if(purchaseOrderItem.size()>0){
+                    if( oldPurchaseOrdersMap.get( purchaseRec.Id ).buildertek__Budget_Line__c != newPurchaseOrdersMap.get( purchaseRec.Id ).buildertek__Budget_Line__c )
+                    {
                         
-                        system.debug('-------------------------->2222222');
+                        system.debug('working');
+                        List<buildertek__PO_Item_To_Budget_Item_Link__c>  budgetItemLinkRecs= new List<buildertek__PO_Item_To_Budget_Item_Link__c>();
                         
-                        system.debug('PurchaseOrderItem size-------------->'+purchaseOrderItem.size());
-                        for(buildertek__Purchase_Order_Item__c poitemRec : purchaseOrderItem){
-                            for(buildertek__Budget_Item__c budgetRec : BudgetItemList){
-                                buildertek__PO_Item_To_Budget_Item_Link__c potobudgetRec = new buildertek__PO_Item_To_Budget_Item_Link__c();
-                                potobudgetRec.buildertek__Budget_Item__c = budgetRec.id;
-                                potobudgetRec.buildertek__PO_Item__c = poitemRec.id;
-                                potobudgetRec.buildertek__Approved_PO__c =purchaseRec.buildertek__PO_Total__c;
-                                budgetItemLinkRecs.add(potobudgetRec);
-                            } 
+                        system.debug('---------------------c1111');
+                        
+                        if(purchaseOrderItem.size()>0){
+                            
+                            system.debug('-------------------------->2222222');
+                            
+                            system.debug('PurchaseOrderItem size-------------->'+purchaseOrderItem.size());
+                            for(buildertek__Purchase_Order_Item__c poitemRec : purchaseOrderItem){
+                                for(buildertek__Budget_Item__c budgetRec : BudgetItemList){
+                                    buildertek__PO_Item_To_Budget_Item_Link__c potobudgetRec = new buildertek__PO_Item_To_Budget_Item_Link__c();
+                                    potobudgetRec.buildertek__Budget_Item__c = budgetRec.id;
+                                    potobudgetRec.buildertek__PO_Item__c = poitemRec.id;
+                                    potobudgetRec.buildertek__Approved_PO__c =purchaseRec.buildertek__PO_Total__c;
+                                    budgetItemLinkRecs.add(potobudgetRec);
+                                } 
+                            }
                         }
+                        system.debug('before------->'+ budgetItemLinkRecs);
+                        Insert budgetItemLinkRecs;
+                        system.debug('After-------->'+ budgetItemLinkRecs);
+                        
                     }
-                    system.debug('before------->'+ budgetItemLinkRecs);
-                    Insert budgetItemLinkRecs;
-                    system.debug('After-------->'+ budgetItemLinkRecs);
-                    
-              }
+
+                    if (poLink.size()>0) {
+                        for (buildertek__PO_Item_To_Budget_Item_Link__c po : poLink) {
+                            po.buildertek__Approved_PO__c = purchaseRec.buildertek__PO_Total__c; 
+                        }
+                        update poLink;
+                    }
                 }
              
             }

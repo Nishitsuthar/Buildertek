@@ -1,7 +1,7 @@
 ({
     getExistingFiles: function (component, event, helper) {
         component.set('v.sObjectId', component.get('v.recordId'));
-        helper.getExistingFiles(component);
+        // helper.getExistingFiles(component);
     },
 
     handleUploadFinished: function (component, event, helper) {

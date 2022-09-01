@@ -145,6 +145,7 @@ public with sharing class PreQualController {
         Account act = [select id,buildertek__Box_Folder_Id__c,Name from Account where id =:recordId];
         buildertek__Pre_Qual__c prq = new buildertek__Pre_Qual__c();
         List<buildertek__Pre_Qual_Settings__c> preQualSettings = [SELECT Id,buildertek__Is_Multiple_PreQual__c FROM buildertek__Pre_Qual_Settings__c Where name ='PreQualSettings' LIMIT 1];
+        System.debug('preQualSettings>>>'+preQualSettings);
         if(preQualSettings.size()>0){
             isMultiplePrequal = preQualSettings[0].buildertek__Is_Multiple_PreQual__c;
         }else{ 

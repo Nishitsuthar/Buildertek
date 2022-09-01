@@ -13,6 +13,14 @@
 @isTest
 public with sharing class UserTriggerHandlerTest {
 	static testMethod void testInsertUser(){
+        
+        buildertek__Admin_Interface_Node_Configuration__c adminNode = new buildertek__Admin_Interface_Node_Configuration__c();
+        
+        adminNode.buildertek__User_SOV_Sharing__c = false;
+        adminNode.name = 'Payment Application Configuration';
+        insert adminNode;
+        
+        
 		// Create a user
         Profile p = [select id from profile where name = 'System Administrator'];
         User adminUser = new User(alias='admin123', email='sam@test1234.com', 

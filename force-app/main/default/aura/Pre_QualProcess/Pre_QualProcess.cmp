@@ -162,7 +162,7 @@
                                  <aura:if isTrue="{!temp.label == 'Standard_PreQual_VF'}"> 
                                       <option value="{!temp.value}">Standard Pre-Qual</option>
                                      <aura:set attribute="else">
-                                <option value="{!temp.value}">{!temp.label}</option>  
+                                		<option value="{!temp.value}">{!temp.label}</option>  
                                      </aura:set>
                                 </aura:if>
                             </aura:iteration>

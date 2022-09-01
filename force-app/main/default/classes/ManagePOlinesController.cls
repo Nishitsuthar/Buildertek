@@ -70,9 +70,10 @@ public with sharing class ManagePOlinesController {
             totalRecords = [SELECT COUNT() FROM buildertek__Select_Sheet__c 
                             where buildertek__Selection_Sheet_Takeoff__c =: recordId];
         }*/
-        
+        System.debug('recordId==='+recordId);
         String query = 'Select COUNT() FROM buildertek__Select_Sheet__c where (buildertek__Selection_Sheet_Takeoff__c =: recordId) ';
         query += filter;
+        System.debug('query=='+query);
         totalRecords = Database.countQuery(query);
         system.debug('***************************'+totalRecords);
         
@@ -1049,6 +1050,7 @@ public with sharing class ManagePOlinesController {
     
     @AuraEnabled
     public static List<buildertek__Project_Selection_Sheet_Takeoff__c> getBTAdminRecorDetails(String recordId){
+        System.debug('recordId-->'+recordId);
         List<buildertek__Project_Selection_Sheet_Takeoff__c> BomList = new List<buildertek__Project_Selection_Sheet_Takeoff__c>();
         if(String.isNotBlank(recordId))
         {
@@ -1219,6 +1221,7 @@ public with sharing class ManagePOlinesController {
                     // {
                         Map<String,String> strMap = new Map<String,String>();
                         Map<String,String> blankDiscountMap = new Map<String,String>();
+                        Map<String,String> blankslabDiscountMap = new Map<String,String>();
                         Map<String,String> markUpnonSlabMap = new Map<String,String>();
                         Map<String,String> workersCompMap = new Map<String,String>();
                         Map<String,String> generalLiabMap = new Map<String,String>();
@@ -1232,6 +1235,7 @@ public with sharing class ManagePOlinesController {
                             // strMap.put(bomLine.Id, String.valueOf(bomLine.buildertek__Extended_Cost__c));
                             strMap.put(bomLine.Id, '0');
                             blankDiscountMap.put(bomLine.Id, '0');
+                            blankslabDiscountMap.put(bomLine.Id, '');
                         }
                         if(!returnMapVal.containsKey('buildertek__Fabrication_Install_Rate__c'))
                         {
@@ -1271,7 +1275,7 @@ public with sharing class ManagePOlinesController {
                         }
                         if(!returnMapVal.containsKey('buildertek__Slab_Discount_Rate_LongText__c'))
                         {
-                            returnMapVal.put('buildertek__Slab_Discount_Rate_LongText__c',blankDiscountMap );
+                            returnMapVal.put('buildertek__Slab_Discount_Rate_LongText__c',blankslabDiscountMap );
                         }
                         if(!returnMapVal.containsKey('buildertek__Fabrication_Labor_Mark_up_LongText__c'))
                         {

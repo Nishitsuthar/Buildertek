@@ -1,7 +1,8 @@
 ({
     doInit: function (component, event, helper) {
+        console.log('bt_fieldSetMassUpdate Controller callled===');
         var record = component.get("v.record");
-        
+        console.log('record=='+record);
         var field = component.get("v.field");
         if(field.name == 'buildertek__Contractor__c'){
             if (record != undefined) {
@@ -16,6 +17,10 @@
         if (record != undefined) {
             component.set("v.cellValue", record[field.name]);
             component.set("v.fieldName", field.name);
+            console.log('cellValue=='+record[field.name]);
+            console.log('field.Name==='+field.name);
+            console.log('field.type==='+field.type);
+            console.log('percentageValue=='+component.get("v.percentageValue"));
             if (field.type == 'STRING') {
                 component.set("v.isTextField", true);
                 //alert('hai');

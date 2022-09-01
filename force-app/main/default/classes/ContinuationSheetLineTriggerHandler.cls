@@ -29,6 +29,8 @@ public class ContinuationSheetLineTriggerHandler {
         
         buildertek__SOV_Continuation__c conSheetList = [select Id, Name,buildertek__SOV_Payment_Application__c from buildertek__SOV_Continuation__c where Id =: conSheetIdList[0]];
         
+        system.debug('conSheetList----->'+conSheetList);
+        
         list<SOV_Continuation_Sheet_Lines__c>  AllConSheetLineIds = [select Id, Name, buildertek__SOV_Continuation_Sheet__c from SOV_Continuation_Sheet_Lines__c where buildertek__SOV_Continuation_Sheet__c =:conSheetList.Id  Limit 10000];
         List<String> NewChildIds = new List<String>();
         
@@ -38,39 +40,99 @@ public class ContinuationSheetLineTriggerHandler {
             }
         }        
         
+        
+        
+        
         system.debug('NewChildIds------>'+NewChildIds);
-        buildertek__SOV_Payment_Application__c PaymentApp = [select Id, Name, buildertek__Total_Balance_To_Finish__c, buildertek__Total_Completed__c,buildertek__Total_Completed_From_Previous_App__c,buildertek__Net_Change_by_Change_Orders__c, buildertek__Total_Material_Stored_To_Date__c, buildertek__Original_Contract_Sum__c from buildertek__SOV_Payment_Application__c where Id =: conSheetList.buildertek__SOV_Payment_Application__c  Limit 10000];
-        List<buildertek__SOV_Payment_Application__c> newPaymentApp = [select Id, Name, buildertek__Total_Balance_To_Finish__c, buildertek__Total_Completed__c,buildertek__Total_Completed_From_Previous_App__c,buildertek__Net_Change_by_Change_Orders__c, buildertek__Total_Material_Stored_To_Date__c, buildertek__Original_Contract_Sum__c from buildertek__SOV_Payment_Application__c where Id =:PaymentApp.Id  Limit 10000];
+        
+        
+        String payApp =  conSheetList.buildertek__SOV_Payment_Application__c;
+        
+        
+        futureUpdatePayApp(payApp, NewChildIds);
+        
+     
+
+       // update newPaymentApp;
+        
+    }  
+    
+    
+    @future
+    public static void futureUpdatePayApp(String payApp, List<String> NewChildIds){
+                  
+        buildertek__SOV_Payment_Application__c PaymentApp = [select Id, Name, buildertek__Total_Balance_To_Finish__c, buildertek__Total_Completed__c,buildertek__Total_Completed_From_Previous_App__c,buildertek__Net_Change_by_Change_Orders__c, buildertek__Total_Material_Stored_To_Date__c, buildertek__Original_Contract_Sum__c from buildertek__SOV_Payment_Application__c where Id =: payApp  Limit 10000];
+        List<buildertek__SOV_Payment_Application__c> newPaymentApp = [select Id, Name,buildertek__Application_Number__c, buildertek__Total_Balance_To_Finish__c, buildertek__Total_Completed__c,buildertek__Total_Completed_From_Previous_App__c,buildertek__Net_Change_by_Change_Orders__c, buildertek__Total_Material_Stored_To_Date__c, buildertek__Original_Contract_Sum__c, RecordType.Name from buildertek__SOV_Payment_Application__c where Id =:PaymentApp.Id  Limit 10000];
         system.debug('new Payment App----->'+newPaymentApp);
-        List<AggregateResult> result = [SELECT SUM(buildertek__Balance_To_Finish__c )totalCost,SUM(buildertek__Work_Completed_from_Previous_Application__c)totalCompletedfromprevApp, SUM(buildertek__Work_Completed__c)totalCompleted, SUM(buildertek__Material_Presently_Stored__c)totalMaterialStored, SUM(buildertek__Scheduled_Value__c)totalContractSum  FROM SOV_Continuation_Sheet_Lines__c
-                                        WHERE Id IN: NewChildIds];
-        system.debug('********decodedPassword:' + result);
+        
+        system.debug('PaymentApp------>'+PaymentApp);
+        
+        
+        
+        
         if(!newPaymentApp.isEmpty()){
+            List<AggregateResult> result ;
+            
+            if(newPaymentApp[0].buildertek__Application_Number__c == 1){
+                result  = [SELECT SUM(buildertek__Balance_To_Finish__c )totalCost,SUM(buildertek__Vendor_Scheduled_Value__c )totalVendorContractSum,SUM(buildertek__Work_Completed_from_Previous_Application__c)totalCompletedfromprevApp, SUM(buildertek__Work_Completed__c)totalCompleted, SUM(buildertek__Material_Presently_Stored__c)totalMaterialStored, SUM(buildertek__Scheduled_Value__c)totalContractSum  FROM SOV_Continuation_Sheet_Lines__c
+                                            WHERE Id IN: NewChildIds AND buildertek__Budget_Grouping__c != 'Change Orders'];
+            system.debug('********decodedPassword:' + result);
+            }else{
+                  result = [SELECT SUM(buildertek__Balance_To_Finish__c )totalCost,SUM(buildertek__Vendor_Scheduled_Value__c )totalVendorContractSum,SUM(buildertek__Work_Completed_from_Previous_Application__c)totalCompletedfromprevApp, SUM(buildertek__Work_Completed__c)totalCompleted, SUM(buildertek__Material_Presently_Stored__c)totalMaterialStored, SUM(buildertek__Scheduled_Value__c)totalContractSum  FROM SOV_Continuation_Sheet_Lines__c
+                                            WHERE Id IN: NewChildIds];
+            system.debug('********decodedPassword:' + result);
+            }
+            
+           
+            
+            
             for(AggregateResult agg : result){
                 newPaymentApp[0].buildertek__Total_Balance_To_Finish__c = (decimal)agg.get('totalCost'); 
                 newPaymentApp[0].buildertek__Total_Completed__c = (decimal)agg.get('totalCompleted'); 
                 newPaymentApp[0].buildertek__Total_Completed_From_Previous_App__c = (decimal)agg.get('totalCompletedfromprevApp'); 
+                
                 newPaymentApp[0].buildertek__Total_Material_Stored_To_Date__c = (decimal)agg.get('totalMaterialStored');
-                system.debug('Original Sum--->'+ (decimal)agg.get('totalContractSum'));
-                system.debug('changeorder --->'+ PaymentApp.buildertek__Net_Change_by_Change_Orders__c);
-                newPaymentApp[0].buildertek__Original_Contract_Sum__c = (decimal)agg.get('totalContractSum')-PaymentApp.buildertek__Net_Change_by_Change_Orders__c;
-                system.debug('csdjc--->'+ ((decimal)agg.get('totalContractSum')-PaymentApp.buildertek__Net_Change_by_Change_Orders__c));
+                system.debug('cgiagciagc--> '+(decimal)agg.get('totalContractSum'));
+                system.debug('change orders net--.> '+PaymentApp.buildertek__Net_Change_by_Change_Orders__c);
+                if(newPaymentApp[0].RecordType.Name == 'AP'){
+                    if((decimal)agg.get('totalVendorContractSum') != null){
+                        if(newPaymentApp[0].buildertek__Application_Number__c == 1){
+                            newPaymentApp[0].buildertek__Original_Contract_Sum__c = (decimal)agg.get('totalVendorContractSum');
+                            
+                        }else{
+                            system.debug('netchange----k->'+PaymentApp.buildertek__Net_Change_by_Change_Orders__c);
+                            newPaymentApp[0].buildertek__Original_Contract_Sum__c = (decimal)agg.get('totalVendorContractSum')-PaymentApp.buildertek__Net_Change_by_Change_Orders__c;
+                            
+                        }
+                    }
+                }else{
+                    if(newPaymentApp[0].buildertek__Application_Number__c == 1){
+                        newPaymentApp[0].buildertek__Original_Contract_Sum__c = (decimal)agg.get('totalContractSum');
+                        
+                    }else{
+                        newPaymentApp[0].buildertek__Original_Contract_Sum__c = (decimal)agg.get('totalContractSum')-PaymentApp.buildertek__Net_Change_by_Change_Orders__c;
+                        
+                    }
+                }
             }
             
-            ContinuationSheetLineTriggerHandler.blnSkipAterInsertSheetLineTrigger = true;
-            update newPaymentApp;
-            ContinuationSheetLineTriggerHandler.blnSkipAterInsertSheetLineTrigger = false;
-            
-            
+            if (newPaymentApp.size() > 0){
+                ContinuationSheetLineTriggerHandler.blnSkipconSheetLineUpdateTrigger = false;
+                update newPaymentApp;
+                
+                
+                system.debug('newPaymentApp[078]---->'+newPaymentApp[0].buildertek__Original_Contract_Sum__c);
+                system.debug('newPaymentApp[1]98---->'+newPaymentApp[0].buildertek__Net_Change_by_Change_Orders__c);
+                
+                ContinuationSheetLineTriggerHandler.blnSkipconSheetLineUpdateTrigger = true;
+                
+                
+                
+            }
         }
         
-        system.debug('newPaymentApp[0]---->'+newPaymentApp[0].buildertek__Original_Contract_Sum__c);
-        system.debug('newPaymentApp[1]---->'+newPaymentApp[0].buildertek__Net_Change_by_Change_Orders__c);
-        newPaymentApp[0].buildertek__Original_Contract_Sum__c =  newPaymentApp[0].buildertek__Original_Contract_Sum__c - newPaymentApp[0].buildertek__Net_Change_by_Change_Orders__c;
-        
-        update newPaymentApp;
-        
-    }  
+    }
+    
     
     public void afterUpdate(List<SOV_Continuation_Sheet_Lines__c> oldconsheetline, List<SOV_Continuation_Sheet_Lines__c> newconsheetline, Map<Id, SOV_Continuation_Sheet_Lines__c> oldconsheetlineMap, Map<Id, SOV_Continuation_Sheet_Lines__c> newconsheetlineMap){
         
@@ -106,10 +168,21 @@ public class ContinuationSheetLineTriggerHandler {
             
             buildertek__SOV_Payment_Application__c PaymentApp = [select Id, Name, buildertek__Total_Balance_To_Finish__c, buildertek__Total_Completed__c,buildertek__Net_Change_by_Change_Orders__c, buildertek__Total_Material_Stored_To_Date__c, buildertek__Original_Contract_Sum__c from buildertek__SOV_Payment_Application__c where Id =: conSheetList[0].buildertek__SOV_Payment_Application__c  Limit 10000];
             
-            List<buildertek__SOV_Payment_Application__c> newPaymentApp = [select Id,RecordType.Name, Name, buildertek__Total_Balance_To_Finish__c,buildertek__Net_Change_by_Change_Orders__c, buildertek__Total_Completed__c, buildertek__Total_Material_Stored_To_Date__c, buildertek__Original_Contract_Sum__c from buildertek__SOV_Payment_Application__c where Id =:PaymentApp.Id  Limit 10000];
-            List<AggregateResult> result = [SELECT SUM(buildertek__Balance_To_Finish__c )totalCost,SUM(buildertek__Vendor_Scheduled_Value__c )totalVendorContractSum, SUM(buildertek__Work_Completed_from_Previous_Application__c)totalCompletedfromprevApp,SUM(buildertek__Work_Completed__c)totalCompleted, SUM(buildertek__Material_Presently_Stored__c)totalMaterialStored, SUM(buildertek__Scheduled_Value__c)totalContractSum  FROM SOV_Continuation_Sheet_Lines__c
+            List<buildertek__SOV_Payment_Application__c> newPaymentApp = [select Id,RecordType.Name, Name,buildertek__Application_Number__c, buildertek__Total_Balance_To_Finish__c,buildertek__Net_Change_by_Change_Orders__c, buildertek__Total_Completed__c, buildertek__Total_Material_Stored_To_Date__c, buildertek__Original_Contract_Sum__c from buildertek__SOV_Payment_Application__c where Id =:PaymentApp.Id  Limit 10000];
+           if(!newPaymentApp.isEmpty()){
+               
+            
+            List<AggregateResult> result ;
+            
+            if(newPaymentApp[0].buildertek__Application_Number__c == 1){
+                result  = [SELECT SUM(buildertek__Balance_To_Finish__c )totalCost,SUM(buildertek__Vendor_Scheduled_Value__c )totalVendorContractSum,SUM(buildertek__Work_Completed_from_Previous_Application__c)totalCompletedfromprevApp, SUM(buildertek__Work_Completed__c)totalCompleted, SUM(buildertek__Material_Presently_Stored__c)totalMaterialStored, SUM(buildertek__Scheduled_Value__c)totalContractSum  FROM SOV_Continuation_Sheet_Lines__c
+                                            WHERE Id IN: NewChildIds AND buildertek__Budget_Grouping__c != 'Change Orders'];
+            system.debug('********decodedPassword:' + result);
+            }else{
+                  result = [SELECT SUM(buildertek__Balance_To_Finish__c )totalCost,SUM(buildertek__Vendor_Scheduled_Value__c )totalVendorContractSum,SUM(buildertek__Work_Completed_from_Previous_Application__c)totalCompletedfromprevApp, SUM(buildertek__Work_Completed__c)totalCompleted, SUM(buildertek__Material_Presently_Stored__c)totalMaterialStored, SUM(buildertek__Scheduled_Value__c)totalContractSum  FROM SOV_Continuation_Sheet_Lines__c
                                             WHERE Id IN: NewChildIds];
-            if(!newPaymentApp.isEmpty()){
+            system.debug('********decodedPassword:' + result);
+            }
                 for(AggregateResult agg : result){
                     newPaymentApp[0].buildertek__Total_Balance_To_Finish__c = (decimal)agg.get('totalCost'); 
                     newPaymentApp[0].buildertek__Total_Completed__c = (decimal)agg.get('totalCompleted'); 
@@ -120,10 +193,22 @@ public class ContinuationSheetLineTriggerHandler {
                     system.debug('change orders net--.> '+PaymentApp.buildertek__Net_Change_by_Change_Orders__c);
                     if(newPaymentApp[0].RecordType.Name == 'AP'){
                         if((decimal)agg.get('totalVendorContractSum') != null){
-                            newPaymentApp[0].buildertek__Original_Contract_Sum__c = (decimal)agg.get('totalVendorContractSum')-PaymentApp.buildertek__Net_Change_by_Change_Orders__c;
+                            if(newPaymentApp[0].buildertek__Application_Number__c == 1){
+                                newPaymentApp[0].buildertek__Original_Contract_Sum__c = (decimal)agg.get('totalVendorContractSum');
+                                
+                            }else{
+                                newPaymentApp[0].buildertek__Original_Contract_Sum__c = (decimal)agg.get('totalVendorContractSum')-PaymentApp.buildertek__Net_Change_by_Change_Orders__c;
+                                
+                            }
                         }
                     }else{
-                        newPaymentApp[0].buildertek__Original_Contract_Sum__c = (decimal)agg.get('totalContractSum')-PaymentApp.buildertek__Net_Change_by_Change_Orders__c;
+                        if(newPaymentApp[0].buildertek__Application_Number__c == 1){
+                            newPaymentApp[0].buildertek__Original_Contract_Sum__c = (decimal)agg.get('totalContractSum');
+                            
+                        }else{
+                            newPaymentApp[0].buildertek__Original_Contract_Sum__c = (decimal)agg.get('totalContractSum')-PaymentApp.buildertek__Net_Change_by_Change_Orders__c;
+                            
+                        }
                     }
                 }
                 
@@ -141,6 +226,10 @@ public class ContinuationSheetLineTriggerHandler {
                     
                 }
             }
+            
+            
+            
+            
             
             //  Payment app balance to finish field populate  Start
             List<buildertek__SOV_Continuation_Sheet_Lines__c> insertedSheetLinesList = [SELECT Id,
@@ -425,11 +514,23 @@ public class ContinuationSheetLineTriggerHandler {
         
         buildertek__SOV_Payment_Application__c PaymentApp = [select Id, Name,buildertek__Net_Change_by_Change_Orders__c, buildertek__Total_Balance_To_Finish__c, buildertek__Total_Completed__c, buildertek__Total_Material_Stored_To_Date__c, buildertek__Original_Contract_Sum__c from buildertek__SOV_Payment_Application__c where Id =: conSheetList.buildertek__SOV_Payment_Application__c  Limit 10000];
         
-        List<buildertek__SOV_Payment_Application__c> newPaymentApp = [select Id, Name, buildertek__Total_Balance_To_Finish__c, buildertek__Total_Completed__c, buildertek__Total_Material_Stored_To_Date__c, buildertek__Original_Contract_Sum__c from buildertek__SOV_Payment_Application__c where Id =:PaymentApp.Id  Limit 10000];
+        List<buildertek__SOV_Payment_Application__c> newPaymentApp = [select Id, Name,buildertek__Application_Number__c, buildertek__Total_Balance_To_Finish__c, buildertek__Total_Completed__c, buildertek__Total_Material_Stored_To_Date__c, buildertek__Original_Contract_Sum__c from buildertek__SOV_Payment_Application__c where Id =:PaymentApp.Id  Limit 10000];
         
-        List<AggregateResult> result = [SELECT SUM(buildertek__Balance_To_Finish__c )totalCost, SUM(buildertek__Work_Completed__c)totalCompleted,SUM(buildertek__Work_Completed_from_Previous_Application__c)totalCompletedfromprevApp, SUM(buildertek__Material_Presently_Stored__c)totalMaterialStored, SUM(buildertek__Scheduled_Value__c)totalContractSum  FROM SOV_Continuation_Sheet_Lines__c
-                                        WHERE Id IN: NewChildIds];
         if(!newPaymentApp.isEmpty()){
+        
+            List<AggregateResult> result ;
+            
+            if(newPaymentApp[0].buildertek__Application_Number__c == 1){
+                result  = [SELECT SUM(buildertek__Balance_To_Finish__c )totalCost,SUM(buildertek__Vendor_Scheduled_Value__c )totalVendorContractSum,SUM(buildertek__Work_Completed_from_Previous_Application__c)totalCompletedfromprevApp, SUM(buildertek__Work_Completed__c)totalCompleted, SUM(buildertek__Material_Presently_Stored__c)totalMaterialStored, SUM(buildertek__Scheduled_Value__c)totalContractSum  FROM SOV_Continuation_Sheet_Lines__c
+                           WHERE Id IN: NewChildIds AND buildertek__Budget_Grouping__c != 'Change Orders'];
+                system.debug('********decodedPassword:' + result);
+            }else{
+                result = [SELECT SUM(buildertek__Balance_To_Finish__c )totalCost,SUM(buildertek__Vendor_Scheduled_Value__c )totalVendorContractSum,SUM(buildertek__Work_Completed_from_Previous_Application__c)totalCompletedfromprevApp, SUM(buildertek__Work_Completed__c)totalCompleted, SUM(buildertek__Material_Presently_Stored__c)totalMaterialStored, SUM(buildertek__Scheduled_Value__c)totalContractSum  FROM SOV_Continuation_Sheet_Lines__c
+                          WHERE Id IN: NewChildIds];
+                system.debug('********decodedPassword:' + result);
+            }
+            
+
             for(AggregateResult agg : result){
                 newPaymentApp[0].buildertek__Total_Balance_To_Finish__c = (decimal)agg.get('totalCost'); 
                 newPaymentApp[0].buildertek__Total_Completed__c = (decimal)agg.get('totalCompleted'); 
@@ -457,9 +558,10 @@ public class ContinuationSheetLineTriggerHandler {
                                                                                 buildertek__Grouping__c,
                                                                                 buildertek__Scheduled_Value__c,
                                                                                 buildertek__Budget_Grouping__c,
+                                                                                buildertek__Is_Created_In_This_App__c,
                                                                                 buildertek__SOV_Continuation_Sheet__c
                                                                                 FROM buildertek__SOV_Continuation_Sheet_Lines__c
-                                                                                where buildertek__SOV_Continuation_Sheet__c in: sheetId and buildertek__Budget_Grouping__c='Change Orders' Limit 10000 ];
+                                                                                where buildertek__SOV_Continuation_Sheet__c in: sheetId and buildertek__Budget_Grouping__c='Change Orders' AND buildertek__Is_Created_In_This_App__c = true  Limit 10000 ];
         List<buildertek__SOV_Continuation__c> csheet=[SELECT Id, Name, buildertek__SOV_Payment_Application__c FROM buildertek__SOV_Continuation__c where id in : sheetId limit 1];
         if(!csheet.isEmpty()){
             List<buildertek__SOV_Payment_Application__c> paymentApp=[SELECT Id,

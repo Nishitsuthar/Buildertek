@@ -21,6 +21,8 @@ trigger ContinuationSheetLineTrigger on SOV_Continuation_Sheet_Lines__c (after i
     }
     
     if (Trigger.isInsert && Trigger.isAfter){
+        
+        handler.afterInsert(Trigger.new, Trigger.newMap);
          
         if (ContinuationSheetLineTriggerHandler.blnSkipAterInsertSheetLineTrigger ){
                 system.debug('insert1'+ContinuationSheetLineTriggerHandler.blnSkipAterInsertSheetLineTrigger );
@@ -28,7 +30,6 @@ trigger ContinuationSheetLineTrigger on SOV_Continuation_Sheet_Lines__c (after i
         }
         handler.afterUpdate(Trigger.old, Trigger.new, Trigger.oldMap, Trigger.newMap);
         ContinuationSheetLineTriggerHandler.updatePaymentAppStatusBasedOnConSheetLinesStatus(Trigger.New);
-         // handler.afterInsert(Trigger.new, Trigger.newMap);
          // ContinuationSheetLineTriggerHandler.updatePaymentApplication(Trigger.new);
     }
     if (Trigger.isUpdate && Trigger.isAfter){

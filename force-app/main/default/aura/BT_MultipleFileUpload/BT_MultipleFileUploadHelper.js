@@ -1,21 +1,21 @@
 ({
-    getExistingFiles: function (component) {
-        var sObjectId = component.get("v.sObjectId");
-        var action = component.get("c.getAllFilesOnsObjectRecord");
-        action.setParams({
-            sObjectId: sObjectId
-        });
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var existingFilesArr = response.getReturnValue();
-                if (existingFilesArr != null && existingFilesArr != undefined && existingFilesArr.length > 0) {
-                    component.set("v.sObjectAttachedFiles", existingFilesArr);
-                }
-            }
-        });
-        $A.enqueueAction(action);
-    },
+    // getExistingFiles: function (component) {
+    //     var sObjectId = component.get("v.sObjectId");
+    //     var action = component.get("c.getAllFilesOnsObjectRecord");
+    //     action.setParams({
+    //         sObjectId: sObjectId
+    //     });
+    //     action.setCallback(this, function (response) {
+    //         var state = response.getState();
+    //         if (state === "SUCCESS") {
+    //             var existingFilesArr = response.getReturnValue();
+    //             if (existingFilesArr != null && existingFilesArr != undefined && existingFilesArr.length > 0) {
+    //                 component.set("v.sObjectAttachedFiles", existingFilesArr);
+    //             }
+    //         }
+    //     });
+    //     $A.enqueueAction(action);
+    // },
 
     handleUploadFinished: function (component, event) {
         var uploadedFileArr = [];

@@ -506,7 +506,7 @@
         }
         
         
-      
+        console.log("Pricebook search field<<<<*****>>>>>>", component.get("v.pricebookName"));
         
         
         var action = component.get("c.createTakeOffLinesRecords");

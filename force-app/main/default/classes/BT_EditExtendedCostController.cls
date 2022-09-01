@@ -16,6 +16,7 @@ public with sharing class BT_EditExtendedCostController
         {
             Porecord = [Select Id, Name,buildertek__Type__c,buildertek__Textura_Fee__c,buildertek__Edge__c,buildertek__Options_Rate__c,buildertek__Miscellaneous_Rates__c,buildertek__Workers_Comp__c,buildertek__Fabrication_Install_Rate__c,buildertek__Mark_Up_Non_Slab_or_Labor__c,buildertek__Install_Only__c,buildertek__OCIP_CCIP_Required__c,buildertek__CCIP__c,buildertek__General_Liability_Insurance_Long__c,buildertek__OCIP_CCIP__c,buildertek__Fab_Only_Rate__c,LastModifiedBy.Name, buildertek__Region_State_Country_County__c,buildertek__Tax_Rate_1__c,buildertek__Tax_Rate_2__c,buildertek__Slab_Discount_Rate_LongText__c,buildertek__Fabrication_Labor_Mark_up_LongText__c,buildertek__Tax_on_Fabrication_Required__c from buildertek__Project_Selection_Sheet_Takeoff__c  where Id =: recordId LIMIT 1];
         }
+        System.debug('Porecord=='+Porecord);
         return Porecord;
     }
     @AuraEnabled 
@@ -74,6 +75,8 @@ public with sharing class BT_EditExtendedCostController
         {
             if(String.isNotBlank(bomId) && String.isNotBlank(fieldName))
             {
+                System.debug('fieldName==='+fieldName);
+                System.debug('bomId=='+bomId);
                 String query = 'SELECT ';
                 String fields= ' Id, Name,buildertek__Selection_Sheet_Takeoff__r.buildertek__OCIP_CCIP_Required__c,buildertek__Tax__c,buildertek__BL_LIST_PRICE_F__c,buildertek__BL_LIST_PRICE__c, buildertek__Pricebook_Name__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Options_Rate__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Fabrication_Labor_Mark_up_LongText__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Slab_Discount_Rate_LongText__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Textura_Fee__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__General_Liability_Insurance_Long__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Fabrication_Install_Rate__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Miscellaneous_Rates__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__Fab_Only_Rate__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Edge__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__Install_Only__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__Mark_Up_Non_Slab_or_Labor__c, ';
                 fields = fields + 'buildertek__Product__r.ProductCode , buildertek__Selection_Sheet_Takeoff__r.buildertek__Workers_Comp__c,buildertek__Takeoff_Line__r.buildertek__Product_Code__c, buildertek__Service_Category__c, buildertek__BL_SERVICE_CATEGORY__c, buildertek__Takeoff_Line__r.buildertek__Build_Phase__c, buildertek__Takeoff_Line__r.buildertek__Build_Phase__r.Name,buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c, buildertek__Takeoff_Line__r.Name, buildertek__BL_UNIT_COST__c, buildertek__Quantity__c, buildertek__Takeoff_Line__r.buildertek__UOM_PL__c  ';
@@ -159,10 +162,10 @@ public with sharing class BT_EditExtendedCostController
                         !thisBomLine.buildertek__Service_Category__c.equalsIgnoreCase('Slab - Quartz') &&
                         !thisBomLine.buildertek__Service_Category__c.equalsIgnoreCase('Slab - Granite') &&
                         !thisBomLine.buildertek__Service_Category__c.equalsIgnoreCase('Slab - Porcelain') &&
-                        !thisBomLine.buildertek__Service_Category__c.equalsIgnoreCase('Work Comp') &&
                         !thisBomLine.buildertek__Service_Category__c.equalsIgnoreCase('Ins') &&
                         !thisBomLine.buildertek__Service_Category__c.equalsIgnoreCase('Fabrication') && 
                         !thisBomLine.buildertek__Service_Category__c.equalsIgnoreCase('Labor') &&*/
+                        && !thisBomLine.buildertek__Service_Category__c.equalsIgnoreCase('OCIP')
                          && ( (String.isBlank(thisBomLine.buildertek__BL_SERVICE_CATEGORY__c)) || 
                         (String.isNotBlank(thisBomLine.buildertek__BL_SERVICE_CATEGORY__c) && 
                         !thisBomLine.buildertek__BL_SERVICE_CATEGORY__c.equalsIgnoreCase('Fab') && 
@@ -269,7 +272,10 @@ public with sharing class BT_EditExtendedCostController
                                  && ((String.isNotBlank(thisBomLine.buildertek__BL_SERVICE_CATEGORY__c) 
                                       && thisBomLine.buildertek__BL_SERVICE_CATEGORY__c.equalsIgnoreCase('Option')) ||
                         (String.isNotBlank(thisBomLine.buildertek__Takeoff_Line__r.buildertek__Build_Phase__c) && thisBomLine.buildertek__Takeoff_Line__r.buildertek__Build_Phase__r.Name.equalsIgnoreCase('Option'))) &&
-                        !textursProdCodes.contains(thisBomLine.buildertek__Takeoff_Line__r.buildertek__Product_Code__c) )
+                        !textursProdCodes.contains(thisBomLine.buildertek__Takeoff_Line__r.buildertek__Product_Code__c) 
+                        && !thisBomLine.buildertek__Service_Category__c.equalsIgnoreCase('OCIP')
+                        && !thisBomLine.buildertek__Service_Category__c.equalsIgnoreCase('Work Comp')
+                        && !thisBomLine.buildertek__Service_Category__c.equalsIgnoreCase('Insurance'))
                         {
                             System.debug('#@#@OPtions');
 
@@ -349,6 +355,7 @@ public with sharing class BT_EditExtendedCostController
                                 row.add(new fieldWrap('List Price',String.valueOf(thisBomLine.buildertek__BL_LIST_PRICE__c),false));
                                 row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Slab_Discount_Rate_LongText__c),false));
                                 String placeholderDefaultValuefordiscount = getParcentValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Slab_Discount_Rate_LongText__c);
+                                System.debug('placeholderDefaultValuefordiscount-->'+placeholderDefaultValuefordiscount);
                                 if(String.isBlank(placeholderDefaultValuefordiscount)) {
                                     Decimal disucountvalue = 0.450 * -1;
                                     placeholderDefaultValuefordiscount = String.valueOf(disucountvalue);
@@ -414,6 +421,8 @@ public with sharing class BT_EditExtendedCostController
                                (thisBomLine.buildertek__Takeoff_Line__r.buildertek__Build_Phase__r.Name.equalsIgnoreCase('Base') 
                                 || thisBomLine.buildertek__Takeoff_Line__r.buildertek__Build_Phase__r.Name.equalsIgnoreCase('Option'))) 
                         {
+                            System.debug('thisBomLine.buildertek__BL_SERVICE_CATEGORY__c=='+thisBomLine.buildertek__BL_SERVICE_CATEGORY__c);
+                            System.debug('thisBomLine.buildertek__Takeoff_Line__r.buildertek__Build_Phase__r.Name=='+thisBomLine.buildertek__Takeoff_Line__r.buildertek__Build_Phase__r.Name);
                             workersCompId = String.valueOf(thisBomLine.Id);
                             String totalCost = '';
                             set<String> fieldNames = new set<String>();
@@ -425,6 +434,7 @@ public with sharing class BT_EditExtendedCostController
 
                             for(String fieldString : fieldNames)
                             {
+                                System.debug('fieldString=='+fieldString);
                                 totalCost = getExtendedCostFromDB(thisBomLine.Id,fieldString,thisBomLine.buildertek__Quantity__c);
                                 System.debug('#@#@ totalCost--'+totalCost);
                                 if(String.isNotBlank(totalCost))
@@ -466,6 +476,7 @@ public with sharing class BT_EditExtendedCostController
                         List<fieldWrap> row = new List<fieldWrap>();
                         row.add(new fieldWrap('Id',workersCompId,false));
                         row.add(new fieldWrap('Id',workersCompId,false));
+                        System.debug('totalExtendedCost==='+String.valueOf(totalExtendedCost));
                         row.add(new fieldWrap('Install Cost',String.valueOf(totalExtendedCost),false));
                         String nominatorVal = '';
                         String deNominatorVal = '100';
@@ -502,6 +513,9 @@ public with sharing class BT_EditExtendedCostController
                                 {
                                     rateValue = String.valueOf(rateVal);
                                 }
+                            }
+                            else{
+                                nominatorVal = '1.11'; //added on 24th Aug,2022 fro setting default value in Rate at workers comp
                             }
                         }
                         
@@ -640,6 +654,9 @@ public with sharing class BT_EditExtendedCostController
     @TestVisible
     private Static String getExtendedCostFromDB(String bomLineId,String longText,Decimal quantity)
     {
+        System.debug('bomLineId=='+bomLineId);
+        System.debug('longText=='+longText);
+        System.debug('quantity=='+quantity);
         String rateValToReturn = '';
         if(String.isNotBlank(bomLineId) && String.isNotBlank(longText) && quantity != null)
         {
@@ -649,16 +666,21 @@ public with sharing class BT_EditExtendedCostController
 
             for(buildertek.ManagePOlinesController.ExtendedCostWrap wrapObj : wrapperList)
             {
+                System.debug('wrapObj.bomLineId=='+wrapObj.bomLineId);
+                System.debug('bomLineId=='+bomLineId);
                 if(wrapObj.bomLineId == bomLineId)
                 {
                     System.debug('#@#@ BOMLINE MAtched Extended Cost'+wrapObj.bomLineId+'----Quantity---'+quantity+'---wrapObj.singleExtendedCostVal--'+wrapObj.singleExtendedCostVal);
                     //rateValToReturn = wrapObj.extendedCostVal;
                     Decimal singleCost = 0;
+                    System.debug('wrapObj.singleExtendedCostVal=='+wrapObj.singleExtendedCostVal);
                     if(String.isNotBlank(wrapObj.singleExtendedCostVal))
                     {
                         singleCost= Decimal.valueOf(wrapObj.singleExtendedCostVal);
                     }
                     //Decimal Quantity = Decimal.valueOf(quantity);
+                    System.debug('singleCost=='+singleCost);
+                    System.debug('quantity=='+quantity);
                     Decimal valToReturn = singleCost * quantity;
                     rateValToReturn = String.valueOf(valToReturn.setScale(2));
                 }
@@ -708,7 +730,7 @@ public with sharing class BT_EditExtendedCostController
                 System.debug('#@#@jsonString--'+jsonString);
                 List<List<fieldWrap>> finalWrapList = (List<List<fieldWrap>>)JSON.deserialize(jsonString, List<List<fieldWrap>>.Class);
                 System.debug('**            finalWrapList-------------------------------->:' + finalWrapList);
-
+                System.debug('**            finalWrapList-------------------------------->:' + finalWrapList.size());    
                 if(finalWrapList != null && finalWrapList.size()>0)
                 {
                     for(List<fieldWrap> dataList : finalWrapList)
@@ -728,6 +750,7 @@ public with sharing class BT_EditExtendedCostController
                             }
                             else if(wrapObj.label == 'Percentage To Apply')
                             {
+                                System.debug('wrapObj.value Percentage To Apply-->'+wrapObj.value);
                                 singleWrapper.percentageVal = wrapObj.value;
                             }
                             else if(wrapObj.label == 'Extended Cost')
@@ -781,6 +804,7 @@ public with sharing class BT_EditExtendedCostController
                     {
                         buildertek__Project_Selection_Sheet_Takeoff__c bomToUpdate = new buildertek__Project_Selection_Sheet_Takeoff__c();
                         bomToUpdate.Id = bomId;
+                        System.debug('bomId-->'+bomId);
 
                         if(fieldToUpdate.equals('buildertek__Fabrication_Install_Rate__c'))
                         {
@@ -841,7 +865,7 @@ public with sharing class BT_EditExtendedCostController
                             bomToUpdate.buildertek__OCIP_CCIP__c = getOCIPValue(bomId,wrapperList,fieldToUpdate);
                         }
                         
-
+                        System.debug('bomToUpdate-->'+bomToUpdate);
                         update bomToUpdate;
 
 

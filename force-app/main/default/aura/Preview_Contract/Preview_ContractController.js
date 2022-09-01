@@ -25,6 +25,7 @@
 	},
 	
 	preiewEmailTemplate : function(component, event, helper) {
+	    component.set("v.Spinner", true);
 	    var selectedTemplate = component.get("v.selectedTemplate");
 	    //alert('selectedTemplate ----------> '+selectedTemplate);
 	    if(selectedTemplate != undefined){
@@ -63,6 +64,7 @@
                     window.signaturePad.clear();
                     }
                 }
+                component.set("v.Spinner", false);
             },3000);
 	},
 	
@@ -181,5 +183,35 @@
         }
         
         
-	}
+	},
+
+    preview : function(component, event, helper){
+        try {
+            component.set("v.Spinner", true);
+            component.set("v.contractlines", '');
+            component.set("v.selectedTemplate", "");
+            component.set("v.isTemplateSelected", false);
+            var dbAction = component.get("c.getTemplates");
+            dbAction.setParams({
+                recordId : component.get("v.recordId")
+            });
+            dbAction.setCallback(this, function (response) {
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    component.set("v.templates", response.getReturnValue());
+                    component.set("v.Spinner", false);
+                    if(response.getReturnValue()[0].Name == 'Contract Template 1'){
+                        component.set("v.Header",'Contract');
+                    }
+                    else{
+                        component.set("v.Header",'Quote');
+                    }
+                }
+            });
+            $A.enqueueAction(dbAction);   
+        } catch (error) {
+            component.set("v.Spinner", false);
+	        $A.get("e.force:closeQuickAction").fire();    
+        }
+    }
 })

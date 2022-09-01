@@ -377,10 +377,10 @@ public class AddProductForSSTLTest {
         takeOffLineList.add(String.valueOf(projectTakeOffLines[0].Id));
         List<String> productIdList = new List<String>();
         productIdList.add(String.valueOf(pro[0].Id));
-        AddProductForSSTL.createTakeOffLinesRecords(prodcutIds,String.valueOf(selectionSheetTakeOff[0].id),1,1,1,1,1,1,'','','',productIdList,takeOffLineList,project[0].Id,String.valueOf(pbList[0].Id));
-        AddProductForSSTL.getFiledNameAndApi();
-        AddProductForSSTL.getProductFiledNameAndApi();
-        AddProductForSSTL.getBOMLineFiledNameAndApi();
+        //AddProductForSSTL.createTakeOffLinesRecords(prodcutIds,String.valueOf(selectionSheetTakeOff[0].id),1,1,1,1,1,1,'','','',productIdList,takeOffLineList,project[0].Id,String.valueOf(pbList[0].Id));
+        //AddProductForSSTL.getFiledNameAndApi();
+        //AddProductForSSTL.getProductFiledNameAndApi();
+        //AddProductForSSTL.getBOMLineFiledNameAndApi();
         //AddProductForSSTL.fetchObjectRecords();
         //AddProductForSSTL.MessageClass  msgClsObj = new AddProductForSSTL.MessageClass();
         //String Status = msgClsObj.Status;

@@ -1,32 +1,86 @@
 public class OrderPOFromProjectController {
     @AuraEnabled
-    public static object getMasterBudgets(String recId){
+    public static object getMasterBudgets(String recId, Integer pageNumber, Integer pageSize, String poFilter, String poLineFilter, String tradeTypeFilter, String projectFilter){
         
-        map<String , List<buildertek__Purchase_Order__c>> GroupingMap = new map<String , List<buildertek__Purchase_Order__c>>(); 
+        system.debug('pageNumber--------->'+pageNumber);
+        system.debug('pageSize----------->'+pageSize);
+        
+        Integer offset;
+        offset = (pageNumber - 1) * pageSize;
+        Integer totalRecords = 0;
+        Integer recordEnd = pageSize * pageNumber;
+        string orgCurr = UserInfo.getDefaultCurrency();
+        
+        String query = 'Select COUNT() FROM buildertek__Purchase_Order__c';
+        if(poFilter != ''){
+            
+            if(poFilter != '' && poFilter != null){
+                query = query+ ' Where (buildertek__Vendor__r.Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
+                query = query+ ' or (Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
+                query = query+ ' or (buildertek__Status__c LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
+                query = query+ ' or (buildertek__Project__r.Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
+                
+            }
+            totalRecords = Database.countQuery(query);
+            
+        }else if(tradeTypeFilter != ''){
+            if(tradeTypeFilter != '' && tradeTypeFilter != null){
+                query = query+ ' Where (buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name LIKE \'%'+String.escapeSingleQuotes(tradeTypeFilter)+'%\')';
+            }
+            totalRecords = Database.countQuery(query);
+        } else if(projectFilter != ''){
+            if(projectFilter != '' && projectFilter != null){
+                query = query+ ' Where (buildertek__Vendor__r.Name LIKE \'%'+String.escapeSingleQuotes(projectFilter)+'%\')';
+            }
+            totalRecords = Database.countQuery(query);
+        }
+
+        else{
+            totalRecords = [SELECT COUNT() FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId AND buildertek__Phase__c != '']; 
+        }
         
         List<MasterBudgetsClass> MasterBudgetsClassList = new List<MasterBudgetsClass>();
-        
         List<buildertek__Purchase_Order__c> nullspoRecList;
-        
         List<buildertek__Purchase_Order__c> MainpoRecList = new List<buildertek__Purchase_Order__c>();
+        String queryList = 'SELECT Id, Name, buildertek__Type__c,toLabel(buildertek__Phase__c),buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name,buildertek__Vendor__r.buildertek__Email_Address__c,buildertek__Status__c,buildertek__Description__c,buildertek__Change_Order__c,buildertek__Change_Order__r.Name, buildertek__PO_Total__c, buildertek__Paid_Amount__c, buildertek__PO_Balance__c, buildertek__Date_Ordered__c, buildertek__Project__c, buildertek__Project__r.Name,';
+        queryList = queryList +  ' (SELECT Id, Name, buildertek__Purchase_Order__c,buildertek__Total_Price__c,buildertek__Tax__c, buildertek__Purchase_Order__r.Name, buildertek__Quantity__c, buildertek__Unit_Price__c, buildertek__Description__c, buildertek__Total_Amount_Tax__c from Purchase_Order_Items__r) FROM buildertek__Purchase_Order__c';
+        queryList = queryList+ ' WHERE buildertek__Project__c =: recId ';
+        if(poFilter != '' || tradeTypeFilter != '' || projectFilter != ''){
+            if(poFilter != ''){
+                
+                queryList = queryList+ ' AND (buildertek__Vendor__r.Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\'';
+                
+                queryList = queryList+ ' or Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\'';
+                
+                queryList = queryList+ ' or buildertek__Status__c LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\'';
+                queryList = queryList+ ' or buildertek__Project__r.Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
+
+            }
+            if(tradeTypeFilter != ''){
+                if(tradeTypeFilter != '' && tradeTypeFilter != null){
+                    queryList = queryList+ ' AND (buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name LIKE \'%'+String.escapeSingleQuotes(tradeTypeFilter)+'%\')';
+                }
+            }
+            if(projectFilter != ''){
+                if(projectFilter != '' && projectFilter != null){
+                    queryList = queryList+ ' AND (buildertek__Vendor__r.Name LIKE \'%'+String.escapeSingleQuotes(projectFilter)+'%\')';
+                }
+                
+            }
+
+            queryList = queryList+ ' ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC';
+            MainpoRecList = Database.query(queryList); 
+        }
         
-        If(Schema.sObjectType.buildertek__Purchase_Order__c.fields.Name.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Phase__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Vendor__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Status__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Description__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__PO_Total__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Paid_Amount__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Change_Order__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Date_Ordered__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__PO_Balance__c.isAccessible()){ 
-               MainpoRecList = [SELECT Id,
+        else if(poLineFilter != ''){
+            MainpoRecList = [SELECT Id,
                                 Name, 
                                 buildertek__Type__c,
                                 toLabel(buildertek__Phase__c),
                                 buildertek__Vendor__c,
                                 buildertek__Vendor__r.Name,
                                 buildertek__Vendor__r.buildertek__Email_Address__c,
+                                buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name,
                                 buildertek__Status__c,
                                 buildertek__Description__c,
                                 buildertek__Change_Order__c,
@@ -35,68 +89,164 @@ public class OrderPOFromProjectController {
                                 buildertek__Paid_Amount__c,
                                 buildertek__PO_Balance__c,
                                 buildertek__Date_Ordered__c,
-                                buildertek__Project__c
-                                FROM buildertek__Purchase_Order__c Where buildertek__Project__c =: recId AND buildertek__Phase__c != ''  ORDER BY buildertek__Phase__c  ASC NULLS last, Name DESC, buildertek__Status__c ASC];    
-           }
-        
-        
-        If(Schema.sObjectType.buildertek__Purchase_Order__c.fields.Name.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Phase__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Vendor__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Status__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Description__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__PO_Total__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Paid_Amount__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Date_Ordered__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Change_Order__c.isAccessible() &&
-           Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__PO_Balance__c.isAccessible()){ 
-               nullspoRecList = [SELECT Id,
-                                 Name, 
-                                 buildertek__Type__c,
-                                 toLabel(buildertek__Phase__c),
-                                 buildertek__Vendor__c,
-                                 buildertek__Vendor__r.Name,
-                                 buildertek__Vendor__r.buildertek__Email_Address__c,
-                                 buildertek__Change_Order__c,
-                                 buildertek__Change_Order__r.Name,
-                                 buildertek__Status__c,
-                                 buildertek__Description__c,
-                                 buildertek__PO_Total__c,
-                                 buildertek__Paid_Amount__c,
-                                 buildertek__PO_Balance__c,
-                                 buildertek__Date_Ordered__c,
-                                 buildertek__Project__c
-                                 FROM buildertek__Purchase_Order__c Where buildertek__Project__c =: recId AND buildertek__Phase__c = ''  ORDER BY buildertek__Phase__c  ASC NULLS last, Name DESC, buildertek__Status__c ASC];    
-           }
-        
-        if(nullspoRecList.size()>0){
-            MainpoRecList.addAll(nullspoRecList);
+                                buildertek__Project__c,
+                                buildertek__Project__r.Name,(SELECT Id, Name, 
+                                                            buildertek__Purchase_Order__c, 
+                                                            buildertek__Purchase_Order__r.Name,
+                                                            buildertek__Quantity__c,
+                                                            buildertek__Unit_Price__c,
+                                                            buildertek__Description__c,
+                                                            buildertek__Tax__c,
+                                                            buildertek__Total_Price__c,
+                                                            buildertek__Total_Amount_Tax__c FROM Purchase_Order_Items__r)
+                                FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC ];    
+        }else {
+            MainpoRecList = [SELECT Id,
+                                Name, 
+                                buildertek__Type__c,
+                                toLabel(buildertek__Phase__c),
+                                buildertek__Vendor__c,
+                                buildertek__Vendor__r.Name,
+                                buildertek__Vendor__r.buildertek__Email_Address__c,
+                                buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name,
+                                buildertek__Status__c,
+                                buildertek__Description__c,
+                                buildertek__Change_Order__c,
+                                buildertek__Change_Order__r.Name,
+                                buildertek__PO_Total__c,
+                                buildertek__Paid_Amount__c,
+                                buildertek__PO_Balance__c,
+                                buildertek__Date_Ordered__c,
+                                buildertek__Project__c,
+                                buildertek__Project__r.Name,(SELECT Id, Name, 
+                                                            buildertek__Purchase_Order__c, 
+                                                            buildertek__Purchase_Order__r.Name,
+                                                            buildertek__Quantity__c,
+                                                            buildertek__Unit_Price__c,
+                                                            buildertek__Description__c,
+                                                            buildertek__Tax__c,
+                                                            buildertek__Total_Price__c,
+                                                            buildertek__Total_Amount_Tax__c FROM Purchase_Order_Items__r)
+                                FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC  LIMIT :pageSize OFFSET :offset];    
         }
+        System.debug('MainpoRecList>>>'+MainpoRecList);
+        map<String , List<buildertek__Purchase_Order__c>> GroupingMap = new map<String , List<buildertek__Purchase_Order__c>>(); 
         
         for(buildertek__Purchase_Order__c POrec : MainpoRecList){
-            if(GroupingMap.get(POrec.buildertek__Phase__c) == null){
-                GroupingMap.put(POrec.buildertek__Phase__c , new List<buildertek__Purchase_Order__c>());
+            if(POrec.Purchase_Order_Items__r.size() > 0){
+                if(GroupingMap.get(POrec.buildertek__Phase__c) == null){
+                    GroupingMap.put(POrec.buildertek__Phase__c , new List<buildertek__Purchase_Order__c>());
+                }
+                GroupingMap.get(POrec.buildertek__Phase__c).add(POrec);
             }
-            GroupingMap.get(POrec.buildertek__Phase__c).add(POrec);
         }
-        
-        
+        System.debug('GroupingMap>>>'+GroupingMap);
         for(String PO : GroupingMap.keySet()){
             MasterBudgetsClass MasterBudgetsClassRecord = new MasterBudgetsClass(); 
             MasterBudgetsClassRecord.groupName = PO;
             MasterBudgetsClassRecord.poCheck = false;
-            MasterBudgetsClassRecord.poRecordList = GroupingMap.get(PO);
-            List<POInnerClass> POInnerClassList = new List<POInnerClass>();
-            for(buildertek__Purchase_Order__c PO1 : GroupingMap.get(PO)){
-                POInnerClass POInnerClassRecord = new POInnerClass();
-                POInnerClassRecord.poCheck = false;
-                POInnerClassRecord.poRecord = PO1;
-                POInnerClassList.add(POInnerClassRecord); 
+            MasterBudgetsClassRecord.expanded = false; 
+            MasterBudgetsClassRecord.pageSize = pageSize;
+            if(poFilter != '' || poLineFilter != ''){
+                MasterBudgetsClassRecord.pageNumber = 1;  
+            }else{
+                MasterBudgetsClassRecord.pageNumber = pageNumber;
             }
-            MasterBudgetsClassRecord.poRecInner = POInnerClassList;
-            MasterBudgetsClassList.add(MasterBudgetsClassRecord);
+            MasterBudgetsClassRecord.recordStart = offset + 1;
+            MasterBudgetsClassRecord.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
+            MasterBudgetsClassRecord.totalRecords = totalRecords; 
+            MasterBudgetsClassRecord.orgCurr = orgCurr;
+            
+            List<POInnerClass> POInnerClassList = new List<POInnerClass>();
+            List<POLinesWrapper> POLinesList = new List<POLinesWrapper>(); 
+            
+            for(buildertek__Purchase_Order__c PO1 : GroupingMap.get(PO)){
+                system.debug('varmatest--->'+PO1.Purchase_Order_Items__r.size());
+                if(PO1.Purchase_Order_Items__r.size() > 0){
+                    POInnerClass POInnerClassRecord = new POInnerClass();
+                    POLinesList = new List<POLinesWrapper>();
+                    for(buildertek__Purchase_Order_Item__c lines : PO1.Purchase_Order_Items__r){
+                        POLinesWrapper POLi = new POLinesWrapper();
+                        if(poLineFilter != '' && poLineFilter != null){
+                            if(lines.buildertek__Description__c != null && lines.buildertek__Description__c != ''){
+                                if(lines.Name.toLowercase().contains(poLineFilter.toLowercase())){
+                                    POLi.RecordId = lines.Id;
+                                    POLi.Name = lines.Name;
+                                    system.debug('innerif'+lines.buildertek__Description__c);
+                                    POLi.Description = lines.buildertek__Description__c;
+                                    POLi.PurchaseOrder = lines.buildertek__Purchase_Order__r.Name;
+                                    POLi.Quantity = lines.buildertek__Quantity__c;
+                                    POLi.UnitCost = lines.buildertek__Unit_Price__c ;
+                                    POLi.TaxRate = lines.buildertek__Tax__c ;
+                                    POLi.TotalPrice = lines.buildertek__Total_Price__c ;
+                                    POLi.TotalCost = lines.buildertek__Total_Amount_Tax__c;
+                                    POLi.expanded = false;
+                                    POLi.PORow = false;
+                                    POLi.poLineCheck = false;
+                                    POLinesList .add(POLi); 
+                                }
+                            }
+                        }else{
+                            system.debug('else');
+                            POLi.RecordId = lines.Id;
+                            POLi.Name = lines.Name;
+                            POLi.Description = lines.buildertek__Description__c;
+                            POLi.PurchaseOrder = lines.buildertek__Purchase_Order__r.Name;
+                            POLi.Quantity = lines.buildertek__Quantity__c;
+                            POLi.UnitCost = lines.buildertek__Unit_Price__c ;
+                            POLi.TaxRate = lines.buildertek__Tax__c ;
+                            POLi.TotalPrice = lines.buildertek__Total_Price__c ;
+                            POLi.TotalCost = lines.buildertek__Total_Amount_Tax__c;
+                            POLi.expanded = false;
+                            POLi.PORow = false;
+                            POLi.poLineCheck = false;
+                            POLinesList .add(POLi);  
+                        }
+                        
+                    }
+
+                    if (POLinesList.size() > 0) {
+                        POLinesWrapper POLi1 = new POLinesWrapper();
+                        POLi1.coastType =  'PO Total';
+                        POLi1.coastValue = PO1.buildertek__PO_Total__c;
+                        POLi1.PORow = true;
+                        POLinesList.add(POLi1);  
+    
+                        POLinesWrapper POLi2 = new POLinesWrapper();
+                        POLi2.coastType =  'Paid Amount';
+                        POLi2.coastValue = PO1.buildertek__Paid_Amount__c;
+                        POLi2.PORow = true;
+                        POLinesList.add(POLi2); 
+    
+                        POLinesWrapper POLi3 = new POLinesWrapper();
+                        POLi3.coastType =  'PO Balance';
+                        POLi3.coastValue = PO1.buildertek__PO_Balance__c;
+                        POLi3.PORow = true;
+                        POLinesList.add(POLi3); 
+                    }
+                    
+                    POInnerClassRecord.poLinesWrapper = POLinesList;
+                    POInnerClassRecord.poCheck = false;
+                    POInnerClassRecord.poRecord = PO1;
+                    POInnerClassRecord.expanded = false;
+                    
+                    if(POLinesList.size() > 0){
+                        POInnerClassList.add(POInnerClassRecord); 
+                    }
+                }
+            }
+            
+            system.debug('polinelist Size'+POInnerClassList.size());
+            if(POInnerClassList.size() > 0){
+                
+                MasterBudgetsClassRecord.poRecordList = GroupingMap.get(PO);
+                MasterBudgetsClassRecord.poRecInner = POInnerClassList; 
+            }
+            
+            MasterBudgetsClassList.add(MasterBudgetsClassRecord); 
+            
         }
-        
+
         return  MasterBudgetsClassList;   
     }
     
@@ -104,7 +254,6 @@ public class OrderPOFromProjectController {
         
         @AuraEnabled
         public buildertek__Purchase_Order__c poRecord {get;set;}
-        
         
         @AuraEnabled
         public boolean poCheck {get;set;}
@@ -118,8 +267,27 @@ public class OrderPOFromProjectController {
         @AuraEnabled
         public List<POInnerClass> poRecInner {get;set;}
         
+        @AuraEnabled 
+        public boolean expanded;
+        
+        @AuraEnabled
+        public Integer pageSize{ get; set; }
+        
+        @AuraEnabled
+        public Integer pageNumber{ get; set; }
+        
+        @AuraEnabled
+        public Integer totalRecords {get;set;}
+        
+        @AuraEnabled
+        public Integer recordStart {get;set;}
+        
+        @AuraEnabled
+        public Integer recordEnd {get;set;}
+
+        @AuraEnabled public String orgCurr;
+        
     }
-    
     
     public class POInnerClass{
         @AuraEnabled
@@ -127,426 +295,33 @@ public class OrderPOFromProjectController {
         
         @AuraEnabled
         public buildertek__Purchase_Order__c poRecord {get;set;}
+        
+        @AuraEnabled
+        public List<POLinesWrapper> poLinesWrapper {get;set;}
+        
+        @AuraEnabled public Boolean expanded;
     }
     
-    
-    @AuraEnabled
-    public static object findByName(String searchKey , string recId) {
-        map<String , List<buildertek__Purchase_Order__c>> GroupingMap = new map<String , List<buildertek__Purchase_Order__c>>(); 
-        List<MasterBudgetsClass> MasterBudgetsClassList = new List<MasterBudgetsClass>();
+    public class POLinesWrapper{
+        @AuraEnabled public String Name;
+        @AuraEnabled public String Description;
+        @AuraEnabled public Id RecordId;
+        @AuraEnabled public String PurchaseOrder;
+        @AuraEnabled public decimal Quantity;
+        @AuraEnabled public decimal UnitCost;
+        @AuraEnabled public decimal TotalCost;
+        @AuraEnabled public decimal TaxRate;
+        @AuraEnabled public decimal TotalPrice;
+        @AuraEnabled public Boolean expanded;
+        @AuraEnabled public Boolean PORow;
+        @AuraEnabled public String coastType;
+        @AuraEnabled public decimal coastValue;
+
+        @AuraEnabled public String groupName {get;set;}
         
-        List<buildertek__Purchase_Order__c> nullspoRecList;
-        
-        List<buildertek__Purchase_Order__c> MainpoRecList = new List<buildertek__Purchase_Order__c>();
-        
-        String  name =  + searchKey + '%'; 
-        if(name != null){
-            MainpoRecList = [SELECT Id,
-                             Name,
-                             buildertek__Type__c,
-                             toLabel(buildertek__Phase__c),
-                             buildertek__Vendor__c,
-                             buildertek__Vendor__r.Name,
-                             buildertek__Vendor__r.buildertek__Email_Address__c,
-                             buildertek__Change_Order__c,
-                             buildertek__Change_Order__r.Name,
-                             buildertek__Status__c,
-                             buildertek__Description__c,
-                             buildertek__PO_Total__c,
-                             buildertek__Paid_Amount__c,
-                             buildertek__PO_Balance__c,
-                             buildertek__Date_Ordered__c
-                             FROM buildertek__Purchase_Order__c
-                             WHERE  buildertek__Vendor__r.Name LIKE :name AND buildertek__Project__c =: recId AND buildertek__Phase__c != '' ORDER BY buildertek__Phase__c ASC NULLS last]; 
-        }
-        
-        if(name != null){
-            nullspoRecList = [SELECT Id,
-                              Name,
-                              buildertek__Type__c,
-                              toLabel(buildertek__Phase__c),
-                              buildertek__Vendor__c,
-                              buildertek__Vendor__r.Name,
-                              buildertek__Vendor__r.buildertek__Email_Address__c,
-                              buildertek__Change_Order__c,
-                              buildertek__Change_Order__r.Name,
-                              buildertek__Status__c,
-                              buildertek__Description__c,
-                              buildertek__PO_Total__c,
-                              buildertek__Paid_Amount__c,
-                              buildertek__PO_Balance__c,
-                              buildertek__Date_Ordered__c
-                              FROM buildertek__Purchase_Order__c
-                              WHERE  buildertek__Vendor__r.Name LIKE :name AND buildertek__Project__c =: recId  AND buildertek__Phase__c = '' ORDER BY buildertek__Phase__c ASC NULLS last]; 
-        }
-        
-        if(nullspoRecList.size()>0){
-            MainpoRecList.addAll(nullspoRecList);
-        }
-        
-        for(buildertek__Purchase_Order__c POrec : MainpoRecList){
-            if(GroupingMap.get(POrec.buildertek__Phase__c) == null){
-                GroupingMap.put(POrec.buildertek__Phase__c , new List<buildertek__Purchase_Order__c>());
-            }
-            GroupingMap.get(POrec.buildertek__Phase__c).add(POrec);
-        }
-        
-        
-        for(String PO : GroupingMap.keySet()){
-            MasterBudgetsClass MasterBudgetsClassRecord = new MasterBudgetsClass(); 
-            MasterBudgetsClassRecord.groupName = PO;
-            MasterBudgetsClassRecord.poCheck = false;
-            MasterBudgetsClassRecord.poRecordList = GroupingMap.get(PO);
-            List<POInnerClass> POInnerClassList = new List<POInnerClass>();
-            for(buildertek__Purchase_Order__c PO1 : GroupingMap.get(PO)){
-                POInnerClass POInnerClassRecord = new POInnerClass();
-                POInnerClassRecord.poCheck = false;
-                POInnerClassRecord.poRecord = PO1;
-                POInnerClassList.add(POInnerClassRecord); 
-            }
-            MasterBudgetsClassRecord.poRecInner = POInnerClassList;
-            MasterBudgetsClassList.add(MasterBudgetsClassRecord);
-        }
-  
-        return  MasterBudgetsClassList;  
-    }
-    
-    @AuraEnabled
-    public static object findByName1(String searchKey , string recId) {
-        map<String , List<buildertek__Purchase_Order__c>> GroupingMap = new map<String , List<buildertek__Purchase_Order__c>>(); 
-        List<MasterBudgetsClass> MasterBudgetsClassList = new List<MasterBudgetsClass>();
-        
-        List<buildertek__Purchase_Order__c> nullspoRecList;
-        
-        List<buildertek__Purchase_Order__c> MainpoRecList = new List<buildertek__Purchase_Order__c>();
-        
-        String  name = '%' + searchKey + '%'; 
-        if(name != null){
-            MainpoRecList = [SELECT Id,
-                             Name,
-                             buildertek__Type__c,
-                             toLabel(buildertek__Phase__c),
-                             buildertek__Vendor__c,
-                             buildertek__Vendor__r.Name,
-                             buildertek__Vendor__r.buildertek__Email_Address__c,
-                             buildertek__Change_Order__c,
-                             buildertek__Change_Order__r.Name,
-                             buildertek__Status__c,
-                             buildertek__Description__c,
-                             buildertek__PO_Total__c,
-                             buildertek__Paid_Amount__c,
-                             buildertek__PO_Balance__c,
-                             buildertek__Date_Ordered__c
-                             FROM buildertek__Purchase_Order__c
-                             WHERE  buildertek__Phase__c LIKE :name AND buildertek__Project__c =: recId AND buildertek__Phase__c != '' ORDER BY buildertek__Phase__c ASC NULLS last];
-        } 
-        
-        if(name != null){
-            nullspoRecList = [SELECT Id,
-                              Name,
-                              buildertek__Type__c,
-                              toLabel(buildertek__Phase__c),
-                              buildertek__Vendor__c,
-                              buildertek__Vendor__r.Name,
-                              buildertek__Vendor__r.buildertek__Email_Address__c,
-                              buildertek__Change_Order__c,
-                              buildertek__Change_Order__r.Name,
-                              buildertek__Status__c,
-                              buildertek__Description__c,
-                              buildertek__PO_Total__c,
-                              buildertek__Paid_Amount__c,
-                              buildertek__PO_Balance__c,
-                              buildertek__Date_Ordered__c
-                              FROM buildertek__Purchase_Order__c
-                              WHERE  buildertek__Phase__c LIKE :name AND buildertek__Project__c =: recId AND buildertek__Phase__c = '' ORDER BY buildertek__Phase__c ASC NULLS last];
-        }
-        
-        if(nullspoRecList.size()>0){
-            MainpoRecList.addAll(nullspoRecList);
-        }
-        
-        for(buildertek__Purchase_Order__c POrec : MainpoRecList){
-            if(GroupingMap.get(POrec.buildertek__Phase__c) == null){
-                GroupingMap.put(POrec.buildertek__Phase__c , new List<buildertek__Purchase_Order__c>());
-            }
-            GroupingMap.get(POrec.buildertek__Phase__c).add(POrec);
-        }
-        
-        
-        for(String PO : GroupingMap.keySet()){
-            MasterBudgetsClass MasterBudgetsClassRecord = new MasterBudgetsClass(); 
-            MasterBudgetsClassRecord.groupName = PO;
-            MasterBudgetsClassRecord.poCheck = false;
-            MasterBudgetsClassRecord.poRecordList = GroupingMap.get(PO);
-            List<POInnerClass> POInnerClassList = new List<POInnerClass>();
-            for(buildertek__Purchase_Order__c PO1 : GroupingMap.get(PO)){
-                POInnerClass POInnerClassRecord = new POInnerClass();
-                POInnerClassRecord.poCheck = false;
-                POInnerClassRecord.poRecord = PO1;
-                POInnerClassList.add(POInnerClassRecord); 
-            }
-            MasterBudgetsClassRecord.poRecInner = POInnerClassList;
-            MasterBudgetsClassList.add(MasterBudgetsClassRecord);
-        }
-        
-        
-        return  MasterBudgetsClassList;  
-    }
-    
-    @AuraEnabled
-    public static object findByName2(String searchKey , string recId) {
-        map<String , List<buildertek__Purchase_Order__c>> GroupingMap = new map<String , List<buildertek__Purchase_Order__c>>(); 
-        List<MasterBudgetsClass> MasterBudgetsClassList = new List<MasterBudgetsClass>();
-        
-        List<buildertek__Purchase_Order__c> nullspoRecList;
-        
-        List<buildertek__Purchase_Order__c> MainpoRecList = new List<buildertek__Purchase_Order__c>();
-        
-        String  name =  + searchKey + '%'; 
-        if(name != null){
-            MainpoRecList = [SELECT Id,
-                             Name,
-                             buildertek__Type__c,
-                             toLabel(buildertek__Phase__c),
-                             buildertek__Vendor__c,
-                             buildertek__Vendor__r.Name,
-                             buildertek__Vendor__r.buildertek__Email_Address__c,
-                             buildertek__Change_Order__c,
-                             buildertek__Change_Order__r.Name,
-                             buildertek__Status__c,
-                             buildertek__Description__c,
-                             buildertek__PO_Total__c,
-                             buildertek__Paid_Amount__c,
-                             buildertek__PO_Balance__c,
-                             buildertek__Date_Ordered__c
-                             FROM buildertek__Purchase_Order__c
-                             WHERE  buildertek__Status__c LIKE :name AND buildertek__Project__c =: recId AND buildertek__Phase__c != '' ORDER BY buildertek__Phase__c ASC NULLS last];
-        }
-        
-        if(name != null){
-            nullspoRecList = [SELECT Id,
-                              Name,
-                              buildertek__Type__c,
-                              toLabel(buildertek__Phase__c),
-                              buildertek__Vendor__c,
-                              buildertek__Vendor__r.Name,
-                              buildertek__Vendor__r.buildertek__Email_Address__c,
-                              buildertek__Change_Order__c,
-                              buildertek__Change_Order__r.Name,
-                              buildertek__Status__c,
-                              buildertek__Description__c,
-                              buildertek__PO_Total__c,
-                              buildertek__Paid_Amount__c,
-                              buildertek__PO_Balance__c,
-                              buildertek__Date_Ordered__c
-                              FROM buildertek__Purchase_Order__c
-                              WHERE  buildertek__Status__c LIKE :name AND buildertek__Project__c =: recId AND buildertek__Phase__c = '' ORDER BY buildertek__Phase__c ASC NULLS last];
-        }
-        
-        if(nullspoRecList.size()>0){
-            MainpoRecList.addAll(nullspoRecList);
-        }
-        
-        for(buildertek__Purchase_Order__c POrec : MainpoRecList){
-            if(GroupingMap.get(POrec.buildertek__Phase__c) == null){
-                GroupingMap.put(POrec.buildertek__Phase__c , new List<buildertek__Purchase_Order__c>());
-            }
-            GroupingMap.get(POrec.buildertek__Phase__c).add(POrec);
-        }
-        
-        
-        for(String PO : GroupingMap.keySet()){
-            MasterBudgetsClass MasterBudgetsClassRecord = new MasterBudgetsClass(); 
-            MasterBudgetsClassRecord.groupName = PO;
-            MasterBudgetsClassRecord.poCheck = false;
-            MasterBudgetsClassRecord.poRecordList = GroupingMap.get(PO);
-            List<POInnerClass> POInnerClassList = new List<POInnerClass>();
-            for(buildertek__Purchase_Order__c PO1 : GroupingMap.get(PO)){
-                POInnerClass POInnerClassRecord = new POInnerClass();
-                POInnerClassRecord.poCheck = false;
-                POInnerClassRecord.poRecord = PO1;
-                POInnerClassList.add(POInnerClassRecord); 
-            }
-            MasterBudgetsClassRecord.poRecInner = POInnerClassList;
-            MasterBudgetsClassList.add(MasterBudgetsClassRecord);
-        }
-        
-        
-        return  MasterBudgetsClassList;  
-    }
-    
-    
-    @AuraEnabled
-    public static object findByName3(String searchKey , string recId) {
-        map<String , List<buildertek__Purchase_Order__c>> GroupingMap = new map<String , List<buildertek__Purchase_Order__c>>(); 
-        List<MasterBudgetsClass> MasterBudgetsClassList = new List<MasterBudgetsClass>();
-        
-        List<buildertek__Purchase_Order__c> nullspoRecList;
-        
-        List<buildertek__Purchase_Order__c> MainpoRecList = new List<buildertek__Purchase_Order__c>();
-        
-        String  name = '%' + searchKey + '%'; 
-        if(name != null){
-            MainpoRecList = [SELECT Id,
-                             Name,
-                             buildertek__Type__c,
-                             toLabel(buildertek__Phase__c),
-                             buildertek__Vendor__c,
-                             buildertek__Vendor__r.Name,
-                             buildertek__Vendor__r.buildertek__Email_Address__c,
-                             buildertek__Change_Order__c,
-                             buildertek__Change_Order__r.Name,
-                             buildertek__Status__c,
-                             buildertek__Description__c,
-                             buildertek__PO_Total__c,
-                             buildertek__Paid_Amount__c,
-                             buildertek__PO_Balance__c,
-                             buildertek__Date_Ordered__c
-                             FROM buildertek__Purchase_Order__c
-                             WHERE  Name LIKE : name AND buildertek__Project__c =: recId AND buildertek__Phase__c != '' ORDER BY buildertek__Phase__c ASC NULLS last];
-        } 
-        
-        if(name != null){
-            nullspoRecList = [SELECT Id,
-                              Name,
-                              buildertek__Type__c,
-                              toLabel(buildertek__Phase__c),
-                              buildertek__Vendor__c,
-                              buildertek__Vendor__r.Name,
-                              buildertek__Vendor__r.buildertek__Email_Address__c,
-                              buildertek__Change_Order__c,
-                              buildertek__Change_Order__r.Name,
-                              buildertek__Status__c,
-                              buildertek__Description__c,
-                              buildertek__PO_Total__c,
-                              buildertek__Paid_Amount__c,
-                              buildertek__PO_Balance__c,
-                              buildertek__Date_Ordered__c
-                              FROM buildertek__Purchase_Order__c
-                              WHERE  Name LIKE : name AND buildertek__Project__c =: recId AND buildertek__Phase__c = '' ORDER BY buildertek__Phase__c ASC NULLS last];
-        } 
-        
-        
-        if(nullspoRecList.size()>0){
-            MainpoRecList.addAll(nullspoRecList);
-        }
-        
-        for(buildertek__Purchase_Order__c POrec : MainpoRecList){
-            if(GroupingMap.get(POrec.buildertek__Phase__c) == null){
-                GroupingMap.put(POrec.buildertek__Phase__c , new List<buildertek__Purchase_Order__c>());
-            }
-            GroupingMap.get(POrec.buildertek__Phase__c).add(POrec);
-        }
-        
-        
-        for(String PO : GroupingMap.keySet()){
-            MasterBudgetsClass MasterBudgetsClassRecord = new MasterBudgetsClass(); 
-            MasterBudgetsClassRecord.groupName = PO;
-            MasterBudgetsClassRecord.poCheck = false;
-            MasterBudgetsClassRecord.poRecordList = GroupingMap.get(PO);
-            List<POInnerClass> POInnerClassList = new List<POInnerClass>();
-            for(buildertek__Purchase_Order__c PO1 : GroupingMap.get(PO)){
-                POInnerClass POInnerClassRecord = new POInnerClass();
-                POInnerClassRecord.poCheck = false;
-                POInnerClassRecord.poRecord = PO1;
-                POInnerClassList.add(POInnerClassRecord); 
-            }
-            MasterBudgetsClassRecord.poRecInner = POInnerClassList;
-            MasterBudgetsClassList.add(MasterBudgetsClassRecord);
-        }
-        
-        
-        return  MasterBudgetsClassList;  
-    }
-    
-    @AuraEnabled
-    public static object findByName4(String searchKey , string recId) {
-        map<String , List<buildertek__Purchase_Order__c>> GroupingMap = new map<String , List<buildertek__Purchase_Order__c>>(); 
-        List<MasterBudgetsClass> MasterBudgetsClassList = new List<MasterBudgetsClass>();
-        
-        List<buildertek__Purchase_Order__c> nullspoRecList;
-        
-        List<buildertek__Purchase_Order__c> MainpoRecList = new List<buildertek__Purchase_Order__c>();
-        
-        String  name = '%' + searchKey + '%'; 
-        if(name != null){
-            MainpoRecList = [SELECT Id,
-                             Name,
-                             buildertek__Type__c,
-                             toLabel(buildertek__Phase__c),
-                             buildertek__Vendor__c,
-                             buildertek__Vendor__r.Name,
-                             buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name,
-                             buildertek__Vendor__r.buildertek__Email_Address__c,
-                             buildertek__Change_Order__c,
-                             buildertek__Change_Order__r.Name,
-                             buildertek__Status__c,
-                             buildertek__Description__c,
-                             buildertek__PO_Total__c,
-                             buildertek__Paid_Amount__c,
-                             buildertek__PO_Balance__c,
-                             buildertek__Date_Ordered__c
-                             FROM buildertek__Purchase_Order__c
-                             WHERE  buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name LIKE : name AND buildertek__Project__c =: recId AND buildertek__Phase__c != '' ORDER BY buildertek__Phase__c ASC NULLS last];
-        } 
-        
-        if(name != null){
-            nullspoRecList = [SELECT Id,
-                              Name,
-                              buildertek__Type__c,
-                              toLabel(buildertek__Phase__c),
-                              buildertek__Vendor__c,
-                              buildertek__Vendor__r.Name,
-                              buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name,
-                              buildertek__Vendor__r.buildertek__Email_Address__c,
-                              buildertek__Change_Order__c,
-                              buildertek__Change_Order__r.Name,
-                              buildertek__Status__c,
-                              buildertek__Description__c,
-                              buildertek__PO_Total__c,
-                              buildertek__Paid_Amount__c,
-                              buildertek__PO_Balance__c,
-                              buildertek__Date_Ordered__c
-                              FROM buildertek__Purchase_Order__c
-                              WHERE  buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name LIKE : name AND buildertek__Project__c =: recId AND buildertek__Phase__c = '' ORDER BY buildertek__Phase__c ASC NULLS last];
-        } 
-        
-        
-        if(nullspoRecList.size()>0){
-            MainpoRecList.addAll(nullspoRecList);
-        }
-        
-        for(buildertek__Purchase_Order__c POrec : MainpoRecList){
-            if(GroupingMap.get(POrec.buildertek__Phase__c) == null){
-                GroupingMap.put(POrec.buildertek__Phase__c , new List<buildertek__Purchase_Order__c>());
-            }
-            GroupingMap.get(POrec.buildertek__Phase__c).add(POrec);
-        }
-        
-        
-        for(String PO : GroupingMap.keySet()){
-            MasterBudgetsClass MasterBudgetsClassRecord = new MasterBudgetsClass(); 
-            MasterBudgetsClassRecord.groupName = PO;
-            MasterBudgetsClassRecord.poCheck = false;
-            MasterBudgetsClassRecord.poRecordList = GroupingMap.get(PO);
-            List<POInnerClass> POInnerClassList = new List<POInnerClass>();
-            for(buildertek__Purchase_Order__c PO1 : GroupingMap.get(PO)){
-                POInnerClass POInnerClassRecord = new POInnerClass();
-                POInnerClassRecord.poCheck = false;
-                POInnerClassRecord.poRecord = PO1;
-                POInnerClassList.add(POInnerClassRecord); 
-            }
-            MasterBudgetsClassRecord.poRecInner = POInnerClassList;
-            MasterBudgetsClassList.add(MasterBudgetsClassRecord);
-        }
-        
-        
-        return  MasterBudgetsClassList;  
-    }
-    
-    
-    
-    
+        @AuraEnabled
+        public boolean poLineCheck {get;set;}
+    } 
     
     public class PoDetailsInnerClass{
         @AuraEnabled
@@ -568,7 +343,7 @@ public class OrderPOFromProjectController {
         public decimal paidPercent {get;set;}
     }
     
-    
+
     @AuraEnabled
     public static PoDetailsInnerClass getPORecListDetails(String recId){
         
@@ -643,14 +418,14 @@ public class OrderPOFromProjectController {
         return MasterBudgetsClassRecord;
     }
     
-    
+
     @AuraEnabled
     public static MessageClass sendMail(List<String> budgetIds, string filedata){
         
         system.debug('budgetIds--------->'+budgetIds);
         
         system.debug('filedata------->'+filedata);
- 
+        
         List<Innerclass> inn;
         if(filedata != null && filedata != '' && filedata != '[]'){
             system.debug('filedata'+filedata);
@@ -660,7 +435,7 @@ public class OrderPOFromProjectController {
             system.debug(inn[0].fileContent);
             system.debug('kdhiic------>'+inn[0].POId);
         }
-
+        
         EmailTemplate et = [SELECT Id,Subject, Body FROM EmailTemplate WHERE name ='Purchase Order Template' limit 1];
         
         
@@ -740,7 +515,7 @@ public class OrderPOFromProjectController {
                     
                     blob pdfPageBlob = pagePdf.getContentAsPDF();
                     List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
-                    
+
                     if(filedata != null && filedata != '' && filedata != '[]'){
                         for(Innerclass i:inn){
                             system.debug('myContact.id------->'+myContact.id);
@@ -833,29 +608,36 @@ public class OrderPOFromProjectController {
         
     } 
     
-    
     public class Innerclass{
         @AuraEnabled public string fileName;
         @AuraEnabled public string fileContent;
         @AuraEnabled public string POId;
     }
     
-      @AuraEnabled  
-    public static String getContactName(String recId){
-        if(recId != null && recId != ''){
-            List<Contact> conList = [select Name from Contact where buildertek__Primary_PO_Contact__c = True AND AccountId =: recId];
-            System.debug('Contacts : '+conList);
-            if(conList.size() > 0){
-                return conList[0].Name;
+    @AuraEnabled 
+    public static String updatePOLines(List<String> poLineIds, decimal unitCostValue){
+        system.debug('poLineIds------------>'+unitCostValue);
+        if(poLineIds.size() > 0){
+            List<buildertek__Purchase_Order_Item__c> poLineList = [select Id, Name, buildertek__Unit_Price__c from buildertek__Purchase_Order_Item__c where Id IN: poLineIds];
+            system.debug('poLineList------>'+poLineList);
+            List<buildertek__Purchase_Order_Item__c> newPOLinesList = new List<buildertek__Purchase_Order_Item__c>();
+            for(buildertek__Purchase_Order_Item__c poline : poLineList){
+                buildertek__Purchase_Order_Item__c pol = new buildertek__Purchase_Order_Item__c();
+                pol.Id = poline.Id;
+                pol.Name = poline.Name;
+                pol.buildertek__Unit_Price__c =  unitCostValue;
+                newPOLinesList.add(pol);
             }
-            else{
-                return 'undefine';
+            
+            
+            system.debug('newPOLinesList------->'+newPOLinesList);
+            
+            if(!newPOLinesList.isEmpty()){
+                update newPOLinesList;
             }
+            
         }
-        else{
-            return 'Id is null';
-        }
+        return 'success';
     }
-    
     
 }

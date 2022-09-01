@@ -14,7 +14,7 @@
 
 
     <lightning:navigation aura:id="navService" />
-    <!-- <aura:handler name="init" value="{!this}" action="{!c.getExistingFiles}" /> -->
+    <aura:handler name="init" value="{!this}" action="{!c.getExistingFiles}" />
 
     <aura:html tag="style">
         .slds-modal__content{
@@ -25,6 +25,12 @@
         max-width: 80% !important;
         min-width: 80% !important;
         width: 80% !important;
+        }
+        .slds-p-around--medium{
+            padding: 0;
+        }
+        .cuf-content{
+            padding: 0 !important;
         }
     </aura:html>
 

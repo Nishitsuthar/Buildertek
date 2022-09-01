@@ -84,7 +84,7 @@
             
         }).catch(function(error){
                          console.log(error);
-        })
+        })*/
         component.set('v.isLoading', true);
         var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
@@ -117,7 +117,7 @@
                     console.log('sub tab error::', error);
                 });
             }), 200
-        );*/
+        );
        
     },
 

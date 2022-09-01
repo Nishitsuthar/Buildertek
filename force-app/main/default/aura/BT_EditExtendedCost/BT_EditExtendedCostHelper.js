@@ -146,7 +146,7 @@
        // alert('nokl');
         var action = component.get("c.saveBOMRecord");
         var bomRecToUpdate = component.get('v.bomRecord');
-
+        console.log('bomRecToUpdate==='+bomRecToUpdate);
         console.log('bomRecToUpdate***', bomRecToUpdate);
         action.setParams({
 
