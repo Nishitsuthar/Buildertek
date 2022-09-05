@@ -115,3 +115,11 @@ i.b-action-item.b-fa.b-fa-comment-alt-plus::before{
 .b-grid-header-text{
     white-space:unset !important;
 }
+
+.dateInputDiv{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 25rem;
+    padding: 10px;
+}

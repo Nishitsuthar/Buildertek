@@ -21,6 +21,10 @@
         visibility : hidden;*/
 }
 
-.THIS .slds-form {
-    margin-top: -10px !important;
+.THIS .tableRow .buildertekBT_LookupFields{
+    padding-top: 7px;
+}
+
+.THIS .tableDiv{
+    min-height: 70vh;
 }

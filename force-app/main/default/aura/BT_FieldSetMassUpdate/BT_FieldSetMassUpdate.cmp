@@ -67,7 +67,6 @@
             
         </aura:if>
         <aura:if isTrue="{!v.isDateField}">
-            
             <lightning:input type="date" value="{!v.cellValue}" name="{!v.index+'-'+v.fieldName}"
                 onchange="{!c.onInputChange}" data-fieldapi="{!v.fieldName}"/>
         </aura:if>

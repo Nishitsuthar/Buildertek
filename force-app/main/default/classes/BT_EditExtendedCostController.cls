@@ -567,7 +567,7 @@ public with sharing class BT_EditExtendedCostController
                         row.add(new fieldWrap('Id',texturaFeeId,false));
                         row.add(new fieldWrap('Single Extended Cost','',false));
                         
-                        String rate = '0.0022';
+                        String rate = '3750.00';
                         String rateValue = '';
                         String proposalAmount = '';
                         String extendedCost = '';
@@ -577,10 +577,11 @@ public with sharing class BT_EditExtendedCostController
                             List<buildertek.ManagePOlinesController.ExtendedCostWrap> wrapperList = (List<buildertek.ManagePOlinesController.ExtendedCostWrap>)JSON.deserialize(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Textura_Fee__c, List<buildertek.ManagePOlinesController.ExtendedCostWrap>.Class);
                             if(wrapperList != null && wrapperList.size() > 0)
                             {
+                                System.debug('wrapperList[0].productRate==='+wrapperList[0].productRate);
                                 if(wrapperList[0].productRate != null && 
                                 wrapperList[0].extendedCostVal != null && wrapperList[0].proposalAmountVal != null)
                                 {
-                                    rate = wrapperList[0].productRate;
+                                    // rate = wrapperList[0].productRate;
                                     rateValue = wrapperList[0].extendedCostVal;
                                     proposalAmount = wrapperList[0].proposalAmountVal;
                                 }
@@ -588,7 +589,7 @@ public with sharing class BT_EditExtendedCostController
 
                             // extendedCost = getExtendedCostFromDB(texturaFeeId,recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Textura_Fee__c,Decimal.valueOf(1));
                         }
-                        
+                        System.debug('rate-->'+rate);
                         row.add(new fieldWrap('Proposal Amount',proposalAmount,false));
                         row.add(new fieldWrap('Rate',rate,false));
                         row.add(new fieldWrap('Value',rateValue,false));

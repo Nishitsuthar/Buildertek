@@ -71,7 +71,7 @@
     save: function (component, event, helper) {
        // alert("haiii");
     $A.util.addClass(component.find("uploading").getElement(), "uploading");
-    document.getElementById("uploadingCSVSpinnerText").innerHTML = 'Importing Budget Lines. Please wait.';
+    document.getElementById("uploadingCSVSpinnerText").innerHTML = '';  //Remove text for BUIL-2690
     helper.save(component, helper);
   },
 

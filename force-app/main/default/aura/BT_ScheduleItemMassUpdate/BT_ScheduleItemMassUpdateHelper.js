@@ -97,7 +97,9 @@
     updateMassRecords: function (component, event, helper, phase, contractor, contractorResources, TradeType) {
         component.set('v.isLoading', true);
         var listOfRecords = component.get('v.listOfRecords');
+        console.log({listOfRecords});
         var grpList = JSON.parse(JSON.stringify(component.get("v.grpByPhaseValuesMassUpdate")))
+        console.log({grpList});
         var newList = []
         for(var i=0;i<grpList.length;i++){
             var val = grpList[i].value
@@ -105,7 +107,8 @@
                 newList.push(val[j])
             }
         }
-        listOfRecords = newList
+        console.log({newList});
+        // listOfRecords = newList
         var action = component.get("c.updateRecords");
         var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
@@ -127,6 +130,7 @@
             }
         }
         console.log('Records To Update::', JSON.stringify(listOfRecords));
+        console.log({listOfRecords});
         action.setParams({
             recordId: component.get('v.recordId'),
             updatedRecords: JSON.stringify(listOfRecords),
@@ -345,6 +349,7 @@
         }
         console.log('recordsMap'+recordsMap)
         var result = Array.from(recordsMap.entries());
+        console.log({result});
         var groupData = [];
         var pagObj = {}
         var pageArr = component.get("v.pageArr")

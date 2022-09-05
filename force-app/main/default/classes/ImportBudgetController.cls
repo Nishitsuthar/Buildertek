@@ -90,8 +90,8 @@ public with sharing class ImportBudgetController{
 								}
 
 								when 'Unit Price'{
-									if (String.isNotBlank(listCSVData.get(intIndex).get(intInnerIndex))){
-										budget.Unit_Price__c = Decimal.valueOf(listCSVData.get(intIndex).get(intInnerIndex));
+									if (String.isNotBlank(listCSVData.get(intIndex).get(intInnerIndex))){										
+										budget.Unit_Price__c = Decimal.valueOf(listCSVData.get(intIndex).get(intInnerIndex).replaceAll('[^.\\d]',''));
 									}
 								}
 

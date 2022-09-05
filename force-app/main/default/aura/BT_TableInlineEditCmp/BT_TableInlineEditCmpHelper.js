@@ -242,15 +242,18 @@
                         proposalAmount = dataList[i].value;
                     }
                 }
-
+                console.log('rate-->'+rate);
                 if (proposalAmount != null && proposalAmount != undefined  &&
                 rate != null && rate != undefined ) 
                 {
                     proposalAmount = parseFloat(proposalAmount);
                     rate = parseFloat(rate);
+                    console.log('rate-->'+rate);
 
                     texturaFeeValue = proposalAmount * rate ;
+                    console.log('texturaFeeValue-->'+texturaFeeValue);
                     texturaFeeValue = parseFloat(texturaFeeValue).toFixed(2);
+                    console.log('texturaFeeValue-->'+texturaFeeValue);
 
                     if (texturaFeeValue > 499.99 && texturaFeeValue < 3750.01) {
                         finalExtendedCost = parseFloat(texturaFeeValue).toFixed(2);

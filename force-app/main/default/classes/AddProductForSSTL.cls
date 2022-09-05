@@ -1953,6 +1953,23 @@ public with sharing class AddProductForSSTL{
                                 update TakeofLinesToUpdate;
                           }
                       }
+                      else{
+                          List<buildertek__Project_Takeoff_Lines__c> TakeofLinesToUpdate = new List<buildertek__Project_Takeoff_Lines__c>();
+                          //System.debug('<takeOffLineList>'+takeOffLineList);
+                          for(buildertek__Project_Takeoff_Lines__c TakeOfLines: [SELECT id, name, buildertek__Price_Book__c FROM buildertek__Project_Takeoff_Lines__c WHERE Id IN: takeOffLineList]){
+                              //System.debug('<TakeOfLines> '+TakeOfLines);
+                              //System.debug('<TakeOfLines.buildertek__Price_Book__c> '+TakeOfLines.buildertek__Price_Book__c);
+                              //if(TakeOfLines.buildertek__Price_Book__c == null || TakeOfLines.buildertek__Price_Book__c == ''){
+                                  //System.debug(PriceListt.size()+'<>'+PriceListt[0].Id);
+                                TakeOfLines.buildertek__Price_Book__c = null;
+                                
+                                TakeofLinesToUpdate.add(TakeOfLines);   
+                              //}
+                          }
+                          if(TakeofLinesToUpdate.size() > 0){
+                                update TakeofLinesToUpdate;
+                          }
+                      }
                       
                      
                       

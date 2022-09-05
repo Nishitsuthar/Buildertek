@@ -605,7 +605,6 @@
                                                                             }],
                                                                         ],
                                                                             function (components, status) {
-                                                                                console.log('--- --- RFQ Email Preview Modal --- ---');
                                                                                 if (status === 'SUCCESS') {
                                                                                     var modalPromise = component.find('overlayLib').showCustomModal({
                                                                                         header: components[0],

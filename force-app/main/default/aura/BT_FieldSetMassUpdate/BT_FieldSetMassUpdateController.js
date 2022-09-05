@@ -3,6 +3,7 @@
         console.log('bt_fieldSetMassUpdate Controller callled===');
         var record = component.get("v.record");
         console.log('record=='+record);
+        console.log({record});
         var field = component.get("v.field");
         if(field.name == 'buildertek__Contractor__c'){
             if (record != undefined) {

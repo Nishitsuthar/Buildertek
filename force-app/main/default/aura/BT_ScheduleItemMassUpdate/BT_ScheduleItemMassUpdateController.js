@@ -274,8 +274,11 @@
         debugger;
         component.set('v.isLoading', true);
         var phase = component.find("SearchPhase").get("v.value");
+        console.log({phase});
         var contractor = component.find("searchContractor").get("v.value");
+        console.log({contractor});
         var contractorResources = component.find("searchContractorResources").get("v.value");
+        console.log({contractorResources});
         var TradeType = component.find("searchTradeType").get("v.value");
         if (!component.get('v.massUpdateEnable')) {
             component.set('v.massUpdateEnable', true);

@@ -105,6 +105,7 @@ public with sharing class BT_AdminConfigurationController{
                 
                 if (listNodeConfigurations[intI].Parent_Node__c == null) {
                 
+                    // System.debug('objTabInfoCardHTML ===> ' + getTabInfoCard(listNodeConfigurations[intI]));
                     if (math.mod(intCount,2) == 0) {
                         
                         objHomeTabHTML.value += '<tr class="">';
@@ -425,6 +426,11 @@ public with sharing class BT_AdminConfigurationController{
         listNodeConfigurations = Database.query(String.escapeSingleQuotes('Select '+BT_Utils.buildSelectListFragment(null, null, fields) + ','+ 
                                 ' (Select '+BT_Utils.buildSelectListFragment(null, null, fields) + 
                                 ' FROM Admin_Interface_Node_Configurations__r WHERE Disable__c = False ORDER BY Index__c,Name Asc) FROM Admin_Interface_Node_Configuration__c WHERE Disable__c = False ORDER BY Index__c,Name Asc'));
+        
+        System.debug('listNodeConfigurations => '+listNodeConfigurations);
+        for (Admin_Interface_Node_Configuration__c Conf : listNodeConfigurations) {
+            System.debug('Conf ==> ' + Conf);
+        }
                          
     }
     

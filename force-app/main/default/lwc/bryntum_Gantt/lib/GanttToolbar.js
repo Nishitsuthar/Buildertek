@@ -312,6 +312,20 @@ export default base => class GanttToolbar extends base {
                         }
                     ]
                 },
+                {
+                    type  : 'buttonGroup',
+                    items : [
+                        {
+                            type       : 'button',
+                            color      : 'b-blue',
+                            ref        : '',
+                            cls        : '',
+                            icon       : 'b-fa b-fa-calendar',
+                            text       : 'Set Original Dates',
+                            onAction   : 'up.onEditOriginalDate'
+                        }
+                    ]
+                },
                 /* {
                     type  : 'buttonGroup',
                     items : [
@@ -549,6 +563,9 @@ export default base => class GanttToolbar extends base {
     }
     onExportToPdf(){
         this.gantt.features.pdfExport.showExportDialog();
+    }
+    onEditOriginalDate(){
+        this.gantt.callGanttComponent.openOriginDateModal()
     }
     // region controller methods
     async onAddTaskClick() {

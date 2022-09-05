@@ -875,6 +875,11 @@ public class BT_NewGanttChartCls {
         
     }
 
+    @AuraEnabled
+    public static buildertek__Schedule__c getScheduleOriginal(String recordId){
+        buildertek__Schedule__c schedule = [SELECT Id, Name, buildertek__Original_Start_Date__c, buildertek__Original_End_Date__c FROM buildertek__Schedule__c WHERE Id =: recordId];
+        return schedule;
+    }
     
 
     // wrapper class 
