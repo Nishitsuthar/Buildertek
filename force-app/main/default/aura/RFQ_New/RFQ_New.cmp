@@ -13,7 +13,7 @@
     <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
              aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
     <!-- <div role="dialog" class="slds-modal slds-fade-in-open" style="height:90%; margin-top:6%;"> -->
-        <div class="slds-modal__container" style="height:98%;margin-top:5%;margin-bottom:2%;max-width: 85% !important;width:80%;"> 
+        <div class="slds-modal__container" style="height:95%;margin-top:5%;margin-bottom:2%;max-width: 85% !important;width:80%;"> 
             <!--  <div class="slds-modal__container"> -->
             <header class="slds-modal__header">
                 <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeModel }" alternativeText="close"
@@ -27,7 +27,7 @@
                 
                 <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__RFQ__c"
                                           onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}">
-                    <div class="slds-scrollable" style="height:100%;width:100%">
+                    <div class="slds-scrollable" style="height:55vh;width:100%">
                         <lightning:layout multipleRows="true">
                             <aura:iteration items="{!v.listOfFields}" var="field">
                                 <br />

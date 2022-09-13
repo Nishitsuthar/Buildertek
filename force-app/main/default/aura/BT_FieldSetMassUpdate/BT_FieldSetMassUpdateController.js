@@ -1,9 +1,9 @@
 ({
     doInit: function (component, event, helper) {
-        console.log('bt_fieldSetMassUpdate Controller callled===');
+        // console.log('bt_fieldSetMassUpdate Controller callled===');
         var record = component.get("v.record");
-        console.log('record=='+record);
-        console.log({record});
+        // console.log('record=='+record);
+        // console.log({record});
         var field = component.get("v.field");
         if(field.name == 'buildertek__Contractor__c'){
             if (record != undefined) {
@@ -18,10 +18,10 @@
         if (record != undefined) {
             component.set("v.cellValue", record[field.name]);
             component.set("v.fieldName", field.name);
-            console.log('cellValue=='+record[field.name]);
-            console.log('field.Name==='+field.name);
-            console.log('field.type==='+field.type);
-            console.log('percentageValue=='+component.get("v.percentageValue"));
+            // console.log('cellValue=='+record[field.name]);
+            // console.log('field.Name==='+field.name);
+            // console.log('field.type==='+field.type);
+            // console.log('percentageValue=='+component.get("v.percentageValue"));
             if (field.type == 'STRING') {
                 component.set("v.isTextField", true);
                 //alert('hai');
@@ -176,11 +176,24 @@
     onInputChange: function (component, event, helper) {
         var fieldName = event.getSource().get("v.name").split('-');
         var fieldLabel = fieldName[1];
-        debugger;
+        // debugger;
         var selectedValue = event.getSource().get("v.value");
         //alert(selectedValue);
         var record = component.get('v.record');
         record[fieldLabel] = selectedValue != '' && selectedValue != 'None' ? selectedValue : '';
+        console.log('=== == Record Change == ===');
+        console.log({record});
+
+        if (record.buildertek__Start__c != null && record.buildertek__Start__c != '' && record.buildertek__Finish__c != null && record.buildertek__Finish__c != '') {
+            var startData = new Date(record.buildertek__Start__c);
+            var finishDate = new Date(record.buildertek__Finish__c);
+            finishDate.setDate(finishDate.getDate() + 1)
+            var diffTime = Math.abs(finishDate - startData);
+            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (diffDays > 0) {
+                record.buildertek__Duration__c = diffDays;
+            }
+        }
         component.set('v.record', record);
     },
     
@@ -217,7 +230,7 @@
             
             component.set("v.percentageValue", 0);
         }
-         console.log(JSON.parse(JSON.stringify(record))); 
+        //  console.log(JSON.parse(JSON.stringify(record))); 
         }
         component.set('v.record', record);
     },

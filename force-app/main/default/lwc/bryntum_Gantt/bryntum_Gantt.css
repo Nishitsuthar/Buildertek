@@ -123,3 +123,11 @@ i.b-action-item.b-fa.b-fa-comment-alt-plus::before{
     width: 25rem;
     padding: 10px;
 }
+
+.dateModal{
+    z-index: 101;
+}
+
+.dateModalDiv{
+    z-index: 100;
+}

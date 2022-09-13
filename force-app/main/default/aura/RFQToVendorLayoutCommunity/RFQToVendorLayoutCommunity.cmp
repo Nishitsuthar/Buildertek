@@ -19,7 +19,23 @@
     <aura:attribute name="isalreadyaccepted" type="boolean" default = "false"/>
     <aura:attribute name="isalreadyawarded" type="boolean" default = "false"/>
     <aura:attribute name="isRFQRejectedbyanthoervendor" type="boolean" default = "false"/>
+    <aura:attribute name="loaded" type="Boolean" default="false" />
     
+    <aura:if isTrue="{!v.loaded}">
+        <div class="demo-only">
+            <div class="slds-spinner_container">
+                <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                    <div class="custom-loading-text">
+                        Please Wait... 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+
     <aura:if isTrue="{!and(!v.isAnotherVendor,!v.isRFQAccepted)}" >
         <aura:if isTrue='{!v.isalreadyaccepted}'>
             <div class="slds-modal__container" style="min-width:30rem; padding: 0px;">

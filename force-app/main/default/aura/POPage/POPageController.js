@@ -15,7 +15,7 @@
 			});
 		});
 
-		debugger;
+		// debugger;
 
 		var productCategoryValue = component.get("v.searchCategoryFilter");
 		var recId = component.get("v.recordId");
@@ -29,14 +29,11 @@
 	},
 
 	toggle: function (component, event, helper) {
-		debugger;
+		// debugger;
 		var parentItems = component.get("v.PaginationList"),
 			pathIndex = event.getSource().get("v.title").split('_'),
 			grpIndex = Number(pathIndex[1]),
 			rowIndex = Number(pathIndex[0])
-
-		console.log("Records")
-		console.log(parentItems)
 
 		parentItems[grpIndex].poRecInner[rowIndex].expanded = !parentItems[grpIndex].poRecInner[rowIndex].expanded;
 		var childItems = parentItems[grpIndex].poRecInner[rowIndex]['poLinesWrapper']
@@ -48,7 +45,7 @@
 	},
 
 	searchKeyChange: function (component, event) {
-		debugger;
+		// debugger;
 		var productCategoryValue = component.get("v.searchCategoryFilter");
 		var recId = component.get("v.recordId");
 		var pageSize = component.get("v.pageSize");
@@ -85,10 +82,10 @@
 					"pageSize": pageSize
 				});
 				action1.setCallback(this, function (response) {
-					debugger;
+					// debugger;
 					var state = response.getState();
 					if (state === "SUCCESS") {
-						debugger;
+						// debugger;
 						var result = response.getReturnValue();
 						for (var k = 0; k < result.length; k++) {
 							if (result[k].poRecordList.length > 0) {
@@ -170,7 +167,7 @@
 	},
 
 	searchKeyChange3: function (component, event) {
-		debugger;
+		// debugger;
 		component.set("v.Spinner", true);
 		var list = component.get("v.PaginationList");
 		var searchKey = component.find("searchKey3").get("v.value");
@@ -221,7 +218,7 @@
 	},
 
 	next: function (component, event, helper) {
-		debugger;
+		// debugger;
 		var pageNumber = component.get("v.PageNumber");
 		var pageSize = component.get("v.pageSize");
 		pageNumber++;
@@ -230,7 +227,7 @@
 	},
 
 	previous: function (component, event, helper) {
-		debugger;
+		// debugger;
 		var pageNumber = component.get("v.PageNumber");
 		var pageSize = component.get("v.pageSize");
 		pageNumber--;
@@ -238,9 +235,10 @@
 	},
 
 	handleCheck: function (component, event, helper) {
-		debugger;
+		// debugger;
 		var checkbox = event.getSource();
 		var Submittals = component.get("v.masterBudgetsList");
+		var selectedHeaderCheck;
 		if (Submittals != undefined) {
 			for (var i = 0; i < Submittals.length; i++) {
 				if (Submittals[i].poRecInner != undefined) {
@@ -248,9 +246,11 @@
 						if (Submittals[i].poRecInner != null) {
 							if (Submittals[i].poRecInner[j].poRecord.Id == checkbox.get("v.name") && Submittals[i].poRecInner[j].poCheck == false) {
 								Submittals[i].poRecInner[j].poCheck = true;
+								selectedHeaderCheck = true;
 							}
 							else if (Submittals[i].poRecInner[j].poRecord.Id == checkbox.get("v.name") && Submittals[i].poRecInner[j].poCheck == true) {
 								Submittals[i].poRecInner[j].poCheck = false;
+								selectedHeaderCheck = false;
 							}
 						}
 					}
@@ -259,10 +259,42 @@
 		}
 		component.set("v.masterBudgetsList", Submittals);
 
+		var pathIndex = checkbox.get("v.id").split('_'),
+			grpIndex = Number(pathIndex[1]),
+			rowIndex = Number(pathIndex[0])
+
+		var Submittals = component.get("v.masterBudgetsList");
+		// var getAllId = component.find("checkPOLine");
+		if (Submittals != undefined) {
+
+			if (Submittals.length > 0) {
+				if (selectedHeaderCheck == true) {
+					if (Submittals[grpIndex]['poRecInner'][rowIndex]['poLinesWrapper']) {
+						var poLines = Submittals[grpIndex]['poRecInner'][rowIndex]['poLinesWrapper']
+						if (poLines != undefined) {
+							for (var i = 0; i < poLines.length; i++) {
+								poLines[i].poLineCheck = true;
+							}
+						}
+					}
+				} else {
+					if (Submittals[grpIndex]['poRecInner'][rowIndex]['poLinesWrapper']) {
+						var poLines = Submittals[grpIndex]['poRecInner'][rowIndex]['poLinesWrapper']
+						if (poLines != undefined) {
+							for (var i = 0; i < poLines.length; i++) {
+								poLines[i].poLineCheck = false;
+							}
+						}
+					}
+				}
+			}
+			component.set("v.PaginationList", Submittals);
+		}
+
 	},
 
 	selectAll: function (component, event, helper) {
-		debugger;
+		// debugger;
 		var selectedHeaderCheck = event.getSource().get("v.value");
 		var Submittals = component.get("v.masterBudgetsList");
 		var getAllId = component.find("checkContractor");
@@ -289,8 +321,18 @@
 									if (Submittals[i].poRecInner[j].poRecord.buildertek__Status__c != 'Ordered') {
 										Submittals[i].poRecInner[j].poCheck = true;
 									}
+									var poLines = Submittals[i]['poRecInner'][j]['poLinesWrapper'];
+									if (poLines != undefined){
+										for (var k = 0; k < poLines.length; k++) {
+											poLines[k].poLineCheck = true;
+										}
+									}
 								}
 							}
+						}
+						var checkPOLineClass = document.querySelectorAll(".checkPOLineClass");
+						for (let i = 0; i < checkPOLineClass.length; i++) {
+							checkPOLineClass[i].checked = true;
 						}
 					}
 					else {
@@ -304,8 +346,18 @@
 									if (Submittals[i].poRecInner[j].poRecord.buildertek__Status__c != 'Ordered') {
 										Submittals[i].poRecInner[j].poCheck = false;
 									}
+									var poLines = Submittals[i]['poRecInner'][j]['poLinesWrapper'];
+									if (poLines != undefined){
+										for (var k = 0; k < poLines.length; k++) {
+											poLines[k].poLineCheck = false;
+										}
+									}
 								}
 							}
+						}
+						var checkPOLineClass = document.querySelectorAll(".checkPOLineClass");
+						for (let i = 0; i < checkPOLineClass.length; i++) {
+							checkPOLineClass[i].checked = false;
 						}
 					}
 				}
@@ -330,7 +382,7 @@
 	},
 
 	clear: function (component, event, heplper) {
-		debugger;
+		// debugger;
 		event.stopPropagation();
 		event.preventDefault();
 		var selectedPillId = event.getSource().get("v.name");
@@ -371,7 +423,7 @@
 	},
 
 	confirmOrderPO: function (component, event, helper) {
-		debugger;
+		// debugger;
 		component.set("v.Spinner2", true);
 		component.set("v.Spinner", true);
 		var record = component.get("v.recordId");
@@ -475,7 +527,7 @@
 	},
 
 	orderPO: function (component, event, helper) {
-		debugger;
+		// debugger;
 
 		var record = component.get("v.recordId");
 		var select = component.get("v.selectedobjInfo");
@@ -516,7 +568,7 @@
 	},
 
 	closePOListPopUp: function (component, event, helper) {
-		debugger;
+		// debugger;
 		component.set("v.selectedPOList", false);
 		component.set("v.fileData2", []);
 
@@ -591,7 +643,7 @@
 	},
 
 	handleFilesChange2: function (component, event, helper) {
-		debugger;
+		// debugger;
 		var fileName = "No File Selected..";
 		var fileCount = event.target.files;
 		var POId = event.currentTarget.dataset.index;
@@ -629,7 +681,7 @@
 	},
 
 	saveMassUpdate: function (component, event, helper) {
-		debugger;
+		// debugger;
 		var unitCost = component.get("v.UnitCostValue");
 
 		if (unitCost != undefined) {
@@ -637,7 +689,7 @@
 			var budgetIds = [];
 			var budgetsList = component.get("v.masterBudgetsList")
 
-			debugger;
+			// debugger;
 
 			if (budgetsList != null && budgetsList != undefined) {
 				for (var i = 0; i < budgetsList.length; i++) {
@@ -759,7 +811,7 @@
 
 	doSearch: function (component, event, helper) {
 
-		debugger;
+		// debugger;
 		var pageNumber = component.get("v.PageNumber");
 		var pageSize = component.get("v.pageSize");
         helper.getPurchaseOrders(component, event, helper, pageNumber, pageSize);
@@ -789,43 +841,42 @@
 
 
 
-	selectAllPOLines: function (component, event, helper) {
+	// selectAllPOLines: function (component, event, helper) {
 
-		debugger;
-		var selectedHeaderCheck = event.getSource().get("v.value");
+		// debugger;
+		// var selectedHeaderCheck = event.getSource().get("v.value");
 
+		// var pathIndex = event.getSource().get("v.name").split('_'),
+		// 	grpIndex = Number(pathIndex[1]),
+		// 	rowIndex = Number(pathIndex[0])
+		// console.log('pathIndex => '+pathIndex);
 
-		var pathIndex = event.getSource().get("v.name").split('_'),
-			grpIndex = Number(pathIndex[1]),
-			rowIndex = Number(pathIndex[0])
+		// var Submittals = component.get("v.masterBudgetsList");
+		// var getAllId = component.find("checkPOLine");
+		// if (getAllId != undefined && Submittals != undefined) {
 
-
-		var Submittals = component.get("v.masterBudgetsList");
-		var getAllId = component.find("checkPOLine");
-		if (getAllId != undefined && Submittals != undefined) {
-
-			if (Submittals.length > 0) {
-				if (selectedHeaderCheck == true) {
-					if (Submittals[grpIndex]['poRecInner'][rowIndex]['poLinesWrapper']) {
-						var poLines = Submittals[grpIndex]['poRecInner'][rowIndex]['poLinesWrapper']
-						if (poLines != undefined) {
-							for (var i = 0; i < poLines.length; i++) {
-								poLines[i].poLineCheck = true;
-							}
-						}
-					}
-				} else {
-					if (Submittals[grpIndex]['poRecInner'][rowIndex]['poLinesWrapper']) {
-						var poLines = Submittals[grpIndex]['poRecInner'][rowIndex]['poLinesWrapper']
-						if (poLines != undefined) {
-							for (var i = 0; i < poLines.length; i++) {
-								poLines[i].poLineCheck = false;
-							}
-						}
-					}
-				}
-			}
-			component.set("v.PaginationList", Submittals)
+		// 	if (Submittals.length > 0) {
+		// 		if (selectedHeaderCheck == true) {
+		// 			if (Submittals[grpIndex]['poRecInner'][rowIndex]['poLinesWrapper']) {
+		// 				var poLines = Submittals[grpIndex]['poRecInner'][rowIndex]['poLinesWrapper']
+		// 				if (poLines != undefined) {
+		// 					for (var i = 0; i < poLines.length; i++) {
+		// 						poLines[i].poLineCheck = true;
+		// 					}
+		// 				}
+		// 			}
+		// 		} else {
+		// 			if (Submittals[grpIndex]['poRecInner'][rowIndex]['poLinesWrapper']) {
+		// 				var poLines = Submittals[grpIndex]['poRecInner'][rowIndex]['poLinesWrapper']
+		// 				if (poLines != undefined) {
+		// 					for (var i = 0; i < poLines.length; i++) {
+		// 						poLines[i].poLineCheck = false;
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// 	component.set("v.PaginationList", Submittals)
 
 
 
@@ -882,50 +933,64 @@
 					Submittals[i].poLineCheck = false;
 				}
 			}   */
-		}
+	// 	}
 
-	},
+	// },
 
 	handleCheckPoLine: function (component, event, helper) {
-		debugger;
-		var checkbox = event.getSource();
+		// debugger;
+		var id = event.target.id;
 		var Submittals = component.get("v.masterBudgetsList");
-		/* for(var i=0 ; i < Submittals.length;i++){
+		for(var i=0 ; i < Submittals.length;i++){
 			if(Submittals[i].poRecInner != null){
 				for(var j=0;j<Submittals[i].poRecInner.length;j++){
 					if(Submittals[i].poRecInner[j].poLinesWrapper != null){
 						if(Submittals[i].poRecInner[j].poLinesWrapper != null){
 							for(var k=0;k<Submittals[i].poRecInner[j].poLinesWrapper.length;k++){
-								if(Submittals[i].poRecInner[j].poLinesWrapper[k].RecordId == checkbox.get("v.name") && Submittals[i].poRecInner[j].poLinesWrapper[k].poLineCheck == false){
-									Submittals[i].poRecInner[j].poLinesWrapper[k].poLineCheck = true;
-								}
-								else if(Submittals[i].poRecInner[j].poLinesWrapper[k].RecordId == checkbox.get("v.name") && Submittals[i].poRecInner[j].poLinesWrapper[k].poLineCheck == true){
-									Submittals[i].poRecInner[j].poLinesWrapper[k].poLineCheck = false;
-								}    
+								if (i+'-'+j+'-'+k == id) {
+									Submittals[i].poRecInner[j].poLinesWrapper[k].poLineCheck = !Submittals[i].poRecInner[j].poLinesWrapper[k].poLineCheck;
+								} 
 							}
 						}
 					}
 				}
 			}
 		}
-		component.set("v.PaginationList",Submittals); */
+		component.set("v.PaginationList",Submittals);
 	},
 
 
 
 
 	maintoggle: function (component, event, helper) {
-		debugger;
+		// debugger;
 		var parentItems = component.get("v.PaginationList")
-
-		if (parentItems != undefined) {
-			for (var i = 0; i < parentItems.length; i++) {
-				if (parentItems[i].poRecInner != undefined) {
-					for (var j = 0; j < parentItems[i].poRecInner.length; j++) {
-						parentItems[i].poRecInner[j].expanded = !parentItems[i].poRecInner[j].expanded;
-						if (parentItems[i].poRecInner[j]['poLinesWrapper'] != undefined) {
-							for (var k = 0; k < parentItems[i].poRecInner[j]['poLinesWrapper'].length; k++) {
-								parentItems[i].poRecInner[j]['poLinesWrapper'][k].expanded = !parentItems[i].poRecInner[j]['poLinesWrapper'][k].expanded;
+		var isExpanded = component.get("v.isExpanded");
+		if (isExpanded) {
+			if (parentItems != undefined) {
+				for (var i = 0; i < parentItems.length; i++) {
+					if (parentItems[i].poRecInner != undefined) {
+						for (var j = 0; j < parentItems[i].poRecInner.length; j++) {
+							parentItems[i].poRecInner[j].expanded = !isExpanded;
+							if (parentItems[i].poRecInner[j]['poLinesWrapper'] != undefined) {
+								for (var k = 0; k < parentItems[i].poRecInner[j]['poLinesWrapper'].length; k++) {
+									parentItems[i].poRecInner[j]['poLinesWrapper'][k].expanded = !isExpanded;
+								}
+							}
+						}
+					}
+				}
+			}
+		} else{
+			if (parentItems != undefined) {
+				for (var i = 0; i < parentItems.length; i++) {
+					if (parentItems[i].poRecInner != undefined) {
+						for (var j = 0; j < parentItems[i].poRecInner.length; j++) {
+							parentItems[i].poRecInner[j].expanded = !isExpanded;
+							if (parentItems[i].poRecInner[j]['poLinesWrapper'] != undefined) {
+								for (var k = 0; k < parentItems[i].poRecInner[j]['poLinesWrapper'].length; k++) {
+									parentItems[i].poRecInner[j]['poLinesWrapper'][k].expanded = !isExpanded;
+								}
 							}
 						}
 					}
@@ -934,8 +999,6 @@
 		}
 
 		component.set("v.PaginationList", parentItems);
-
-		var isExpanded = component.get("v.isExpanded");
 		isExpanded = !isExpanded;
 		component.set("v.isExpanded", isExpanded);
 

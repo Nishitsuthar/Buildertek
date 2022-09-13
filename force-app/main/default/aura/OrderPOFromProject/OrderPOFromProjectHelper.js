@@ -3,6 +3,7 @@
     
     getPurchaseOrders : function(component, event, helper, pageNumber, pageSize) {
         component.set("v.Spinner", true);
+        component.set("v.isExpanded", false);
         // debugger;
         var purchaseOrderFilter = component.get("v.searchItemFilter");
         
@@ -11,6 +12,8 @@
         var tradeTypeValue = component.get("v.searchTradeTypeFilter");
         
         var projectValue = component.get("v.searchProjectFilter");
+
+        var searchProductValue = component.get("v.searchProductFilter");
 
         // var searchStatusFilter = component.get("v.searchStatusFilter");
    
@@ -25,16 +28,17 @@
             "poFilter" : purchaseOrderFilter,
             "poLineFilter" : descriptionValue,
             "tradeTypeFilter" : tradeTypeValue,
-            "projectFilter" : projectValue
+            "projectFilter" : projectValue,
+            "productFilter" : searchProductValue
             // "statusFilter" : searchStatusFilter
         });
         action.setCallback(this, function(response){
             
-            debugger;
+            // debugger;
             var state = response.getState();
             console.log({state});
             if(state === "SUCCESS"){
-                debugger;
+                // debugger;
                 
                 var result = response.getReturnValue();
                 console.log({result});
@@ -47,17 +51,7 @@
                     component.set("v.RecordStart", result[0].recordStart);
                     component.set("v.RecordEnd", result[0].recordEnd);
                     component.set("v.orgCurr", result[0].orgCurr);
-                   
-                    var  poLineFilter = component.get("v.searchDescriptionFilter");
-                    var poFilter = component.get("v.searchItemFilter");
-                    
-                    if(poFilter != '' || poLineFilter != ''){
-                        component.set("v.TotalPages", 1);
-                    }else{
-                        component.set("v.TotalPages", Math.ceil(result[0].totalRecords / pageSize));
-                    }
-                    
-                   
+                                       
                     component.set('v.PaginationList', result);
                     console.log(' --- --- --- doInit --- --- --- ');
                     console.log({result});
@@ -97,7 +91,17 @@
                 component.set("v.totalRemainingAmount", result.totalRemainingAmount);
                 component.set("v.orderedPercent", result.orderedPercent);
                 component.set("v.paidPercent", result.paidPercent);
-                component.set("v.TotalPages", Math.ceil(result.totalPOs / component.get("v.pageSize")));
+
+                var  poLineFilter = component.get("v.searchDescriptionFilter");
+                var poFilter = component.get("v.searchItemFilter");
+                
+                if(poFilter != '' || poLineFilter != ''){
+                    component.set("v.TotalPages", 1);
+                } else{
+                    component.set("v.TotalPages", Math.ceil(result.totalPOs / component.get("v.pageSize")));
+                }
+                var TotalPages = component.get("v.TotalPages");
+                console.log('TotalPages => ' + TotalPages);
             } 
         });
         $A.enqueueAction(action);
@@ -106,7 +110,7 @@
     
     
     readFiles2 : function(component, event, helper, file,poId){
-        debugger;
+        // debugger;
         var filesList = component.get("v.fileData2");
         var reader = new FileReader(); 
         reader.onload = () => {

@@ -1,6 +1,6 @@
 ({
    doInit : function(component,event,helper){
-       console.log(component.get("v.selectedRecord"));
+    //    console.log(component.get("v.selectedRecord"));
        var action;
        if(component.get("v.objectAPIName") == "buildertek__Dependency__c"){
            
@@ -160,7 +160,7 @@
     handleComponentEvent : function(component, event, helper) {
     // get the selected Account record from the COMPONETN event 	 
        var selectedAccountGetFromEvent = event.getParam("recordByEvent");
-        console.log("##########record By Event",JSON.stringify(selectedAccountGetFromEvent)); 
+        // console.log("##########record By Event",JSON.stringify(selectedAccountGetFromEvent)); 
 	   component.set("v.selectedRecord" , selectedAccountGetFromEvent);
 	   
        

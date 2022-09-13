@@ -33,7 +33,9 @@ public with sharing class ProjectTaskTriggerHandler{
              * Update completed checkbox true when completion is 100, if completion is less than 100 then completed checkbox false 
             */
             if(newProjectTask.buildertek__Completion__c == 100){
-                newProjectTask.buildertek__Actual_Completion_date__c = system.today();
+                if(newProjectTask.buildertek__Actual_Completion_date__c == null) {
+                    newProjectTask.buildertek__Actual_Completion_date__c = system.today();
+                }
                 newProjectTask.buildertek__Completed__c = true;
             }else if(newProjectTask.buildertek__Completion__c < 100){
                 newProjectTask.buildertek__Actual_Completion_date__c = null;
@@ -68,7 +70,9 @@ public with sharing class ProjectTaskTriggerHandler{
                 }
                 
                 if(newProjectTask.buildertek__Completion__c == 100){
-                    newProjectTask.buildertek__Actual_Completion_date__c = system.today();
+                    if(newProjectTask.buildertek__Actual_Completion_date__c == null) {
+                        newProjectTask.buildertek__Actual_Completion_date__c = system.today();
+                    }
                 }else if(newProjectTask.buildertek__Completion__c < 100){
                     newProjectTask.buildertek__Actual_Completion_date__c = null;
                 }
@@ -104,7 +108,11 @@ public with sharing class ProjectTaskTriggerHandler{
             
             //Actual Completion date
             if(updatedProjectTask.buildertek__Completion__c == 100){
-                updatedProjectTask.buildertek__Actual_Completion_date__c = system.today();
+                if(updatedProjectTask.buildertek__Actual_Completion_date__c != null && updatedProjectTask.buildertek__Actual_Completion_date__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Actual_Completion_date__c) {
+                    updatedProjectTask.buildertek__Actual_Completion_date__c = updatedProjectTask.buildertek__Actual_Completion_date__c;
+                }else {
+                    updatedProjectTask.buildertek__Actual_Completion_date__c = system.today();
+                }
                 updatedProjectTask.buildertek__Completed__c = true;
             }else if(updatedProjectTask.buildertek__Completion__c < 100){
                 updatedProjectTask.buildertek__Actual_Completion_date__c = null;
@@ -804,7 +812,6 @@ public with sharing class ProjectTaskTriggerHandler{
         Map<string,string> parentTaskMap = new Map<string,string>();
         Map<String,String> updatedDependentTasks = new Map<String,String>();
        
-       
         for (Id taskId : mapAllTask.keySet()){
              
             buildertek__Project_Task__c projectTask = mapAllTask.get(taskId);
@@ -831,6 +838,7 @@ public with sharing class ProjectTaskTriggerHandler{
                     Integer lag = projectTask.buildertek__Lag__c != null ? Integer.valueOf(projectTask.buildertek__Lag__c) : 0;
                     if(parentTask.buildertek__finish__c != null){
                         startDate =  parentTask.buildertek__finish__c.addDays(1);
+                        System.debug('Task Id are '+ mapAllTask.get(taskId).buildertek__Duration__c + 'It is null or not '  );
                          if(mapAllTask.get(taskId).buildertek__Duration__c != null){
                             endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
                         }else{
@@ -1073,7 +1081,7 @@ public with sharing class ProjectTaskTriggerHandler{
                     Date startDate;
                     Date endDate;
                     Project_Task__c currentTask = new Project_Task__c();
-                    system.debug(pathItem);
+                    System.debug('pathItem is '+ pathItem);
                     if(!String.isBlank(pathItem)){
                         if(newProjectTaskMap.get(Id.valueOf(pathItem)) != null){
                             if(prevParent.Id == null){
@@ -1106,6 +1114,9 @@ public with sharing class ProjectTaskTriggerHandler{
                     
                 }
             }
+            // debug by sakina
+            System.debug('lastTask' + lastTask.Id);
+            // System.debug(ProjectTaskTriggerHandler.getStartDate(lastTask.buildertek__finish__c.addDays(1) + 'Date is');
             if(lastTask.Id != null){
                 taskItem.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(lastTask.buildertek__finish__c.addDays(1));
                 Date taskEndDate;
@@ -1347,7 +1358,7 @@ public with sharing class ProjectTaskTriggerHandler{
             throw new AuraHandledException(e.getMessage());
         }
     }
-
+    
     //Calculate and duration.
     public static Decimal calculateDuration(Date sDate, Date eDate){
         try{

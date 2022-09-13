@@ -3,12 +3,15 @@
     
     getPurchaseOrders : function(component, event, helper, pageNumber, pageSize) {
         component.set("v.Spinner", true);
-        debugger;
+        component.set("v.isExpanded", false);
+        // debugger;
         var purchaseOrderFilter = component.get("v.searchItemFilter");
         
         var descriptionValue = component.get("v.searchDescriptionFilter");
         
         var tradeTypeValue = component.get("v.searchTradeTypeFilter");
+
+        var searchProductValue = component.get("v.searchProductFilter");
         
         var projectValue = component.get("v.searchProjectFilter");
    
@@ -22,15 +25,18 @@
             "poFilter" : purchaseOrderFilter,
             "poLineFilter" : descriptionValue,
             "tradeTypeFilter" : tradeTypeValue,
-            "projectFilter" : projectValue
+            "projectFilter" : projectValue,
+            "productFilter" : searchProductValue
         });
         action.setCallback(this, function(response){
-            debugger;
+            // debugger;
             var state = response.getState();
             if(state === "SUCCESS"){
-                debugger;
+                // debugger;
                 
                 var result = response.getReturnValue();
+                console.log('--- result ---');
+                console.log({result});
                 if(result != null && result.length > 0){
                     
                     
@@ -72,7 +78,7 @@
     
     
     getPOListDetails : function(component, event, helper) {
-        debugger;
+        // debugger;
         var action = component.get("c.getPORecListDetails");
         action.setParams({
             recId : component.get("v.recordId")
@@ -96,7 +102,7 @@
     
     
     readFiles2 : function(component, event, helper, file,poId){
-        debugger;
+        // debugger;
         var filesList = component.get("v.fileData2");
         var reader = new FileReader(); 
         reader.onload = () => {

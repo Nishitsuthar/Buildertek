@@ -699,6 +699,8 @@
                     component.set('v.isLoading', false);
 
                     helper.getExtendedCosts(component, event, helper);
+                    console.log('GL===='+component.get('v.generalLiabilityCost'));
+
                     // //helper.getCountryOptions(component, event, helper);
                     // if(savedSelectedCountry != null && savedSelectedCountry != undefined)
                     // {
@@ -814,8 +816,15 @@
 
         var params = event.getParam('arguments');
 
-        var action = component.get("c.handleBTAdmin");
-        $A.enqueueAction(action);
+        helper.getExtendedCosts(component, event, helper);
+        console.log('GL===='+component.get('v.generalLiabilityCost'));
+        
+        // var action = component.get("c.handleBTAdmin");
+        // $A.enqueueAction(action);
+        
+        // helper.getExtendedCosts(component, event, helper);
+        // console.log('GL===='+component.get('v.generalLiabilityCost'));
+        
         if (params) {
             // var allExtendedCosts = params.extendedCosts;
 

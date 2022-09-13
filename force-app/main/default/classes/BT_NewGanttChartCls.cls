@@ -876,9 +876,24 @@ public class BT_NewGanttChartCls {
     }
 
     @AuraEnabled
-    public static buildertek__Schedule__c getScheduleOriginal(String recordId){
-        buildertek__Schedule__c schedule = [SELECT Id, Name, buildertek__Original_Start_Date__c, buildertek__Original_End_Date__c FROM buildertek__Schedule__c WHERE Id =: recordId];
-        return schedule;
+    public static String changeOriginalDates(String recordId){
+        try {
+            System.debug('changeOriginalDates');
+            List<buildertek__Project_Task__c> scheduleTaskList = [SELECT Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Original_Start_Date__c, buildertek__Original_End_Date__c FROM buildertek__Project_Task__c WHERE buildertek__Schedule__c =: recordId FOR UPDATE];
+            System.debug('scheduleTaskList => '+scheduleTaskList);
+            for (buildertek__Project_Task__c st : scheduleTaskList) {
+                st.buildertek__Original_Start_Date__c = st.buildertek__Start__c;
+                st.buildertek__Original_End_Date__c = st.buildertek__Finish__c;
+            }
+            update scheduleTaskList;
+            System.debug('Success');
+            return 'Success';
+
+        } catch (Exception e) {
+            String data = 'Error => ' + e.getMessage() + ' || Line No => ' + e.getLineNumber(); 
+            System.debug(data);
+            return data;
+        }
     }
     
 

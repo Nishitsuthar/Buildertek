@@ -44,7 +44,7 @@
             max-height:unset !important;
             }
         </aura:html>
-        
+
         <aura:if isTrue="{!v.IsSubmitted}">
             <!--Modal Body-->   
             <div class="slds-modal__content slds-p-around--x-small slds-align_absolute-center slds-size_1-of-1 slds-is-relative">
@@ -69,8 +69,13 @@
         
     </aura:if> 
     
-    
+
     <aura:if isTrue="{!v.IsActive}">
+        <aura:html tag="style">
+            .container{
+                height: auto;
+            }
+        </aura:html>
         <header class="slds-modal__header">
             
             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Import Master SOVs</h2>

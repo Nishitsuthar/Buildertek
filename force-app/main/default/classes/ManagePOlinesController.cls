@@ -242,8 +242,11 @@ public with sharing class ManagePOlinesController {
         if(fields.contains('buildertek__Product__r.buildertek__Vendor__c') == false){
             fields += ' , ' + 'buildertek__Product__r.buildertek__Vendor__c ';
         }
+        if(fields.contains('buildertek__Selection_Sheet_Takeoff__r.buildertek__Options_Rate__c') == false){
+            fields += ' , ' + 'buildertek__Selection_Sheet_Takeoff__r.buildertek__Options_Rate__c ';
+        }
         fields += ' , ' + 'buildertek__Product__r.ProductCode , buildertek__Takeoff_Line__r.buildertek__TL_SERVICE_CATEGORY__c, buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c, buildertek__Takeoff_Line__r.buildertek__UOM_PL__c  ';
-        system.debug(fields);
+        system.debug('fields==='+fields);
         
         
         
@@ -1050,7 +1053,6 @@ public with sharing class ManagePOlinesController {
     
     @AuraEnabled
     public static List<buildertek__Project_Selection_Sheet_Takeoff__c> getBTAdminRecorDetails(String recordId){
-        System.debug('recordId-->'+recordId);
         List<buildertek__Project_Selection_Sheet_Takeoff__c> BomList = new List<buildertek__Project_Selection_Sheet_Takeoff__c>();
         if(String.isNotBlank(recordId))
         {
@@ -1149,6 +1151,7 @@ public with sharing class ManagePOlinesController {
     @AuraEnabled
     public static Map<String,Map<String,String>> getExtendedCosts(String bomId)
     {
+        System.debug('getExtendedCosts called==='+bomId);
         Map<String,Map<String,String>> returnMapVal = new Map<String,Map<String,String>>();
      //   try 
      //   {
@@ -1158,8 +1161,11 @@ public with sharing class ManagePOlinesController {
                 String fields= ' Id, Name,buildertek__Upgrade_Price__c,buildertek__Quantity__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Textura_Fee__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__General_Liability_Insurance_Long__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Workers_Comp__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__Options_Rate__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Fabrication_Labor_Mark_up_LongText__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Slab_Discount_Rate_LongText__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Edge__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__Miscellaneous_Rates__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Fabrication_Install_Rate__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__Fab_Only_Rate__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__Install_Only__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__Mark_Up_Non_Slab_or_Labor__c, ';
                 fields = fields + ' buildertek__Extended_Cost__c,buildertek__Product__r.ProductCode , buildertek__Takeoff_Line__r.buildertek__TL_SERVICE_CATEGORY__c  ';
                 query = query+fields+' FROM buildertek__Select_Sheet__c WHERE (buildertek__Selection_Sheet_Takeoff__c =: bomId) ';
-                system.debug('#@#@#Query---'+query);
+                system.debug('#@#@#Query---*****'+query);
+                System.debug('bomId===='+bomId);
                 List<buildertek__Select_Sheet__c> recList = Database.query(query);
+                System.debug('recList==='+recList);
+                System.debug('recList size==='+recList.size());
                 if(recList != null && recList.size() > 0)
                 {
                     Map<Id,buildertek__Select_Sheet__c> bomLineMap = new Map<Id,buildertek__Select_Sheet__c>(recList);
@@ -1179,11 +1185,15 @@ public with sharing class ManagePOlinesController {
                     {
                         if(string.valueof(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Workers_Comp__c) != null){
                             returnMapVal.put('buildertek__Workers_Comp__c', formatExtendedCostForWorkComp('buildertek__Workers_Comp__c',recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Workers_Comp__c,bomLineMap));
+                            System.debug('work comp==='+returnMapVal.get('buildertek__Workers_Comp__c'));
                         }
                     }
+                    // System.debug('Gl insurance====='+formatExtendedCostForWorkComp('buildertek__General_Liability_Insurance_Long__c',recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__General_Liability_Insurance_Long__c,bomLineMap));
+                    System.debug('gl====='+recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__General_Liability_Insurance_Long__c);
                     if(String.isNotBlank(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__General_Liability_Insurance_Long__c))
                     {
                         returnMapVal.put('buildertek__General_Liability_Insurance_Long__c', formatExtendedCostForWorkComp('buildertek__General_Liability_Insurance_Long__c',recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__General_Liability_Insurance_Long__c,bomLineMap));
+                        System.debug('Gl insurance====='+returnMapVal.get('buildertek__General_Liability_Insurance_Long__c'));
                     }
                     if(String.isNotBlank(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Textura_Fee__c))
                     {
@@ -1221,7 +1231,6 @@ public with sharing class ManagePOlinesController {
                     // {
                         Map<String,String> strMap = new Map<String,String>();
                         Map<String,String> blankDiscountMap = new Map<String,String>();
-                        Map<String,String> blankslabDiscountMap = new Map<String,String>();
                         Map<String,String> markUpnonSlabMap = new Map<String,String>();
                         Map<String,String> workersCompMap = new Map<String,String>();
                         Map<String,String> generalLiabMap = new Map<String,String>();
@@ -1235,7 +1244,6 @@ public with sharing class ManagePOlinesController {
                             // strMap.put(bomLine.Id, String.valueOf(bomLine.buildertek__Extended_Cost__c));
                             strMap.put(bomLine.Id, '0');
                             blankDiscountMap.put(bomLine.Id, '0');
-                            blankslabDiscountMap.put(bomLine.Id, '');
                         }
                         if(!returnMapVal.containsKey('buildertek__Fabrication_Install_Rate__c'))
                         {
@@ -1275,7 +1283,7 @@ public with sharing class ManagePOlinesController {
                         }
                         if(!returnMapVal.containsKey('buildertek__Slab_Discount_Rate_LongText__c'))
                         {
-                            returnMapVal.put('buildertek__Slab_Discount_Rate_LongText__c',blankslabDiscountMap );
+                            returnMapVal.put('buildertek__Slab_Discount_Rate_LongText__c',blankDiscountMap );
                         }
                         if(!returnMapVal.containsKey('buildertek__Fabrication_Labor_Mark_up_LongText__c'))
                         {
@@ -1342,17 +1350,25 @@ public with sharing class ManagePOlinesController {
 
     private Static Map<String,String> formatExtendedCostForWorkComp(String fieldAPIName,String fieldName,Map<Id,buildertek__Select_Sheet__c> bomLineMap )
     {
+        System.debug('fieldAPIName=='+fieldAPIName);
+        System.debug('fieldName=='+fieldName);
+        System.debug('bomLineMap=='+bomLineMap);
         Map<String,String> fabInstallRates = new Map<String,String>();
         List<buildertek.ManagePOlinesController.ExtendedCostWrap> wrapperList = (List<buildertek.ManagePOlinesController.ExtendedCostWrap>)JSON.deserialize(fieldName, List<buildertek.ManagePOlinesController.ExtendedCostWrap>.Class);
         for(buildertek.ManagePOlinesController.ExtendedCostWrap wrapObj : wrapperList)
         {
+            System.debug('wrapObj=== '+wrapObj);
+            System.debug('wrapObj.bomLineId=='+bomLineMap.get(wrapObj.bomLineId));
+            System.debug('Qty==='+bomLineMap.get(wrapObj.bomLineId).buildertek__Quantity__c);
+
             if(bomLineMap.containsKey(wrapObj.bomLineId) && bomLineMap.get(wrapObj.bomLineId).buildertek__Quantity__c != null )
             {
                 Decimal extendedCost;
-              //  system.debug('wrapObj.extendedCostVal'+string.valueof(wrapObj.extendedCostVal));
+               system.debug('wrapObj.extendedCostVal=='+string.valueof(wrapObj.extendedCostVal));
                 if(String.isNotBlank(wrapObj.extendedCostVal))
                 {
                     extendedCost = Decimal.valueOf(wrapObj.extendedCostVal);
+                    System.debug('extendedCost=='+extendedCost);
                     fabInstallRates.put(fieldAPIName, String.valueOf(extendedCost));
                 }
             }

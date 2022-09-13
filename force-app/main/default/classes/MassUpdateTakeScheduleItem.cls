@@ -71,30 +71,24 @@ public class MassUpdateTakeScheduleItem{
                 }
                 query += ' FROM buildertek__Project_Task__c WHERE buildertek__Schedule__c=: recordId';
                 if (String.isNotBlank(phase)){
-                    phase = '\'%' + phase + '%\'';
-                    System.debug('phase>>>'+phase);
-                    query += ' AND buildertek__Phase__c LIKE '+phase;
+                    phase = '%' + phase + '%';                    
+                    query += ' AND buildertek__Phase__c LIKE : phase';
                 }
                 if (String.isNotBlank(contractor)){
-                    contractor = '%' + contractor + '%';
-                    System.debug('contractor>>>'+contractor);
+                    contractor = '%' + contractor + '%';                    
                     query += ' AND buildertek__Contractor__r.Name LIKE : contractor';
                 }
                 if (String.isNotBlank(contractorResources)){
-                    contractorResources = '%' + contractorResources + '%';
-                    System.debug('contractorResources>>>'+contractorResources);
+                    contractorResources = '%' + contractorResources + '%';                    
                     query += ' AND buildertek__Contractor_Resource__r.Name LIKE : contractorResources';
                 }
                 if (String.isNotBlank(TradeType)){
-                    TradeType = '%' + TradeType + '%';
-                    System.debug('TradeType>>>'+TradeType);
+                    TradeType = '%' + TradeType + '%';                    
                     query += ' AND buildertek__Trade_Type__r.Name LIKE : TradeType';
                 }
                 query += ' Order by Order__c NULLS LAST,CreatedDate' ;//CreatedDate//Order by buildertek__Milestone__c , Order__c ASC NULLS LAST, Auto_Number__c ASC
                 //query += ' Order by Order__c ASC NULLS LAST, buildertek__Phase__c ASC NULLS LAST, buildertek__Milestone__c,buildertek__Start__c , Auto_Number__c ASC';
-                //query += ' LIMIT : pageSize OFFSET : offset';
-                
-                System.debug('query>>>'+query);
+                //query += ' LIMIT : pageSize OFFSET : offset';                                
 
                 for (buildertek__Project_Task__c s : Database.query(query)){
                     lstResult.add(s);
@@ -104,16 +98,14 @@ public class MassUpdateTakeScheduleItem{
                 List<buildertek__Project_Task__c>  milestoneTaskList = DataBase.query(milestonequery);
                 
                 Map<String,List<buildertek__Project_Task__c>> TaskWithPhaseMap = new Map<String,List<buildertek__Project_Task__c>>();
-                
-                System.debug('lstResult>>>'+lstResult);
+                                
                 for(buildertek__Project_Task__c  task:lstResult){ //projectTasks1
                     if(!task.buildertek__Milestone__c){
                         if(task.buildertek__Phase__c !=null){
                             // system.debug(task.Name);
                             if(TaskWithPhaseMap.get(task.buildertek__Phase__c) != null){
                                 list<buildertek__Project_Task__c> newProjectTaskList = TaskWithPhaseMap.get(task.buildertek__Phase__c);
-                                newProjectTaskList.add(task);    
-                                System.debug('newProjectTaskList 1>>>'+newProjectTaskList);
+                                newProjectTaskList.add(task);                                    
                                 TaskWithPhaseMap.put(task.buildertek__Phase__c,newProjectTaskList);  
                             }else{
                                 List<buildertek__Project_Task__c> newTaskList = new List<buildertek__Project_Task__c>();
@@ -122,16 +114,14 @@ public class MassUpdateTakeScheduleItem{
                             }
                         }
                     }
-                }
-                System.debug('TaskWithPhaseMap 1>>>'+TaskWithPhaseMap);
+                }                
                 
                 Map<String,buildertek__Project_Task__c> milestoneMap = new Map<String,buildertek__Project_Task__c>();
                 if(milestoneTaskList.Size()>0){
                     for(buildertek__Project_Task__c milestone : milestoneTaskList){
                         if(milestone.buildertek__Phase__c != null){
                             list<buildertek__Project_Task__c> newProjectTaskList = TaskWithPhaseMap.get(milestone.buildertek__Phase__c);
-                            System.debug('TaskWithPhaseMap>>>'+TaskWithPhaseMap);
-                            System.debug('newProjectTaskList>>>'+newProjectTaskList);
+                                                        
                             if(newProjectTaskList!=null)
                                 newProjectTaskList.add(milestone);    
                             TaskWithPhaseMap.put(milestone.buildertek__Phase__c,newProjectTaskList);  

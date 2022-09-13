@@ -108,6 +108,7 @@
         var recordId = component.get('v.parentId');
         var fieldName = component.get('v.fieldAPIName');
         console.log('TableData***', wrapList);
+        console.log('fieldName==='+fieldName);
         action.setParams({
 
             'jsonString': JSON.stringify(wrapList),

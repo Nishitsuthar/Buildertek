@@ -54,8 +54,21 @@
     },
 
     closeScreen: function (component, event, helper) {
-        var redirectUrl = '/one/one.app?#/sObject/'+component.get('v.recordId')+'/view';
-        window.open(redirectUrl,'_self');
+        // var redirectUrl = '/one/one.app?#/sObject/'+component.get('v.recordId')+'/view';
+        // window.open(redirectUrl,'_self');
+        
+        // var navEvt = $A.get("e.force:navigateToSObject");
+        // navEvt.setParams({
+        //     "recordId": component.get('v.recordId'),
+        //     "slideDevName": "detail"
+        // });
+        // navEvt.fire();
+
+        component.set("v.isCancelModalOpen", false);
+        sforce.one.navigateToSObject(component.get('v.recordId'), 'detail');
+        var pageNumber = component.get("v.PageNumber");
+        var pageSize = component.get("v.pageSize");
+        helper.getTableRows(component, event, helper, pageNumber, pageSize);
       },
 
     deleteRecord: function (component, event, helper) {

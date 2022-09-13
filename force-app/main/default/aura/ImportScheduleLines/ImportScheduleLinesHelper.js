@@ -1,48 +1,48 @@
 ({
-    CSV2JSON: function (component, event, helper, csv) {
-        debugger;
+    CSV2JSON: function(component, event, helper, csv) {
+        // debugger;
         var arr = [];
         arr = csv.split('\n');
         arr.pop();
         var jsonObj = [];
         var headers = arr[0].split(',');
-        console.log('headers::',headers);
-        if (headers[0] !== "Name" || headers[1] !== "Dependency" || headers[2] !== "StartDate" || headers[3] !== "Duration" || headers[4] !== "% Complete" || headers[5] !== "Phase" ||  headers[6] !== "Notes" || headers[7] !== "Lag\r") {
+        console.log('headers::', headers);
+        if (headers[0] !== "Name" || headers[1] !== "Dependency" || headers[2] !== "StartDate" || headers[3] !== "Duration" || headers[4] !== "% Complete" || headers[5] !== "Phase" || headers[6] !== "Notes" || headers[7] !== "Lag\r") {
             component.set("v.Spinner", false);
             component.set("v.isErrorOccured", true);
             component.set("v.errorMessage", 'File Header Format is Invalid!');
             return '';
         }
         var startIndex;
-        var endIndex;  
+        var endIndex;
         for (var i = 1; i < arr.length; i++) {
             if (i >= 23) {
                 // alert("hai");
                 // debugger;
             }
             if (arr[i] != undefined) {
-                
-                while(arr[i].indexOf('"') > -1){
-                    if(startIndex == null){
+
+                while (arr[i].indexOf('"') > -1) {
+                    if (startIndex == null) {
                         startIndex = arr[i].indexOf('"');
-                        
-                        arr[i] = arr[i].substring(0, startIndex) + ':quotes:' + arr[i].substring(startIndex+1, arr[i].length);
-                        
-                    }else{
-                        if(endIndex == null){
+
+                        arr[i] = arr[i].substring(0, startIndex) + ':quotes:' + arr[i].substring(startIndex + 1, arr[i].length);
+
+                    } else {
+                        if (endIndex == null) {
                             endIndex = arr[i].indexOf('"');
-                            
-                            arr[i] = arr[i].substring(0, endIndex) + ':quotes:' + arr[i].substring(endIndex+1, arr[i].length);
+
+                            arr[i] = arr[i].substring(0, endIndex) + ':quotes:' + arr[i].substring(endIndex + 1, arr[i].length);
                         }
                     }
-                    
-                    if(startIndex != null && endIndex != null){
+
+                    if (startIndex != null && endIndex != null) {
                         var sub = arr[i].substring(startIndex, endIndex);
                         sub = sub.replaceAll(',', ':comma:');
                         arr[i] = arr[i].substring(0, startIndex) + sub + arr[i].substring(endIndex, arr[i].length);
                         startIndex = null;
                         endIndex = null;
-                        
+
                     }
                 }
                 // alert(arr[i]);
@@ -80,78 +80,77 @@
                 for (var j = 0; j < data.length; j++) {
                     var myStr = data[j];
                     var newStr = myStr.replace(/:comma:/g, ',');
-                    newStr= newStr.replace(/:quotes:/g, '');
+                    newStr = newStr.replace(/:quotes:/g, '');
                     data[j] = newStr;
                     if (headers[j].trim() == 'StartDate' && data[j].trim() != '') {
                         var date = data[j].trim();
                         var splitDate = date.split("/");
-                     //   alert(JSON.stringify(parseInt(splitDate[0])))
+                        //   alert(JSON.stringify(parseInt(splitDate[0])))
                         // debugger;
-                        if(parseInt(splitDate[0]) < 10 && parseInt(splitDate[0]).length <2){
+                        if (parseInt(splitDate[0]) < 10 && parseInt(splitDate[0]).length < 2) {
                             month = '0' + splitDate[0]
-                        }else{
+                        } else {
                             month = splitDate[0]
                         }
-                        if(parseInt(splitDate[1]) < 10 && parseInt(splitDate[1]).length <2){
+                        if (parseInt(splitDate[1]) < 10 && parseInt(splitDate[1]).length < 2) {
                             day = '0' + splitDate[1]
-                        }else{
+                        } else {
                             day = splitDate[1]
                         }
                         //var month = parseInt(splitDate[0]) < 10 ? month = '0' + splitDate[0] : month = splitDate[0];
                         //var day = parseInt(splitDate[1]) < 10 ? day = '0' + splitDate[1] : day = splitDate[1];
-                     /*   obj[headers[j].trim()] = splitDate[2] + '-' + month + '-' + day; */
-                       
-                          obj[headers[j].trim()] = month.split('-').reverse().join('-');
+                        /*   obj[headers[j].trim()] = splitDate[2] + '-' + month + '-' + day; */
+
+                        obj[headers[j].trim()] = month.split('-').reverse().join('-');
                     } else {
-                        if(headers[j].trim() == '% Complete'){
+                        if (headers[j].trim() == '% Complete') {
                             obj['percentComplete'] = data[j].trim();
-                        }else{
+                        } else {
                             obj[headers[j].trim()] = data[j].trim();
                         }
-                        
+
                     }
                     // }
                 }
                 //obj.StartDate != undefined && obj.StartDate != '' ? jsonObj.push(obj) : '';
-                if(obj.StartDate != undefined && obj.StartDate != ''){
-                    jsonObj.push(obj); 
-                }else{
+                if (obj.StartDate != undefined && obj.StartDate != '') {
+                    jsonObj.push(obj);
+                } else {
                     var today = new Date();
                     var dd = String(today.getDate()).padStart(2, '0');
                     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
                     var yyyy = today.getFullYear();
-                    
+
                     today = yyyy + '-' + mm + '-' + dd;
                     obj.StartDate = today;
                     jsonObj.push(obj);
-                  /*  var toastEvent = $A.get("e.force:showToast");
-                    toastEvent.setParams({
-                        title : 'Error',
-                        message: 'StartDate should not be null',
-                        duration:' 10000',
-                        key: 'info_alt',
-                        type: 'error',
-                        mode: 'dismissible'
-                    });
-                    toastEvent.fire();
-                    component.set("v.startdateError",true);
-                    component.set("v.Spinner", false); */
+                    /*  var toastEvent = $A.get("e.force:showToast");
+                      toastEvent.setParams({
+                          title : 'Error',
+                          message: 'StartDate should not be null',
+                          duration:' 10000',
+                          key: 'info_alt',
+                          type: 'error',
+                          mode: 'dismissible'
+                      });
+                      toastEvent.fire();
+                      component.set("v.startdateError",true);
+                      component.set("v.Spinner", false); */
                 }
-                if(obj.percentComplete != "" && obj.percentComplete != undefined){
-                    
-                }
-                else{
-                     var toastEvent = $A.get("e.force:showToast");
+                if (obj.percentComplete != "" && obj.percentComplete != undefined) {
+
+                } else {
+                    var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
-                        title : 'Error',
+                        title: 'Error',
                         message: 'Percent Complete should not be null',
-                        duration:' 10000',
+                        duration: ' 10000',
                         key: 'info_alt',
                         type: 'error',
                         mode: 'dismissible'
                     });
                     toastEvent.fire();
-                    component.set("v.startdateError",true);
+                    component.set("v.startdateError", true);
                     component.set("v.Spinner", false);
                 }
                 //jsonObj.push(obj);
@@ -160,7 +159,7 @@
         var json = JSON.stringify(jsonObj);
         return json;
     },
-    
+
     /*  parseFile : function(component,uploadFile) {
         //var fileInput = component.find("file").getElement();
         var file = uploadFile //fileInput.files[0];
@@ -191,8 +190,8 @@
             toastEvent.fire();
         }
     },*/
-    
-    
+
+
     /*   parse : function(component,thing) {
         var complete = $A.getCallback(function(results,file) {
             console.log("Parsing complete:", results, file);
@@ -227,114 +226,115 @@
 
         Papa.parse(thing,{complete: complete});
 	},*/
-    
-    
-    
-    CreateAccount: function (component, jsonstr) {
+
+
+
+    CreateAccount: function(component, jsonstr) {
         // component.set("v.isOpen", false);
         var jsonData = JSON.parse(jsonstr);
         var recordId = component.get("v.RecordId");
         var action = component.get("c.insertData");
         console.log('CSv FIle::', JSON.stringify(jsonData));
-        
+
         action.setParams({
             "recordId": component.get("v.RecordId"),
             "strFileData": JSON.stringify(jsonData)
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
-            debugger;
+            console.log({ state });
+            // debugger;
             if (state === "SUCCESS") {
-                if(response.getReturnValue() == 'SUCCESS'){
+                if (response.getReturnValue() == 'SUCCESS') {
                     //alert( JSON.stringify(response.getReturnValue()));
                     component.set("v.Spinner", false);
-                    component.set("v.showMessage",false);
+                    component.set("v.showMessage", false);
                     component.set("v.isOpen", false);
-                    
+
                     var baseURL = component.get("v.BaseURLs");
                     var url = location.href;
                     var baseURL = url.substring(0, url.indexOf('--', 0));
-                    
+
                     var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
-                        title : 'Success',
+                        title: 'Success',
                         message: 'Schedule lines Imported Successfully.',
-                        duration:' 10000',
+                        duration: ' 10000',
                         key: 'info_alt',
                         type: 'success',
                         mode: 'dismissible'
                     });
                     toastEvent.fire();
-                    
-                    if(component.get('v.isNewGantt')){
+
+                    if (component.get('v.isNewGantt')) {
                         var workspaceAPI = component.find("workspace");
-                        if(workspaceAPI.getFocusedTabInfo()){
+                        if (workspaceAPI.getFocusedTabInfo()) {
                             workspaceAPI.getFocusedTabInfo().then(function(response) {
-                                var focusedTabId = response.tabId;
-                                workspaceAPI.closeTab({tabId: focusedTabId}).then(function(res){
-                                    window.setTimeout(function(){
-                                        window.open('/'+recordId,'_top');
+                                    var focusedTabId = response.tabId;
+                                    workspaceAPI.closeTab({ tabId: focusedTabId }).then(function(res) {
+                                        window.setTimeout(function() {
+                                            window.open('/' + recordId, '_top');
+                                            location.reload();
+                                        }, 2000)
+                                        if (workspaceAPI.getFocusedTabInfo()) {
+                                            workspaceAPI.getFocusedTabInfo().then(function(response) {
+                                                    var focusedTabId = response.tabId;
+                                                    //location.reload();
+                                                    // $A.get('e.force:refreshView').fire();
+                                                    window.setTimeout(function() {
+                                                            window.open('/' + recordId, '_top');
+                                                            location.reload();
+                                                        }, 2000)
+                                                        // component.set("v.isOpen", false);
+                                                })
+                                                .catch(function(error) {
+                                                    console.log(error);
+
+
+                                                });
+                                        }
+
+
+                                        //$A.enqueueAction(component.get('c.doInit'))
+                                        // $A.enqueueAction(navEvt.fire());
+                                    });
+
+                                })
+                                .catch(function(error) {
+                                    console.log(error);
+                                    var navEvt = $A.get("e.force:navigateToSObject");
+                                    navEvt.setParams({
+
+                                        "recordId": recordId,
+                                        "slideDevName": "detail"
+                                    });
+                                    window.setTimeout(function() {
                                         location.reload();
-                                    },2000)
-                                    if(workspaceAPI.getFocusedTabInfo()){
-                                        workspaceAPI.getFocusedTabInfo().then(function(response) {
-                                            var focusedTabId = response.tabId;
-                                            //location.reload();
-                                            // $A.get('e.force:refreshView').fire();
-                                            window.setTimeout(function(){
-                                                window.open('/'+recordId,'_top');
-                                                location.reload();
-                                            },2000)
-                                            // component.set("v.isOpen", false);
-                                        })
-                                        .catch(function(error) {
-                                            console.log(error);
-                                            
-                                            
-                                        });
-                                    }
-                                    
-                                    
-                                    //$A.enqueueAction(component.get('c.doInit'))
-                                    // $A.enqueueAction(navEvt.fire());
+                                    }, 500)
+                                    navEvt.fire();
+                                    // $A.enqueueAction(component.get('c.doInit'))
+                                    //$A.enqueueAction(navEvt.fire());
+
                                 });
-                                
-                            })
-                            .catch(function(error) {
-                                console.log(error);
-                                var navEvt = $A.get("e.force:navigateToSObject");
-                                navEvt.setParams({
-                                    
-                                    "recordId": recordId,
-                                    "slideDevName": "detail"
-                                });
-                                window.setTimeout(function(){
-                                    location.reload();
-                                },500)
-                                navEvt.fire(); 
-                                // $A.enqueueAction(component.get('c.doInit'))
-                                //$A.enqueueAction(navEvt.fire());
-                                
-                            });
-                        }else{
-                            window.open('/'+recordId, "_top");
+                        } else {
+                            window.open('/' + recordId, "_top");
                             //window.open(baseURL + '.lightning.force.com/lightning/r/buildertek__Schedule__c/' + escape(recordId) + '/view', '_top');
                         }
                         // window.open(baseURL + '.lightning.force.com/lightning/r/buildertek__Schedule__c/' + escape(recordId) + '/view', '_top');
-                    }else{
+                    } else {
                         window.open('/apex/BT_Task_Manager?recordId=' + escape(recordId), '_self')
                     }
                     // window.open('/apex/BT_Task_Manager?recordId=' + escape(recordId), '_self') 
-                }else{
-                  
+                } else {
+
                     component.set("v.Spinner", false);
-                    component.set("v.showMessage",false);
-                    console.log("error--->",response.getReturnValue())
+                    component.set("v.showMessage", false);
+                    console.log("error--->", response.getReturnValue())
                     var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
-                        title : 'Error',
+                        title: 'Error',
                         message: 'There was an error uploading your file. Please Contact your Administrator for assistance',
-                        duration:' 10000',
+                        duration: ' 10000',
                         key: 'info_alt',
                         type: 'error',
                         mode: 'dismissible'
@@ -342,36 +342,36 @@
                     toastEvent.fire();
                 }
                 //window.open(baseURL + '.lightning.force.com/lightning/r/buildertek__Schedule__c/' + escape(recordId) + '/view', '_self');
-            }
-            else{
-                
+            } else {
+                // sakina 5th sept
+                component.set("v.Spinner", false);
                 console.error(response.getError());
             }
         });
-        
-        var ph=false;
-        var du=false;
-        var nam=false;
-        if(JSON.stringify(jsonData).includes('"Phase":""')){
+
+        var ph = false;
+        var du = false;
+        var nam = false;
+        if (JSON.stringify(jsonData).includes('"Phase":""')) {
             //alert('Phase-------------------'+JSON.stringify(jsonData).includes('"Phase":""'));
-            ph=true;
+            ph = true;
         }
-        if(JSON.stringify(jsonData).includes('"Duration":""')){
+        if (JSON.stringify(jsonData).includes('"Duration":""')) {
             // alert('Duration------------------'+JSON.stringify(jsonData).includes('"Duration":""'));
-            du=true;
+            du = true;
         }
-        if(JSON.stringify(jsonData).includes('"Name":""')){
+        if (JSON.stringify(jsonData).includes('"Name":""')) {
             //alert('Name------------------------'+JSON.stringify(jsonData).includes('"Name":""'));
-            nam=true;
+            nam = true;
         }
-        
+
         // if(ph==true && du==true && nam==true){
-        if( du==true && nam==true){
+        if (du == true && nam == true) {
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
-                title : 'Error',
+                title: 'Error',
                 message: 'You are missing Name, Duration in your CSV file.',
-                duration:' 10000',
+                duration: ' 10000',
                 key: 'info_alt',
                 type: 'error',
                 mode: 'dismissible'
@@ -404,20 +404,20 @@
                     });
                     toastEvent.fire();
             component.set("v.Spinner", false);*/
-           }else if( du==true && nam==false){
-               // alert(ph,du);
-               var toastEvent = $A.get("e.force:showToast");
-               toastEvent.setParams({
-                   title : 'Error',
-                   message: 'You are missing the Duration value in your CSV file.',
-                   duration:' 10000',
-                   key: 'info_alt',
-                   type: 'error',
-                   mode: 'dismissible'
-               });
-               toastEvent.fire();
-               component.set("v.Spinner", false);
-               /*   }else if(ph==true && du==false && nam==true){
+        } else if (du == true && nam == false) {
+            // alert(ph,du);
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'You are missing the Duration value in your CSV file.',
+                duration: ' 10000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'dismissible'
+            });
+            toastEvent.fire();
+            component.set("v.Spinner", false);
+            /*   }else if(ph==true && du==false && nam==true){
          // alert(ph,du);
           var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
@@ -430,20 +430,20 @@
                     });
                     toastEvent.fire();
             component.set("v.Spinner", false);*/
-      }else if( du==false && nam==true){
-          // alert(ph,du);
-          var toastEvent = $A.get("e.force:showToast");
-          toastEvent.setParams({
-              title : 'Error',
-              message: 'You must have a Name value on all records.',
-              duration:' 10000',
-              key: 'info_alt',
-              type: 'error',
-              mode: 'dismissible'
-          });
-          toastEvent.fire();
-          component.set("v.Spinner", false);
-          /* }else if(ph==false && du==true && nam==true){
+        } else if (du == false && nam == true) {
+            // alert(ph,du);
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'You must have a Name value on all records.',
+                duration: ' 10000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'dismissible'
+            });
+            toastEvent.fire();
+            component.set("v.Spinner", false);
+            /* }else if(ph==false && du==true && nam==true){
          // alert(ph,du);
           var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
@@ -456,13 +456,12 @@
                     });
                     toastEvent.fire();
             component.set("v.Spinner", false);*/
-      }else if(component.get("v.startdateError") == true){
-          
-      }
-          else{
-              $A.enqueueAction(action);
-          }
-        
+        } else if (component.get("v.startdateError") == true) {
+
+        } else {
+            $A.enqueueAction(action);
+        }
+
         /* if(JSON.stringify(jsonData).includes('"Phase":""' &&  '"Duration":""'  && '"Name" :""') ){
             var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
@@ -517,16 +516,16 @@
         else{
             $A.enqueueAction(action);
         }*/
-        
+
     },
-    convertArrayOfObjectsToCSV : function(component,event,helper){
+    convertArrayOfObjectsToCSV: function(component, event, helper) {
         // declare variables
         var csvStringResult, keys, columnDivider;
         columnDivider = ',';
-        keys = [ 'Name','Dependency','StartDate','Duration','% Complete','Phase','Notes','Lag'];
+        keys = ['Name', 'Dependency', 'StartDate', 'Duration', '% Complete', 'Phase', 'Notes', 'Lag'];
         csvStringResult = '';
         csvStringResult += keys.join(columnDivider);
         // return the CSV formate String 
-        return csvStringResult;        
+        return csvStringResult;
     },
 })

@@ -859,6 +859,8 @@ public with sharing class BT_EditExtendedCostController
                             bomToUpdate.buildertek__General_Liability_Insurance_Long__c = JSON.serialize(wrapperList);
                         }
                         system.debug('wrapperList'+wrapperList.size());
+                        system.debug('wrapperList===='+wrapperList);
+
                         system.debug('fieldToUpdate'+fieldToUpdate);
                         system.debug('bomId'+bomId);
                         if(fieldToUpdate.equals('buildertek__General_Liability_Insurance_Long__c') || fieldToUpdate.equals('buildertek__Workers_Comp__c') )

@@ -21,16 +21,16 @@
    if (workspaceAPI) {
      // ensure that we are in Console
      workspaceAPI.isConsoleNavigation().then(isConsole => {
-         console.log({isConsole});
+        //  console.log({isConsole});
        if (isConsole) {
          // get our enclosing tab
          workspaceAPI.getEnclosingTabId().then(enclosingTabId => {
-         console.log({enclosingTabId});
+        //  console.log({enclosingTabId});
            // retrieve full tab info
            workspaceAPI.getTabInfo({
                tabId: enclosingTabId
            }).then(tabInfo => {
-         console.log({tabInfo});
+        //  console.log({tabInfo});
                // Actual action implementation
 
                // create variable name for retrieving info which tab we should be focusing on
@@ -103,7 +103,7 @@
                 var workspaceAPI = component.find("workspace");
                 workspaceAPI.getFocusedTabInfo().then(function (response) {
                     var focusedTabId = response.tabId;
-                                 console.log({focusedTabId});
+                                //  console.log({focusedTabId});
                     workspaceAPI.setTabLabel({
                         tabId: focusedTabId,
                         label: "Mass Update"
@@ -192,7 +192,7 @@
         var scheduleId =  component.get("v.recordId");
         var tabId = component.get("v.currentTab")
         var spanEle = event.currentTarget.dataset.iconname;
-        console.log(spanEle)
+        // console.log(spanEle)
         var expandallicon
         var collapeallIcon
         var scheduleItems = component.get("v.grpByPhaseValuesMassUpdate")
@@ -255,6 +255,7 @@
     },
     
     onAddClick: function (component, event, helper) {
+        component.set('v.isLoading', true);
         var fields = component.get('v.fieldSetValues');
         var list = component.get('v.listOfRecords');
         var obj = {};
@@ -268,17 +269,21 @@
         list.unshift(obj);
         component.set('v.listOfRecords', list);
         helper.formatDataByGroups(component,list)
+        window.setTimeout(function(){
+
+            component.set('v.isLoading', false);
+        },2000);
     },
 
     onMassUpdate: function (component, event, helper) {
-        debugger;
+        // debugger;
         component.set('v.isLoading', true);
         var phase = component.find("SearchPhase").get("v.value");
-        console.log({phase});
+        // console.log({phase});
         var contractor = component.find("searchContractor").get("v.value");
-        console.log({contractor});
+        // console.log({contractor});
         var contractorResources = component.find("searchContractorResources").get("v.value");
-        console.log({contractorResources});
+        // console.log({contractorResources});
         var TradeType = component.find("searchTradeType").get("v.value");
         if (!component.get('v.massUpdateEnable')) {
             component.set('v.massUpdateEnable', true);
@@ -298,7 +303,7 @@
                 workspaceAPI.getFocusedTabInfo().then(function(response) {
                     var focusedTabId = response.tabId;
                     workspaceAPI.closeTab({tabId: focusedTabId}).then(function(response){
-                        console.log(response)
+                        // console.log(response)
                         workspaceAPI.openSubtab({
                             parentTabId: response.parentTabId,
                             url: '/lightning/r/buildertek__Schedule__c/'+component.get("v.recordId")+'/view',
@@ -306,7 +311,7 @@
                         });
                     }).catch(function(error) {
                         component.set('v.massUpdateEnable', false);
-                        console.log(error);
+                        // console.log(error);
                         var navEvt = $A.get("e.force:navigateToSObject");
                         navEvt.setParams({
                             "recordId": component.get("v.recordId"),
@@ -325,7 +330,7 @@
                     
                 }).catch(function(error) {
                     component.set('v.massUpdateEnable', false);
-                    console.log(error);
+                    // console.log(error);
                     var navEvt = $A.get("e.force:navigateToSObject");
                     navEvt.setParams({
                         "recordId": component.get("v.recordId"),
@@ -398,7 +403,7 @@
         var index = event.getSource().get('v.name');
         var records = component.get('v.listOfRecords');
         var recordIdsToDelete = component.get('v.recordIdsToDelete');
-        debugger;
+        // debugger;
         if(event.getSource().get("v.checked")){
             event.getSource().set("v.checked",false)
         }else{
@@ -471,6 +476,6 @@
         var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
         helper.getTableRows(component, event, helper, pageNumber, pageSize, phase, contractor, contractorResources, TradeType);
-        component.set('v.isLoading', false);
+        // component.set('v.isLoading', false);
     }
 })

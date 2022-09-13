@@ -1,6 +1,6 @@
 public class POPageController {
     @AuraEnabled
-    public static object getMasterBudgets(String recId, Integer pageNumber, Integer pageSize, String poFilter, String poLineFilter, String tradeTypeFilter, String projectFilter){
+    public static object getMasterBudgets(String recId, Integer pageNumber, Integer pageSize, String poFilter, String poLineFilter, String tradeTypeFilter, String projectFilter, String productFilter){
         
         system.debug('pageNumber--------->'+pageNumber);
         system.debug('pageSize----------->'+pageSize);
@@ -78,7 +78,7 @@ public class POPageController {
             MainpoRecList = Database.query(queryList); 
         }
         
-        else if(poLineFilter != ''){
+        else if(poLineFilter != '' || productFilter != ''){
             MainpoRecList = [SELECT Id,
                              Name, 
                              buildertek__Type__c,
@@ -104,7 +104,8 @@ public class POPageController {
                                                           buildertek__Description__c,
                                                           buildertek__Tax__c,
                                                           buildertek__Total_Price__c,
-                                                          buildertek__Total_Amount_Tax__c from Purchase_Order_Items__r)
+                                                          buildertek__Total_Amount_Tax__c, 
+                                                          buildertek__Product__r.ProductCode from Purchase_Order_Items__r)
                              FROM buildertek__Purchase_Order__c where (buildertek__Status__c != 'Ordered' AND buildertek__Status__c != 'Paid' AND buildertek__Status__c != 'Partially Paid')    ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC ];    
         }else {
             MainpoRecList = [SELECT Id,
@@ -132,7 +133,8 @@ public class POPageController {
                                                           buildertek__Description__c,
                                                           buildertek__Tax__c,
                                                           buildertek__Total_Price__c,
-                                                          buildertek__Total_Amount_Tax__c from Purchase_Order_Items__r)
+                                                          buildertek__Total_Amount_Tax__c, 
+                                                          buildertek__Product__r.ProductCode from Purchase_Order_Items__r)
                              FROM buildertek__Purchase_Order__c where (buildertek__Status__c != 'Ordered' AND buildertek__Status__c != 'Paid' AND buildertek__Status__c != 'Partially Paid')    ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC  LIMIT :pageSize OFFSET :offset];    
         }
         
@@ -153,7 +155,7 @@ public class POPageController {
             MasterBudgetsClassRecord.poCheck = false;
             MasterBudgetsClassRecord.expanded = false; 
             MasterBudgetsClassRecord.pageSize = pageSize;
-            if(poFilter != '' || poLineFilter != ''){
+            if(poFilter != '' || poLineFilter != '' || productFilter != ''){
                 MasterBudgetsClassRecord.pageNumber = 1;  
             }else{
                 MasterBudgetsClassRecord.pageNumber = pageNumber;
@@ -173,8 +175,50 @@ public class POPageController {
                     POLinesList = new List<POLinesWrapper>();
                     for(buildertek__Purchase_Order_Item__c lines : PO1.Purchase_Order_Items__r){
                         POLinesWrapper POLi = new POLinesWrapper();
-                        if(poLineFilter != '' && poLineFilter != null){
-                            if(lines.buildertek__Description__c != null && lines.buildertek__Description__c != ''){
+                        if(poLineFilter != '' && poLineFilter != null && productFilter != '' && productFilter != null){
+                            if(lines.Name != null && lines.Name != '' && lines.buildertek__Product__r.ProductCode != null && lines.buildertek__Product__r.ProductCode != ''){
+                                if(lines.Name.toLowercase().contains(poLineFilter.toLowercase()) && lines.buildertek__Product__r.ProductCode.toLowercase().contains(productFilter.toLowercase())){
+                                    POLi.RecordId = lines.Id;
+                                    POLi.Name = lines.Name;
+                                    system.debug('innerif'+lines.buildertek__Description__c);
+                                    POLi.Description = lines.buildertek__Description__c;
+                                    POLi.PurchaseOrder = lines.buildertek__Purchase_Order__r.Name;
+                                    POLi.Quantity = lines.buildertek__Quantity__c;
+                                    POLi.UnitCost = lines.buildertek__Unit_Price__c ;
+                                    POLi.TaxRate = lines.buildertek__Tax__c ;
+                                    POLi.TotalPrice = lines.buildertek__Total_Price__c ;
+                                    POLi.TotalCost = lines.buildertek__Total_Amount_Tax__c;
+                                    POLi.expanded = false;
+                                    POLi.PORow = false;
+                                    POLi.poLineCheck = false;
+                                    POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
+                                    POLinesList .add(POLi); 
+                                }
+                            }
+                        }
+                        else if(productFilter != '' && productFilter != null){
+                            if (lines.buildertek__Product__r.ProductCode != null && lines.buildertek__Product__r.ProductCode != '') {
+                                if(lines.buildertek__Product__r.ProductCode.toLowercase().contains(productFilter.toLowercase())){
+                                    POLi.RecordId = lines.Id;
+                                    POLi.Name = lines.Name;
+                                    system.debug('innerif'+lines.buildertek__Description__c);
+                                    POLi.Description = lines.buildertek__Description__c;
+                                    POLi.PurchaseOrder = lines.buildertek__Purchase_Order__r.Name;
+                                    POLi.Quantity = lines.buildertek__Quantity__c;
+                                    POLi.UnitCost = lines.buildertek__Unit_Price__c ;
+                                    POLi.TaxRate = lines.buildertek__Tax__c ;
+                                    POLi.TotalPrice = lines.buildertek__Total_Price__c ;
+                                    POLi.TotalCost = lines.buildertek__Total_Amount_Tax__c;
+                                    POLi.expanded = false;
+                                    POLi.PORow = false;
+                                    POLi.poLineCheck = false;
+                                    POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
+                                    POLinesList .add(POLi); 
+                                }
+                            }
+                        }
+                        else if(poLineFilter != '' && poLineFilter != null){
+                            if(lines.Name != null && lines.Name != ''){
                                 if(lines.Name.toLowercase().contains(poLineFilter.toLowercase())){
                                     POLi.RecordId = lines.Id;
                                     POLi.Name = lines.Name;
@@ -189,11 +233,12 @@ public class POPageController {
                                     POLi.expanded = false;
                                     POLi.PORow = false;
                                     POLi.poLineCheck = false;
+                                    POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
                                     POLinesList .add(POLi); 
                                 }
                             }
-                        }else{
-                            system.debug('else');
+                        }
+                        else if((poLineFilter == '' || poLineFilter == null) && (productFilter == '' || productFilter == null)){
                             POLi.RecordId = lines.Id;
                             POLi.Name = lines.Name;
                             POLi.Description = lines.buildertek__Description__c;
@@ -206,6 +251,7 @@ public class POPageController {
                             POLi.expanded = false;
                             POLi.PORow = false;
                             POLi.poLineCheck = false;
+                            POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
                             POLinesList .add(POLi);  
                         }
                         
@@ -322,6 +368,7 @@ public class POPageController {
         @AuraEnabled public Boolean PORow;
         @AuraEnabled public String coastType;
         @AuraEnabled public decimal coastValue;
+        @AuraEnabled public String ProductCode;
 
         @AuraEnabled public String groupName {get;set;}
         

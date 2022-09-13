@@ -114,7 +114,7 @@
                 }else{
                    component.set("v.acceptPopUp",true);
                 }
-            }     
+            }         
         });
         $A.enqueueAction(action);
     },
@@ -124,6 +124,7 @@
     },    
     confirmAccept: function (component, event, helper) {
         component.set("v.acceptPopUp",false);
+        component.set("v.loaded", true);
        // var loggedInVendor = component.get("v.Vendorname");
         var action = component.get("c.acceptrfqAndChild");
         action.setParams({ 
@@ -144,11 +145,13 @@
                 });
                 toastEvent.fire();
             }     
+            component.set("v.loaded", false);
         });
         $A.enqueueAction(action);
     },
       confirmReject: function (component, event, helper) {
         component.set("v.rejectPopUp",false);
+        component.set("v.loaded", true);
         var action = component.get("c.rejectRfq");
         action.setParams({
             recordId : component.get("v.recordId")
@@ -170,6 +173,7 @@
                 });
                 toastEvent.fire();
             }     
+            component.set("v.loaded", true);
         });
         $A.enqueueAction(action);
     },

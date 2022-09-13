@@ -67,27 +67,27 @@ Balfour Beatty Construction3100 McKinnon StreetDallas, Texas 75201
 </span> -->
                                 
                                 <span style="font-size:10px;top:0px;display:block" face="Swis721LtBT-NormalItalic">
-                                    Balfour Beatty Construction
+                                    <!-- Balfour Beatty Construction -->
                                     <b><apex:outputField value="{!paymentApp.buildertek__Payment_Application_To__r.Name}" /></b>
                                 </span>
                                 
                                 <span style="font-size:10px;top:0px;display:block" face="Swis721LtBT-NormalItalic">
-                                    3100 McKinnon StreetDallas,
-                                    <b><apex:outputField value="{!paymentApp.buildertek__Payment_Application_To__r.BillingStreet}" /></b>
+                                    <!-- 3100 McKinnon StreetDallas, -->
+                                    <b><apex:outputField value="{!paymentApp.buildertek__Payment_Application_To__r.BillingStreet}" />,&nbsp;</b>
                                 </span>
                                 
                                 <span style="font-size:10px;top:0px;display:block" face="Swis721LtBT-NormalItalic">
-                                    Texas 75201
-                                    <b><apex:outputField value="{!paymentApp.buildertek__Payment_Application_To__r.BillingCity}" /></b>
+                                    <!-- Texas 75201 -->
+                                    <b><apex:outputField value="{!paymentApp.buildertek__Payment_Application_To__r.BillingCity}" /><apex:outputText value="{!IF(paymentApp.buildertek__Payment_Application_To__r.BillingState != '', ',' , '')}" />&nbsp;<apex:outputField value="{!paymentApp.buildertek__Payment_Application_To__r.BillingState}" /><apex:outputText value="{!IF(paymentApp.buildertek__Payment_Application_To__r.BillingPostalCode != '', ',' , '')}" />&nbsp;<apex:outputField value="{!paymentApp.buildertek__Payment_Application_To__r.BillingPostalCode}" /><apex:outputText value="{!IF(paymentApp.buildertek__Payment_Application_To__r.BillingCountry != '', ',' , '')}" />&nbsp;<apex:outputField value="{!paymentApp.buildertek__Payment_Application_To__r.BillingCountry}"/></b>
                                 </span>
                                 
-                                <span style="font-size:8px;top:0px;display:block;" face="Swis721LtBT-NormalItalic">
+                                <!-- <span style="font-size:8px;top:0px;display:block;" face="Swis721LtBT-NormalItalic">
                                     <b><apex:outputField value="{!paymentApp.buildertek__Payment_Application_To__r.BillingState}" /></b>
                                 </span>
                                 
                                 <span style="font-size:8px;top:0px;display:block;" face="Swis721LtBT-NormalItalic">
                                     <b ><apex:outputField value="{!paymentApp.buildertek__Payment_Application_To__r.BillingCountry}" /></b>
-                                </span>
+                                </span> -->
                                 &nbsp;
                                 <span style="font-size:13px;top:0px;display:block;line-height:1;" face="Swis721LtBT-NormalItalic">
                                     <b> FROM CONTRACTOR:</b>
@@ -95,27 +95,28 @@ Balfour Beatty Construction3100 McKinnon StreetDallas, Texas 75201
                                 </span>
                                 
                                 <span style="font-size:10px;top:0px;display:block;line-height:1;" face="Swis721LtBT-NormalItalic">
-                                    View, Inc.
+                                    <!-- View, Inc. -->
                                     <b><apex:outputField value="{!paymentApp.buildertek__Vendor__r.Name}" /></b>
                                 </span>
                                 
                                 <span style="font-size:10px;top:0px;display:block;line-height:1;" face="Swis721LtBT-NormalItalic">
-                                    195 S. Milpitas Blvd ,
+                                    <!-- 195 S. Milpitas Blvd , -->
                                     <b><apex:outputField value="{!paymentApp.buildertek__Vendor__r.BillingStreet}" /></b>
                                 </span>
                                 
                                 <span style="font-size:10px;display:block" face="Swis721LtBT-NormalItalic">
-                                    California 95035
-                                    <b><apex:outputField value="{!paymentApp.buildertek__Vendor__r.BillingCity}" /></b>
+                                    <!-- California 95035 -->
+                                    <!-- <b><apex:outputField value="{!paymentApp.buildertek__Vendor__r.BillingCity}" /></b> -->
+                                    <b><apex:outputField value="{!paymentApp.buildertek__Vendor__r.BillingCity}"/><apex:outputText value="{!IF(paymentApp.buildertek__Vendor__r.BillingState != '', ',' , '')}" />&nbsp;<apex:outputField value="{!paymentApp.buildertek__Vendor__r.BillingState}" /><apex:outputText value="{!IF(paymentApp.buildertek__Vendor__r.BillingPostalCode != '', ',' , '')}" />&nbsp;<apex:outputField value="{!paymentApp.buildertek__Vendor__r.BillingPostalCode}" /><apex:outputText value="{!IF(paymentApp.buildertek__Vendor__r.BillingCountry != '', ',' , '')}" />&nbsp;<apex:outputField value="{!paymentApp.buildertek__Vendor__r.BillingCountry}"/></b>
                                     
                                 </span>
                                 
                                 
-                                <span style="font-size:8px;display:block;"  face="Swis721LtBT-NormalItalic">
+                                <!-- <span style="font-size:8px;display:block;"  face="Swis721LtBT-NormalItalic">
                                     <b><apex:outputField value="{!paymentApp.buildertek__Vendor__r.BillingState}" /></b>
                                     <b><apex:outputField value="{!paymentApp.buildertek__Vendor__r.BillingCountry}" /></b>
                                     
-                                </span>
+                                </span> -->
                                 
                             </td>
                             <td width="25%">
@@ -123,15 +124,15 @@ Balfour Beatty Construction3100 McKinnon StreetDallas, Texas 75201
                                     <b>PROJECT:</b>
                                 </font>
                                 <font style="font-size:10px;display:block" face="Swis721LtBT-NormalItalic">
-                                    TAVISTOCK OFFICE PHASE 1C
+                                    <!--TAVISTOCK OFFICE PHASE 1C--><b><apex:outputField value="{!paymentApp.buildertek__Project__r.Name}" /></b>
                                 </font>
                                 
                                 <font style="font-size:10px;display:block" face="Swis721LtBT-NormalItalic">
-                                    6955 LAKE NONA BOULEVARD
+                                    <!--6955 LAKE NONA BOULEVARD--><b><apex:outputField value="{!paymentApp.buildertek__Project__r.Address__c}" /></b>
                                 </font>
                                 
                                 <font style="font-size:10px;display:block" face="Swis721LtBT-NormalItalic">
-                                    ORLANDO, Florida 32827-7560, ORANGE County
+                                    <!-- ORLANDO, Florida 32827-7560, ORANGE County --><b><apex:outputField value="{!paymentApp.buildertek__Project__r.City__c}"/><apex:outputText value="{!IF(paymentApp.buildertek__Project__r.State__c != '', ',' , '')}" />&nbsp;<apex:outputField value="{!paymentApp.buildertek__Project__r.State__c}"/><apex:outputText value="{!IF(paymentApp.buildertek__Project__r.Zip__c != '', ',' , '')}" />&nbsp;<apex:outputField value="{!paymentApp.buildertek__Project__r.Zip__c}"/><apex:outputText value="{!IF(paymentApp.buildertek__Project__r.Country__c != '', ',' , '')}" />&nbsp;<apex:outputField value="{!paymentApp.buildertek__Project__r.Country__c}"/> </b>
                                 </font>
                                 &nbsp;
                                 <font style="font-size:13px;display:block" face="Swis721LtBT-NormalItalic" align="left">

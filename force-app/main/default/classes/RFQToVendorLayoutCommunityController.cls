@@ -34,86 +34,83 @@ public class RFQToVendorLayoutCommunityController {
         parent.buildertek__Status__c = 'Accepted';
         
         update parent;
-        list<OrgWideEmailAddress> owea = new list<OrgWideEmailAddress>();
-        list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,buildertek__Email_Address__c
-                                                                                                    from buildertek__Admin_Interface_Node_Configuration__c
-                                                                                                    WHERE Name = :'Email Configuration'];
-        if (adminInterfaceNodeConfigurations.size() > 0){
-            owea = [select Id from OrgWideEmailAddress where Address =: adminInterfaceNodeConfigurations[0].buildertek__Email_Address__c];
-        }   
+        
+        // list<OrgWideEmailAddress> owea = new list<OrgWideEmailAddress>();
+        // list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,buildertek__Email_Address__c
+        //                                                                                             from buildertek__Admin_Interface_Node_Configuration__c
+        //                                                                                             WHERE Name = :'Email Configuration'];
+        // if (adminInterfaceNodeConfigurations.size() > 0){
+        //     owea = [select Id from OrgWideEmailAddress where Address =: adminInterfaceNodeConfigurations[0].buildertek__Email_Address__c];
+        // }   
 
                    
-        buildertek__RFQ__c rfqrec = [select id,Name,buildertek__Project__c,buildertek__Project__r.Name,
-        buildertek__Project__r.OwnerId,buildertek__Project__r.Owner.Email
-        from buildertek__RFQ__c where Id =: awardedRfq.buildertek__RFQ__c ];
+        // buildertek__RFQ__c rfqrec = [select id,Name,buildertek__Project__c,buildertek__Project__r.Name,
+        // buildertek__Project__r.OwnerId,buildertek__Project__r.Owner.Email
+        // from buildertek__RFQ__c where Id =: awardedRfq.buildertek__RFQ__c ];
 
-        string toemailadd='';
-        if(rfqrec.buildertek__Project__c!=null){
+        // string toemailadd='';
+        // if(rfqrec.buildertek__Project__c!=null){
 
-            toemailadd = rfqrec.buildertek__Project__r.Owner.Email;
-            System.debug('toemailadd--->'+toemailadd);
+        //     toemailadd = rfqrec.buildertek__Project__r.Owner.Email;
+        //     System.debug('toemailadd--->'+toemailadd);
     
-            string theTemplate;
+        //     string theTemplate;
     
-            theTemplate = [SELECT Id
-            FROM EmailTemplate
-            WHERE Name  = 'Award Accept Manager Email'].Id;        
+        //     theTemplate = [SELECT Id
+        //     FROM EmailTemplate
+        //     WHERE Name  = 'Award Accept Manager Email'].Id;        
     
-            system.debug('theTemplate>'+theTemplate);
+        //     system.debug('theTemplate>'+theTemplate);
     
-            List<Messaging.SingleEmailMessage> messageList = new List<Messaging.SingleEmailMessage>();    
-            Messaging.SingleEmailMessage message1= new        Messaging.SingleEmailMessage();
+        //     List<Messaging.SingleEmailMessage> messageList = new List<Messaging.SingleEmailMessage>();    
+        //     Messaging.SingleEmailMessage message1= new        Messaging.SingleEmailMessage();
     
-            message1.toAddresses = new String[] { toemailadd};
-            message1.setTemplateID(theTemplate);     
-            message1.setSaveAsActivity(false);
-            message1.setWhatId(awardedRfq.Id);
-            //message1.setSubject('New RFI Notification - [ref:'+newrfi.Id+']');
-            message1.setTargetObjectId(awardedRfq.buildertek__Contact__c);
-            messageList.add(message1);
+        //     message1.toAddresses = new String[] { toemailadd};
+        //     message1.setTemplateID(theTemplate);     
+        //     message1.setSaveAsActivity(false);
+        //     message1.setWhatId(awardedRfq.Id);
+        //     //message1.setSubject('New RFI Notification - [ref:'+newrfi.Id+']');
+        //     message1.setTargetObjectId(awardedRfq.buildertek__Contact__c);
+        //     messageList.add(message1);
     
-            Savepoint sp = Database.setSavepoint();
+        //     Savepoint sp = Database.setSavepoint();
     
-            Messaging.sendEmail(messageList);
+        //     Messaging.sendEmail(messageList);
     
-            Database.rollback(sp);
-            try{ 
+        //     Database.rollback(sp);
+        //     try{ 
     
-            //List<string> CCAdresses = new List<string>();                    
-            //CCAdresses.add('sowndarya.nittala@diligentforcelabs.com'); 
+        //     //List<string> CCAdresses = new List<string>();                    
+        //     //CCAdresses.add('sowndarya.nittala@diligentforcelabs.com'); 
     
-            List<Messaging.SingleEmailMessage> actualMessageList = new List<Messaging.SingleEmailMessage>();
+        //     List<Messaging.SingleEmailMessage> actualMessageList = new List<Messaging.SingleEmailMessage>();
     
-            // loop through the previous message list and set the email fields
-            for (Messaging.SingleEmailMessage email : messageList) {
-            Messaging.SingleEmailMessage emailToSend = new Messaging.SingleEmailMessage();
-            emailToSend.setToAddresses(email.getToAddresses());
-            emailToSend.setHTMLBody(email.getHTMLBody());
-            emailToSend.setSaveAsActivity(false);
-            emailToSend.setSubject(email.getSubject());
-                if ( owea.size() > 0 ) {
-                    emailToSend.setOrgWideEmailAddressId(owea.get(0).Id);
-                }
-            //emailToSend.setOrgWideEmailAddressId(email.getOrgWideEmailAddressId());
-            emailToSend.setFileAttachments(email.getFileAttachments());
-            //emailToSend.setCcAddresses(CCAdresses);
-            actualMessageList.add(emailToSend);
-            system.debug('emailToSend--->'+emailToSend);
-            }
+        //     // loop through the previous message list and set the email fields
+        //     for (Messaging.SingleEmailMessage email : messageList) {
+        //     Messaging.SingleEmailMessage emailToSend = new Messaging.SingleEmailMessage();
+        //     emailToSend.setToAddresses(email.getToAddresses());
+        //     emailToSend.setHTMLBody(email.getHTMLBody());
+        //     emailToSend.setSaveAsActivity(false);
+        //     emailToSend.setSubject(email.getSubject());
+        //         if ( owea.size() > 0 ) {
+        //             emailToSend.setOrgWideEmailAddressId(owea.get(0).Id);
+        //         }
+        //     //emailToSend.setOrgWideEmailAddressId(email.getOrgWideEmailAddressId());
+        //     emailToSend.setFileAttachments(email.getFileAttachments());
+        //     //emailToSend.setCcAddresses(CCAdresses);
+        //     actualMessageList.add(emailToSend);
+        //     system.debug('emailToSend--->'+emailToSend);
+        //     }
     
     
-            Messaging.SendEmailResult [] serList = Messaging.sendEmail(actualMessageList);           
-            System.debug('The email was sent successfully.');
-            }catch(Exception e){
-            System.debug('The email failed to send: ');             
-            }    
+        //     Messaging.SendEmailResult [] serList = Messaging.sendEmail(actualMessageList);           
+        //     System.debug('The email was sent successfully.');
+        //     }catch(Exception e){
+        //     System.debug('The email failed to send: ');             
+        //     }    
 
-        }
+        // }
                     
-
-
-
-        
         return 'success';
     }
    

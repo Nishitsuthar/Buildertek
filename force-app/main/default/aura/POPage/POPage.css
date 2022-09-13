@@ -62,3 +62,7 @@
 .THIS .subData{
     border-left:  1px solid #fff; 
 }
+
+.THIS .searchbarList .slds-size_2-of-12{
+    width: 20%;
+}

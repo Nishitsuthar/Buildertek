@@ -66,7 +66,7 @@
                 var list = JSON.parse(response.getReturnValue());
                 if (list.length > 0) {
                     component.set("v.listOfRecords", list);
-                    console.log(list)
+                    // console.log(list)
 
                     
                     component.set("v.cloneListOfRecords", list);
@@ -80,7 +80,7 @@
 
                     if (component.get('v.TotalRecords') <= pageNumber * pageSize) {
                         component.set("v.isNextDisabled", true);
-                        console.log('isNextDisabled:::', component.get("v.isNextDisabled"));
+                        // console.log('isNextDisabled:::', component.get("v.isNextDisabled"));
                     } else {
                         component.set("v.isNextDisabled", false);
                     }
@@ -97,9 +97,9 @@
     updateMassRecords: function (component, event, helper, phase, contractor, contractorResources, TradeType) {
         component.set('v.isLoading', true);
         var listOfRecords = component.get('v.listOfRecords');
-        console.log({listOfRecords});
+        // console.log({listOfRecords});
         var grpList = JSON.parse(JSON.stringify(component.get("v.grpByPhaseValuesMassUpdate")))
-        console.log({grpList});
+        // console.log({grpList});
         var newList = []
         for(var i=0;i<grpList.length;i++){
             var val = grpList[i].value
@@ -107,7 +107,7 @@
                 newList.push(val[j])
             }
         }
-        console.log({newList});
+        // console.log({newList});
         // listOfRecords = newList
         var action = component.get("c.updateRecords");
         var pageNumber = component.get("v.PageNumber");
@@ -129,8 +129,8 @@
                 i--;
             }
         }
-        console.log('Records To Update::', JSON.stringify(listOfRecords));
-        console.log({listOfRecords});
+        // console.log('Records To Update::', JSON.stringify(listOfRecords));
+        // console.log({listOfRecords});
         action.setParams({
             recordId: component.get('v.recordId'),
             updatedRecords: JSON.stringify(listOfRecords),
@@ -162,7 +162,7 @@
                     workspaceAPI.getFocusedTabInfo().then(function(response) {
                         var focusedTabId = response.tabId;
                         workspaceAPI.closeTab({tabId: focusedTabId}).then(function(response){
-                            console.log(response)
+                            // console.log(response)
                             workspaceAPI.openSubtab({
                                 parentTabId: response.parentTabId,
                                 url: '/lightning/r/buildertek__Schedule__c/'+component.get("v.recordId")+'/view',
@@ -171,7 +171,7 @@
                             $A.get('e.force:refreshView').fire();
                         }).catch(function(error) {
                             component.set('v.massUpdateEnable', false);
-                            console.log(error);
+                            // console.log(error);
                             var navEvt = $A.get("e.force:navigateToSObject");
                             navEvt.setParams({
                                 "recordId": component.get("v.recordId"),
@@ -191,7 +191,7 @@
                         
                     }).catch(function(error) {
                         component.set('v.massUpdateEnable', false);
-                        console.log(error);
+                        // console.log(error);
                         var navEvt = $A.get("e.force:navigateToSObject");
                         navEvt.setParams({
                             "recordId": component.get("v.recordId"),
@@ -329,6 +329,7 @@
     
     formatDataByGroups : function(component,mapData){
         
+        component.set('v.isLoading', true);
         let recordsMap = new Map();
         var mapData = JSON.parse(JSON.stringify(component.get("v.listOfRecords")));
         for (var i in mapData) {
@@ -347,9 +348,9 @@
                 //console.log(recordsMap.get("No vendor"))
             }
         }
-        console.log('recordsMap'+recordsMap)
+        // console.log('recordsMap'+recordsMap)
         var result = Array.from(recordsMap.entries());
-        console.log({result});
+        // console.log({result});
         var groupData = [];
         var pagObj = {}
         var pageArr = component.get("v.pageArr")
@@ -365,7 +366,7 @@
             
             groupData.push(newObj);
         }
-        console.log(groupData);
+        // console.log(groupData);
         component.set("v.grpByPhaseValuesMassUpdate",groupData)
          component.set("v.prevlastPhaseName", component.get("v.lastPhaseName"))
         var lastPhaseName = groupData[groupData.length-1].key
@@ -443,6 +444,7 @@
             
             
         }
+        // component.set('v.isLoading', false);
     }
    
     

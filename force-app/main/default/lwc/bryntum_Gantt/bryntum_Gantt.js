@@ -26,7 +26,7 @@ import getAllNotes from '@salesforce/apex/BT_NewGanttChartCls.getAllNotes';
 import getattachmentLength from '@salesforce/apex/BT_NewGanttChartCls.getattachmentLength';
 import saveResourceForRecord from '@salesforce/apex/BT_NewGanttChartCls.saveResourceForRecord';
 import updateHideGanttOnSch from '@salesforce/apex/BT_NewGanttChartCls.updateHideGanttOnSch';
-import getScheduleOriginal from '@salesforce/apex/BT_NewGanttChartCls.getScheduleOriginal';
+import changeOriginalDates from '@salesforce/apex/BT_NewGanttChartCls.changeOriginalDates';
 
 import { formatData, saveeditRecordMethod } from "./bryntum_GanttHelper";
 export default class Gantt_component extends NavigationMixin(LightningElement) {
@@ -149,8 +149,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     @track contracFieldApiName;
     @track contractorname;
     @track showOriginalDateModal = false;
-    @track oriStartDate;
-    @track oriEndDate;
 
 
     @wire(pickListValueDynamically, {
@@ -2110,32 +2108,43 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     }
 
     openOriginDateModal() {
-        try {
-            this.showOriginalDateModal = true;
-
-            // var recId = this.recordId;
-            // console.log({recId});
-            // getScheduleOriginal({ 
-            //     recordId: recId
-            // })
-            // .then(function (response) {
-            //     this.showOriginalDateModal = true;
-            //     console.log({response});
-            //     this.oriStartDate = response.buildertek__Original_Start_Date__c;
-            //     this.oriEndDate = response.buildertek__Original_End_Date__c;
-            // }).catch(function (error) {
-            //     console.log({error});
-            // })
-        } catch (error) {
-            console.log({error});
-        }
+        this.showOriginalDateModal = true;
     }
 
     closeModal() {
         this.showOriginalDateModal = false;
     }
 
-    changeOriginDate() {
+    changeOriginalDate() {
+        this.isLoaded = true;
         this.showOriginalDateModal = false;
+            var that = this;
+            var recId = this.recordId;
+            changeOriginalDates({
+                recordId: recId,
+            })
+            .then(function (response) {
+                console.log('response');
+                console.log({response});
+                that.dispatchEvent(
+                    new ShowToastEvent({
+                        title: "Success",
+                        message: "Original Dates Changed Successfully.",
+                        variant: "success"
+                    })
+                );
+                that.isLoaded = false;
+            }).catch(function (error) {
+                console.log('error');
+                console.log({error});
+                that.dispatchEvent(
+                    new ShowToastEvent({
+                        title: "Try Again",
+                        message: "Something Went Wrong, Please Try Again",
+                        variant: "warning"
+                    })
+                );
+                that.isLoaded = false;
+            })
     }
 }
