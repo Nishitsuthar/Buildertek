@@ -2052,4 +2052,21 @@ public with sharing class QuoteDAO{
         }
     }
     
+    // new method only for search filter for product family on NewQuoteitemClone 
+    @AuraEnabled
+    public static List<Product2> searchProdcutFamily(string searchedWord){
+        try {
+            List<Product2> getProductsFamily = new List<Product2>();
+            string filterKey = searchedWord+'%';
+            // getProductsFamily = [select id,family from product2 where family LIKE :filterKey];
+
+            getProductsFamily =  [SELECT Id,Name,ProductCode,Description,Family,(SELECT UnitPrice FROM PricebookEntries WHERE IsActive = True) FROM Product2 WHERE IsActive = True AND family LIKE :filterKey AND Id IN (SELECT Product2Id FROM PricebookEntry WHERE isActive = true)];
+
+            System.debug('List of product family is here ==> '+getProductsFamily);
+            return getProductsFamily;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+            return null;
+        }
+    }
 }
