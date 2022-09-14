@@ -62,6 +62,10 @@
 	
 	sendEmail : function(component, event, helper){
 	    component.set("v.Spinner", true);
+        // adding new variable here for attach files 
+        var uploadedFiles = event.getParam("files");
+        console.log('please check type of uploaded files here');
+        console.log(typeof(uploadedFiles));
 	    var toIds = []; 
 	    var ccIds = [];
 	    var to = component.get("v.selectedToContact");
@@ -76,6 +80,7 @@
     	        templateId : component.get("v.selectedTemplate"),
     	        to : toIds,
                 cc : ccIds,
+                attachment : uploadedFiles,
     	    });
     	    action.setCallback(this, function(response){
     	        var state = response.getState();
@@ -267,7 +272,14 @@
             });
             toastEvent.fire();
         }
-	}
+	},
+
+    handleUploadFinished : function(component, event, helper){
+        var uploadedFiles = event.getParam("files");
+        console.log('please check type of uploaded files here');
+        
+        // helper.handleUploadFinishedHelper(component, event, helper);
+    },
     
     
 })
