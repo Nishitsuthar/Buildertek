@@ -309,7 +309,15 @@
 								//document.location.reload(true);   
 								var action1 = component.get("c.getMasterBudgets");
 								action1.setParams({
-									recId: component.get("v.recordId")
+									recId: component.get("v.recordId"),
+									"pageNumber": component.get("v.PageNumber"),
+									"pageSize": component.get("v.pageSize"),
+									"poFilter" : '',
+									"poLineFilter" : '',
+									"tradeTypeFilter" : '',
+									"projectFilter" : '',
+									"productFilter" : '',
+									"permitFilter" : ''
 								});
 								action1.setCallback(this, function (response) {
 									var state = response.getState();

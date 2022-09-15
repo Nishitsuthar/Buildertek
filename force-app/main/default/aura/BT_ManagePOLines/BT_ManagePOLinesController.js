@@ -819,8 +819,8 @@
         helper.getExtendedCosts(component, event, helper);
         console.log('GL===='+component.get('v.generalLiabilityCost'));
         
-        // var action = component.get("c.handleBTAdmin");
-        // $A.enqueueAction(action);
+        var action = component.get("c.handleBTAdmin");
+        $A.enqueueAction(action);
         
         // helper.getExtendedCosts(component, event, helper);
         // console.log('GL===='+component.get('v.generalLiabilityCost'));

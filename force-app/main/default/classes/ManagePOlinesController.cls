@@ -1235,6 +1235,7 @@ public with sharing class ManagePOlinesController {
                         Map<String,String> workersCompMap = new Map<String,String>();
                         Map<String,String> generalLiabMap = new Map<String,String>();
                         Map<String,String> texturaFeeMap = new Map<String,String>();
+                        Map<String,String> blankslabDiscountMap = new Map<String,String>();
                         workersCompMap.put('buildertek__Workers_Comp__c', '0');
                         generalLiabMap.put('buildertek__General_Liability_Insurance_Long__c', '0');
                         texturaFeeMap.put('buildertek__Textura_Fee__c', '0');
@@ -1244,6 +1245,7 @@ public with sharing class ManagePOlinesController {
                             // strMap.put(bomLine.Id, String.valueOf(bomLine.buildertek__Extended_Cost__c));
                             strMap.put(bomLine.Id, '0');
                             blankDiscountMap.put(bomLine.Id, '0');
+                            blankslabDiscountMap.put(bomLine.Id, '');
                         }
                         if(!returnMapVal.containsKey('buildertek__Fabrication_Install_Rate__c'))
                         {
@@ -1283,7 +1285,7 @@ public with sharing class ManagePOlinesController {
                         }
                         if(!returnMapVal.containsKey('buildertek__Slab_Discount_Rate_LongText__c'))
                         {
-                            returnMapVal.put('buildertek__Slab_Discount_Rate_LongText__c',blankDiscountMap );
+                            returnMapVal.put('buildertek__Slab_Discount_Rate_LongText__c',blankslabDiscountMap);
                         }
                         if(!returnMapVal.containsKey('buildertek__Fabrication_Labor_Mark_up_LongText__c'))
                         {
@@ -1353,25 +1355,37 @@ public with sharing class ManagePOlinesController {
         System.debug('fieldAPIName=='+fieldAPIName);
         System.debug('fieldName=='+fieldName);
         System.debug('bomLineMap=='+bomLineMap);
+        for(buildertek__Select_Sheet__c val : bomLineMap.values()){
+            System.debug(val.Id +'==>' +val);
+        }
         Map<String,String> fabInstallRates = new Map<String,String>();
         List<buildertek.ManagePOlinesController.ExtendedCostWrap> wrapperList = (List<buildertek.ManagePOlinesController.ExtendedCostWrap>)JSON.deserialize(fieldName, List<buildertek.ManagePOlinesController.ExtendedCostWrap>.Class);
-        for(buildertek.ManagePOlinesController.ExtendedCostWrap wrapObj : wrapperList)
-        {
-            System.debug('wrapObj=== '+wrapObj);
-            System.debug('wrapObj.bomLineId=='+bomLineMap.get(wrapObj.bomLineId));
-            System.debug('Qty==='+bomLineMap.get(wrapObj.bomLineId).buildertek__Quantity__c);
+        try{
 
-            if(bomLineMap.containsKey(wrapObj.bomLineId) && bomLineMap.get(wrapObj.bomLineId).buildertek__Quantity__c != null )
+            for(buildertek.ManagePOlinesController.ExtendedCostWrap wrapObj : wrapperList)
             {
-                Decimal extendedCost;
-               system.debug('wrapObj.extendedCostVal=='+string.valueof(wrapObj.extendedCostVal));
-                if(String.isNotBlank(wrapObj.extendedCostVal))
-                {
-                    extendedCost = Decimal.valueOf(wrapObj.extendedCostVal);
-                    System.debug('extendedCost=='+extendedCost);
-                    fabInstallRates.put(fieldAPIName, String.valueOf(extendedCost));
+                System.debug('wrapObj=== '+wrapObj);
+                System.debug('wrapObj.bomLineId=='+wrapObj.bomLineId);
+                System.debug('wrapObj.bomLineId exists in a Map=='+bomLineMap.get(wrapObj.bomLineId));
+                System.debug('Qty==='+bomLineMap.get(wrapObj.bomLineId).buildertek__Quantity__c);
+                if(bomLineMap.containsKey(wrapObj.bomLineId)){
+                    System.debug('contains===');
+                    if(bomLineMap.containsKey(wrapObj.bomLineId) && bomLineMap.get(wrapObj.bomLineId).buildertek__Quantity__c != null )
+                    {
+                        Decimal extendedCost;
+                        system.debug('wrapObj.extendedCostVal=='+string.valueof(wrapObj.extendedCostVal));
+                        if(String.isNotBlank(wrapObj.extendedCostVal))
+                        {
+                            extendedCost = Decimal.valueOf(wrapObj.extendedCostVal);
+                            System.debug('extendedCost=='+extendedCost);
+                            fabInstallRates.put(fieldAPIName, String.valueOf(extendedCost));
+                        }
+                    }
                 }
             }
+        }catch(Exception e){
+            System.debug('error=='+e.getMessage());
+            System.debug('errorLine=='+e.getLineNumber());
         }
         return fabInstallRates;
     }

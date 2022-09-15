@@ -105,6 +105,7 @@ public class POPageController {
                                                           buildertek__Tax__c,
                                                           buildertek__Total_Price__c,
                                                           buildertek__Total_Amount_Tax__c, 
+                                                          buildertek__Product__c,
                                                           buildertek__Product__r.ProductCode from Purchase_Order_Items__r)
                              FROM buildertek__Purchase_Order__c where (buildertek__Status__c != 'Ordered' AND buildertek__Status__c != 'Paid' AND buildertek__Status__c != 'Partially Paid')    ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC ];    
         }else {
@@ -134,6 +135,7 @@ public class POPageController {
                                                           buildertek__Tax__c,
                                                           buildertek__Total_Price__c,
                                                           buildertek__Total_Amount_Tax__c, 
+                                                          buildertek__Product__c,
                                                           buildertek__Product__r.ProductCode from Purchase_Order_Items__r)
                              FROM buildertek__Purchase_Order__c where (buildertek__Status__c != 'Ordered' AND buildertek__Status__c != 'Paid' AND buildertek__Status__c != 'Partially Paid')    ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC  LIMIT :pageSize OFFSET :offset];    
         }
@@ -191,7 +193,7 @@ public class POPageController {
                                     POLi.expanded = false;
                                     POLi.PORow = false;
                                     POLi.poLineCheck = false;
-                                    POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
+                                    // POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
                                     POLinesList .add(POLi); 
                                 }
                             }
@@ -212,7 +214,7 @@ public class POPageController {
                                     POLi.expanded = false;
                                     POLi.PORow = false;
                                     POLi.poLineCheck = false;
-                                    POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
+                                    // POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
                                     POLinesList .add(POLi); 
                                 }
                             }
@@ -233,7 +235,7 @@ public class POPageController {
                                     POLi.expanded = false;
                                     POLi.PORow = false;
                                     POLi.poLineCheck = false;
-                                    POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
+                                    // POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
                                     POLinesList .add(POLi); 
                                 }
                             }
@@ -251,7 +253,7 @@ public class POPageController {
                             POLi.expanded = false;
                             POLi.PORow = false;
                             POLi.poLineCheck = false;
-                            POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
+                            // POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
                             POLinesList .add(POLi);  
                         }
                         
@@ -843,16 +845,18 @@ public class POPageController {
                 for(buildertek__Purchase_Order__c myContact : poList) {
                     List<ContentVersion> cvlinklist = new List<ContentVersion>();
                     cvlinklist = conDocMap.get(myContact.Id);
-                    for(Integer i=0; i<documents.size(); i++){
-                        for(ContentVersion cvl : cvlinklist) {
-                            if(cvl.Id == documents[i].Id){
-                                ContentDocumentLink cdl = new ContentDocumentLink();
-                                cdl.LinkedEntityId = myContact.Id;
-                                cdl.ContentDocumentId = documents[i].ContentDocumentId;
-                                cdl.ShareType = 'V';
-                                cdl.Visibility = 'AllUsers';
-                                cdlList.add(cdl);
-                                System.debug('ContentDocumentLink Added.');
+                    if (cvlinklist != null) {
+                        for(Integer i=0; i<documents.size(); i++){
+                            for(ContentVersion cvl : cvlinklist) {
+                                if(cvl.Id == documents[i].Id){
+                                    ContentDocumentLink cdl = new ContentDocumentLink();
+                                    cdl.LinkedEntityId = myContact.Id;
+                                    cdl.ContentDocumentId = documents[i].ContentDocumentId;
+                                    cdl.ShareType = 'V';
+                                    cdl.Visibility = 'AllUsers';
+                                    cdlList.add(cdl);
+                                    System.debug('ContentDocumentLink Added.');
+                                }
                             }
                         }
                     }

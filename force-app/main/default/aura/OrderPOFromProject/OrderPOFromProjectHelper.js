@@ -13,7 +13,9 @@
         
         var projectValue = component.get("v.searchProjectFilter");
 
-        var searchProductValue = component.get("v.searchProductFilter");
+        var productValue = component.get("v.searchProductFilter");
+
+        var permitValue = component.get("v.searchPermitFilter");
 
         // var searchStatusFilter = component.get("v.searchStatusFilter");
    
@@ -29,14 +31,15 @@
             "poLineFilter" : descriptionValue,
             "tradeTypeFilter" : tradeTypeValue,
             "projectFilter" : projectValue,
-            "productFilter" : searchProductValue
+            "productFilter" : productValue,
+            "permitFilter" : permitValue
             // "statusFilter" : searchStatusFilter
         });
         action.setCallback(this, function(response){
             
             // debugger;
             var state = response.getState();
-            console.log({state});
+            console.log('State => ' + state);
             if(state === "SUCCESS"){
                 // debugger;
                 

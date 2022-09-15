@@ -421,11 +421,12 @@
 
                                         (selectedVendor.isEmail == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noMailVedors.push(selectedVendor.Id) : '';
                                         (selectedVendor.isContact == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
-                                        (selectedVendor.isValidEmail == false && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
+                                        // (selectedVendor.isValidEmail == false && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
 
                                     });
 
                                     if (noMailVedors.length) {
+                                        console.log('no mailvendor length');
                                         var toastEvent = $A.get("e.force:showToast");
                                         toastEvent.setParams({
                                             "type": "error",
@@ -433,6 +434,7 @@
                                         });
                                         toastEvent.fire();
                                     } else if (noContactVendors.length) {
+                                        console.log('no contactvendor length');
                                         var toastEvent = $A.get("e.force:showToast");
                                         toastEvent.setParams({
                                             "type": "error",
@@ -441,6 +443,7 @@
                                         toastEvent.fire();
                                     }
                                     else if (isValidEmail.length) {
+                                        console.log('no validemail length');
                                         var toastEvent = $A.get("e.force:showToast");
                                         toastEvent.setParams({
                                             "type": "error",
@@ -549,11 +552,13 @@
 
                             (selectedVendor.isEmail == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noMailVedors.push(selectedVendor.Id) : '';
                             (selectedVendor.isContact == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
-                            (selectedVendor.isValidEmail == false && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
+                            // (selectedVendor.isValidEmail == false && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
 
                         });
 
                         if (noMailVedors.length) {
+                            console.log('no1 mailvendor length');
+
                             var toastEvent = $A.get("e.force:showToast");
                             toastEvent.setParams({
                                 "type": "error",
@@ -561,6 +566,7 @@
                             });
                             toastEvent.fire();
                         } else if (noContactVendors.length) {
+                            console.log('no1 vendor length');
                             var toastEvent = $A.get("e.force:showToast");
                             toastEvent.setParams({
                                 "type": "error",
@@ -569,6 +575,7 @@
                             toastEvent.fire();
                         }
                         else if (isValidEmail.length) {
+                            console.log('no1 valid length');
                             var toastEvent = $A.get("e.force:showToast");
                             toastEvent.setParams({
                                 "type": "error",

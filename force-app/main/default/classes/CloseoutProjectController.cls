@@ -1,10 +1,23 @@
 public with sharing class CloseoutProjectController {
     @AuraEnabled
-    public static string getInvoiceLines(String recordId, String templateId){
+    public static void createInvoice(String recordId){
+        string mainAR = '';
+        buildertek__Billings__c oldAR = [SELECT Id, Name FROM buildertek__Billings__c WHERE Project__c =: recordId AND Name =: 'Closeout-Project-Invoice' LIMIT 1];
+        if (oldAR == null) {
+            buildertek__Billings__c AR = new buildertek__Billings__c();
+            AR.Name = 'Closeout-Project-Invoice';
+            AR.Project__c = recordId;
+            insert AR;
+            mainAR = AR.Id;
+        } else {
+            mainAR = oldAR.Id;
+        }
+
+        EmailTemplate eTemp = [SELECT Id, Name FROM EmailTemplate WHERE Name =: 'Invoice (AR) w/ Change Orders' LIMIT 1];
         Contact con = [SELECT id, Email FROM Contact WHERE email != null ORDER BY createddate DESC LIMIT 1];
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-        email.setTemplateId(templateId);
-        email.setWhatId(recordId);
+        email.setTemplateId(eTemp.Id);
+        email.setWhatId(mainAR);
         email.setTargetObjectId(con.Id);
         email.setSaveAsActivity(false);
         email.setToAddresses(new String[]{con.email});
@@ -14,20 +27,6 @@ public with sharing class CloseoutProjectController {
         Database.rollback(sp);
 
         string templateBody = email.getHTMLBody();
-        return templateBody;
-    }
-
-    @AuraEnabled
-    public static List<buildertek__Billings__c> getInvoice(String recordId){
-        List<buildertek__Billings__c> invoiceList = [SELECT Id, Name FROM buildertek__Billings__c WHERE buildertek__Project__c =: recordId];
-        return invoiceList;
-    }
-
-    @AuraEnabled
-    public static void createInvoice(String recordId){
-        buildertek__Billings__c AR = new buildertek__Billings__c();
-        AR.Name = 'Closeout-Project-Invoice';
-        AR.Project__c = recordId;
-		// insert AR;
+        // return templateBody;
     }
 }

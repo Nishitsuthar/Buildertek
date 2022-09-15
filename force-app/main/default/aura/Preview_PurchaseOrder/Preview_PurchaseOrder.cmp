@@ -264,8 +264,7 @@
                         <div style="display: flex;justify-content: flex-end;">
                             <div style="margin: 0 1rem;">
                                 <lightning:fileUpload name="fileUploader" multiple="true"
-                                    accept="{!v.filetype}" recordId="{!v.recordId}"
-                                    onuploadfinished="{!c.handleUploadFinished}" />
+                                    accept="{!v.filetype}" recordId="{!v.recordId}" />
                             </div>
                         </div>
                         <div style="display: flex;">

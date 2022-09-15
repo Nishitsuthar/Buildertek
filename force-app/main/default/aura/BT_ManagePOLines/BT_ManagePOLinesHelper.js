@@ -947,7 +947,7 @@
                     var extendedcost = 0;
                     var percentageOnFab = 0;
                     var properCost = 0;
-                    var markupPercentage = 0;
+                    var markupPercentage = '';
                     var bomLineId = '';
                     let grossCost = 0;
                     let grossLessCost = 0;
@@ -967,15 +967,15 @@
                         console.log('jsonstring=='+jsonstring);
                         if(jsonstring != undefined){
                             console.log('testing');
-                            // arr = JSON.parse(jsonstring);
+                            arr = JSON.parse(jsonstring);
                         
-                            // if(arr.length > 0){
-                            //     arr.forEach(function (item, index) {
-                            //         var test = item;
-                            //         map1.set(test.bomLineId, test.taxbvalue);
+                            if(arr.length > 0){
+                                arr.forEach(function (item, index) {
+                                    var test = item;
+                                    map1.set(test.bomLineId, test.taxbvalue);
 
-                            //     });
-                            // }
+                                });
+                            }
                         }
                     }
 
@@ -1095,30 +1095,29 @@
                         if (serviceCategory == 'Fab' || serviceCategory == 'Install' || serviceCategory == 'Edge' ||
                             serviceCategory == 'Fab & Install' || serviceCategory == 'Labor') {
                             var fabLabormarkUpRateVal = component.get('v.fabLaborMarkupRate');
-
+                            // console.log('fabLabormarkUpRateVal[bomLineId]');
+                            // console.log(fabLabormarkUpRateVal[bomLineId]);
                             if (fabLabormarkUpRateVal != null && fabLabormarkUpRateVal != undefined &&
                               
                                 fabLabormarkUpRateVal[bomLineId] != null && fabLabormarkUpRateVal[bomLineId] != undefined) {
                                 markupPercentage = parseFloat(fabLabormarkUpRateVal[bomLineId]);
                                 markupPercentage = (markupPercentage * 100).toFixed(2);
-                             
                                 if(map1.has(testoId) == true){
                                     if(map1.get(testoId) == true){
-                                        if (markupPercentage == 0) {
+                                        if (markupPercentage == '') {
                                             markupPercentage = 11.5;
                                         }
                                     }else{
                                         markupPercentage = 0;
-
+                                        
                                     }
                                 }else if(map1.has(testoId) == false || map1.has(testoId) == undefined){
 
-                                    if (markupPercentage == 0) {
+                                    if (markupPercentage == '') {
                                         markupPercentage = 11.5;
                                     }
                                 }
                             } else {
-                                // debugger;
                                 if(map1.has(testoId) == true){
                                     if(map1.get(testoId) == true){
                                         markupPercentage = 11.5;
@@ -1127,7 +1126,7 @@
 
                                 }else if(map1.has(testoId) == false || map1.has(testoId) == undefined){
 
-                                    if (markupPercentage == 0) {
+                                    if (markupPercentage == '') {
                                         markupPercentage = 11.5;
                                     }
                                 }
@@ -1153,14 +1152,14 @@
                                 markupPercentage = (markupPercentage * 100).toFixed(2);
                                 if(map1.has(testoId) == true){
                                     if(map1.get(testoId) == true){
-                                        if (markupPercentage == 0) {
+                                        if (markupPercentage == '') {
                                             markupPercentage = 11.5;
                                         }
                                     }else{
                                         markupPercentage = 0;
                                     }
                                 }else if(map1.has(testoId) == false || map1.has(testoId) == undefined){
-                                    if (markupPercentage == 0) {
+                                    if (markupPercentage == '') {
                                         markupPercentage = 11.5;
                                     }
                                 }
@@ -1173,7 +1172,7 @@
                                         markupPercentage = 0;
 
                                 }else if(map1.has(testoId) == false || map1.has(testoId) == undefined){
-                                    if (markupPercentage == 0) {
+                                    if (markupPercentage == '') {
                                         markupPercentage = 11.5;
                                     }
                                 }
@@ -1207,7 +1206,8 @@
                          grossLessCost = grossCost - discountAmount;
                          var markupAmount = 0;
                             markupAmount = grossLessCost * (parseFloat(markupPercentage) / 100);
-                       
+                        if(markupPercentage == '') markupAmount = 0;
+
                         // var subTotalAmt = (extendedcost - discountAmount) + markupAmount;
                         finalExtendedCost = parseFloat(grossLessCost + markupAmount).toFixed(2);
                         
@@ -1377,6 +1377,7 @@
 
                         //MarkUp Amount
                         var markupAmount = grossLessCost * (parseFloat(markupPercentage) / 100);
+                        if(markupPercentage == '') markupAmount = 0;
                         finalExtendedCost = parseFloat(grossLessCost + markupAmount).toFixed(2);
                         
 

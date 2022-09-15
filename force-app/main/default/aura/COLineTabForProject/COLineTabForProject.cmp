@@ -66,7 +66,7 @@
             
              <lightning:layoutItem padding="around-small" size="3">
                 <lightning:input value="{!v.searchKeyword2}"
-                                 placeholder="LINE ITEM NAME"
+                                 placeholder="Search for Line Item Name"
                                  aura:id="searchKey2"
                                  name="searchField"
                                  class="pointer"
@@ -78,7 +78,7 @@
             
             <lightning:layoutItem padding="around-small" size="3">
                 <lightning:input value="{!v.searchKeyword3}"
-                                 placeholder="Vendor"
+                                 placeholder="Search for Vendor"
                                  aura:id="searchKey3"
                                  name="searchField"
                                  class="pointer"
@@ -93,7 +93,7 @@
             <lightning:layoutItem padding="around-small" size="3">
                 <!--  <div style = "width:21rem;">-->
                 <lightning:input value="{!v.searchKeyword}"
-                                 placeholder="Change Order"
+                                 placeholder="Search for Change Order"
                                  aura:id="searchKey"
                                  name="searchField"
                                  class="pointer"

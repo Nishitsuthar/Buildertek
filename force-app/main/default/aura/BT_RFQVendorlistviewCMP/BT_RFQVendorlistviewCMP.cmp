@@ -33,6 +33,8 @@
     <aura:attribute name="listviewName" type="String"/>
     <aura:attribute name="selectedListViewName" type="String" />
   <aura:attribute name="Vendorlist" type="List" />      
+
+  <aura:attribute name="loaded" type="Boolean" default="false" />
     
       <aura:attribute name="searchResult" type="List" description="use for store and display account list return from server"/>
    <aura:attribute name="searchKeyword" type="String" description="use for store user search input"/>
@@ -56,6 +58,17 @@
                 <div class="slds-page-header__row" style="padding-bottom:1rem">
                     <!-- <div class="slds-page-header__col-title"> -->
                         <div class="slds-media">
+                            <aura:if isTrue="{!v.loaded}">
+                                <div class="demo-only">
+                                    <div class="slds-spinner_container">
+                                        <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                                            <span class="slds-assistive-text">Loading</span>
+                                            <div class="slds-spinner__dot-a"></div>
+                                            <div class="slds-spinner__dot-b"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </aura:if>
                             <div class="slds-media__figure">
                                 <lightning:icon iconName='custom:custom27' alternativeText='All' size='medium' title='custom3'/>
                             </div>

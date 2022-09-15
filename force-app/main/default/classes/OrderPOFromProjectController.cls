@@ -1,6 +1,6 @@
 public class OrderPOFromProjectController {
     @AuraEnabled
-    public static object getMasterBudgets(String recId, Integer pageNumber, Integer pageSize, String poFilter, String poLineFilter, String tradeTypeFilter, String projectFilter, String productFilter){
+    public static object getMasterBudgets(String recId, Integer pageNumber, Integer pageSize, String poFilter, String poLineFilter, String tradeTypeFilter, String projectFilter, String productFilter, String permitFilter){
         
         system.debug('pageNumber--------->'+pageNumber);
         system.debug('pageSize----------->'+pageSize);
@@ -43,9 +43,9 @@ public class OrderPOFromProjectController {
         List<buildertek__Purchase_Order__c> nullspoRecList;
         List<buildertek__Purchase_Order__c> MainpoRecList = new List<buildertek__Purchase_Order__c>();
         String queryList = 'SELECT Id, Name, buildertek__Type__c,toLabel(buildertek__Phase__c),buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name,buildertek__Vendor__r.buildertek__Email_Address__c,buildertek__Status__c,buildertek__Description__c,buildertek__Change_Order__c,buildertek__Change_Order__r.Name, buildertek__PO_Total__c, buildertek__Paid_Amount__c, buildertek__PO_Balance__c, buildertek__Date_Ordered__c, buildertek__Project__c, buildertek__Project__r.Name,';
-        queryList = queryList +  ' (SELECT Id, Name, buildertek__Purchase_Order__c,buildertek__Total_Price__c,buildertek__Tax__c, buildertek__Purchase_Order__r.Name, buildertek__Quantity__c, buildertek__Unit_Price__c, buildertek__Description__c, buildertek__Total_Amount_Tax__c from Purchase_Order_Items__r) FROM buildertek__Purchase_Order__c';
+        queryList = queryList +  ' (SELECT Id, Name, buildertek__Purchase_Order__c,buildertek__Total_Price__c,buildertek__Tax__c, buildertek__Purchase_Order__r.Name, buildertek__Quantity__c, buildertek__Unit_Price__c, buildertek__Description__c, buildertek__Total_Amount_Tax__c from Purchase_Order_Items__r), buildertek__Permit__c, buildertek__Permit__r.Name, buildertek__Permit__r.buildertek__Status__c FROM buildertek__Purchase_Order__c';
         queryList = queryList+ ' WHERE buildertek__Project__c =: recId ';
-        if(poFilter != '' || tradeTypeFilter != '' || projectFilter != ''){
+        if(poFilter != '' || tradeTypeFilter != '' || projectFilter != '' || permitFilter != ''){
             if(poFilter != ''){
                 
                 queryList = queryList+ ' AND (buildertek__Vendor__r.Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\'';
@@ -66,6 +66,10 @@ public class OrderPOFromProjectController {
                     queryList = queryList+ ' AND (buildertek__Vendor__r.Name LIKE \'%'+String.escapeSingleQuotes(projectFilter)+'%\')';
                 }
                 
+            }
+
+            if(permitFilter != '' && permitFilter != null){
+                queryList = queryList+ ' AND (buildertek__Permit__r.Name LIKE \'%'+String.escapeSingleQuotes(permitFilter)+'%\') AND (buildertek__Permit__r.buildertek__Status__c = \'Completed\')';
             }
 
             queryList = queryList+ ' ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC';
@@ -90,7 +94,10 @@ public class OrderPOFromProjectController {
                                 buildertek__PO_Balance__c,
                                 buildertek__Date_Ordered__c,
                                 buildertek__Project__c,
-                                buildertek__Project__r.Name,(SELECT Id, Name, 
+                                buildertek__Project__r.Name,
+                                buildertek__Permit__c, 
+                                buildertek__Permit__r.Name,
+                                buildertek__Permit__r.buildertek__Status__c, (SELECT Id, Name, 
                                                             buildertek__Purchase_Order__c, 
                                                             buildertek__Purchase_Order__r.Name,
                                                             buildertek__Quantity__c,
@@ -99,6 +106,7 @@ public class OrderPOFromProjectController {
                                                             buildertek__Tax__c,
                                                             buildertek__Total_Price__c,
                                                             buildertek__Total_Amount_Tax__c,
+                                                            buildertek__Product__c,
                                                             buildertek__Product__r.ProductCode FROM Purchase_Order_Items__r)
                                 FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC ];    
         }else {
@@ -119,7 +127,10 @@ public class OrderPOFromProjectController {
                                 buildertek__PO_Balance__c,
                                 buildertek__Date_Ordered__c,
                                 buildertek__Project__c,
-                                buildertek__Project__r.Name,(SELECT Id, Name, 
+                                buildertek__Project__r.Name,
+                                buildertek__Permit__c, 
+                                buildertek__Permit__r.Name,
+                                buildertek__Permit__r.buildertek__Status__c, (SELECT Id, Name, 
                                                             buildertek__Purchase_Order__c, 
                                                             buildertek__Purchase_Order__r.Name,
                                                             buildertek__Quantity__c,
@@ -128,6 +139,7 @@ public class OrderPOFromProjectController {
                                                             buildertek__Tax__c,
                                                             buildertek__Total_Price__c,
                                                             buildertek__Total_Amount_Tax__c,
+                                                            buildertek__Product__c,
                                                             buildertek__Product__r.ProductCode FROM Purchase_Order_Items__r)
                                 FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC  LIMIT :pageSize OFFSET :offset];    
         }
@@ -149,7 +161,7 @@ public class OrderPOFromProjectController {
             MasterBudgetsClassRecord.poCheck = false;
             MasterBudgetsClassRecord.expanded = false; 
             MasterBudgetsClassRecord.pageSize = pageSize;
-            if(poFilter != '' || poLineFilter != '' || productFilter != ''){
+            if(poFilter != '' || poLineFilter != '' || tradeTypeFilter != '' || projectFilter != '' || productFilter != '' || permitFilter != ''){
                 MasterBudgetsClassRecord.pageNumber = 1;  
             }else{
                 MasterBudgetsClassRecord.pageNumber = pageNumber;
@@ -174,7 +186,6 @@ public class OrderPOFromProjectController {
                                 if(lines.Name.toLowercase().contains(poLineFilter.toLowercase()) && lines.buildertek__Product__r.ProductCode.toLowercase().contains(productFilter.toLowercase())){
                                     POLi.RecordId = lines.Id;
                                     POLi.Name = lines.Name;
-                                    system.debug('innerif'+lines.buildertek__Description__c);
                                     POLi.Description = lines.buildertek__Description__c;
                                     POLi.PurchaseOrder = lines.buildertek__Purchase_Order__r.Name;
                                     POLi.Quantity = lines.buildertek__Quantity__c;
@@ -185,8 +196,8 @@ public class OrderPOFromProjectController {
                                     POLi.expanded = false;
                                     POLi.PORow = false;
                                     POLi.poLineCheck = false;
-                                    POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
-                                    POLinesList .add(POLi); 
+                                    // POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
+                                    POLinesList.add(POLi); 
                                 }
                             }
                         }
@@ -195,7 +206,6 @@ public class OrderPOFromProjectController {
                                 if(lines.buildertek__Product__r.ProductCode.toLowercase().contains(productFilter.toLowercase())){
                                     POLi.RecordId = lines.Id;
                                     POLi.Name = lines.Name;
-                                    system.debug('innerif'+lines.buildertek__Description__c);
                                     POLi.Description = lines.buildertek__Description__c;
                                     POLi.PurchaseOrder = lines.buildertek__Purchase_Order__r.Name;
                                     POLi.Quantity = lines.buildertek__Quantity__c;
@@ -206,8 +216,8 @@ public class OrderPOFromProjectController {
                                     POLi.expanded = false;
                                     POLi.PORow = false;
                                     POLi.poLineCheck = false;
-                                    POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
-                                    POLinesList .add(POLi); 
+                                    // POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
+                                    POLinesList.add(POLi); 
                                 }
                             }
                         }
@@ -216,7 +226,6 @@ public class OrderPOFromProjectController {
                                 if(lines.Name.toLowercase().contains(poLineFilter.toLowercase())){
                                     POLi.RecordId = lines.Id;
                                     POLi.Name = lines.Name;
-                                    system.debug('innerif'+lines.buildertek__Description__c);
                                     POLi.Description = lines.buildertek__Description__c;
                                     POLi.PurchaseOrder = lines.buildertek__Purchase_Order__r.Name;
                                     POLi.Quantity = lines.buildertek__Quantity__c;
@@ -227,8 +236,8 @@ public class OrderPOFromProjectController {
                                     POLi.expanded = false;
                                     POLi.PORow = false;
                                     POLi.poLineCheck = false;
-                                    POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
-                                    POLinesList .add(POLi); 
+                                    // POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
+                                    POLinesList.add(POLi); 
                                 }
                             }
                         }
@@ -245,8 +254,8 @@ public class OrderPOFromProjectController {
                             POLi.expanded = false;
                             POLi.PORow = false;
                             POLi.poLineCheck = false;
-                            POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
-                            POLinesList .add(POLi);  
+                            // POLi.ProductCode = lines.buildertek__Product__r.ProductCode;
+                            POLinesList.add(POLi);  
                         }
                         
                     }
@@ -293,7 +302,7 @@ public class OrderPOFromProjectController {
             
         }
 
-        return  MasterBudgetsClassList;   
+        return  MasterBudgetsClassList;     
     }
     
     public class MasterBudgetsClass{
@@ -614,16 +623,18 @@ public class OrderPOFromProjectController {
                 for(buildertek__Purchase_Order__c myContact : poList) {
                     List<ContentVersion> cvlinklist = new List<ContentVersion>();
                     cvlinklist = conDocMap.get(myContact.Id);
-                    for(Integer i=0; i<documents.size(); i++){
-                        for(ContentVersion cvl : cvlinklist) {
-                            if(cvl.Id == documents[i].Id){
-                                ContentDocumentLink cdl = new ContentDocumentLink();
-                                cdl.LinkedEntityId = myContact.Id;
-                                cdl.ContentDocumentId = documents[i].ContentDocumentId;
-                                cdl.ShareType = 'V';
-                                cdl.Visibility = 'AllUsers';
-                                cdlList.add(cdl);
-                                System.debug('ContentDocumentLink Added.');
+                    if (cvlinklist != null) {
+                        for(Integer i=0; i<documents.size(); i++){
+                            for(ContentVersion cvl : cvlinklist) {
+                                if(cvl.Id == documents[i].Id){
+                                    ContentDocumentLink cdl = new ContentDocumentLink();
+                                    cdl.LinkedEntityId = myContact.Id;
+                                    cdl.ContentDocumentId = documents[i].ContentDocumentId;
+                                    cdl.ShareType = 'V';
+                                    cdl.Visibility = 'AllUsers';
+                                    cdlList.add(cdl);
+                                    System.debug('ContentDocumentLink Added.');
+                                }
                             }
                         }
                     }

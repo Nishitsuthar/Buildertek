@@ -277,6 +277,8 @@
     handleUploadFinished : function(component, event, helper){
         var uploadedFiles = event.getParam("files");
         console.log('please check type of uploaded files here');
+        var convertedFiles = JSON.stringify(uploadedFiles);
+        console.log({convertedFiles});
         
         // helper.handleUploadFinishedHelper(component, event, helper);
     },

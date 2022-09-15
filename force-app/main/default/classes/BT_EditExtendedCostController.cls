@@ -84,6 +84,8 @@ public with sharing class BT_EditExtendedCostController
                 system.debug('#@#@#Query---'+query);
                 List<buildertek__Select_Sheet__c> recList = Database.query(query);
 
+                System.debug('recList==='+recList);
+                System.debug('recList size==='+recList.size());
                 if(recList != null && recList.Size() > 0)
                 {
                     for(buildertek__Select_Sheet__c thisBomLine : recList)
@@ -458,8 +460,10 @@ public with sharing class BT_EditExtendedCostController
                         }
                         else if(fieldName.equals('buildertek__General_Liability_Insurance_Long__c') /*&& String.isNotBlank(thisBomLine.buildertek__Service_Category__c)
                         && thisBomLine.buildertek__Service_Category__c.equalsIgnoreCase('Ins')*/&& String.isNotBlank(thisBomLine.buildertek__BL_SERVICE_CATEGORY__c)
-                        && thisBomLine.buildertek__BL_SERVICE_CATEGORY__c.equalsIgnoreCase('Insurance') &&
-                               thisBomLine.buildertek__Takeoff_Line__r.buildertek__Build_Phase__r.Name.equalsIgnoreCase('Base')) 
+                        && thisBomLine.buildertek__BL_SERVICE_CATEGORY__c.equalsIgnoreCase('Insurance'))
+                        //  && (thisBomLine.buildertek__Takeoff_Line__r.buildertek__Build_Phase__r.Name.equalsIgnoreCase('Base') ||
+                        //  thisBomLine.buildertek__Takeoff_Line__r.buildertek__Build_Phase__r.Name.equalsIgnoreCase('Alt 1') || // added Alt 1 & option as a build phase condition as a part of CAES-84 issue
+                        //  thisBomLine.buildertek__Takeoff_Line__r.buildertek__Build_Phase__r.Name.equalsIgnoreCase('Option') )) 
                         {
                             system.debug('Ins--->');
                             generalLiabilityId = String.valueOf(thisBomLine.Id);
@@ -801,6 +805,7 @@ public with sharing class BT_EditExtendedCostController
                     }
 
                     system.debug('wrapperList'+wrapperList.size());
+                    System.debug('wrapperList===='+wrapperList);
                     if(wrapperList.size() > 0 )
                     {
                         buildertek__Project_Selection_Sheet_Takeoff__c bomToUpdate = new buildertek__Project_Selection_Sheet_Takeoff__c();
@@ -960,10 +965,12 @@ public with sharing class BT_EditExtendedCostController
 
             if(fieldName.equals('buildertek__General_Liability_Insurance_Long__c'))
             {
+                System.debug('GLS insurance record==='+wrapperList[0]);
                 generalLiabilityVal  = Decimal.valueOf(wrapperList[0].extendedCostVal);
                 if(bomFromDB != null && String.isNotBlank(bomFromDB.buildertek__Workers_Comp__c) )
                 {
                     List<buildertek.ManagePOlinesController.ExtendedCostWrap> workerWrapperList = (List<buildertek.ManagePOlinesController.ExtendedCostWrap>)JSON.deserialize(bomFromDB.buildertek__Workers_Comp__c, List<buildertek.ManagePOlinesController.ExtendedCostWrap>.Class);
+                    System.debug('workerWrapperList=='+workerWrapperList);
                     workerCompVal = Decimal.valueOf(workerWrapperList[0].extendedCostVal);
                 }
             }

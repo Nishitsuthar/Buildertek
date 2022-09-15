@@ -210,7 +210,7 @@ public class RFQVendorItemController {
     }
     @AuraEnabled
     public static list<buildertek__RFQ_To_Vendor__c> getvendorRelatedList(string recId){
-        User userrec = [select id,Name, AccountId from User where id =: userInfo.getUserId()];
+        User userrec = [select id,Name, AccountId from User where id =: userInfo.getUserId()];//changed from userinfo.getuserid()
         string accountId = '';
         if(userrec.AccountId!=null){
             accountId = userrec.AccountId;
@@ -438,11 +438,46 @@ public class RFQVendorItemController {
              wrap.Issuccess = true;
              return wrap;
          }else{
-           WrapperListView wrap = new WrapperListView();
-           wrap.RFQVendorList = new list<buildertek__RFQ_To_Vendor__c>(); 
-           wrap.message = httpRes.getBody();
-           wrap.Issuccess = false;
-           return wrap;
+            WrapperListView wrap = new WrapperListView();
+            httpReq.setEndpoint(httpRes.getHeader('Location'));
+            httpRes = new Http().send(httpReq);
+            fromJSON fr = new fromJSON();
+            fr = (fromJSON) System.JSON.deserialize(httpRes.getBody(),fromJSON.class);
+            
+            
+            string str = fr.query;
+            system.debug(str);
+            string str2 = ',buildertek__Status__c,buildertek__Accepted_Date__c,buildertek__Vendor__c,buildertek__Quote_Amount__c,buildertek__Open_RFI__c,buildertek__Days_Outstanding__c,buildertek__RFQ__c,buildertek__Send_Invitation__c,buildertek__RFQ__r.Name,buildertek__RFQ__r.buildertek__Auto_Number__c,buildertek__Submitted_Date__c,buildertek__RFQ__r.buildertek__Description__c';
+            string[] splitted = str.split('FROM');
+            system.debug(splitted[0]);
+            system.debug(splitted[1]);
+            
+            string fieldstring = '';
+            if(UserInfo.isMultiCurrencyOrganization()){
+                  fieldstring = 'SELECT Name, Id, CurrencyIsoCode, CreatedDate, LastModifiedDate, SystemModstamp'+string.valueof(str2);
+            }else{
+                fieldstring = 'SELECT Name, Id, CreatedDate, LastModifiedDate, SystemModstamp'+string.valueof(str2);
+            }
+            //string fieldstring = 'SELECT Name, Id, CurrencyIsoCode, CreatedDate, LastModifiedDate, SystemModstamp'+string.valueof(str2);
+            string prefinalstring = fieldstring+' FROM '+splitted[1];
+            string[] getstring = prefinalstring.split('USING'); 
+            system.debug(getstring[0]+splitted[1]);
+            string queryStr = getstring[0]+splitted[1];
+            
+            string finalstring = '';
+            if(queryStr.contains('WHERE') == false){
+                finalstring = getstring[0]+' WHERE buildertek__Vendor__c =:accountId '+splitted[1];
+            }else{
+                finalstring = getstring[0]+' WHERE buildertek__Vendor__c =:accountId AND '+splitted[1].split('WHERE')[1];
+            }
+            //system.debug(getstring[0]+splitted[1].split('WHERE')[0]);
+            
+            
+            system.debug('*&&&***&*&*'+finalstring);
+            wrap.RFQVendorList = Database.query(finalstring); 
+            wrap.message = httpRes.getBody();
+            wrap.Issuccess = true;
+            return wrap;            
         }
         }catch (Exception e) {
              WrapperListView wrap = new WrapperListView();

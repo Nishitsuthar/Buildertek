@@ -53,7 +53,10 @@
                 if(result != null && result != undefined )
                 {
                     component.set('v.bomRecord',result);
-                    component.set("v.showSaveCancelBtn",true);
+                    // if(component.get("v.showSaveCancelBtn") == false){
+                        // component.set("v.showSaveCancelBtn",true);
+
+                    // }
                     console.log('Data--',result.buildertek__OCIP_CCIP_Required__c);
                 }
                 component.set('v.isLoading', false);
@@ -164,7 +167,7 @@
                 if (result.isSuccess) {
                     var retResponse = JSON.parse(result.response);
                     console.log('retResponse***', retResponse);
-
+                    // component.set("v.showSaveCancelBtn",false);
                     var parentComponent = component.get("v.parent");
                     parentComponent.setExtendedCostValues(retResponse)
 

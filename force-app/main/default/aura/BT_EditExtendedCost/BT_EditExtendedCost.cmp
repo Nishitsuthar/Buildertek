@@ -100,7 +100,8 @@
             </div>
             <aura:set attribute="else">
                 <aura:if isTrue="{!and(v.bomRecord != undefined,v.bomRecord != null)}">
-                    <lightning:input type="checkbox" label="OCIP/CCIP Required" name="ocip_required" checked="{!v.bomRecord.buildertek__OCIP_CCIP_Required__c}"></lightning:input>
+                    <!-- Called a method (OCIPChange) as a part of CAES-86 3rd issue -->
+                    <lightning:input type="checkbox" label="OCIP/CCIP Required" name="ocip_required" checked="{!v.bomRecord.buildertek__OCIP_CCIP_Required__c}" onchange="{!c.OCIPChange}" ></lightning:input>
                     <aura:if isTrue="{!v.bomRecord.buildertek__OCIP_CCIP_Required__c}">
                         <lightning:select aura:id="bomTypePicklist" value="{!v.bomRecord.buildertek__Type__c}" 
                             name="bomTypePicklist" label="Type">

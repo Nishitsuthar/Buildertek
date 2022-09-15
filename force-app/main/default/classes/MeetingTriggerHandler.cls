@@ -9,11 +9,28 @@ public with sharing class MeetingTriggerHandler {
     }
     
     public void OnBeforeInsertEvent(){
-        updateEndTime();
+        List<buildertek__Meeting__c> lastResult = new List<buildertek__Meeting__c>();
+        for(buildertek__Meeting__c mr : recordsNewList){
+            if (mr.buildertek__End_Time__c == null) {
+                if(mr.buildertek__Start_Time__c != null && mr.buildertek__Duration__c != null){
+                    mr.buildertek__End_Time__c = mr.buildertek__Start_Time__c.addMinutes(Integer.valueOf(mr.buildertek__Duration__c));
+                    System.debug('mr.buildertek__End_Time__c ==>>> '+mr.buildertek__End_Time__c);
+                }
+            }
+        }
     } 
 
     public void OnBeforeUpdateEvent(){
-        updateEndTime();
+        List<buildertek__Meeting__c> lastResult = new List<buildertek__Meeting__c>();
+        for(buildertek__Meeting__c mr : recordsNewList){
+            buildertek__Meeting__c oldMt = recordsOldMap.get(mr.Id);
+            if (mr.buildertek__End_Time__c == oldMt.buildertek__End_Time__c) {
+                if(mr.buildertek__Start_Time__c != null && mr.buildertek__Duration__c != null){
+                    mr.buildertek__End_Time__c = mr.buildertek__Start_Time__c.addMinutes(Integer.valueOf(mr.buildertek__Duration__c));
+                    System.debug('mr.buildertek__End_Time__c ==>>> '+mr.buildertek__End_Time__c);
+                }
+            }
+        }
     }
 
     public void OnAfterInsertEvent(){
@@ -25,14 +42,15 @@ public with sharing class MeetingTriggerHandler {
     } 
 
     public void updateEndTime(){
-        List<buildertek__Meeting__c> lastResult = new List<buildertek__Meeting__c>();
-        for(buildertek__Meeting__c mr : recordsNewList){
-            if(mr.buildertek__End_Time__c == null){
-                if(mr.buildertek__Start_Time__c != null && mr.buildertek__Duration__c != null){
-                    mr.buildertek__End_Time__c = mr.buildertek__Start_Time__c.addMinutes(Integer.valueOf(mr.buildertek__Duration__c));
-                    System.debug('mr.buildertek__End_Time__c ==>>> '+mr.buildertek__End_Time__c);
-                }
-            }
-        }
+        // List<buildertek__Meeting__c> lastResult = new List<buildertek__Meeting__c>();
+        // for(buildertek__Meeting__c mr : recordsNewList){
+        //     buildertek__Meeting__c oldMt = recordsOldMap.get(mr.Id);
+        //     if (mr.buildertek__End_Time__c == oldMt.buildertek__End_Time__c) {
+        //         if(mr.buildertek__Start_Time__c != null && mr.buildertek__Duration__c != null){
+        //             mr.buildertek__End_Time__c = mr.buildertek__Start_Time__c.addMinutes(Integer.valueOf(mr.buildertek__Duration__c));
+        //             System.debug('mr.buildertek__End_Time__c ==>>> '+mr.buildertek__End_Time__c);
+        //         }
+        //     }
+        // }
     }
 }

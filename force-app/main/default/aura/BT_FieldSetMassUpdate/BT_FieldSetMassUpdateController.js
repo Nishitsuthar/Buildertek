@@ -43,6 +43,12 @@
                 component.set("v.isDropDownField", true);
                 component.set("v.dropDownValue", record[field.name]);
                 if (field.pickListValuesList != undefined) {
+                    var cellValue = component.get("v.cellValue");
+                    if (cellValue != undefined) {
+                        if (!field.pickListValuesList.includes(cellValue)) {
+                            field.pickListValuesList.push(cellValue);
+                        }
+                    }
                     component.set('v.dropDown', field.pickListValuesList);
                 }
             } else if (field.type == 'DATE') {
@@ -181,17 +187,16 @@
         //alert(selectedValue);
         var record = component.get('v.record');
         record[fieldLabel] = selectedValue != '' && selectedValue != 'None' ? selectedValue : '';
-        console.log('=== == Record Change == ===');
-        console.log({record});
-
-        if (record.buildertek__Start__c != null && record.buildertek__Start__c != '' && record.buildertek__Finish__c != null && record.buildertek__Finish__c != '') {
-            var startData = new Date(record.buildertek__Start__c);
-            var finishDate = new Date(record.buildertek__Finish__c);
-            finishDate.setDate(finishDate.getDate() + 1)
-            var diffTime = Math.abs(finishDate - startData);
-            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            if (diffDays > 0) {
-                record.buildertek__Duration__c = diffDays;
+        if (fieldLabel == 'buildertek__Finish__c') {
+            if (record.buildertek__Start__c != null && record.buildertek__Start__c != '' && record.buildertek__Finish__c != null && record.buildertek__Finish__c != '') {
+                var startData = new Date(record.buildertek__Start__c);
+                var finishDate = new Date(record.buildertek__Finish__c);
+                finishDate.setDate(finishDate.getDate() + 1)
+                var diffTime = Math.abs(finishDate - startData);
+                var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays > 0) {
+                    record.buildertek__Duration__c = diffDays;
+                }
             }
         }
         component.set('v.record', record);

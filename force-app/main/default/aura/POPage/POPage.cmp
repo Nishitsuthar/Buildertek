@@ -83,7 +83,7 @@
             </lightning:layoutItem>
 
             <lightning:layoutItem padding="around-small" size="2.5">
-                <lightning:input autocomplete="off" type="search" placeholder="Search Product Code" variant="label-hidden" value="{!v.searchProductFilter}" />
+                <lightning:input autocomplete="off" type="search" placeholder="Search for Product Code" variant="label-hidden" value="{!v.searchProductFilter}" />
             </lightning:layoutItem>
             
             <lightning:layoutItem padding="around-small" size="2.5">

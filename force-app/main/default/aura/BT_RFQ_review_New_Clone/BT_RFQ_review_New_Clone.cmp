@@ -241,7 +241,7 @@
                                                         <lightning:icon title="No Primary Contact or Valid Email"
                                                                         iconName="utility:error" variant="Error" size="xx-small" />
                                                     </span>
-                                                    <aura:set attribute = 'else'>
+                                                    <!-- <aura:set attribute = 'else'>
                                                         <aura:if
                                                                  isTrue="{!!vlist.isValidEmail}" >
                                                             <span style="padding-left:5px">
@@ -250,7 +250,7 @@
                                                             </span>
                                                             
                                                         </aura:if>
-                                                    </aura:set>
+                                                    </aura:set> -->
                                                     
                                                 </aura:if>
                                                 <aura:if isTrue="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')}"> 

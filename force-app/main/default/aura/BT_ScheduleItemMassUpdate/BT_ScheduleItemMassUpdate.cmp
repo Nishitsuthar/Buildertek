@@ -45,6 +45,9 @@
     <aura:attribute name="iPrevClicked" type="Boolean" default = "false" />
     <aura:attribute name="firstPhaseName" type="String" />
     <aura:attribute name="pageArr" type="List" />
+    <aura:attribute name="sPhaseList" type="List" />
+    <aura:attribute name="tempIndexList" type="List" />
+
     
     <!-- refresh gantt -->
     <aura:registerEvent name="apprefreshEventfromTable" type="c:refresh_componenent_event"/>
@@ -163,12 +166,14 @@
                                 </aura:if>
                                 
                                 <div class="slds-col slds-size_6-of-12 slds-float_right">
-                                    <aura:if isTrue="{!mapKey.key == 'No Phase'}">
+
+                                    {!mapKey.key}
+                                    <!-- <aura:if isTrue="{!mapKey.key == 'No Phase'}">
                                         No Phase
                                         <aura:set attribute="else">
                                             {!mapKey.key}
                                         </aura:set>
-                                    </aura:if>
+                                    </aura:if> -->
                                     
                                 </div>
                                 
@@ -265,7 +270,7 @@
                                                     <th style="width:4%;">
                                                     </th>
                                                     <th style="width:4%;">
-                                                        Wbs_
+                                                        WBS
                                                     </th>
                                                 </aura:if>
                                                 <aura:iteration items="{!v.fieldSetValues}" var="field" indexVar="index">
@@ -275,64 +280,60 @@
                                         </thead>
                                         <tbody>
                                             <aura:iteration items="{!v.listOfRecords}" var="row" indexVar="index">
-                                                <aura:if isTrue="{!row}">
-                                                    
-                                                    <tr style="{!v.massUpdateEnable ? '':'height:35px; !important; line-height: 1;'}">
-                                                        <aura:if isTrue="{!v.massUpdateEnable}">
-                                                            <td style="padding:5px; margin:5px;line-height:5;">
-                                                                <lightning:input type="checkbox" name="{!row.Id}" checked="{!row.isSelected}"
-                                                                                 onclick="{!c.onCheckBoxSelect}" class="customCheckBoxCss" />
-                                                            </td>
-                                                            <td style="padding:5px; margin:5px;line-height:5;">
-                                                               <aura:if isTrue="{!v.PageNumber == 1}">
-                                                                1.{!Phaseindex+1}.{!index+1}
-                                                                
-                                                                <aura:set attribute="else">
-                                                                    <aura:if isTrue="{!v.firstPhaseName == v.prevlastPhaseName}">
-                                                                        <aura:if isTrue="{!mapKey.key == v.prevlastPhaseName}">
-                                                                            1.{!v.prevlastPhaseNum+Phaseindex}.{!v.prevlastItemInPhaseNum+index+1}
-                                                                            <aura:set attribute="else">
-                                                                                <aura:if isTrue="{!Phaseindex == 0}">
-                                                                                    1.{!v.prevlastPhaseNum+Phaseindex+1}.{!v.prevlastItemInPhaseNum+index+1}
-                                                                                     <aura:set attribute="else">
-                                                                                        1.{!v.prevlastPhaseNum+Phaseindex}.{!index+1}
-                                                                                    </aura:set>
-                                                                                </aura:if>
-                                                                                
-                                                                            </aura:set>
-                                                                        </aura:if>
-                                                                        
-                                                                        <aura:set attribute="else">
-                                                                            <aura:if isTrue="{!Phaseindex == 0}">
-                                                                                1.{!v.prevlastPhaseNum+Phaseindex+1}.{!index+1}
+                                                <aura:if isTrue="{!or(and((mapKey.key == 'No Phase'), (row.buildertek__Phase__c == null)), (mapKey.key == row.buildertek__Phase__c))}">
+
+                                                    <aura:if isTrue="{!row}">
+                                                        
+                                                        <tr style="{!v.massUpdateEnable ? '':'height:35px; !important; line-height: 1;'}">
+                                                            <aura:if isTrue="{!v.massUpdateEnable}">
+                                                                <td style="padding:5px; margin:5px;line-height:5;">
+                                                                    <lightning:input type="checkbox" name="{!row.Id}" checked="{!row.isSelected}"
+                                                                                    onclick="{!c.onCheckBoxSelect}" class="customCheckBoxCss" />
+                                                                </td>
+                                                                <td style="padding:5px; margin:5px;line-height:5;">
+                                                                <aura:if isTrue="{!v.PageNumber == 1}">
+                                                                    1.{!Phaseindex+1}.{!row.tempIndex}
+                                                                    <aura:set attribute="else">
+                                                                        <aura:if isTrue="{!v.firstPhaseName == v.prevlastPhaseName}">
+                                                                            <aura:if isTrue="{!mapKey.key == v.prevlastPhaseName}">
+                                                                                1.{!v.prevlastPhaseNum+Phaseindex}.{!row.tempIndex}
                                                                                 <aura:set attribute="else">
-                                                                                    1.{!v.prevlastPhaseNum+Phaseindex+1}.{!index+1}
+                                                                                    <aura:if isTrue="{!Phaseindex == 0}">
+                                                                                        1.{!v.prevlastPhaseNum+Phaseindex+1}.{!row.tempIndex}
+                                                                                        <aura:set attribute="else">
+                                                                                            1.{!v.prevlastPhaseNum+Phaseindex}.{!row.tempIndex}
+                                                                                        </aura:set>
+                                                                                    </aura:if>
+                                                                                    
                                                                                 </aura:set>
                                                                             </aura:if>
                                                                             
-                                                                        </aura:set>
-                                                                    </aura:if>
-                                                                </aura:set>
+                                                                            <aura:set attribute="else">
+                                                                                1.{!v.prevlastPhaseNum+Phaseindex+1}.{!row.tempIndex}
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                    </aura:set>
+                                                                </aura:if>
+                                                                
+                                                                
+                                                            <!-- <aura:if isTrue="{!mapKey.key == 'No Phase'}">
+                                                                    {!index+1}
+                                                                    <aura:set attribute="else">
+                                                                        {!Phaseindex+1}.{!index+1}
+                                                                    </aura:set>
+                                                                </aura:if> -->
+                                                                    
+                                                                </td>
                                                             </aura:if>
-                                                            
-                                                            
-                                                           <!-- <aura:if isTrue="{!mapKey.key == 'No Phase'}">
-                                                                {!index+1}
-                                                                <aura:set attribute="else">
-                                                                    {!Phaseindex+1}.{!index+1}
-                                                                </aura:set>
-                                                            </aura:if> -->
-                                                            	  
-                                                            </td>
-                                                        </aura:if>
-                                                        <aura:iteration items="{!v.fieldSetValues}" var="field"> <!-- scheduleId="{!v.recordId}" -->
-                                                            <td style="padding:5px; margin:5px;">
-                                                                <c:BT_FieldSetMassUpdate record="{!row}" index="{!index}" field="{!field}"  scheduleId="{!v.recordId}"
-                                                                                         isMassUpdateEnable="{!v.massUpdateEnable}"
-                                                                                         childObjectName="buildertek__Project_Task__c"/>
-                                                            </td>
-                                                        </aura:iteration>
-                                                    </tr>
+                                                            <aura:iteration items="{!v.fieldSetValues}" var="field"> <!-- scheduleId="{!v.recordId}" -->
+                                                                <td style="padding:5px; margin:5px;">
+                                                                    <c:BT_FieldSetMassUpdate record="{!row}" index="{!index}" field="{!field}"  scheduleId="{!v.recordId}"
+                                                                                            isMassUpdateEnable="{!v.massUpdateEnable}"
+                                                                                            childObjectName="buildertek__Project_Task__c"/>
+                                                                </td>
+                                                            </aura:iteration>
+                                                        </tr>
+                                                    </aura:if>
                                                 </aura:if>
                                             </aura:iteration>
                                         </tbody>

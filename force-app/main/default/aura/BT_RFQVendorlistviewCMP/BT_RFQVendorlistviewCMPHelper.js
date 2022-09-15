@@ -28,6 +28,7 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result= response.getReturnValue(); 
+                console.log({result});
                //  alert('MY.........'+JSON.stringify(result));
                 component.set("v.currentUserList", result);
                // alert( 'kkkkkkk'+component.set("v.currentUserList", result));
@@ -114,6 +115,7 @@
         $A.enqueueAction(action);
     },*/
     getrelatedrfqvendorlist : function(component, event, helper){
+        component.set("v.loaded", true);
                component.set('v.columns', [
                {label: 'RFQ #', fieldName: 'Id', type: 'url',
                typeAttributes: {
@@ -149,6 +151,8 @@
             })
             action.setCallback(this, function(data){
             var result = data.getReturnValue();
+                   console.log({result});
+                   console.log('GET VENDOER LIST');
                    for ( var i = 0; i < result.length; i++ ) {
                    var row = result[i];
                              // if ( row.buildertek__RFQ__c) {
@@ -175,7 +179,7 @@
     }
     component.set("v.RFQVendorLineList",result);
     
-    
+    component.set("v.loaded", false);
     });
     $A.enqueueAction(action);
     },
@@ -268,6 +272,7 @@
             action.setCallback(this,function(response){
                 
                 var result = response.getReturnValue();
+                console.log({result});
         //alert('&&&'+response.getState());
                 if(response.getState() == 'SUCCESS'){
                     
@@ -292,7 +297,8 @@
                                 //console.log(JSON.stringify(response.getReturnValue()));
                                 
                                 var result = response.getReturnValue().RFQVendorList;
-                                
+                                console.log('getListViewQuery');
+                                console.log({result});
                                 if(response.getState() == 'SUCCESS'){
                                     if(response.getReturnValue().Issuccess == true){
                                         //console.log('!!!!!'+JSON.stringify(result));
@@ -344,7 +350,8 @@
                                 //console.log(JSON.stringify(response.getReturnValue()));
                                 
                                 var result = response.getReturnValue().RFQVendorList;
-                                
+                                console.log('vendor list');
+                                console.log({result});
                                 if(response.getState() == 'SUCCESS'){
                                     if(response.getReturnValue().Issuccess == true){
                                         //console.log('!!!!!'+JSON.stringify(result));

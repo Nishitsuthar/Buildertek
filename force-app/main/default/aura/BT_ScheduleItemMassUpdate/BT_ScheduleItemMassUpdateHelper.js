@@ -65,6 +65,37 @@
             if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
                 var list = JSON.parse(response.getReturnValue());
                 if (list.length > 0) {
+
+                    var sPhaseList = component.get("v.sPhaseList");;
+                    var tempIndexList = component.get("v.tempIndexList");
+                    var sPhase = sPhaseList[pageNumber-1];
+                    var tempIndex = tempIndexList[pageNumber-1];
+                    if (sPhase == undefined) {
+                        sPhase = '';
+                    }
+                    if (tempIndex == undefined) {
+                        tempIndex = 1;
+                    }
+                    list.forEach(element => {
+                        if (element.buildertek__Phase__c == undefined) {
+                            element.tempIndex = tempIndex;
+                            tempIndex++;
+                        }
+                        else if (sPhase != element.buildertek__Phase__c) {
+                            sPhase = element.buildertek__Phase__c;
+                            tempIndex = 1;
+                            element.tempIndex = tempIndex;
+                            tempIndex++;
+                        } else{
+                            element.tempIndex = tempIndex;
+                            tempIndex++;
+                        }
+                    });
+                    sPhaseList[pageNumber] = sPhase;
+                    tempIndexList[pageNumber] = tempIndex;
+                    component.set("v.sPhaseList", sPhaseList);
+                    component.set("v.tempIndexList", tempIndexList);
+
                     component.set("v.listOfRecords", list);
                     // console.log(list)
 

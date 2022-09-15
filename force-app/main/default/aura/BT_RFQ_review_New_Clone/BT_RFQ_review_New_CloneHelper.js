@@ -152,11 +152,11 @@
                              
                         }else{
                             rfqToVendorList[i]['isEmail'] = false;
-                            rfqToVendorList[i]['isValidEmail']= validateEmail(rfqToVendorList[i].buildertek__Contact__r.Email)
+                            // rfqToVendorList[i]['isValidEmail']= validateEmail(rfqToVendorList[i].buildertek__Contact__r.Email)
                         }
                     }else{
                         rfqToVendorList[i]['isEmail'] = false;
-                            rfqToVendorList[i]['isValidEmail']= false
+                            // rfqToVendorList[i]['isValidEmail']= false
                     }
                      
                     if(rfqToVendorList[i].buildertek__Contact__c == '' || rfqToVendorList[i].buildertek__Contact__c == undefined || rfqToVendorList[i].buildertek__Contact__c == null){

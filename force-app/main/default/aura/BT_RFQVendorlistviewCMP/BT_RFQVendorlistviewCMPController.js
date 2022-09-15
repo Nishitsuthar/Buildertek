@@ -190,6 +190,7 @@
     },
     
     handleListViewChange : function( component, event, helper ) { 
+        component.set("v.loaded", true);
         var listview = component.get("v.listviewName");
          var listviews = component.get("v.selectedListViewName");
         var currentuser = component.get("v.currentUserList");
@@ -227,7 +228,7 @@
              /*var action = component.get("c.doInit");
             $A.enqueueAction(action)*/
             helper.getrelatedrfqvendorlist(component, event, helper);
-            $A.enqueueAction(action)
+            //$A.enqueueAction(action)
             
         }else{
             var action = component.get("c.getListViewQuery");
@@ -262,8 +263,9 @@
                     }else{
                         console.log(response.getReturnValue().message);
                     }
-                    
+                    component.set("v.loaded", false);
                 }else{
+                    component.set("v.loaded", false);
                     //alert('ERROR');
                     //alert(JSON.stringify(response.getError()));
                 }
