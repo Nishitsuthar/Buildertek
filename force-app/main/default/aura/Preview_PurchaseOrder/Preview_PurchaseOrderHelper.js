@@ -244,6 +244,10 @@
         });
         $A.enqueueAction(signatureaction); 
     },
+
+    // handleUploadFinishedHelper : function(component, event, helper){
+    //     var uploadedFiles = event.getParam("files");
+    // }
 	
 	
 })

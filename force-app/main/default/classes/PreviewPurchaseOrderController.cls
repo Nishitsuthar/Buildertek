@@ -53,8 +53,25 @@ public with sharing class PreviewPurchaseOrderController {
     }
     
     @AuraEnabled
-     public static String sendProposal(String htmlBody, String recordId, String templateId, List<String> to, List<String> cc,String fileid){
+     public static String sendProposal(String htmlBody, String recordId, String templateId, List<String> to, List<String> cc, String fileid, String attacheDocMap){
          try{
+
+            System.debug('THis is attachedFiles ==> '+attacheDocMap);
+            // System.debug(attacheDocMap[0]);
+
+            // System.debug(attacheDocMap.);
+            
+
+            // System.debug(JSON.deserialize(attacheDocMap, String));
+            // System.debug('THis is attachedFiles ==> ', img);
+
+            //Map<String, String> m = (Map<String, String>) JSON.deserializeUntyped(attacheDocMap);
+
+            // System.debug(m);
+            // for (String i : m) {
+            //     System.debug(i+' This is values '+ attacheDocMap.get(i));
+            // }
+
              String body = '';
              //String subject = 'PurchaseOrder';
              String subject = ''; 
@@ -94,6 +111,10 @@ public with sharing class PreviewPurchaseOrderController {
             		strCC.add(con.email);
             	}    
     	    }
+
+
+            // Blob bb = [SELECT Id,VersionData FROM ContentVersion WHERE].VersionData;
+            // System.debug(bb);
         	 
              List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
              Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
@@ -127,6 +148,12 @@ public with sharing class PreviewPurchaseOrderController {
              system.debug('Blob ---> '+setAttachmentBody(recordId, templateId,fileid));
              efa.setBody(setAttachmentBody(recordId, templateId,fileid));
              fileAttachments.add(efa); 
+             
+            //  Messaging.Emailfileattachment efa1 = new Messaging.Emailfileattachment();
+            //  efa1.setFileName('test.png');
+            //  efa1.setBody(bb);
+            //  fileAttachments.add(efa1); 
+             
              mail.setFileAttachments(fileAttachments);
              mails.add(mail);
              Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);
