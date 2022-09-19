@@ -164,16 +164,13 @@ public without sharing class PreviewQuoteController{
                 update quoterecbody;
                 System.debug('Memo : '+quoterecbody[0].buildertek__Memo__c);
             }
-            
-           /* contact conrec = [select id, Email
-                              from Contact
-                              //where email<>null
-                              where id =: to[0]
-                              limit 1]; */
-            contact conrec = [select id, Email
-                              from Contact
-                              limit 1];
-            system.debug('random contact id '+conrec);
+           
+            List<Contact> conList = [SELECT Id, email FROM Contact WHERE Id IN :to AND Email != null];
+
+            // contact conrec = [select id, Email
+            //                   from Contact
+            //                   limit 1];
+            system.debug('random contact id '+conList[0]);
             List<Messaging.SingleEmailMessage> msgList = new List<Messaging.SingleEmailMessage>();
             List<Messaging.SingleEmailMessage> msgList1 = new List<Messaging.SingleEmailMessage>();
             Savepoint sp = Database.setSavepoint();
@@ -182,7 +179,7 @@ public without sharing class PreviewQuoteController{
                                         FROM EmailTemplate
                                         WHERE DeveloperName = 'QuoteTemplateBody'].Id;
             email.setTemplateId(theTemplatebodyid);
-            email.setTargetObjectId(conrec.Id);
+            email.setTargetObjectId(conList[0].Id);
             email.setSaveAsActivity(true);
             email.setWhatId(recordId);
             email.setToAddresses(new List<String>{'noreplay@buildertek.com'});
@@ -217,12 +214,12 @@ public without sharing class PreviewQuoteController{
             List<string> strTO = new List<string>();
             List<string> strCC = new List<string>();
             SET<Id> contactIdSet = new SET<Id>();
-            List<Contact> conList = new List<Contact>();
-            if (Schema.sObjectType.Contact.fields.Id.isAccessible() && Schema.sObjectType.Contact.fields.email.isAccessible()){
-                conList = [Select Id, email
-                           from Contact
-                           where Id IN :to and Email != null];
-            }
+            // List<Contact> conList = new List<Contact>();
+            // if (Schema.sObjectType.Contact.fields.Id.isAccessible() && Schema.sObjectType.Contact.fields.email.isAccessible()){
+            //     conList = [Select Id, email
+            //                from Contact
+            //                where Id IN :to and Email != null];
+            // }
             system.debug('conList -------> ' + conList);
             for (Contact con : conList){
                 strTO.add(con.email);

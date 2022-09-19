@@ -1,4 +1,4 @@
-public class RFQVendorItemController {
+public without sharing class RFQVendorItemController {
     @AuraEnabled
     public static void DeleteVendorItems(string recordId){
       buildertek__RFQ_Vendor_Item__c vendorline =  [SELECT Id, Name, buildertek__Cost_Code__c, buildertek__Quantity__c, buildertek__Unit_Price__c, buildertek__Total_Price__c, buildertek__Vendor__c, buildertek__Item_Name__c, 

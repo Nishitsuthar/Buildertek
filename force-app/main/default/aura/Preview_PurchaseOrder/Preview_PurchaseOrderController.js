@@ -69,8 +69,8 @@
             var Files = component.get("v.attachedFile");
             
             console.log('send this these attached files to email');
-            console.log({ Files });
-            console.log(JSON.stringify(Files));
+            console.log(typeof(Files[1]));
+            console.log(Files[1]);
 
             var toIds = [];
             var ccIds = [];
@@ -88,8 +88,7 @@
                     to: toIds,
                     cc: ccIds,
                     fileid: component.get("v.fileimageId"),
-                    attacheDocMap: JSON.stringify(Files),
-                    img: Files,
+                    attacheDocs: Files,
                 });
                 action.setCallback(this, function (response) {
                     var state = response.getState();
@@ -288,16 +287,22 @@
         }
     },
 
-    // handleUploadFinished: function (component, event, helper) {
-    //     var uploadedFiles = event.getParam("files");
-    //     console.log('please check type of uploaded files here');
+    handleUploadFinished: function (component, event, helper) {
+        var uploadedFiles = event.getParam("files");
+        console.log('please check type of uploaded files here');
         
-    //     console.log(uploadedFiles);
+        console.log(uploadedFiles);
+
+        var fileDocsId = [];
+        uploadedFiles.forEach(element => {
+            console.log(element);
+            fileDocsId.push(element.documentId);
+        });
         
-    //     component.set("v.attachedFile",uploadedFiles);
+        component.set("v.attachedFile",fileDocsId);
         
-    //    //helper.handleUploadFinishedHelper(component, event, helper);
-    // },
+       //helper.handleUploadFinishedHelper(component, event, helper);
+    },
 
 
 })

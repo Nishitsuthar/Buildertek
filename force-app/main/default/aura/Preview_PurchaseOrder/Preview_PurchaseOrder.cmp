@@ -32,7 +32,7 @@
     <aura:method name="acceptandSendMethod" action="{!c.acceptandSendMethodCall}" access="public" />
 
     <!-- attribute for setting uploaded file -->
-    <aura:attribute name="attachedFile" type="Map"/>
+    <aura:attribute name="attachedFile" type="List"/>
 
     <!--  <aura:html tag="style">
         .slds-modal__container{
@@ -267,7 +267,7 @@
                             <div style="margin: 0 1rem;">
                                 <lightning:fileUpload name="fileUploader" multiple="true"
                                     accept="{!v.filetype}" recordId="{!v.recordId}" onuploadfinished="{!c.handleUploadFinished}" />
-                                    <!-- <input type="file" id="myFile" name="filename" multiple="true"/> -->
+                                    <!-- <input type="file" id="fileInput" name="filename" multiple="true"/> -->
                             </div>
                         </div>
                         <div style="display: flex;">
@@ -284,10 +284,10 @@
                             </div>
                         </div>
                     </aura:if>
-                </div>
-                <div style="margin: 0.4rem 0.5rem;">
-                    <button class="slds-button slds-button--neutral sldsbutton"
-                        onclick="{!c.closeModel}">Cancel</button>
+                    <div style="margin: 1.5rem 0.5rem 0 0;">
+                        <button class="slds-button slds-button--neutral sldsbutton"
+                            onclick="{!c.closeModel}">Cancel</button>
+                    </div>
                 </div>
             </div>
         </footer>

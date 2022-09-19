@@ -33,11 +33,11 @@
                 function validateEmail(email)
                 {
                     var reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-                    if (reg.test(email)){
-                        return true; }
-                    else{
-                        return false;
-                    }
+                    // if (reg.test(email)){
+                        return true; //}
+                    // else{
+                    //     return false;
+                    // }
                 } 
                 
 				var rfqToVendorList = response.getReturnValue();
@@ -152,11 +152,11 @@
                              
                         }else{
                             rfqToVendorList[i]['isEmail'] = false;
-                            // rfqToVendorList[i]['isValidEmail']= validateEmail(rfqToVendorList[i].buildertek__Contact__r.Email)
+                            rfqToVendorList[i]['isValidEmail']= validateEmail(rfqToVendorList[i].buildertek__Contact__r.Email)
                         }
                     }else{
                         rfqToVendorList[i]['isEmail'] = false;
-                            // rfqToVendorList[i]['isValidEmail']= false
+						rfqToVendorList[i]['isValidEmail'] = false
                     }
                      
                     if(rfqToVendorList[i].buildertek__Contact__c == '' || rfqToVendorList[i].buildertek__Contact__c == undefined || rfqToVendorList[i].buildertek__Contact__c == null){

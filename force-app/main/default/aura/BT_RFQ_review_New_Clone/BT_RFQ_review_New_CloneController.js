@@ -421,7 +421,7 @@
 
                                         (selectedVendor.isEmail == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noMailVedors.push(selectedVendor.Id) : '';
                                         (selectedVendor.isContact == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
-                                        // (selectedVendor.isValidEmail == false && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
+                                        (selectedVendor.isValidEmail == false && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
 
                                     });
 
@@ -552,7 +552,7 @@
 
                             (selectedVendor.isEmail == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noMailVedors.push(selectedVendor.Id) : '';
                             (selectedVendor.isContact == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
-                            // (selectedVendor.isValidEmail == false && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
+                            (selectedVendor.isValidEmail == false && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
 
                         });
 

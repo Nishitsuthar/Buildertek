@@ -956,6 +956,9 @@
                     let salestax = 0;
                     
                     var testo = grpData[j];
+                    console.log('service category--'+testo.buildertek__BL_SERVICE_CATEGORY__c);
+                    console.log('testo===');
+                    console.log({testo});
                  
                     var testoId = testo.Id;
                   
@@ -1104,6 +1107,8 @@
                                 markupPercentage = (markupPercentage * 100).toFixed(2);
                                 if(map1.has(testoId) == true){
                                     if(map1.get(testoId) == true){
+                                        console.log('markrup 1===='+markupPercentage);
+
                                         if (markupPercentage == '') {
                                             markupPercentage = 11.5;
                                         }
@@ -1120,7 +1125,10 @@
                             } else {
                                 if(map1.has(testoId) == true){
                                     if(map1.get(testoId) == true){
-                                        markupPercentage = 11.5;
+                                        console.log('markrup 2===='+markupPercentage);
+                                        if(markupPercentage == '') {
+                                            markupPercentage = 11.5;
+                                        }
                                     }else
                                         markupPercentage = 0;
 
@@ -1152,6 +1160,7 @@
                                 markupPercentage = (markupPercentage * 100).toFixed(2);
                                 if(map1.has(testoId) == true){
                                     if(map1.get(testoId) == true){
+                                        console.log('markrup 3===='+markupPercentage);
                                         if (markupPercentage == '') {
                                             markupPercentage = 11.5;
                                         }
@@ -1167,7 +1176,10 @@
                                 // debugger;
                                 if(map1.has(testoId) == true){
                                     if(map1.get(testoId) == true){
-                                        markupPercentage = 11.5;
+                                        console.log('markrup 4===='+markupPercentage);
+                                        if (markupPercentage == '') {
+                                            markupPercentage = 11.5;
+                                        }   
                                     }else
                                         markupPercentage = 0;
 
@@ -1205,6 +1217,9 @@
                         // grossLessCost = grossCost - Math.abs(discountAmount); // commneted for CAES-79 for correct calculation
                          grossLessCost = grossCost - discountAmount;
                          var markupAmount = 0;
+                        console.log('service category====++'+testo.buildertek__Location_Detail_Reference_1__c);
+
+                         console.log('markupPercentage 2==='+markupPercentage);
                             markupAmount = grossLessCost * (parseFloat(markupPercentage) / 100);
                         if(markupPercentage == '') markupAmount = 0;
 
@@ -1376,6 +1391,8 @@
                         record[lastindex + 3] = JSON.parse('{"fieldType": "PERCENTAGE", "Key": "buildertek__Markup", "Value": "' + markupPercentage + '"}');
 
                         //MarkUp Amount
+                        console.log('service category====3 ++'+testo.buildertek__Location_Detail_Reference_1__c);
+                        console.log('markupPercentage 3==='+markupPercentage);
                         var markupAmount = grossLessCost * (parseFloat(markupPercentage) / 100);
                         if(markupPercentage == '') markupAmount = 0;
                         finalExtendedCost = parseFloat(grossLessCost + markupAmount).toFixed(2);
@@ -2099,122 +2116,124 @@
             // console.log('bomlineIdVsWCFee----->',bomlineIdVsWCFee);
 
             var allData = component.get("v.dataByGroup");
-            for (var i = 0; i < allData.length; i++) {
-                var groupedRecords = allData[i].groupedRecordsTmp;
-                var grpData = allData[i].groupData;
-                for (var j = 0; j < groupedRecords.length; j++) {
-                    var record = groupedRecords[j];
-                    var bomLineId;
-                    var texturaFee;
-                    var workrsCompFee;
-                    var GLFee;
-                    var theFInalExtendedcost;
-                    var productCode = '';
-                    var serviceCategory = '';
-                    var thisBuildPhaseName = '';
-
-                    if (grpData[j].buildertek__Takeoff_Line__r != null &&
-                        grpData[j].buildertek__Takeoff_Line__r != undefined &&
-                        /* grpData[j].buildertek__Service_Category__c != null
-                         && grpData[j].buildertek__Service_Category__c != undefined
-                         && grpData[j].buildertek__Service_Category__c != ''*/
-                        grpData[j].buildertek__BL_SERVICE_CATEGORY__c != null &&
-                        grpData[j].buildertek__BL_SERVICE_CATEGORY__c != undefined &&
-                        grpData[j].buildertek__BL_SERVICE_CATEGORY__c != '') {
-                        //  serviceCategory = grpData[j].buildertek__Service_Category__c;
-                        serviceCategory = grpData[j].buildertek__BL_SERVICE_CATEGORY__c;
+            if(allData.length >0){
+                for (var i = 0; i < allData.length; i++) {
+                    var groupedRecords = allData[i].groupedRecordsTmp;
+                    var grpData = allData[i].groupData;
+                    for (var j = 0; j < groupedRecords.length; j++) {
+                        var record = groupedRecords[j];
+                        var bomLineId;
+                        var texturaFee;
+                        var workrsCompFee;
+                        var GLFee;
+                        var theFInalExtendedcost;
+                        var productCode = '';
+                        var serviceCategory = '';
+                        var thisBuildPhaseName = '';
+    
+                        if (grpData[j].buildertek__Takeoff_Line__r != null &&
+                            grpData[j].buildertek__Takeoff_Line__r != undefined &&
+                            /* grpData[j].buildertek__Service_Category__c != null
+                             && grpData[j].buildertek__Service_Category__c != undefined
+                             && grpData[j].buildertek__Service_Category__c != ''*/
+                            grpData[j].buildertek__BL_SERVICE_CATEGORY__c != null &&
+                            grpData[j].buildertek__BL_SERVICE_CATEGORY__c != undefined &&
+                            grpData[j].buildertek__BL_SERVICE_CATEGORY__c != '') {
+                            //  serviceCategory = grpData[j].buildertek__Service_Category__c;
+                            serviceCategory = grpData[j].buildertek__BL_SERVICE_CATEGORY__c;
+                        }
+                        if (grpData[j].buildertek__Build_Phase__r != null &&
+                            grpData[j].buildertek__Build_Phase__r != undefined &&
+                            grpData[j].buildertek__Build_Phase__r.Name != null &&
+                            grpData[j].buildertek__Build_Phase__r.Name != undefined &&
+                            grpData[j].buildertek__Build_Phase__r.Name != '') {
+                            thisBuildPhaseName = grpData[j].buildertek__Build_Phase__r.Name;
+                        }
+                        if (grpData[j].buildertek__Product__r != null &&
+                            grpData[j].buildertek__Product__r != undefined &&
+                            grpData[j].buildertek__Product__r.ProductCode != null &&
+                            grpData[j].buildertek__Product__r.ProductCode != undefined &&
+                            grpData[j].buildertek__Product__r.ProductCode != '') {
+                            productCode = grpData[j].buildertek__Product__r.ProductCode;
+                        }
+    
+    
+                        for (var k = 0; k < record.length; k++) {
+                            if (record[k].Key == "Id") {
+                                bomLineId = record[k].Value;
+                            }
+    
+                            if (bomLineId != null && bomLineId != '' && bomlineIdVsTexturaFee != null && bomlineIdVsTexturaFee != undefined) {
+                                if (bomlineIdVsTexturaFee.has(bomLineId) && bomlineIdVsTexturaFee.get(bomLineId) != null) {
+                                    texturaFee = bomlineIdVsTexturaFee.get(bomLineId);
+                                }
+                            }
+                            if (bomLineId != null && bomLineId != '' && bomlineIdVsGLFee != null && bomlineIdVsGLFee != undefined) {
+                                if (bomlineIdVsGLFee.has(bomLineId) && bomlineIdVsGLFee.get(bomLineId) != null) {
+                                    GLFee = bomlineIdVsGLFee.get(bomLineId);
+                                }
+                            }
+    
+                            if (bomLineId != null && bomLineId != '' && bomlineIdVsWCFee != null && bomlineIdVsWCFee != undefined) {
+                                if (bomlineIdVsWCFee.has(bomLineId) && bomlineIdVsWCFee.get(bomLineId) != null) {
+                                    workrsCompFee = bomlineIdVsWCFee.get(bomLineId);
+                                }
+                            }
+    
+                            if (record[k].Key == "buildertek__Extended_Cost" && productCode != null && productCode != undefined && productCode == '69201198' &&
+                                texturaFee != null && texturaFee != undefined) {
+                                record[k].Value = parseFloat(texturaFee).toFixed(2);
+                            }
+                            if (record[k].Key == "buildertek__Total_Cost" && productCode != null && productCode != undefined && productCode == '69201198' &&
+                                texturaFee != null && texturaFee != undefined) {
+                                record[k].Value = parseFloat(texturaFee).toFixed(2);
+                            }
+                            /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
+                            /*if (record[k].Key == "buildertek__Extended_Cost" && serviceCategory != null && serviceCategory!= undefined && serviceCategory == 'Ins'
+                            && GLFee != null && GLFee!= undefined)
+                            {*/
+                                if (record[k].Key == "buildertek__Extended_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'Insurance' &&
+                                GLFee != null && GLFee != undefined) {
+                                if (thisBuildPhaseName == 'Base' || thisBuildPhaseName == 'Option') {
+                                    record[k].Value = parseFloat(GLFee).toFixed(2);
+                                }
+                            }
+                            /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
+                            /*if (record[k].Key == "buildertek__Total_Cost" && serviceCategory != null && serviceCategory!= undefined && serviceCategory == 'Ins'
+                            && GLFee != null && GLFee!= undefined)
+                            {*/
+                            // console.log('record[k].Key=='+record[k].Key);
+                            // console.log('serviceCategory=='+serviceCategory);
+                            // console.log('GLFee=='+GLFee);
+                            if (record[k].Key == "buildertek__Total_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'Insurance' &&
+                                GLFee != null && GLFee != undefined) {
+                                if (thisBuildPhaseName == 'Base' || thisBuildPhaseName == 'Option') {
+                                    record[k].Value = parseFloat(GLFee).toFixed(2);
+                                }
+                            }
+    
+                            console.log('OCIP=='+OCIPVal);
+                            if (record[k].Key == "buildertek__Total_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'OCIP' ) {
+                                if (thisBuildPhaseName == 'Base' || thisBuildPhaseName == 'Option') {
+                                    // console.log('GLFee=='+record[k].Value);
+                                    console.log('OCIP val=='+OCIPVal);
+                                    record[k].Value = parseFloat(OCIPVal).toFixed(2);
+                                }
+                            }
+                            if (record[k].Key == "buildertek__Extended_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'Work Comp' &&
+                                workrsCompFee != null && workrsCompFee != undefined) {
+                                record[k].Value = parseFloat(workrsCompFee).toFixed(2);
+                            }
+    
+                            if (record[k].Key == "buildertek__Total_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'Work Comp' &&
+                                workrsCompFee != null && workrsCompFee != undefined) {
+                                record[k].Value = parseFloat(workrsCompFee).toFixed(2);
+                            }
+    
+                        }
+    
+                        // theFInalExtendedcost = 0;
                     }
-                    if (grpData[j].buildertek__Build_Phase__r != null &&
-                        grpData[j].buildertek__Build_Phase__r != undefined &&
-                        grpData[j].buildertek__Build_Phase__r.Name != null &&
-                        grpData[j].buildertek__Build_Phase__r.Name != undefined &&
-                        grpData[j].buildertek__Build_Phase__r.Name != '') {
-                        thisBuildPhaseName = grpData[j].buildertek__Build_Phase__r.Name;
-                    }
-                    if (grpData[j].buildertek__Product__r != null &&
-                        grpData[j].buildertek__Product__r != undefined &&
-                        grpData[j].buildertek__Product__r.ProductCode != null &&
-                        grpData[j].buildertek__Product__r.ProductCode != undefined &&
-                        grpData[j].buildertek__Product__r.ProductCode != '') {
-                        productCode = grpData[j].buildertek__Product__r.ProductCode;
-                    }
-
-
-                    for (var k = 0; k < record.length; k++) {
-                        if (record[k].Key == "Id") {
-                            bomLineId = record[k].Value;
-                        }
-
-                        if (bomLineId != null && bomLineId != '' && bomlineIdVsTexturaFee != null && bomlineIdVsTexturaFee != undefined) {
-                            if (bomlineIdVsTexturaFee.has(bomLineId) && bomlineIdVsTexturaFee.get(bomLineId) != null) {
-                                texturaFee = bomlineIdVsTexturaFee.get(bomLineId);
-                            }
-                        }
-                        if (bomLineId != null && bomLineId != '' && bomlineIdVsGLFee != null && bomlineIdVsGLFee != undefined) {
-                            if (bomlineIdVsGLFee.has(bomLineId) && bomlineIdVsGLFee.get(bomLineId) != null) {
-                                GLFee = bomlineIdVsGLFee.get(bomLineId);
-                            }
-                        }
-
-                        if (bomLineId != null && bomLineId != '' && bomlineIdVsWCFee != null && bomlineIdVsWCFee != undefined) {
-                            if (bomlineIdVsWCFee.has(bomLineId) && bomlineIdVsWCFee.get(bomLineId) != null) {
-                                workrsCompFee = bomlineIdVsWCFee.get(bomLineId);
-                            }
-                        }
-
-                        if (record[k].Key == "buildertek__Extended_Cost" && productCode != null && productCode != undefined && productCode == '69201198' &&
-                            texturaFee != null && texturaFee != undefined) {
-                            record[k].Value = parseFloat(texturaFee).toFixed(2);
-                        }
-                        if (record[k].Key == "buildertek__Total_Cost" && productCode != null && productCode != undefined && productCode == '69201198' &&
-                            texturaFee != null && texturaFee != undefined) {
-                            record[k].Value = parseFloat(texturaFee).toFixed(2);
-                        }
-                        /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
-                        /*if (record[k].Key == "buildertek__Extended_Cost" && serviceCategory != null && serviceCategory!= undefined && serviceCategory == 'Ins'
-                        && GLFee != null && GLFee!= undefined)
-                        {*/
-                            if (record[k].Key == "buildertek__Extended_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'Insurance' &&
-                            GLFee != null && GLFee != undefined) {
-                            if (thisBuildPhaseName == 'Base' || thisBuildPhaseName == 'Option') {
-                                record[k].Value = parseFloat(GLFee).toFixed(2);
-                            }
-                        }
-                        /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
-                        /*if (record[k].Key == "buildertek__Total_Cost" && serviceCategory != null && serviceCategory!= undefined && serviceCategory == 'Ins'
-                        && GLFee != null && GLFee!= undefined)
-                        {*/
-                        // console.log('record[k].Key=='+record[k].Key);
-                        // console.log('serviceCategory=='+serviceCategory);
-                        // console.log('GLFee=='+GLFee);
-                        if (record[k].Key == "buildertek__Total_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'Insurance' &&
-                            GLFee != null && GLFee != undefined) {
-                            if (thisBuildPhaseName == 'Base' || thisBuildPhaseName == 'Option') {
-                                record[k].Value = parseFloat(GLFee).toFixed(2);
-                            }
-                        }
-
-                        console.log('OCIP=='+OCIPVal);
-                        if (record[k].Key == "buildertek__Total_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'OCIP' ) {
-                            if (thisBuildPhaseName == 'Base' || thisBuildPhaseName == 'Option') {
-                                // console.log('GLFee=='+record[k].Value);
-                                console.log('OCIP val=='+OCIPVal);
-                                record[k].Value = parseFloat(OCIPVal).toFixed(2);
-                            }
-                        }
-                        if (record[k].Key == "buildertek__Extended_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'Work Comp' &&
-                            workrsCompFee != null && workrsCompFee != undefined) {
-                            record[k].Value = parseFloat(workrsCompFee).toFixed(2);
-                        }
-
-                        if (record[k].Key == "buildertek__Total_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'Work Comp' &&
-                            workrsCompFee != null && workrsCompFee != undefined) {
-                            record[k].Value = parseFloat(workrsCompFee).toFixed(2);
-                        }
-
-                    }
-
-                    // theFInalExtendedcost = 0;
                 }
             }
 
