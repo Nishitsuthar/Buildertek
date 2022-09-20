@@ -289,16 +289,22 @@
 
     handleUploadFinished: function (component, event, helper) {
         var uploadedFiles = event.getParam("files");
+    
         console.log('please check type of uploaded files here');
         
         console.log(uploadedFiles);
 
         var fileDocsId = [];
+        var fileName = [];
         uploadedFiles.forEach(element => {
-            console.log(element);
+            console.log(element.name);
+            fileName.push(element.name);
             fileDocsId.push(element.documentId);
         });
         
+        component.set("v.uploadedFileName",fileName);
+        var temp = component.get("v.uploadedFileName");
+        console.log('check this one ==> '+temp);
         component.set("v.attachedFile",fileDocsId);
         
        //helper.handleUploadFinishedHelper(component, event, helper);

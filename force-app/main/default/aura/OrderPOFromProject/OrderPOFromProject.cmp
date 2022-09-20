@@ -515,7 +515,7 @@
                                                     
                                                     <aura:set attribute="else">
                                                         <h1 style = "color:red;">
-                                                            There is no Email for this Vendor
+                                                            There is no Email for this Vendor                                                        
                                                         </h1>
                                                     </aura:set>
                                                 </aura:if>

@@ -30,6 +30,8 @@
     <aura:attribute name="parentId" type="string" />
     <aura:attribute name="fileimageId" type="string" />
     <aura:method name="acceptandSendMethod" action="{!c.acceptandSendMethodCall}" access="public" />
+    <!-- creating new attribute array of string to store uploaded file names -->
+    <aura:attribute name="uploadedFileName" type="String[]" default="" />
 
     <!-- attribute for setting uploaded file -->
     <aura:attribute name="attachedFile" type="List"/>
@@ -157,6 +159,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <aura:unescapedHtml value="{!v.purchaseOrderLines}" />
                             <br />
                             <article class="slds-card">
@@ -261,16 +264,21 @@
         <footer role="contentinfo" class="slds-docked-form-footer fixedFooter"
             style="display:block;text-align:right;padding-right:5px;">
             <div>
-                <div style="display: flex; justify-content: flex-end;">
+                <div style="display: flex; justify-content: space-between;">
                     <aura:if isTrue="{!v.isTemplateSelected}">
-                        <div style="display: flex;justify-content: flex-end;">
-                            <div style="margin: 0 1rem;">
+                        <div style="display: flex;justify-content: space-between;">
+                            <div style="margin: 0 1rem; height: 55px;">
                                 <lightning:fileUpload name="fileUploader" multiple="true"
                                     accept="{!v.filetype}" recordId="{!v.recordId}" onuploadfinished="{!c.handleUploadFinished}" />
                                     <!-- <input type="file" id="fileInput" name="filename" multiple="true"/> -->
-                            </div>
+                            </div>      
+                            <div style="max-width: 14rem;">
+                                <aura:iteration items="{!v.uploadedFileName}" var="item">
+                                    <div style="background-color: rgba(255, 0, 0, 0.373);border-radius: 5px;margin: 10px auto;">{!item}&nbsp;</div>
+                                </aura:iteration>
+                            </div>                          
                         </div>
-                        <div style="display: flex;">
+                        <div style="display: flex; height: 55px;">
                             <div style="margin: 1.5rem 0.5rem 0 0;">
                                 <button class="slds-button slds-button--brand " onclick="{!c.Acceptandclose}">Accept and
                                     Close</button>
@@ -282,12 +290,22 @@
                             <div style="margin: 1.5rem 0.5rem 0 0;">
                                 <button class="slds-button slds-button--brand" onclick="{!c.sendEmail}">Send Email</button>
                             </div>
+                            <div style="margin: 1.5rem 0.5rem 0 0;">
+                                <button class="slds-button slds-button--neutral sldsbutton"
+                                    onclick="{!c.closeModel}">Cancel</button>
+                            </div>
                         </div>
+                        <aura:set attribute="else">
+                            <div style="margin: 1rem 0rem 0 1rem;padding-bottom: 0.5rem">
+                                <button class="slds-button slds-button--neutral sldsbutton"
+                                    onclick="{!c.closeModel}">Cancel</button>
+                            </div>        
+                        </aura:set>
                     </aura:if>
-                    <div style="margin: 1.5rem 0.5rem 0 0;">
-                        <button class="slds-button slds-button--neutral sldsbutton"
+                    <!-- <div style="margin: 1.5rem 0.5rem 0 0;">
+                        <button class="slds-button slds-button-neutral sldsbutton"
                             onclick="{!c.closeModel}">Cancel</button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </footer>
