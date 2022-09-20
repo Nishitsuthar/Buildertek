@@ -22,9 +22,9 @@ padding: 0rem !important;
 	overflow-y:auto; 
 }
 
-.DESKTOP.open .modal-container{
+/* .DESKTOP.open .modal-container{
 	display: none !important;
 }
 .DESKTOP.open.active .modal-container{
 	display: block !important;
-}
+} */

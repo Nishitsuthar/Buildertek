@@ -163,7 +163,7 @@
     },
     addProductFromGroup: function (component, event, helper) {
 
-        debugger;
+        // debugger;
         // component.set("v.Spinner",true);
         if (!component.get('v.isAddProductFromGroup')) {
             var groups = component.get('v.TotalRecords').groups;
@@ -1212,7 +1212,7 @@ $A.enqueueAction(action1);*/
                     } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Vendor__c') {
                         newMassQuoteItem.buildertek__Vendor__c = ListOfEachRecord[i].recordList[j].originalValue;
                     } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Priority__c') {
-                        debugger;
+                        // debugger;
                         newMassQuoteItem.buildertek__Priority__c = ListOfEachRecord[i].recordList[j].originalValue;
                     }
                 }
@@ -1514,7 +1514,7 @@ $A.enqueueAction(action1);*/
             $A.get("e.c:BT_SpinnerEvent").setParams({
                 "action": "SHOW"
             }).fire();
-            debugger;
+            // debugger;
             var action = component.get("c.massDuplicateQuoteLineItem");
             action.setParams({
                 "quoteLineRecords": duplicateRecs
@@ -2063,7 +2063,7 @@ delete listid[listid.indexOf(unselectedData[i].Id)];
 }
 component.set("v.StoreIdsOfDatatable2",'') */
         if (listid.length > 0 && listid != undefined && listid != "") {
-            debugger;
+            // debugger;
             component.set("v.openProductBox", false);
             component.set("v.openQuoteLineBox", true);
             var BookId = component.get("v.storePriceBookId");
@@ -2098,37 +2098,39 @@ component.set("v.StoreIdsOfDatatable2",'') */
                             'buildertek__Size__c':listProduct[i].Pricebook2.Name
                         }) */
                         var row1 = listProduct[i];
-                        console.log("Rows 1 : ", row1.PricebookEntries)
+                        console.log("Row1 PricebookEntries : ", row1.PricebookEntries)
+                        console.log("Row1 => ",{row1});
+                        console.log(row1.buildertek__Quote_Group__c);
                         if (row1.PricebookEntries != undefined) {
-
-                            xyz.push({
-                                'Name': row1.Name,
-                                'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
-                                'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
-                                'buildertek__Grouping__c': '',
-                                'buildertek__Quantity__c': '1',
-                                'buildertek__Additional_Discount__c': row1.PricebookEntries[0].buildertek__Discount__c ? row1.PricebookEntries[0].buildertek__Discount__c : 0,
-                                'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : 0,
-                                'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
-                                'buildertek__Product__c': row1.Id,
-                                'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
-                            })
+                            if (row1.buildertek__Quote_Group__c != undefined) {
+                                xyz.push({
+                                    'Name': row1.Name,
+                                    'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
+                                    'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
+                                    'buildertek__Grouping__c': row1.buildertek__Quote_Group__r.Name,
+                                    'buildertek__Quantity__c': '1',
+                                    'buildertek__Additional_Discount__c': row1.PricebookEntries[0].buildertek__Discount__c ? row1.PricebookEntries[0].buildertek__Discount__c : 0,
+                                    'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : 0,
+                                    'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
+                                    'buildertek__Product__c': row1.Id,
+                                    'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
+                                })
+                            }
+                            else{
+                                xyz.push({
+                                    'Name': row1.Name,
+                                    'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
+                                    'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
+                                    'buildertek__Grouping__c': '',
+                                    'buildertek__Quantity__c': '1',
+                                    'buildertek__Additional_Discount__c': row1.PricebookEntries[0].buildertek__Discount__c ? row1.PricebookEntries[0].buildertek__Discount__c : 0,
+                                    'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : 0,
+                                    'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
+                                    'buildertek__Product__c': row1.Id,
+                                    'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
+                                })
+                            }
                         }
-                        else if (row1.PricebookEntries != undefined) {
-                            xyz.push({
-                                'Name': row1.Name,
-                                'buildertek__Unit_Price__c': '0',
-                                'buildertek__Unit_Price__c': '0',
-                                'buildertek__Grouping__c': '',
-                                'buildertek__Quantity__c': '1',
-                                'buildertek__Additional_Discount__c': row1.PricebookEntries[0].buildertek__Discount__c ? row1.PricebookEntries[0].buildertek__Discount__c : 0,
-                                'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : 0,
-                                'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
-                                'buildertek__Product__c': row1.Id,
-                                'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
-                            })
-                        }
-
                     }
 
                     component.set("v.data2", xyz);
@@ -2343,7 +2345,7 @@ return other.Id == current.Id
     },
 
     changeEvent1: function (component, event, helper) {
-        debugger
+        // debugger
         component.set("v.data1", '');
         var x = component.find("getPriceBookId").get("v.value");
 

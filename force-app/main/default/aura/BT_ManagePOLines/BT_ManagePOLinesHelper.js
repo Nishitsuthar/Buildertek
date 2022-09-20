@@ -1098,46 +1098,45 @@
                         if (serviceCategory == 'Fab' || serviceCategory == 'Install' || serviceCategory == 'Edge' ||
                             serviceCategory == 'Fab & Install' || serviceCategory == 'Labor') {
                             var fabLabormarkUpRateVal = component.get('v.fabLaborMarkupRate');
-                            // console.log('fabLabormarkUpRateVal[bomLineId]');
-                            // console.log(fabLabormarkUpRateVal[bomLineId]);
                             if (fabLabormarkUpRateVal != null && fabLabormarkUpRateVal != undefined &&
                               
-                                fabLabormarkUpRateVal[bomLineId] != null && fabLabormarkUpRateVal[bomLineId] != undefined) {
+                                fabLabormarkUpRateVal[bomLineId] != null && fabLabormarkUpRateVal[bomLineId] != undefined && fabLabormarkUpRateVal[bomLineId] != '') {
                                 markupPercentage = parseFloat(fabLabormarkUpRateVal[bomLineId]);
                                 markupPercentage = (markupPercentage * 100).toFixed(2);
-                                if(map1.has(testoId) == true){
-                                    if(map1.get(testoId) == true){
-                                        console.log('markrup 1===='+markupPercentage);
-
-                                        if (markupPercentage == '') {
-                                            markupPercentage = 11.5;
-                                        }
-                                    }else{
+                                if(map1.has(testoId)){
+                                    if(!map1.get(testoId)){
                                         markupPercentage = 0;
-                                        
-                                    }
-                                }else if(map1.has(testoId) == false || map1.has(testoId) == undefined){
-
-                                    if (markupPercentage == '') {
-                                        markupPercentage = 11.5;
                                     }
                                 }
+                                // if(map1.has(testoId) == true){
+                                //     if(map1.get(testoId) != true){
+                                //         // if (markupPercentage == 0) {
+                                //             markupPercentage = 0;
+                                //         // }
+                                //     }
+                                // }else if(map1.has(testoId) == false || map1.has(testoId) == undefined){
+                                //     if (markupPercentage == 0) {
+                                //         markupPercentage = 11.5;
+                                //     }
+                                // }
                             } else {
-                                if(map1.has(testoId) == true){
-                                    if(map1.get(testoId) == true){
-                                        console.log('markrup 2===='+markupPercentage);
-                                        if(markupPercentage == '') {
-                                            markupPercentage = 11.5;
-                                        }
-                                    }else
+                                if(map1.has(testoId)){
+                                    if(!map1.get(testoId)){
                                         markupPercentage = 0;
-
-                                }else if(map1.has(testoId) == false || map1.has(testoId) == undefined){
-
-                                    if (markupPercentage == '') {
+                                    }else{
                                         markupPercentage = 11.5;
                                     }
+                                }else{
+                                    markupPercentage = 11.5;
                                 }
+                                // if(map1.has(testoId) == true){
+                                //     if(map1.get(testoId) != true){
+                                //         markupPercentage = 0;
+                                //     }
+
+                                // }else if(map1.has(testoId) == false || map1.has(testoId) == undefined){
+                                //     markupPercentage = 0;
+                                // }
                             }
 
                         }
@@ -1155,38 +1154,25 @@
                         ) {
                             var nonSlabLaborrmarkUp = component.get('v.nonSlabExtndCost');
                             if (nonSlabLaborrmarkUp != null && nonSlabLaborrmarkUp != undefined &&
-                                nonSlabLaborrmarkUp[bomLineId] != null && nonSlabLaborrmarkUp[bomLineId] != undefined) {
+                                nonSlabLaborrmarkUp[bomLineId] != null && nonSlabLaborrmarkUp[bomLineId] != undefined && nonSlabLaborrmarkUp[bomLineId] != '') {
                                 markupPercentage = parseFloat(nonSlabLaborrmarkUp[bomLineId]);
                                 markupPercentage = (markupPercentage * 100).toFixed(2);
-                                if(map1.has(testoId) == true){
-                                    if(map1.get(testoId) == true){
-                                        console.log('markrup 3===='+markupPercentage);
-                                        if (markupPercentage == '') {
-                                            markupPercentage = 11.5;
-                                        }
-                                    }else{
+                                if(map1.has(testoId)){
+                                    if(!map1.get(testoId)){
                                         markupPercentage = 0;
-                                    }
-                                }else if(map1.has(testoId) == false || map1.has(testoId) == undefined){
-                                    if (markupPercentage == '') {
-                                        markupPercentage = 11.5;
                                     }
                                 }
                             } else {
                                 // debugger;
-                                if(map1.has(testoId) == true){
-                                    if(map1.get(testoId) == true){
-                                        console.log('markrup 4===='+markupPercentage);
-                                        if (markupPercentage == '') {
-                                            markupPercentage = 11.5;
-                                        }   
-                                    }else
+                                if(map1.has(testoId)){
+                                    if(!map1.get(testoId)){
                                         markupPercentage = 0;
-
-                                }else if(map1.has(testoId) == false || map1.has(testoId) == undefined){
-                                    if (markupPercentage == '') {
+                                    }else{
                                         markupPercentage = 11.5;
                                     }
+
+                                }else{
+                                    markupPercentage = 11.5;
                                 }
                             }
                         }
@@ -1980,22 +1966,16 @@
         var bomList = [];
         bomList = component.get('v.bomList');
         if (bomList != null && bomList != undefined) {
-            // console.log('----->',bomList[0]);
-            // console.log('OCIP----->',bomList[0].buildertek__OCIP_CCIP__c);
             if (bomList[0].buildertek__Textura_Fee__c != null && bomList[0].buildertek__Textura_Fee__c != undefined && bomList[0].buildertek__Textura_Fee__c.length > 0) {
                 var Textura = [];
                 Textura = JSON.parse(bomList[0].buildertek__Textura_Fee__c);
-                // console.log('Textura----->',Textura.length);
                 if (Textura != null && Textura != undefined && Textura.length > 0) {
                     var rate = Textura[0].productRate;
                     var theBomLine = Textura[0].bomLineId;
-                    // console.log('Tex----->', JSON.parse(bomList[0].buildertek__Textura_Fee__c));
-                    // console.log('Tex Prod Rate----->', rate);
                     if (rate != null && rate != undefined && proposalAmount != null && proposalAmount != undefined) {
                         var texturaExtendedCost;
                         var rateVal = Number(rate) * proposalAmount;
                         rateVal = parseFloat(rateVal).toFixed(2);
-                        // console.log('RateVal----->', rateVal);
                         if (rateVal > 499.99 && rateVal < 3750.01) {
                             texturaExtendedCost = parseFloat(rateVal).toFixed(2);
                         } else if (rateVal < 500.00) {
@@ -2003,7 +1983,7 @@
                         } else if (rateVal > 3750.00) {
                             texturaExtendedCost = 3750.00;
                         }
-                        // console.log('texturaExtendedCost----->', texturaExtendedCost);
+
                         if (texturaExtendedCost != null && texturaExtendedCost != undefined &&
                             rateVal != null && rateVal != undefined) {
                             Textura[0].extendedCostVal = texturaExtendedCost;
@@ -2052,19 +2032,24 @@
 
 
             if (bomList[0].buildertek__Workers_Comp__c != null && bomList[0].buildertek__Workers_Comp__c != undefined) {
+                console.log('++buildertek__Workers_Comp__c++');
                 var workersComp = [];
                 workersComp = JSON.parse(bomList[0].buildertek__Workers_Comp__c);
                 if (workersComp != null && workersComp != undefined && workersComp.length > 0) {
                     var nominatorVal = workersComp[0].productRate;
+                    console.log('nominatorVal-->'+nominatorVal);
                     var denominatorVal = workersComp[0].denominatorVal;
                     var theBomLine = workersComp[0].bomLineId;
+                    console.log('nominatorVal-->'+nominatorVal);
+                    console.log('denominatorVal-->'+denominatorVal);
+                    console.log('installCost-->'+installCost);
                     if (installCost != null && installCost != undefined &&
                         nominatorVal != null && nominatorVal != undefined &&
                         denominatorVal != null && denominatorVal != undefined) {
                         // proposalAmount = parseFloat(proposalAmount);
                         nominatorVal = Number(nominatorVal);
                         denominatorVal = Number(denominatorVal);
-
+                        console.log('installCost-->'+installCost);
                         var rateVal = installCost * (nominatorVal / denominatorVal);
                         rateVal = parseFloat(rateVal).toFixed(2);
                         // console.log('WC Rate----->', rateVal);
@@ -2116,7 +2101,7 @@
             // console.log('bomlineIdVsWCFee----->',bomlineIdVsWCFee);
 
             var allData = component.get("v.dataByGroup");
-            if(allData.length >0){
+            if(allData != undefined){
                 for (var i = 0; i < allData.length; i++) {
                     var groupedRecords = allData[i].groupedRecordsTmp;
                     var grpData = allData[i].groupData;
@@ -2174,6 +2159,8 @@
                                 }
                             }
     
+                            console.log('bomlineIdVsWCFee');
+                            console.log(bomlineIdVsWCFee.get(bomLineId));
                             if (bomLineId != null && bomLineId != '' && bomlineIdVsWCFee != null && bomlineIdVsWCFee != undefined) {
                                 if (bomlineIdVsWCFee.has(bomLineId) && bomlineIdVsWCFee.get(bomLineId) != null) {
                                     workrsCompFee = bomlineIdVsWCFee.get(bomLineId);
@@ -2220,8 +2207,11 @@
                                     record[k].Value = parseFloat(OCIPVal).toFixed(2);
                                 }
                             }
+
+                            console.log('workrsCompFee val=='+workrsCompFee);
                             if (record[k].Key == "buildertek__Extended_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'Work Comp' &&
                                 workrsCompFee != null && workrsCompFee != undefined) {
+                                console.log('workrsCompFee val=='+workrsCompFee);
                                 record[k].Value = parseFloat(workrsCompFee).toFixed(2);
                             }
     

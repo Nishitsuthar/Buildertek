@@ -1,0 +1,8 @@
+<aura:component controller="Create_Sales_Order_Btn" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <force:recordData aura:id="forceRecordCmp" recordId="{!v.recordId}"
+        fields="buildertek__Project__r.Name, buildertek__Auto_Number__c, buildertek__Total_Amount_Tax__c, buildertek__Amount__c, buildertek__Tax_Rate__c, buildertek__Total_Amount_Tax__c"
+        targetRecord="{!v.record}" targetFields="{!v.invoice}" targetError="{!v.error}" />
+
+</aura:component>

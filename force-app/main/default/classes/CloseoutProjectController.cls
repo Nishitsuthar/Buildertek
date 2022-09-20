@@ -13,7 +13,8 @@ public with sharing class CloseoutProjectController {
             mainAR = oldAR[0].Id;
         }
 
-        EmailTemplate eTemp = [SELECT Id, Name FROM EmailTemplate WHERE Name =: 'Invoice (AR) w/ Change Orders' LIMIT 1];
+        String emailLabel = System.label.CloseOutProjectTemplate;
+        EmailTemplate eTemp = [SELECT Id, Name FROM EmailTemplate WHERE Name =: emailLabel LIMIT 1];
         Contact con = [SELECT id, Email FROM Contact WHERE email != null ORDER BY createddate DESC LIMIT 1];
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
         email.setTemplateId(eTemp.Id);
@@ -58,7 +59,8 @@ public with sharing class CloseoutProjectController {
             buildertek__Billings__c oldAR = [SELECT Id, Name FROM buildertek__Billings__c WHERE buildertek__Project__c =: recordPId AND Name =: 'Closeout-Project-Invoice' LIMIT 1];
             String recordId = oldAR.Id;
 
-            EmailTemplate eTemp = [SELECT Id, Name FROM EmailTemplate WHERE Name =: 'Invoice (AR) w/ Change Orders' LIMIT 1];
+            String emailLabel = System.label.CloseOutProjectTemplate;
+            EmailTemplate eTemp = [SELECT Id, Name FROM EmailTemplate WHERE Name =: emailLabel LIMIT 1];
             String templateId = eTemp.Id;
 
             List<Contact> conToList =  [Select Id,Name,email from Contact where Id IN :to and email != null];

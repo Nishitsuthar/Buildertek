@@ -1439,13 +1439,16 @@
                                  <option value="{!item2.Id}">{!item2.Name}</option>
                                  </aura:iteration>
                              </lightning:select> -->
-                                                        <lightning:select name="mySelect" label=""
-                                                            value="{!item.buildertek__Grouping__c}">
-                                                            <option value="a0b1K00000ZR06ZQAT">No Grouping</option>
-                                                            <aura:iteration items="{!v.quotelineRecords}" var="item">
-                                                                <aura:if isTrue="{!item.Name != 'No Grouping'}">
-                                                                    <option text="{!item.Name}" value="{!item.Id}"
-                                                                        selected="{!item.selected}" />
+                                                        <lightning:select name="mySelect" label="" value="{!item.buildertek__Grouping__c}">
+                                                            <option value="">No Grouping</option>
+                                                            <aura:iteration items="{!v.quotelineRecords}" var="rec">
+                                                                <aura:if isTrue="{!rec.Name != 'No Grouping'}">
+                                                                    <aura:if isTrue="{!(rec.Name == item.buildertek__Grouping__c)}">
+                                                                        <option text="{!rec.Name}" value="{!rec.Id}" selected="true" />
+                                                                        <aura:set attribute="else">
+                                                                            <option text="{!rec.Name}" value="{!rec.Id}" selected="false" />
+                                                                        </aura:set>
+                                                                    </aura:if>
                                                                 </aura:if>
                                                             </aura:iteration>
                                                         </lightning:select>

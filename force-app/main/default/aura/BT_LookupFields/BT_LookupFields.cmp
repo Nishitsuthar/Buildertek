@@ -17,7 +17,7 @@
     <aura:registerEvent name="onSelectEvt" type="c:BT_LookupEvent" />
 
     <lightning:recordEditForm onload="{!c.setSelectedRecordId}" objectApiName="{!v.childObjectName}">
-        
+        BT_LookupFields
         <aura:if isTrue = "{!v.childObjectName == 'buildertek__Select_Sheet__c'}">
          
             <aura:if isTrue = "{!v.callingCmpName == 'BT_ManagePOLines'}">

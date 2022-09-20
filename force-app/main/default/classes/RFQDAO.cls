@@ -74,6 +74,7 @@ Throws [Exceptions]: NA
     @AuraEnabled
     public Static List<RFQ_To_Vendor__c> getRfqToVendors(String rfqId){
         try{
+            System.debug('rfqId>>>'+rfqId);
             RFQ__c rfq;
             if (Schema.sObjectType.buildertek__RFQ__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__RFQ__c.fields.buildertek__Trade_Type__c.isAccessible()){
                 rfq = [select Id, buildertek__Trade_Type__c
@@ -89,6 +90,8 @@ Throws [Exceptions]: NA
                     ' from buildertek__Vendor_Items__r), (Select Id, Name, File__r.Name, File__r.buildertek__File_Presigned_URL__c, File__r.buildertek__Download_Link__c,CurrencyIsoCode,'+
                     'File__r.buildertek__Download_Link1__c from buildertek__RFQ_To_Vendor_Document_Links__r), (Select Id, buildertek__File_Presigned_URL__c,CurrencyIsoCode,'+ 
                     'buildertek__Download_Link__c,buildertek__Download_Link1__c, Name from buildertek__Files__r) from buildertek__RFQ_To_Vendor__c where RFQ__c = :rfqId ';
+                
+                System.debug('rfqrecords>>'+rfqrecords);    
                 rfqVendorsList = Database.query(rfqrecords);
                 system.debug('rfqVendorsList'+rfqVendorsList);
             }else{
@@ -107,6 +110,7 @@ Throws [Exceptions]: NA
             
             return rfqVendorsList;
         } catch (Exception ex){
+            System.debug('Exception>>>'+ex);
             throw new AuraHandledException(ex.getMessage() + ex.getLineNumber());
         }
     }

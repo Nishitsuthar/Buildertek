@@ -2,7 +2,7 @@
     access="global" controller="NewBudget">
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute name="parentRecordId" type="String" default="" />
-    <aura:attribute name="isLoading" type="Boolean" />
+    <aura:attribute name="isLoading" type="Boolean" default="false"/>
     <aura:attribute name="listOfFields" type="List" />
     <lightning:workspaceAPI aura:id="workspace" />
 
@@ -46,6 +46,7 @@
                     <br />
                     <br />
                     <br />-->
+                    <br/><br/><br/><br/><br/><br/><br/>
                     <div class="slds-col modal-footer slds-modal__footer slds-buttoncustom" >
                         <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.closeModel }" />
                         <lightning:button variant="neutral" title="Save &amp; New" label="Save &amp; New"
@@ -59,15 +60,14 @@
 
  
     <aura:if isTrue="{!v.isLoading}">
-        <div aura:id="spinnerId" class="slds-spinner_container">
+        <div aura:id="spinnerId" class="slds-spinner_container spinnerDiv">
             <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
                 <span class="slds-assistive-text">Loading</span>
                 <div class="slds-spinner__dot-a"></div>
                 <div class="slds-spinner__dot-b"></div>
                 <div class="custom-loading-text">
-                           <b>Processing, Please Wait</b>
-                       </div>
-                
+                    <b>Processing, Please Wait</b>
+                </div>                
             </div>
         </div>
     </aura:if>

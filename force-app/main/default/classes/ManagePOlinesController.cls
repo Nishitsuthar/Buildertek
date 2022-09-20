@@ -1181,12 +1181,16 @@ public with sharing class ManagePOlinesController {
                     {
                         // returnMapVal.put('buildertek__Install_Only__c', formatExtendedCost(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Install_Only__c,bomLineMap));
                     }
+
+                    System.debug('wc===='+recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Workers_Comp__c);
                     if(String.isNotBlank(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Workers_Comp__c))
                     {
-                        if(string.valueof(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Workers_Comp__c) != null){
+                        System.debug('buildertek__Selection_Sheet_Takeoff__r.buildertek__Workers_Comp__c');
+                        // if(string.valueof(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Workers_Comp__c) != null){
+                            System.debug('work comp===');
                             returnMapVal.put('buildertek__Workers_Comp__c', formatExtendedCostForWorkComp('buildertek__Workers_Comp__c',recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Workers_Comp__c,bomLineMap));
                             System.debug('work comp==='+returnMapVal.get('buildertek__Workers_Comp__c'));
-                        }
+                        // }
                     }
                     // System.debug('Gl insurance====='+formatExtendedCostForWorkComp('buildertek__General_Liability_Insurance_Long__c',recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__General_Liability_Insurance_Long__c,bomLineMap));
                     System.debug('gl====='+recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__General_Liability_Insurance_Long__c);
@@ -1216,7 +1220,9 @@ public with sharing class ManagePOlinesController {
                         returnMapVal.put('buildertek__Slab_Discount_Rate_LongText__c', formatratePercentage(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Slab_Discount_Rate_LongText__c,bomLineMap));
                     }
                     if(String.isNotBlank(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Fabrication_Labor_Mark_up_LongText__c))
-                    {                       
+                    {      
+                        System.debug('testing');                 
+                        System.debug(formatratePercentage(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Fabrication_Labor_Mark_up_LongText__c,bomLineMap));
                         returnMapVal.put('buildertek__Fabrication_Labor_Mark_up_LongText__c', formatratePercentage(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Fabrication_Labor_Mark_up_LongText__c,bomLineMap));
                     }
                     if(String.isNotBlank(recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Options_Rate__c))
@@ -1236,6 +1242,7 @@ public with sharing class ManagePOlinesController {
                         Map<String,String> generalLiabMap = new Map<String,String>();
                         Map<String,String> texturaFeeMap = new Map<String,String>();
                         Map<String,String> blankslabDiscountMap = new Map<String,String>();
+                        Map<String,String> blankmarkupDiscountMap = new Map<String,String>();
                         workersCompMap.put('buildertek__Workers_Comp__c', '0');
                         generalLiabMap.put('buildertek__General_Liability_Insurance_Long__c', '0');
                         texturaFeeMap.put('buildertek__Textura_Fee__c', '0');
@@ -1246,6 +1253,7 @@ public with sharing class ManagePOlinesController {
                             strMap.put(bomLine.Id, '0');
                             blankDiscountMap.put(bomLine.Id, '0');
                             blankslabDiscountMap.put(bomLine.Id, '');
+                            blankmarkupDiscountMap.put(bomLine.Id,'');
                         }
                         if(!returnMapVal.containsKey('buildertek__Fabrication_Install_Rate__c'))
                         {
@@ -1289,7 +1297,7 @@ public with sharing class ManagePOlinesController {
                         }
                         if(!returnMapVal.containsKey('buildertek__Fabrication_Labor_Mark_up_LongText__c'))
                         {
-                            returnMapVal.put('buildertek__Fabrication_Labor_Mark_up_LongText__c',blankDiscountMap );
+                            returnMapVal.put('buildertek__Fabrication_Labor_Mark_up_LongText__c',blankmarkupDiscountMap );
                         }
                         if(!returnMapVal.containsKey('buildertek__Options_Rate__c'))
                         {

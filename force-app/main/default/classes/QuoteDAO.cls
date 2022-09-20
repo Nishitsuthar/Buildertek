@@ -72,7 +72,6 @@ public with sharing class QuoteDAO{
         Map<Id, Product2> productByIDs = new map<Id, Product2>([Select Id, Name
                                                                 from Product2
                                                                 where Id IN :productIds]);
-
         for (buildertek__Quote_Item__c qItem : quoteItems){
             if (qItem.buildertek__Product__c != null && productByIDs.ContainsKey(qItem.buildertek__Product__c)){
                 qItem.Name = productByIDs.get(qItem.buildertek__Product__c).Name;
@@ -564,7 +563,7 @@ public with sharing class QuoteDAO{
         System.debug('########pricebook' + productId);
         list<PricebookEntry> pList = new list<PricebookEntry>();
 
-        pList = [select id, UnitPrice, buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c
+        pList = [select id, UnitPrice, buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c, Product2Id, Product2.buildertek__Quote_Group__r.Name
                  from PricebookEntry
                  where product2Id = :productId and isActive = true and pricebook2Id IN (select id
                                                                                         from Pricebook2
@@ -1900,12 +1899,12 @@ public with sharing class QuoteDAO{
         
         if(PricebookId.size() > 0){
             system.debug('ifiiifif');
-            productList =  [select id,Name,ProductCode,Description,Family,(select UnitPrice,buildertek__Unit_Cost__c,Pricebook2Id,Pricebook2.Name,buildertek__Markup__c,buildertek__Discount__c,IsActive from PricebookEntries where Pricebook2Id IN: PricebookId AND IsActive = True  )  from Product2 where Id in :Ids ];
+            productList =  [select id,Name,ProductCode,Description,Family,buildertek__Quote_Group__r.Name, (select UnitPrice,buildertek__Unit_Cost__c,Pricebook2Id,Pricebook2.Name,buildertek__Markup__c,buildertek__Discount__c,IsActive from PricebookEntries where Pricebook2Id IN: PricebookId AND IsActive = True  )  from Product2 where Id in :Ids ];
             system.debug('productList--------->'+productList);
         }else{
             system.debug('elseleseelse');
             if(Ids.size() > 0){
-             productList =  [select id,Name,ProductCode,Description,Family,(select UnitPrice,Pricebook2Id,Pricebook2.Name,buildertek__Markup__c,buildertek__Unit_Cost__c,buildertek__Discount__c,IsActive from PricebookEntries where IsActive = True order by CreatedDate ASC )  from Product2 where Id in :Ids ];
+             productList =  [select id,Name,ProductCode,Description,Family,buildertek__Quote_Group__r.Name,(select UnitPrice,Pricebook2Id,Pricebook2.Name,buildertek__Markup__c,buildertek__Unit_Cost__c,buildertek__Discount__c,IsActive from PricebookEntries where IsActive = True order by CreatedDate ASC )  from Product2 where Id in :Ids ];
                 system.debug('productList--------->'+productList );
                 
                

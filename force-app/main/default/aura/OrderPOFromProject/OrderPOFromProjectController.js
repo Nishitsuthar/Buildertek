@@ -1,19 +1,19 @@
 ({
 	doInit: function (component, event, helper) {
 
-		var workspaceAPI = component.find("workspace");
-		workspaceAPI.getEnclosingTabId().then((response) => {
-			let opendTab = response.tabId;
-			workspaceAPI.setTabLabel({
-				tabId: opendTab,
-				label: "Purchase Orders"
-			});
-			workspaceAPI.setTabIcon({
-				tabId: opendTab,
-				icon: 'custom:custom5',
-				iconAlt: 'Purchase Orders'
-			});
-		});
+		// var workspaceAPI = component.find("workspace");
+		// workspaceAPI.getEnclosingTabId().then((response) => {
+			// let opendTab = response.tabId;
+			// workspaceAPI.setTabLabel({
+			// 	tabId: opendTab,
+			// 	label: "Purchase Orders"
+			// });
+			// workspaceAPI.setTabIcon({
+			// 	tabId: opendTab,
+			// 	icon: 'custom:custom5',
+			// 	iconAlt: 'Purchase Orders'
+			// });
+		// });
 		// debugger;
 
 		var productCategoryValue = component.get("v.searchCategoryFilter");
