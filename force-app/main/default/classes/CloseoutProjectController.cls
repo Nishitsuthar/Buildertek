@@ -6,7 +6,7 @@ public with sharing class CloseoutProjectController {
         if (oldAR.isEmpty()) {
             buildertek__Billings__c AR = new buildertek__Billings__c();
             AR.Name = 'Closeout-Project-Invoice';
-            AR.Project__c = recordId;
+            AR.buildertek__Project__c = recordId;
             insert AR;
             mainAR = AR.Id;
         } else {

@@ -25,7 +25,7 @@
                             onclick="{!c.twistAccordion}" class="{!(v.icone=='dash' ? 'collapseIcon' : 'iconStyle')}" />
                     </div>
                     <span class="slds-truncate" style="font-size:0.8rem;color:#000;"
-                        title="{!v.questionGroup.Name}"><b>&nbsp;{!v.questionGroup.buildertek__Title__c}</b></span>
+                        title="{!v.questionGroup.Name}"><b>&nbsp;{!v.questionGroup.Name}</b></span>
                 </button>
                 <div class="{!if(v.callerName == 'builder','accordion_edit','slds-hide')}" style="padding:5px;"><a
                         href="javascript:void(0);" onclick="{!c.openNewQuestionGroupComponent}">

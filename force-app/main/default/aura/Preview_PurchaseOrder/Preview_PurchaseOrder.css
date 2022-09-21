@@ -35,3 +35,7 @@
     /* bottom : 4.4rem !important;*/
   }
 }
+
+.THIS .slds-pill__remove {
+  display: none !important;
+}

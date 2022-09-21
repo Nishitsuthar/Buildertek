@@ -7,6 +7,7 @@
             if(state === "SUCCESS"){
                 var pageSize = component.get("v.pageSize");
                 var result = response.getReturnValue();
+                console.log('Quote =>',{result});
                 component.set("v.masterQuotesList", result);
                 component.set("v.totalRecords", component.get("v.masterQuotesList").length);
                 component.set("v.startPage",0);
@@ -140,6 +141,8 @@
 	            }
 	        }
 	    }
+
+        console.log('quoteIds =>', {quoteIds});
 	    //alert('quoteLines --> '+quoteIds);
 	    if(quoteIds.length > 0){
 	        var action = component.get("c.importMasterQuoteLines");  

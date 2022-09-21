@@ -1,5 +1,6 @@
 ({
     getTemplateBody : function(component, event, helper) {
+		console.log('getTemplateBody');
         var recordId = component.get("v.recordId");
 		var action = component.get("c.createInvoice");
 		action.setParams({
@@ -8,6 +9,7 @@
 		action.setCallback(this, function(response){
 		    var state = response.getState();
 		    if(state === "SUCCESS"){
+				console.log({result});
 		        var result =  response.getReturnValue();
 		        component.set("v.invoiceLines", result);
 		    }
@@ -45,6 +47,8 @@
 			});
 			updateAction.setCallback(this, function (response) {
 				var state = response.getState();
+				console.log({toIds});
+				console.log({ccIds});
 				if (state === "SUCCESS") {
 					var action = component.get("c.sendProposal");
 					action.setParams({
@@ -57,6 +61,7 @@
 						var state = response1.getState();
 						if (state === "SUCCESS") {
 							var result1 = response1.getReturnValue();
+							console.log({result1});
 							if (result1 === 'Success') {
 								$A.get("e.force:closeQuickAction").fire();
 								var toastEvent = $A.get("e.force:showToast");

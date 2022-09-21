@@ -289,7 +289,7 @@
 
     handleUploadFinished: function (component, event, helper) {
         var uploadedFiles = event.getParam("files");
-    
+        
         console.log('please check type of uploaded files here');
         
         console.log(uploadedFiles);
@@ -309,6 +309,5 @@
         
        //helper.handleUploadFinishedHelper(component, event, helper);
     },
-
 
 })

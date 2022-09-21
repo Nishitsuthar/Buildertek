@@ -33,7 +33,7 @@
                             onclick="{!c.twistAccordion}" class="{!(v.icone=='dash' ? 'collapseIcon' : 'iconStyle')}" />
                     </div>
                     <span class="slds-truncate" style="font-size: 1rem;color:#000;"
-                        title="{!v.section.Name}"><b>&nbsp;{!v.section.buildertek__Title__c}</b></span>
+                        title="{!v.section.Name}"><b>&nbsp;{!v.section.Name}</b></span>
                 </button>
                 <div class="{!if(v.callerName == 'builder','accordion_edit','slds-hide')}" style="padding:5px;"><a
                         href="javascript:void(0);" onclick="{!c.openNewSectionComponent}">

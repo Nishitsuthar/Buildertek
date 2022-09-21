@@ -150,7 +150,7 @@
                 <lightning:input autocomplete="off" type="search" placeholder="Search for Purchase Order Item" variant="label-hidden" value="{!v.searchDescriptionFilter}" />
             </lightning:layoutItem>
 
-            <lightning:layoutItem padding="around-small" size="2.5">
+            <lightning:layoutItem padding="around-small" size="2">
                 <lightning:input autocomplete="off" type="search" placeholder="Search for PO's By Permit" variant="label-hidden" value="{!v.searchPermitFilter}" />
             </lightning:layoutItem>
 

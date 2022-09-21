@@ -1,11 +1,32 @@
 ({
 	doInit : function(component, event, helper) {
-	    
-	    console.log("newquote");
-	    
+	    component.set("v.Spinner", true);
+        var recordId = component.get("v.recordId");
+        console.log('recordId =>',{recordId});
+        var action = component.get("c.createQuote");
+        action.setParams({
+            recordId: recordId
+        });
+         action.setCallback(this, function (response) {
+            var result = response.getReturnValue();
+            console.log('Result =>', {result});
+            if (result == 'Success') {
+                helper.showToast("Success", "Success", "New Sales Order Created.", "5000");
+            } else{
+                helper.showToast("Error", "Error", "Something Went Wrong", "5000");
+            }
+            component.set("v.Spinner", false);
+	        $A.get("e.force:closeQuickAction").fire();
+        });
+        $A.enqueueAction(action);
+    },
+                   
+      closeModal : function(component, event, helper) {
+	    $A.get("e.force:closeQuickAction").fire();
+	}
+	  /* console.log("newquote");	    
 	   var action = component.get("c.getOpportunityDetails");
-       action.setParams({ "recordId": component.get("v.recordId") });
-       
+       action.setParams({ "recordId": component.get("v.recordId") });       
        
         action.setCallback(this, function(response) {
             var state = response.getState();
@@ -44,10 +65,6 @@
     
     doneRendering: function(component, event, helper) {
         $A.get("e.force:closeQuickAction").fire();
-    }
-})({
-	myAction : function(component, event, helper) {
-
-	
-	}
+    	}*/
+    
 })

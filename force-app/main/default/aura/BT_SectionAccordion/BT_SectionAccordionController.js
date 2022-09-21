@@ -96,6 +96,8 @@
                     "recordTypeName": sectionRecordType,
                     "onSuccess": function (object) {
                         var section = component.get("v.section");
+                        console.log('In section accordioncontroller');
+                        console.log({section});
                         section.Name = object.Name;
                         section.buildertek__Title__c = object.buildertek__Title__c;
                         component.set("v.section", section);

@@ -1,6 +1,7 @@
 ({
     preiewEmailTemplate: function (component, event, helper) {
 		var selectedTemplate = component.get("v.selectedTemplate");
+		console.log({selectedTemplate});
 		if (selectedTemplate != undefined) {
 			component.set("v.isTemplateSelected", true);
 			if (selectedTemplate == 'Invoice') {

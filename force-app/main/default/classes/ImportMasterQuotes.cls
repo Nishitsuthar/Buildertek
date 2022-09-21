@@ -1,5 +1,5 @@
 public with sharing class ImportMasterQuotes {
-    /**/
+    
     @AuraEnabled
     public static object getMasterQuotes(){
         list<buildertek__Master_Quote__c> masterQuoteList;
@@ -184,6 +184,12 @@ public with sharing class ImportMasterQuotes {
         			Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Vendor__c.isCreateable() ){
                     insert quoteItemToInsertList;
         			}
+
+                    if(!quoteItemList.isEmpty()){
+
+                    } else if(!masterQuoteItemList.isEmpty()) {
+
+                    }
                 msg.Status = 'Success';
                 msg.Message = 'Quote Lines Imported Successfully';
             }else{

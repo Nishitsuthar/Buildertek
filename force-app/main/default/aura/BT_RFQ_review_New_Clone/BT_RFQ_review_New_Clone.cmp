@@ -106,10 +106,10 @@
         <div class="wrapper">
             <c:BT_Message aura:id="infoMessage" type="info" message="{!reviewInfoMessage}" />
             <header style="background: #1b5297;padding: 11px 20px;">
-                <div class="left-box" style="display: inline-block;vertical-align: middle;width: 25%;">
+                <div class="left-box" style="display: inline-block;vertical-align: middle;width: 11rem;">
                     <div style="display:flex;">
                         <ui:inputCheckbox aura:id="checkAllRFQs" change="{!c.selectAll}" class="checkAllStyle" />
-                        <td style="margin-top: 0px;margin-right: 20px;"
+                        <td style="margin-top: 0px;margin-right: 5px;"
                             >
                             <!--  <span style="display:inline-block;" class="{!v.currentTab+' expandAllBtn_'+v.budgetId}" data-iconattr ="{!'expandAllBtn_'+v.budgetId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}"> -->
                             
@@ -125,11 +125,11 @@
                                                       title="Collapse All" class="collapseIcon"/>                       
                             </span> 
                         </td>
-                        <h1 style="margin: 0;color: #fff;font-size: 18px;">RFQ Details</h1>
+                        <h1 style="margin: 0;color: #fff;font-size: 17px;">RFQ Details</h1>
                     </div>
                 </div>
                 <div class="right-box"
-                     style="display: inline-block;vertical-align: middle;width: 75%;margin-left:-5px;">
+                     style="display: inline-block;vertical-align: middle;width: 80%;margin-left:-5px;">
                     <ul
                         style="padding-left: 0;margin:0;background: #fff;border-radius: 3px;float: right;border: 1px solid #ccc;">
                         

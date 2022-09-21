@@ -10,10 +10,13 @@
     <aura:attribute name="searchDescriptionFilter" type="String" default="" />
     <aura:handler name="change" value="{!v.searchDescriptionFilter}" action="{!c.doSearch}" />
     
-     <aura:attribute name="searchTradeTypeFilter" type="String" default="" />
+    <aura:attribute name="searchPermitFilter" type="String" default="" />
+    <aura:handler name="change" value="{!v.searchPermitFilter}" action="{!c.doSearch}" />
+
+    <aura:attribute name="searchTradeTypeFilter" type="String" default="" />
     <aura:handler name="change" value="{!v.searchTradeTypeFilter}" action="{!c.doSearch}" />
     
-     <aura:attribute name="searchProjectFilter" type="String" default="" />
+    <aura:attribute name="searchProjectFilter" type="String" default="" />
     <aura:handler name="change" value="{!v.searchProjectFilter}" action="{!c.doSearch}" />
 
     <aura:attribute name="isSave" type="Boolean" default = "false"/>
@@ -78,23 +81,27 @@
         
         <lightning:layout multipleRows="true" class="searchbarList">
      
-            <lightning:layoutItem padding="around-small" size="2.5">
+            <lightning:layoutItem padding="around-small" size="2">
                 <lightning:input autocomplete="off" type="search" placeholder="Search for Purchase Order" variant="label-hidden" value="{!v.searchItemFilter}" />
             </lightning:layoutItem>
 
-            <lightning:layoutItem padding="around-small" size="2.5">
+            <lightning:layoutItem padding="around-small" size="2">
                 <lightning:input autocomplete="off" type="search" placeholder="Search for Product Code" variant="label-hidden" value="{!v.searchProductFilter}" />
             </lightning:layoutItem>
             
-            <lightning:layoutItem padding="around-small" size="2.5">
+            <lightning:layoutItem padding="around-small" size="2">
                 <lightning:input autocomplete="off" type="search" placeholder="Search for Purchase Order Item" variant="label-hidden" value="{!v.searchDescriptionFilter}" />
             </lightning:layoutItem>
 
-            <lightning:layoutItem padding="around-small" size="2.5">
+            <lightning:layoutItem padding="around-small" size="2">
+                <lightning:input autocomplete="off" type="search" placeholder="Search for PO's By Permit" variant="label-hidden" value="{!v.searchPermitFilter}" />
+            </lightning:layoutItem>
+
+            <lightning:layoutItem padding="around-small" size="2">
                 <lightning:input autocomplete="off" type="search" placeholder="Search for Trade Type" variant="label-hidden" value="{!v.searchTradeTypeFilter}" />
             </lightning:layoutItem>
             
-            <lightning:layoutItem padding="around-small" size="2.5">
+            <lightning:layoutItem padding="around-small" size="2">
                 <lightning:input autocomplete="off" type="search" placeholder="Search for Project" variant="label-hidden" value="{!v.searchProjectFilter}" />
             </lightning:layoutItem>
         </lightning:layout>

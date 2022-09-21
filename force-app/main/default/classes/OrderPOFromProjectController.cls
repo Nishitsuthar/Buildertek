@@ -72,7 +72,7 @@ public class OrderPOFromProjectController {
                 queryList = queryList+ ' AND (buildertek__Permit__r.Name LIKE \'%'+String.escapeSingleQuotes(permitFilter)+'%\') AND (buildertek__Permit__r.buildertek__Status__c = \'Completed\')';
             }
 
-            queryList = queryList+ ' ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC';
+            queryList = queryList+ ' ORDER BY buildertek__Phase__c DESC NULLS last, buildertek__Vendor__r.Name ASC NULLS last, Name DESC, buildertek__Status__c ASC';
             MainpoRecList = Database.query(queryList); 
         }
         
@@ -108,7 +108,7 @@ public class OrderPOFromProjectController {
                                                             buildertek__Total_Amount_Tax__c,
                                                             buildertek__Product__c,
                                                             buildertek__Product__r.ProductCode FROM Purchase_Order_Items__r)
-                                FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC ];    
+                                FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId ORDER BY buildertek__Phase__c  DESC NULLS last, buildertek__Vendor__r.Name ASC NULLS last, Name DESC, buildertek__Status__c ASC ];    
         }else {
             MainpoRecList = [SELECT Id,
                                 Name, 
@@ -141,7 +141,7 @@ public class OrderPOFromProjectController {
                                                             buildertek__Total_Amount_Tax__c,
                                                             buildertek__Product__c,
                                                             buildertek__Product__r.ProductCode FROM Purchase_Order_Items__r)
-                                FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC  LIMIT :pageSize OFFSET :offset];    
+                                FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId ORDER BY buildertek__Phase__c  DESC NULLS last, buildertek__Vendor__r.Name ASC NULLS last, Name DESC, buildertek__Status__c ASC  LIMIT :pageSize OFFSET :offset];    
         }
         System.debug('MainpoRecList>>>'+MainpoRecList);
         map<String , List<buildertek__Purchase_Order__c>> GroupingMap = new map<String , List<buildertek__Purchase_Order__c>>(); 
@@ -410,7 +410,7 @@ public class OrderPOFromProjectController {
         Integer totalPaidPOs = 0;
         decimal paidPercent = 0;
         
-        List<buildertek__Purchase_Order__c> poRecList = [select Id,
+        List<buildertek__Purchase_Order__c> poRecList = [SELECT Id,
                                                          Name,
                                                          buildertek__Type__c,
                                                          buildertek__Phase__c,
@@ -422,33 +422,35 @@ public class OrderPOFromProjectController {
                                                          buildertek__Paid_Amount__c,
                                                          buildertek__PO_Balance__c,
                                                          buildertek__Project__c
-                                                         FROM buildertek__Purchase_Order__c where buildertek__Project__c =: recId];
+                                                         FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId];
         
         
-        totalRecords = [SELECT COUNT() FROM buildertek__Purchase_Order__c where buildertek__Project__c =: recId];
+        totalRecords = [SELECT COUNT() FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId];
         
-        AggregateResult result = [SELECT SUM(buildertek__PO_Total__c )totalPO, buildertek__Project__c FROM buildertek__Purchase_Order__c where buildertek__Project__c =: recId group by buildertek__Project__c];
+        AggregateResult result = [SELECT SUM(buildertek__PO_Total__c )totalPO, buildertek__Project__c FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId GROUP BY buildertek__Project__c];
         
         decimal totalPOAmount = (decimal)result.get('totalPO');
         
-        AggregateResult result1 = [SELECT SUM(buildertek__PO_Balance__c)totalPOBalance, buildertek__Project__c FROM buildertek__Purchase_Order__c where buildertek__Project__c =: recId group by buildertek__Project__c];
+        AggregateResult result1 = [SELECT SUM(buildertek__PO_Balance__c)totalPOBalance, buildertek__Project__c FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId GROUP BY buildertek__Project__c];
         
         
         decimal totalPOBalance = (decimal)result1 .get('totalPOBalance');
         
         
-        AggregateResult totalPaidPurchaseOrders  = [SELECT SUM(buildertek__Paid_Amount__c )totalPaid, buildertek__Status__c FROM buildertek__Purchase_Order__c where buildertek__Status__c = 'Paid' group by buildertek__Status__c ];
+        List<AggregateResult> totalPaidPurchaseOrders  = [SELECT SUM(buildertek__Paid_Amount__c )totalPaid, buildertek__Status__c FROM buildertek__Purchase_Order__c WHERE buildertek__Status__c = 'Paid' AND buildertek__Project__c =: recId GROUP BY buildertek__Status__c LIMIT 1];
+
+        if(totalPaidPurchaseOrders.size() > 0){
+            totalPaid = (decimal)totalPaidPurchaseOrders[0].get('totalPaid');
+        }
         
-        totalPaid = (decimal)totalPaidPurchaseOrders.get('totalPaid');
-        
-        totalOrderedPOs = [SELECT COUNT() FROM buildertek__Purchase_Order__c where buildertek__Status__c = 'Ordered' AND  buildertek__Project__c =: recId];
+        totalOrderedPOs = [SELECT COUNT() FROM buildertek__Purchase_Order__c WHERE buildertek__Status__c = 'Ordered' AND  buildertek__Project__c =: recId];
         
         if(totalOrderedPOs > 0){
             orderedPercent = totalOrderedPOs;
         }
         
         
-        totalPaidPOs = [SELECT COUNT() FROM buildertek__Purchase_Order__c where buildertek__Status__c = 'Paid' AND  buildertek__Project__c =: recId];
+        totalPaidPOs = [SELECT COUNT() FROM buildertek__Purchase_Order__c WHERE buildertek__Status__c = 'Paid' AND  buildertek__Project__c =: recId];
         
         if(totalPaidPOs > 0){
             paidPercent = totalPaidPOs;       

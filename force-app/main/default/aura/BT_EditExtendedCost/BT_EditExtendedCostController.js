@@ -51,12 +51,15 @@
         if(isSuccess == true)
         {
             var fieldNameToOperate = component.get('v.fieldAPIName');
+            console.log('fieldNameToOperate-->'+fieldNameToOperate);
             if(fieldNameToOperate != null && fieldNameToOperate != undefined && fieldNameToOperate == 'buildertek__OCIP_CCIP_Required__c')
             {
+                console.log('saveBOMRecord');
                 helper.saveBOMRecord(component, event, helper);
             }
             else
             {
+                console.log('saveRecord');
                 helper.saveRecord(component, event, helper);
             }
         }

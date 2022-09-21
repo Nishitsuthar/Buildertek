@@ -95,10 +95,14 @@
                 component.set("v.orderedPercent", result.orderedPercent);
                 component.set("v.paidPercent", result.paidPercent);
 
-                var  poLineFilter = component.get("v.searchDescriptionFilter");
                 var poFilter = component.get("v.searchItemFilter");
+                var  poLineFilter = component.get("v.searchDescriptionFilter");
+                var tradeTypeFilter = component.get("v.searchTradeTypeFilter");
+                var projectFilter = component.get("v.searchProjectFilter");
+                var productFilter = component.get("v.searchProductFilter");
+                var permitFilter = component.get("v.searchPermitFilter");
                 
-                if(poFilter != '' || poLineFilter != ''){
+                if(poFilter != '' || poLineFilter != '' || tradeTypeFilter != '' || projectFilter != '' || productFilter != '' || permitFilter != ''){
                     component.set("v.TotalPages", 1);
                 } else{
                     component.set("v.TotalPages", Math.ceil(result.totalPOs / component.get("v.pageSize")));

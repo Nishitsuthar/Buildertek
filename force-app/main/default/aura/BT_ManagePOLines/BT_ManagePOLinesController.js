@@ -691,6 +691,7 @@
                         bomRecords[i].LastModifiedByName = bomRecords[i].LastModifiedBy.Name;
                         // slabDiscount = bomRecords[i].buildertek__Slab_Discount_Rate__c;
                         taxRate1 = bomRecords[i].buildertek__Tax_Rate_1__c;
+                        console.log('<--taxRate1-->'+taxRate1);
                         savedSelectedCountry = bomRecords[i].buildertek__Region_State_Country_County__c;
                     }
 
@@ -772,7 +773,6 @@
                     component.set('v.bomList', null);
                     var action = component.get("c.handleBTAdmin");
                     $A.enqueueAction(action);
-
                 } else {
                     console.log('@@Return Value False');
                     helper.showToast(component, event, helper, 'Error!', result.message, 'error');

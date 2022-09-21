@@ -23,6 +23,7 @@
 	            var state = response.getState();
 	            if (state === "SUCCESS") {
                     console.log('Response::',JSON.stringify(response.getReturnValue()));
+					console.log('response of controls>>>',response.getReturnValue().controls);
 	               // Assigned value to component attributes
 	               component.set("v.questionGroupByParentId",response.getReturnValue().controlByParentId);
 	               component.set("v.questionGroups",response.getReturnValue().controls);

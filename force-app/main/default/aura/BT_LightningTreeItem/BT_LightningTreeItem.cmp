@@ -106,7 +106,7 @@
             <div style="margin-top: 10px">
                 <a id="{!concat(v.treeItemId,'__label')}" style="text-align:center;white-space: pre-wrap;"
                     aura:id="itemLink" href="javascript:void(0);" tabindex="-1" role="presentation"
-                    class="slds-truncate" onclick="{!c.nodeClick}">{!v.title} </a>
+                    class="slds-truncate" onclick="{!c.nodeClick}">{!v.title}</a>
             </div>
             <aura:if isTrue="{!v.showProgress}">
                 <div style=" margin-left: auto; order: 2;">

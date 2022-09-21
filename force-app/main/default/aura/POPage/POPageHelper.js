@@ -14,6 +14,8 @@
         var searchProductValue = component.get("v.searchProductFilter");
         
         var projectValue = component.get("v.searchProjectFilter");
+
+        var permitValue = component.get("v.searchPermitFilter");
    
         component.find("checkContractors").set("v.value", false);
 
@@ -26,7 +28,8 @@
             "poLineFilter" : descriptionValue,
             "tradeTypeFilter" : tradeTypeValue,
             "projectFilter" : projectValue,
-            "productFilter" : searchProductValue
+            "productFilter" : searchProductValue,
+            "permitFilter" : permitValue
         });
         action.setCallback(this, function(response){
             // debugger;

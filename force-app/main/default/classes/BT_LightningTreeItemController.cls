@@ -17,7 +17,7 @@ public with sharing class BT_LightningTreeItemController {
                                                   
         // Select node data
         TreeNodeUserData node = (TreeNodeUserData)JSON.deserialize(nodeData, TreeNodeUserData.class);
-        
+        System.debug('node>>>'+node);
         // Need to prefix tree type
         String key = treeType + '/' + node.key;
         

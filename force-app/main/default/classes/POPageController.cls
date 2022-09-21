@@ -1,6 +1,6 @@
 public class POPageController {
     @AuraEnabled
-    public static object getMasterBudgets(String recId, Integer pageNumber, Integer pageSize, String poFilter, String poLineFilter, String tradeTypeFilter, String projectFilter, String productFilter){
+    public static object getMasterBudgets(String recId, Integer pageNumber, Integer pageSize, String poFilter, String poLineFilter, String tradeTypeFilter, String projectFilter, String productFilter, String permitFilter){
         
         system.debug('pageNumber--------->'+pageNumber);
         system.debug('pageSize----------->'+pageSize);
@@ -49,7 +49,7 @@ public class POPageController {
         String queryList = 'select Id, Name, buildertek__Type__c,toLabel(buildertek__Phase__c),buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name,buildertek__Vendor__r.buildertek__Email_Address__c,buildertek__Status__c,buildertek__Description__c,buildertek__Change_Order__c,buildertek__Change_Order__r.Name, buildertek__PO_Total__c, buildertek__Paid_Amount__c, buildertek__PO_Balance__c, buildertek__Date_Ordered__c, buildertek__Project__c, buildertek__Project__r.Name,';
         queryList = queryList +  ' (select Id, Name, buildertek__Purchase_Order__c,buildertek__Total_Price__c,buildertek__Tax__c, buildertek__Purchase_Order__r.Name, buildertek__Quantity__c, buildertek__Unit_Price__c, buildertek__Description__c, buildertek__Total_Amount_Tax__c from Purchase_Order_Items__r) FROM buildertek__Purchase_Order__c';
         queryList = queryList+ ' Where (buildertek__Status__c != \'Ordered\' AND buildertek__Status__c != \'Paid\' AND buildertek__Status__c != \'Partially Paid\') ';
-        if(poFilter != '' || tradeTypeFilter != '' || projectFilter != ''){
+        if(poFilter != '' || tradeTypeFilter != '' || projectFilter != '' || permitFilter != ''){
             if(poFilter != ''){
                 
                 queryList = queryList+ ' AND (buildertek__Vendor__r.Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\'';
@@ -74,7 +74,12 @@ public class POPageController {
                 }
                 
             }
-            queryList = queryList+ ' ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC';
+
+            if(permitFilter != '' && permitFilter != null){
+                queryList = queryList+ ' AND (buildertek__Permit__r.Name LIKE \'%'+String.escapeSingleQuotes(permitFilter)+'%\') AND (buildertek__Permit__r.buildertek__Status__c = \'Completed\')';
+            }
+
+            queryList = queryList+ ' ORDER BY buildertek__Phase__c  DESC NULLS last, buildertek__Vendor__r.Name ASC NULLS last, Name DESC, buildertek__Status__c ASC';
             MainpoRecList = Database.query(queryList); 
         }
         
@@ -107,7 +112,7 @@ public class POPageController {
                                                           buildertek__Total_Amount_Tax__c, 
                                                           buildertek__Product__c,
                                                           buildertek__Product__r.ProductCode from Purchase_Order_Items__r)
-                             FROM buildertek__Purchase_Order__c where (buildertek__Status__c != 'Ordered' AND buildertek__Status__c != 'Paid' AND buildertek__Status__c != 'Partially Paid')    ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC ];    
+                             FROM buildertek__Purchase_Order__c where (buildertek__Status__c != 'Ordered' AND buildertek__Status__c != 'Paid' AND buildertek__Status__c != 'Partially Paid') ORDER BY buildertek__Phase__c  DESC NULLS last, buildertek__Vendor__r.Name ASC NULLS last, Name DESC, buildertek__Status__c ASC ];    
         }else {
             MainpoRecList = [SELECT Id,
                              Name, 
@@ -137,7 +142,7 @@ public class POPageController {
                                                           buildertek__Total_Amount_Tax__c, 
                                                           buildertek__Product__c,
                                                           buildertek__Product__r.ProductCode from Purchase_Order_Items__r)
-                             FROM buildertek__Purchase_Order__c where (buildertek__Status__c != 'Ordered' AND buildertek__Status__c != 'Paid' AND buildertek__Status__c != 'Partially Paid')    ORDER BY buildertek__Phase__c  DESC NULLS last, Name DESC, buildertek__Status__c ASC  LIMIT :pageSize OFFSET :offset];    
+                             FROM buildertek__Purchase_Order__c where (buildertek__Status__c != 'Ordered' AND buildertek__Status__c != 'Paid' AND buildertek__Status__c != 'Partially Paid') ORDER BY buildertek__Phase__c  DESC NULLS last, buildertek__Vendor__r.Name ASC NULLS last, Name DESC, buildertek__Status__c ASC  LIMIT :pageSize OFFSET :offset];    
         }
         
         map<String , List<buildertek__Purchase_Order__c>> GroupingMap = new map<String , List<buildertek__Purchase_Order__c>>(); 
@@ -157,7 +162,7 @@ public class POPageController {
             MasterBudgetsClassRecord.poCheck = false;
             MasterBudgetsClassRecord.expanded = false; 
             MasterBudgetsClassRecord.pageSize = pageSize;
-            if(poFilter != '' || poLineFilter != '' || productFilter != ''){
+            if(poFilter != '' || poLineFilter != '' || tradeTypeFilter != '' || projectFilter != '' || productFilter != '' || permitFilter != ''){
                 MasterBudgetsClassRecord.pageNumber = 1;  
             }else{
                 MasterBudgetsClassRecord.pageNumber = pageNumber;

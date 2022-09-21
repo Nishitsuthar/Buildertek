@@ -786,10 +786,12 @@
 
                 if (adjustmentTableData[i].buildertek__Tax_Rate_1__c != null && adjustmentTableData[i].buildertek__Tax_Rate_1__c != undefined) {
                     taxRate1 = adjustmentTableData[i].buildertek__Tax_Rate_1__c;
+                    console.log('<--taxRate1-->'+taxRate1);
                 }
 
                 if (adjustmentTableData[i].buildertek__Tax_Rate_2__c != null && adjustmentTableData[i].buildertek__Tax_Rate_2__c != undefined) {
                     taxRate2 = adjustmentTableData[i].buildertek__Tax_Rate_2__c;
+                    console.log('<--taxRate2-->'+taxRate2);
                 }
 
                 if (adjustmentTableData[i].buildertek__Fabrication_Install_Rate__c != null && adjustmentTableData[i].buildertek__Fabrication_Install_Rate__c != undefined) {
@@ -1108,17 +1110,6 @@
                                         markupPercentage = 0;
                                     }
                                 }
-                                // if(map1.has(testoId) == true){
-                                //     if(map1.get(testoId) != true){
-                                //         // if (markupPercentage == 0) {
-                                //             markupPercentage = 0;
-                                //         // }
-                                //     }
-                                // }else if(map1.has(testoId) == false || map1.has(testoId) == undefined){
-                                //     if (markupPercentage == 0) {
-                                //         markupPercentage = 11.5;
-                                //     }
-                                // }
                             } else {
                                 if(map1.has(testoId)){
                                     if(!map1.get(testoId)){
@@ -1129,14 +1120,6 @@
                                 }else{
                                     markupPercentage = 11.5;
                                 }
-                                // if(map1.has(testoId) == true){
-                                //     if(map1.get(testoId) != true){
-                                //         markupPercentage = 0;
-                                //     }
-
-                                // }else if(map1.has(testoId) == false || map1.has(testoId) == undefined){
-                                //     markupPercentage = 0;
-                                // }
                             }
 
                         }
@@ -1260,6 +1243,7 @@
                                 if (taxedit == true) {
 
                                     salestax = finalExtendedCost * (taxRate1 / 100);
+                                    console.log('<<--salestax-->>'+salestax);
                                 }
                             }
 
@@ -1440,15 +1424,23 @@
                         //Sales Tax                    
                      
                         if (helper.isPresentInSlab(serviceCategory) || serviceCategory == 'Slab - Quartz' || serviceCategory == 'Misc' || serviceCategory == 'Option') {
-                            //if(serviceCategory == 'Option'){
-                               
-                            if (record[k].Key == "buildertek__Tax__c") {
-                                taxedit = record[k].Value;
-                                if (taxedit == true) {
-                                    salestax = finalExtendedCost * (taxRate1 / 100);
-                                }
+                            if(serviceCategory == 'Option'){
+                                if(map1.has(testoId)){
+                                    if(map1.get(testoId)){
+                                        salestax = finalExtendedCost * (taxRate1 / 100);
+                                    }else{
+                                        salestax = 0;
+                                    }
+                                }   
                             }else{
-                              salestax = finalExtendedCost * (taxRate1 / 100); 
+                                if (record[k].Key == "buildertek__Tax__c") {
+                                    taxedit = record[k].Value;
+                                    if (taxedit == true) {
+                                        salestax = finalExtendedCost * (taxRate1 / 100);
+                                    }
+                                }else{
+                                  salestax = finalExtendedCost * (taxRate1 / 100); 
+                                }
                             }
                             //  salestax = finalExtendedCost * (taxRate1 / 100);
                         } else if (taxOnFabRequired == true && (serviceCategory == 'Fab' /*|| serviceCategory == 'Install'*/ || serviceCategory == 'Edge')) {
@@ -1476,6 +1468,8 @@
                         
                         salestax = parseFloat(salestax).toFixed(2);
                         finalExtendedCost = parseFloat(finalExtendedCost).toFixed(2);
+                        console.log('--salestax--'+salestax);
+                        console.log('--finalExtendedCost--'+finalExtendedCost);
                         totalCost = Number(finalExtendedCost) + Number(salestax);
                         if(serviceCategory == 'Insurance'){
                             console.log('finalExtendedCost=='+finalExtendedCost);
@@ -1954,6 +1948,7 @@
 
         component.set('v.totalProposalBaseCost', totalProposalBaseCost.toString()); // v.totalAmount
         component.set('v.totalProposalBaseValue', totalProposalBaseValue.toString());
+        // $A.get('e.force:refreshView').fire();
     },
     reCalculateTable: function(component, event, helper, installCost, proposalAmount, ocipextendedcost) {
         console.log(proposalAmount + '{..............}' + installCost + 'Recalculate table+++++++++++++++++++++===========================');
@@ -1996,8 +1991,6 @@
                 }
             }
 
-            console.log('bomList[0].buildertek__General_Liability_Insurance_Long__c=='+bomList[0].buildertek__General_Liability_Insurance_Long__c);
-
             if (bomList[0].buildertek__General_Liability_Insurance_Long__c != null && bomList[0].buildertek__General_Liability_Insurance_Long__c != undefined) {
                 var generalLiability = [];
                 generalLiability = JSON.parse(bomList[0].buildertek__General_Liability_Insurance_Long__c);
@@ -2015,9 +2008,6 @@
                         var rateVal = proposalAmount * (nominatorVal / denominatorVal);
                         rateVal = parseFloat(rateVal).toFixed(2);
                         console.log('GL Rate----->', rateVal);
-                        // console.log(nominatorVal);
-                        // console.log(denominatorVal);
-                        // console.log(proposalAmount);
                         if (rateVal != null && rateVal != undefined) {
                             generalLiability[0].extendedCostVal = rateVal;
                             glRateValue = rateVal;
@@ -2032,28 +2022,24 @@
 
 
             if (bomList[0].buildertek__Workers_Comp__c != null && bomList[0].buildertek__Workers_Comp__c != undefined) {
-                console.log('++buildertek__Workers_Comp__c++');
                 var workersComp = [];
                 workersComp = JSON.parse(bomList[0].buildertek__Workers_Comp__c);
                 if (workersComp != null && workersComp != undefined && workersComp.length > 0) {
                     var nominatorVal = workersComp[0].productRate;
                     console.log('nominatorVal-->'+nominatorVal);
+                    if(!nominatorVal || nominatorVal == null){
+                        nominatorVal = 1.11;
+                    }
                     var denominatorVal = workersComp[0].denominatorVal;
                     var theBomLine = workersComp[0].bomLineId;
-                    console.log('nominatorVal-->'+nominatorVal);
-                    console.log('denominatorVal-->'+denominatorVal);
-                    console.log('installCost-->'+installCost);
                     if (installCost != null && installCost != undefined &&
                         nominatorVal != null && nominatorVal != undefined &&
                         denominatorVal != null && denominatorVal != undefined) {
                         // proposalAmount = parseFloat(proposalAmount);
                         nominatorVal = Number(nominatorVal);
                         denominatorVal = Number(denominatorVal);
-                        console.log('installCost-->'+installCost);
                         var rateVal = installCost * (nominatorVal / denominatorVal);
                         rateVal = parseFloat(rateVal).toFixed(2);
-                        // console.log('WC Rate----->', rateVal);
-
                         if (rateVal != null && rateVal != undefined) {
                             workersComp[0].extendedCostVal = rateVal;
                             wcRateValue = rateVal;
@@ -2159,7 +2145,7 @@
                                 }
                             }
     
-                            console.log('bomlineIdVsWCFee');
+                            // console.log('bomlineIdVsWCFee');
                             console.log(bomlineIdVsWCFee.get(bomLineId));
                             if (bomLineId != null && bomLineId != '' && bomlineIdVsWCFee != null && bomlineIdVsWCFee != undefined) {
                                 if (bomlineIdVsWCFee.has(bomLineId) && bomlineIdVsWCFee.get(bomLineId) != null) {
@@ -2208,7 +2194,7 @@
                                 }
                             }
 
-                            console.log('workrsCompFee val=='+workrsCompFee);
+                            // console.log('workrsCompFee val=='+workrsCompFee);
                             if (record[k].Key == "buildertek__Extended_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'Work Comp' &&
                                 workrsCompFee != null && workrsCompFee != undefined) {
                                 console.log('workrsCompFee val=='+workrsCompFee);
@@ -2334,6 +2320,8 @@
                 }
                 if (extendedCostRecords[optionsRate] != null && extendedCostRecords[optionsRate] != undefined) {
                     component.set('v.OptionsExtndCost', extendedCostRecords[optionsRate]);
+                    console.log('extendedCostRecords[optionsRate]');
+                    console.log(extendedCostRecords[optionsRate]);
                 }
                 if (extendedCostRecords[workersComp] != null && extendedCostRecords[workersComp] != undefined) {
                     var recordDetail = extendedCostRecords[workersComp]
