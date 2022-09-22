@@ -878,6 +878,7 @@
             var allData = component.get("v.dataByGroup");
             // console.log('@@dataByGroup FIRST-', allData);
             var map1 = new Map();
+            var map2 = new Map();
 
             for (var i = 0; i < allData.length; i++) {
 
@@ -983,6 +984,27 @@
                             }
                         }
                     }
+
+                    if(map2.size == 0){
+                        // buildertek__Slab_Discount_Rate_LongText__c
+                        var jsonstringslab = '';
+                        jsonstringslab = testo.buildertek__Selection_Sheet_Takeoff__r.buildertek__Slab_Discount_Rate_LongText__c;
+                        var arr = [];
+                        console.log('jsonstringslab=='+jsonstringslab);
+                        if(jsonstringslab != undefined){
+                            console.log('testing');
+                            arr = JSON.parse(jsonstringslab);
+                        
+                            if(arr.length > 0){
+                                arr.forEach(function (item, index) {
+                                    var test = item;
+                                    map2.set(test.bomLineId, test.taxbvalue);
+
+                                });
+                            }
+                        }
+                    }
+
 
                     for (var k = 0; k < record.length; k++) {
                         if (record[k].Key == "buildertek__Extended_Cost") {
@@ -1339,6 +1361,7 @@
 
 
                     }
+                    console.log('<--!costAdjustmentColumnsPresent!-->',costAdjustmentColumnsPresent);
                     if (costAdjustmentColumnsPresent == false) {
                       
 
@@ -1432,6 +1455,14 @@
                                         salestax = 0;
                                     }
                                 }   
+                            }else if(serviceCategory == 'Slab - Quartz'){
+                                if(map2.has(testoId)){
+                                    if(map2.get(testoId)){
+                                        salestax = finalExtendedCost * (taxRate1 / 100);
+                                    }else{
+                                        salestax = 0;
+                                    }
+                                }
                             }else{
                                 if (record[k].Key == "buildertek__Tax__c") {
                                     taxedit = record[k].Value;
@@ -1786,12 +1817,18 @@
         
                                         }
         
-        
-                                        if (serviceCatVsTotalCostMap.has(serviceCategory) && thisProductCode != '69201198') {
+                                        console.log('keys()-->',serviceCatVsTotalCostMap);
+                                        console.log('serviceCategory-->'+serviceCategory);
+                                        console.log('thisProductCode-->'+thisProductCode);
+                                        if (serviceCatVsTotalCostMap.has(serviceCategory) /*&& thisProductCode != '69201198'*/) {
                                             let existingTotalCost = Number(serviceCatVsTotalCostMap.get(serviceCategory));
+                                            console.log('existingTotalCost-->'+existingTotalCost);
                                             let currentVal = Number(record[k].Value);
+                                            console.log('currentVal-->'+currentVal);
                                             let updatedVal = existingTotalCost + currentVal;
+                                            console.log('updatedVal-->'+updatedVal);
                                             updatedVal = parseFloat(updatedVal).toFixed(2);
+                                            console.log('updatedVal-->'+updatedVal);
                                             serviceCatVsTotalCostMap.set(serviceCategory, String(updatedVal));
                                         }
                                         // else {
@@ -1915,6 +1952,8 @@
         }
 
         serviceCatVsTotalCostMap.forEach(function(value, key) {
+            console.log('key-->'+key);
+            console.log('value-->'+value);
             servCatVsTotalCost.push({ value: value, key: key });
         });
         installCost = parseFloat(installCost).toFixed(2);
@@ -1969,8 +2008,11 @@
                     var theBomLine = Textura[0].bomLineId;
                     if (rate != null && rate != undefined && proposalAmount != null && proposalAmount != undefined) {
                         var texturaExtendedCost;
+                        console.log('rate-->'+Number(rate));
                         var rateVal = Number(rate) * proposalAmount;
+                        console.log('rateVal==>'+rateVal);
                         rateVal = parseFloat(rateVal).toFixed(2);
+                        console.log('rateVal==>'+rateVal);
                         if (rateVal > 499.99 && rateVal < 3750.01) {
                             texturaExtendedCost = parseFloat(rateVal).toFixed(2);
                         } else if (rateVal < 500.00) {
@@ -2188,13 +2230,10 @@
                             console.log('OCIP=='+OCIPVal);
                             if (record[k].Key == "buildertek__Total_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'OCIP' ) {
                                 if (thisBuildPhaseName == 'Base' || thisBuildPhaseName == 'Option') {
-                                    // console.log('GLFee=='+record[k].Value);
-                                    console.log('OCIP val=='+OCIPVal);
                                     record[k].Value = parseFloat(OCIPVal).toFixed(2);
                                 }
                             }
 
-                            // console.log('workrsCompFee val=='+workrsCompFee);
                             if (record[k].Key == "buildertek__Extended_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'Work Comp' &&
                                 workrsCompFee != null && workrsCompFee != undefined) {
                                 console.log('workrsCompFee val=='+workrsCompFee);
@@ -2227,11 +2266,9 @@
 
                 var state = response.getState();
                 if (state === "SUCCESS") {
-                    // console.log('Success---', response.getReturnValue());
-
-
+                    console.log('Success---');
                 } else {
-                    // console.log('@@Not Success');
+                    console.log('@@Not Success');
 
                 }
 

@@ -172,7 +172,7 @@
                                                 <div class="slds-form-element__control">
                                                     <!-- <span style="font-weight:bold;color: #444444;">SIGNATURE(Not Required)</span> -->
                                                     <label class="slds-form-element__label"
-                                                        style="font-weight:bold;color: #444444;"> SIGNATURE</label>
+                                                        style="font-weight:bold;color: #444444;">Test SIGNATURE</label>
                                                 </div>
                                             </div>
                                         </div>

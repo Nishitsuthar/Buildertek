@@ -32,7 +32,7 @@ public with sharing class BT_LightningTreeItemController {
         
         // Title field
         String titleFieldName = node.titleFieldName;
-        
+        System.debug('titleFieldName>>>'+titleFieldName);
         // Query string
         String nodeFilterCondition = node.nodeQuery;
         

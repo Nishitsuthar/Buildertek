@@ -667,6 +667,7 @@
 
     },
     handleBTAdmin: function(component, event, helper) {
+        console.log('<--handleBTAdmin-->');
         component.set('v.isLoading', true);
         var BOMID = component.get("v.recordId");
         var action = component.get("c.getBTAdminRecorDetails");
@@ -786,6 +787,7 @@
             }
 
         });
+        $A.get('e.force:refreshView').fire();
         $A.enqueueAction(action);
         // }
 

@@ -585,13 +585,13 @@ public with sharing class BT_EditExtendedCostController
                                 if(wrapperList[0].productRate != null && 
                                 wrapperList[0].extendedCostVal != null && wrapperList[0].proposalAmountVal != null)
                                 {
-                                    // rate = wrapperList[0].productRate;
+                                    rate = wrapperList[0].productRate;
                                     rateValue = wrapperList[0].extendedCostVal;
                                     proposalAmount = wrapperList[0].proposalAmountVal;
                                 }
                             }
 
-                            // extendedCost = getExtendedCostFromDB(texturaFeeId,recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Textura_Fee__c,Decimal.valueOf(1));
+                            extendedCost = getExtendedCostFromDB(texturaFeeId,recList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Textura_Fee__c,Decimal.valueOf(1));
                         }
                         System.debug('rate-->'+rate);
                         row.add(new fieldWrap('Proposal Amount',proposalAmount,false));

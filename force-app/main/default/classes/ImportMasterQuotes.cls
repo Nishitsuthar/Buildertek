@@ -49,37 +49,33 @@ public with sharing class ImportMasterQuotes {
         try{
             List<buildertek__Quote_Item__c> quoteItemList;
             if(Schema.sObjectType.buildertek__Quote_Item__c.fields.Id.isAccessible()&&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.Name.isAccessible() &&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Cost_Code__c.isAccessible() &&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Additional_Discount__c.isAccessible() &&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Description__c.isAccessible() &&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Applied_Markup__c.isAccessible() &&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Grouping__c.isAccessible() &&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isAccessible() &&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Product__c.isAccessible() &&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quantity__c.isAccessible() &&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Unit_Cost__c.isAccessible() &&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Unit_Price__c.isAccessible() &&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__UOM__c.isAccessible() &&
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Vendor__c.isAccessible() && 
-          Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quote__c.isAccessible()){
-                                                quoteItemList= [SELECT Id,
-                                                                Name,
-                                                                buildertek__Cost_Code__c,
-                                                                buildertek__Additional_Discount__c,
-                                                                buildertek__Description__c,
-                                                                buildertek__Applied_Markup__c,
-                                                                buildertek__Grouping__c,
-                                                                buildertek__Markup__c,
-                                                                buildertek__Product__c,
-                                                                buildertek__Quantity__c,
-                                                                buildertek__Unit_Cost__c,
-                                                                buildertek__Unit_Price__c,
-                                                                buildertek__UOM__c,
-                                                                buildertek__Vendor__c
-                                                                FROM buildertek__Quote_Item__c
-                                                                WHERE buildertek__Quote__c IN: quoteIds]; 
-             }                                     
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.Name.isAccessible() &&
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Cost_Code__c.isAccessible() &&
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Additional_Discount__c.isAccessible() &&
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Description__c.isAccessible() &&
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Applied_Markup__c.isAccessible() &&
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Grouping__c.isAccessible() &&
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isAccessible() &&
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Product__c.isAccessible() &&
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quantity__c.isAccessible() &&
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Unit_Cost__c.isAccessible() &&
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Unit_Price__c.isAccessible() &&
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__UOM__c.isAccessible() &&
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Vendor__c.isAccessible() && 
+                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quote__c.isAccessible()){
+                        quoteItemList= [SELECT Id, Name, buildertek__Cost_Code__c, buildertek__Additional_Discount__c,
+                                        buildertek__Description__c, buildertek__Applied_Markup__c, buildertek__Grouping__c,
+                                        buildertek__Markup__c, buildertek__Product__c, buildertek__Quantity__c, buildertek__Unit_Cost__c,
+                                        buildertek__Unit_Price__c, buildertek__UOM__c, buildertek__Vendor__c, buildertek__Quote__c, 
+                                        buildertek__Quote__r.buildertek__Memo__c, buildertek__Quote__r.buildertek__Email_Body__c, 
+                                        buildertek__Quote__r.buildertek__Section_I__c, buildertek__Quote__r.buildertek__Section_II__c, 
+                                        buildertek__Quote__r.buildertek__Section_III__c, buildertek__Quote__r.buildertek__Section_IV__c, 
+                                        buildertek__Quote__r.buildertek__Section_V__c, buildertek__Quote__r.buildertek__Section_VI__c, 
+                                        buildertek__Quote__r.buildertek__Section_VII__c, buildertek__Quote__r.buildertek__Section_VIII__c, 
+                                        buildertek__Quote__r.buildertek__Section_X__c, buildertek__Quote__r.buildertek__Section_IX__c, 
+                                        buildertek__Quote__r.buildertek__Footer__c FROM buildertek__Quote_Item__c WHERE buildertek__Quote__c IN: quoteIds]; 
+            } 
+
             List<buildertek__Master_Quote_Item__c> masterQuoteItemList;
             if(Schema.sObjectType.buildertek__Master_Quote_Item__c.fields.Id.isAccessible()&&
                 Schema.sObjectType.buildertek__Master_Quote_Item__c.fields.Name.isAccessible()&&
@@ -93,26 +89,17 @@ public with sharing class ImportMasterQuotes {
                 Schema.sObjectType.buildertek__Master_Quote_Item__c.fields.buildertek__Quantity__c.isAccessible()&&
                 Schema.sObjectType.buildertek__Master_Quote_Item__c.fields.buildertek__Unit_Cost__c.isAccessible() &&
                 Schema.sObjectType.buildertek__Master_Quote_Item__c.fields.buildertek__Unit_Price__c.isAccessible() &&
-                 Schema.sObjectType.buildertek__Master_Quote_Item__c.fields.buildertek__UOM__c.isAccessible() &&
+                Schema.sObjectType.buildertek__Master_Quote_Item__c.fields.buildertek__UOM__c.isAccessible() &&
                 Schema.sObjectType.buildertek__Master_Quote_Item__c.fields.buildertek__Vendor__c.isAccessible() && 
                 Schema.sObjectType.buildertek__Master_Quote_Item__c.fields.buildertek__Master_Quote__c.isAccessible()){ 
-                masterQuoteItemList= [SELECT Id,
-                                        Name,
-                                        buildertek__Cost_Code__c,
-                                        buildertek__Additional_Discount__c,
-                                        buildertek__Description__c,
-                                        buildertek__Applied_Markup__c,
-                                        buildertek__Quote_Line_Group__c,
-                                        buildertek__Markup__c,
-                                        buildertek__Product__c,
-                                        buildertek__Quantity__c,
-                                        buildertek__Unit_Cost__c,
-                                        buildertek__Unit_Price__c,
-                                        buildertek__UOM__c,
-                                        buildertek__Vendor__c
-                                        FROM buildertek__Master_Quote_Item__c
-                                        WHERE buildertek__Master_Quote__c IN: quoteIds];                                                     
-                }
+                        masterQuoteItemList= [SELECT Id, Name, buildertek__Cost_Code__c, buildertek__Additional_Discount__c,
+                                                buildertek__Description__c, buildertek__Applied_Markup__c, buildertek__Quote_Line_Group__c,
+                                                buildertek__Markup__c, buildertek__Product__c, buildertek__Quantity__c, buildertek__Unit_Cost__c,
+                                                buildertek__Unit_Price__c, buildertek__UOM__c, buildertek__Vendor__c, buildertek__Master_Quote__c, 
+                                                buildertek__Master_Quote__r.buildertek__Email_Body__c FROM buildertek__Master_Quote_Item__c
+                                                WHERE buildertek__Master_Quote__c IN: quoteIds];                                                     
+            }
+
             List<buildertek__Quote_Item__c> quoteItemToInsertList =  new List<buildertek__Quote_Item__c>();
             buildertek__Quote_Line_Group__c quoteGroup;
             if(Schema.sObjectType.buildertek__Quote_Line_Group__c.fields.Id.isAccessible()&&
@@ -185,11 +172,30 @@ public with sharing class ImportMasterQuotes {
                     insert quoteItemToInsertList;
         			}
 
+                    buildertek__Quote__c quote = [SELECT Id, Name, buildertek__Memo__c, buildertek__Email_Body__c, buildertek__Section_I__c, 
+                                                    buildertek__Section_II__c, buildertek__Section_III__c, buildertek__Section_IV__c, buildertek__Section_V__c, 
+                                                    buildertek__Section_VI__c, buildertek__Section_VII__c, buildertek__Section_VIII__c, buildertek__Section_X__c, 
+                                                    buildertek__Section_IX__c, buildertek__Footer__c FROM buildertek__Quote__c WHERE Id =:recordId];
+
                     if(!quoteItemList.isEmpty()){
-
+                        quote.buildertek__Memo__c = quoteItemList[0].buildertek__Quote__r.buildertek__Memo__c;
+                        quote.buildertek__Email_Body__c = quoteItemList[0].buildertek__Quote__r.buildertek__Email_Body__c;
+                        quote.buildertek__Section_I__c = quoteItemList[0].buildertek__Quote__r.buildertek__Section_I__c;
+                        quote.buildertek__Section_II__c = quoteItemList[0].buildertek__Quote__r.buildertek__Section_II__c;
+                        quote.buildertek__Section_III__c = quoteItemList[0].buildertek__Quote__r.buildertek__Section_III__c;
+                        quote.buildertek__Section_IV__c = quoteItemList[0].buildertek__Quote__r.buildertek__Section_IV__c;
+                        quote.buildertek__Section_V__c = quoteItemList[0].buildertek__Quote__r.buildertek__Section_V__c;
+                        quote.buildertek__Section_VI__c = quoteItemList[0].buildertek__Quote__r.buildertek__Section_VI__c;
+                        quote.buildertek__Section_VII__c = quoteItemList[0].buildertek__Quote__r.buildertek__Section_VII__c;
+                        quote.buildertek__Section_VIII__c = quoteItemList[0].buildertek__Quote__r.buildertek__Section_VIII__c;
+                        quote.buildertek__Section_X__c = quoteItemList[0].buildertek__Quote__r.buildertek__Section_X__c;
+                        quote.buildertek__Section_IX__c = quoteItemList[0].buildertek__Quote__r.buildertek__Section_IX__c;
+                        quote.buildertek__Footer__c = quoteItemList[0].buildertek__Quote__r.buildertek__Footer__c;
                     } else if(!masterQuoteItemList.isEmpty()) {
-
+                        quote.buildertek__Email_Body__c = masterQuoteItemList[0].buildertek__Master_Quote__r.buildertek__Email_Body__c;
                     }
+                    update quote;
+
                 msg.Status = 'Success';
                 msg.Message = 'Quote Lines Imported Successfully';
             }else{

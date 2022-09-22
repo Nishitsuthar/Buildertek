@@ -86,6 +86,7 @@
                         }).format(sumOfSelectedItems);
                         component.set('v.sumOfSelectedItems', total);
                         var rootNodes = component.get('v.rootNodes');
+                        console.log({rootNodes});
                         for (var i = 0; i < rootNodes.length; i++) {
                             if (rootNodes[i].children != undefined) {
                                 for (var j = 0; j < rootNodes[i].children.length; j++) {

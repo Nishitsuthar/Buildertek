@@ -1,12 +1,9 @@
 <aura:component controller="QuoteController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global" >
-	<aura:attribute name="quotedefaultvalues" type="List"/>
-    <aura:attribute name="billingcountry" type="string"/>
-    <aura:attribute name="Spinner" type="Boolean" default="false"/>
-    <!--<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:handler event="aura:doneRendering" action="{!c.doneRendering}"/>-->
+    
     <aura:html tag="style">
         .slds-modal__content {
             overflow: hidden !important;
+            height: auto !important;
         }
         .slds-modal__close{
             display:block !important;    
@@ -40,7 +37,7 @@
             </div>
              <footer role="contentinfo" class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;">
                 <button class="slds-button slds-button--neutral" style="min-width: 100px;" onclick="{!c.closeModal}"> Cancel </button>
-                <button class="slds-button slds-button--brand" style="min-width: 100px;" onclick="{!c.doInit}"> Yes </button>
+                <button class="slds-button slds-button--brand" style="min-width: 100px;" onclick="{!c.createNewQuote}"> Yes </button>
             </footer>
         </div>
     </div>

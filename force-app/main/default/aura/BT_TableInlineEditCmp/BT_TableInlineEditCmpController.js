@@ -321,16 +321,17 @@
                     }
                 }
                 console.log('Slab Discount Positive dataList--',dataList);
-            }else{
-                console.log('buildertek__Slab_Discount_Rate_LongText__c if');
-                for (var i = 0; i < dataList.length; i++) 
-                {
-                    if (dataList[i].label == 'Percentage To Apply') 
-                    {
-                        dataList[i].value = 0;
-                    }
-                }
             }
+            // else{
+            //     console.log('buildertek__Slab_Discount_Rate_LongText__c if');
+            //     for (var i = 0; i < dataList.length; i++) 
+            //     {
+            //         if (dataList[i].label == 'Percentage To Apply') 
+            //         {
+            //             dataList[i].value = 0;
+            //         }
+            //     }
+            // }
         }
         if(fieldName != null && fieldName != undefined && fieldName == 'buildertek__Tax__c')
         {

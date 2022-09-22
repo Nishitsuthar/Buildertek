@@ -129,6 +129,8 @@
                 }
                 component.set("v.lazy", false);
                 console.log('getChildNodes :: ' + JSON.stringify(response.getReturnValue()));
+                var c = response.getReturnValue();
+                console.log({c});
             }
         });
         $A.enqueueAction(getChildNodesAction);

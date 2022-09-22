@@ -1368,7 +1368,8 @@ global with sharing class BT_TreeRemotingModel{
 				node.userData.objSelectedRecord = obj;
 
 				if (objectType.equalsIgnoreCase('buildertek__Section__c')){
-					node.title = (String)obj.get('Title__c');
+					// node.title = (String)obj.get('Title__c');
+					node.title = (String)obj.get('Name');
 					if (obj.get('Total_Options__c') != null){
 						node.userData.totalOptions = String.valueOf(Integer.valueOf((Double)obj.get('Total_Options__c')));
 					} else{
