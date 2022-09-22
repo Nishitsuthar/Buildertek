@@ -538,6 +538,7 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
     public PageReference uploadSignature(){
         
         transient Date nowDT = Date.today();
+        System.debug('Check Debug log ==> '+nowDT);
         customerAcceptedDate = String.valueOf(DateTime.now());
         ContentVersion conVer = new ContentVersion();
         conVer.ContentLocation = 'S'; // to use S specify this document is in Salesforce, to use E for external files
@@ -593,6 +594,8 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                 } else{
                     porec.buildertek__Customer_Accepted_Date__c = nowDT;
                     porec.buildertek__Rejection_Reason__c = '';
+                    porec.buildertek__Status__c = 'Vendor Accepted';
+                    porec.buildertek__Date_Confirmed__c = Date.today();
                 }
                 update porec;
             }
