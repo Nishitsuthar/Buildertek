@@ -273,7 +273,7 @@
                             <aura:iteration items="{!rec.poRecInner}" var="record" indexVar="index"> 
 
                                     <aura:if isTrue="{!record.poRecord.Id != null}">
-                                       <aura:if isTrue="{! (record.poRecord.buildertek__Status__c == 'Ordered' || record.poRecord.buildertek__Status__c == 'Canceled' || record.poRecord.buildertek__Status__c == 'Paid' || record.poRecord.buildertek__Status__c == 'Partially Paid')}">
+                                       <aura:if isTrue="{! (record.poRecord.buildertek__Status__c == 'Ordered' || record.poRecord.buildertek__Status__c == 'Canceled' || record.poRecord.buildertek__Status__c == 'Paid' || record.poRecord.buildertek__Status__c == 'Partially Paid') || record.poRecord.buildertek__Status__c == 'Vendor Accepted' }">
                                             <tr class="slds-hint-parent orderedRow">
                                                 <td class="firstCol" >
                                                     <lightning:icon class = "expand-icon" size="x-small" value="{!recordIndex}" onclick="{!c.toggle}" title = "{!index+'_'+groupIndex}" iconName="{!record.expanded?'utility:chevrondown':'utility:chevronright'}" />

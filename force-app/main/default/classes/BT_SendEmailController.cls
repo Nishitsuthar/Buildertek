@@ -403,8 +403,10 @@ public with sharing class BT_SendEmailController{
                 body = body;
             }
               if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Permit__c'){
+                buildertek__Permit__c permit = new buildertek__Permit__c(); 
+                permit = [SELECT Id,Name from buildertek__Permit__c where Id =:recordId];
                 //mail.setTemplateId(templateId);
-                subject = subject + ' - [ref:' + recordId + ']';
+                subject = subject + permit.Name +' - [ref:' + recordId + ']';
                 body = body;
             }
             if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Contract__c'){
