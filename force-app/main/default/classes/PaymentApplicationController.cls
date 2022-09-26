@@ -12,6 +12,7 @@ public  without sharing class PaymentApplicationController {
     public Decimal ADDITIONS{get;set;}
     public Decimal DEDUCTIONS{get;set;}
     public Decimal NETCHANGES{get;set;}
+    public Decimal retainageValue{get;set;}
     
     public String CurrencyCode{get;set;}
     
@@ -90,6 +91,13 @@ public  without sharing class PaymentApplicationController {
                     ded2=paymentApp.buildertek__Change_Order_Decuctions__c;
                 }
                 System.debug('ded2---------------------'+ded2);   
+                if(paymentApp.buildertek__Retainage__c==null){
+                    retainageValue=0;
+                }else{
+                    retainageValue=paymentApp.buildertek__Retainage__c;
+                }
+                System.debug('retainageValue---------------------'+retainageValue);   
+                
                 ADDITIONS= add1+add2;
                 
                 DEDUCTIONS=ded1+ded2;

@@ -4,7 +4,7 @@
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
     <aura:attribute name="contentDocsList" type="List" />
 
-    <lightning:card title="Product Files">
+    <lightning:card title="Option Images">
         <div class="slds-m-around_medium" style="display: flex; overflow: auto;">
             <aura:iteration items="{!v.contentDocsList}" var="item">
                 <div class="slds-m-horizontal_x-small">

@@ -214,52 +214,87 @@
                             </aura:if>
                             <!-- {!record.expanded?'background:#c2c2c2':'background:#fff'} -->
                             <aura:iteration items="{!rec.poRecInner}" var="record" indexVar="index"> 
-                                <tr class="slds-hint-parent" style="background: linear-gradient(to bottom, #fff 0%, #fff 100%);">
-                                    
-                                    <aura:if isTrue="{!record.poRecord.Id != null}">
-                                        
-                                        <td class="firstCol" >
-                                            <lightning:icon class = "expand-icon" size="x-small" value="{!recordIndex}" onclick="{!c.toggle}" title = "{!index+'_'+groupIndex}" iconName="{!record.expanded?'utility:chevrondown':'utility:chevronright'}" />
-                                        </td>
 
-                                       <aura:if isTrue="{!record.poRecord.buildertek__Status__c == 'Ordered'}">
+                            
+
+                                <aura:if isTrue="{!record.poRecord.Id != null}">
+                                       <aura:if isTrue="{! (record.poRecord.buildertek__Status__c == 'Ordered' || record.poRecord.buildertek__Status__c == 'Canceled' || record.poRecord.buildertek__Status__c == 'Paid' || record.poRecord.buildertek__Status__c == 'Partially Paid') || record.poRecord.buildertek__Status__c == 'Vendor Accepted' }">
+                                        <tr class="slds-hint-parent" style="background: linear-gradient(to bottom, #e2e2e2 0%, #e2e2e2 100%);">
+
+                                            <td class="firstCol" >
+                                                <lightning:icon class = "expand-icon" size="x-small" value="{!recordIndex}" onclick="{!c.toggle}" title = "{!index+'_'+groupIndex}" iconName="{!record.expanded?'utility:chevrondown':'utility:chevronright'}" />
+                                            </td>
+
                                             <td> </td> 
+
+                                            <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Vendor__r.Name}" >
+                                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ record.poRecord.buildertek__Vendor__c + '/view'}" target="_blank" label="{!record.poRecord.buildertek__Vendor__r.Name}" />
+                                            </td>
+                                            
+                                            <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Phase__c}" >
+                                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ record.poRecord.Id + '/view'}" target="_blank" label="{!record.poRecord.Name}" />
+                                            </td>
+                                            
+                                            <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Status__c}">
+                                                <ui:outputText value="{!record.poRecord.buildertek__Status__c}" />  
+                                            </td> 
+                                            
+                                            <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Project__c}" >
+                                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ record.poRecord.buildertek__Project__c + '/view'}" target="_blank" label="{!record.poRecord.buildertek__Project__r.Name}" />
+                                            </td> 
+                                            
+                                            <td> </td>
+                                            <td> </td>
+
+                                        </tr>
                                             <aura:set attribute="else">
-                                                <aura:if isTrue="{!or(record.poRecord.buildertek__Status__c == 'Paid' , record.poRecord.buildertek__Status__c == 'Partially Paid')}">
-                                                    <td> </td> 
-                                                    <aura:set attribute="else">
-                                                        <td> 
-                                                            <lightning:input aura:id="checkContractor" type="checkbox" checked="{record.poCheck}" name="{!record.poRecord.Id}" id="{!index+'_'+groupIndex}" onchange="{!c.handleCheck}"/>
-                                                        </td>
-                                                    </aura:set>
-                                                </aura:if> 
+                                                <tr class="slds-hint-parent" style="background: linear-gradient(to bottom, #fff 0%, #fff 100%);">
+                                    
+                                                    <td class="firstCol" >
+                                                        <lightning:icon class = "expand-icon" size="x-small" value="{!recordIndex}" onclick="{!c.toggle}" title = "{!index+'_'+groupIndex}" iconName="{!record.expanded?'utility:chevrondown':'utility:chevronright'}" />
+                                                    </td>
+            
+                                                    <aura:if isTrue="{!record.poRecord.buildertek__Status__c == 'Ordered'}">
+                                                        <td> </td> 
+                                                        <aura:set attribute="else">
+                                                            <aura:if isTrue="{!or(record.poRecord.buildertek__Status__c == 'Paid' , record.poRecord.buildertek__Status__c == 'Partially Paid')}">
+                                                                <td> </td> 
+                                                                <aura:set attribute="else">
+                                                                    <td> 
+                                                                        <lightning:input aura:id="checkContractor" type="checkbox" checked="{record.poCheck}" name="{!record.poRecord.Id}" id="{!index+'_'+groupIndex}" onchange="{!c.handleCheck}"/>
+                                                                    </td>
+                                                                </aura:set>
+                                                            </aura:if> 
+                                                        </aura:set>
+                                                    </aura:if>
+            
+                                                    <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Vendor__r.Name}" >
+                                                        <ui:outputURL value="{!'/one/one.app?#/sObject/'+ record.poRecord.buildertek__Vendor__c + '/view'}" target="_blank" label="{!record.poRecord.buildertek__Vendor__r.Name}" />
+                                                    </td>
+                                                    
+                                                    <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Phase__c}" >
+                                                        <ui:outputURL value="{!'/one/one.app?#/sObject/'+ record.poRecord.Id + '/view'}" target="_blank" label="{!record.poRecord.Name}" />
+                                                    </td>
+                                                    
+                                                    <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Status__c}">
+                                                        <ui:outputText value="{!record.poRecord.buildertek__Status__c}" />  
+                                                    </td> 
+                                                    
+                                                    <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Project__c}" >
+                                                        <ui:outputURL value="{!'/one/one.app?#/sObject/'+ record.poRecord.buildertek__Project__c + '/view'}" target="_blank" label="{!record.poRecord.buildertek__Project__r.Name}" />
+                                                    </td> 
+                                                    
+                                                    <td> </td>
+                                                    <td> </td>
+                                                        
+                                                </tr>
                                             </aura:set>
                                         </aura:if>
-
-                                        <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Vendor__r.Name}" >
-                                            <ui:outputURL value="{!'/one/one.app?#/sObject/'+ record.poRecord.buildertek__Vendor__c + '/view'}" target="_blank" label="{!record.poRecord.buildertek__Vendor__r.Name}" />
-                                        </td>
-                                        
-                                        <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Phase__c}" >
-                                            <ui:outputURL value="{!'/one/one.app?#/sObject/'+ record.poRecord.Id + '/view'}" target="_blank" label="{!record.poRecord.Name}" />
-                                        </td>
-                                        
-                                        <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Status__c}">
-                                            <ui:outputText value="{!record.poRecord.buildertek__Status__c}" />  
-                                        </td> 
-                                        
-                                        <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Project__c}" >
-                                            <ui:outputURL value="{!'/one/one.app?#/sObject/'+ record.poRecord.buildertek__Project__c + '/view'}" target="_blank" label="{!record.poRecord.buildertek__Project__r.Name}" />
-                                        </td> 
-                                        
-                                        <td> </td>
-                                        <td> </td>
-                                        
                                         <aura:set attribute="else">
                                             <div Style="text-align : center; font-size: 1.2rem;"> There is No Purchase order  </div>
                                         </aura:set>
                                     </aura:if>
-                                </tr>
+
                                 <aura:if isTrue="{!record.expanded}">
 
                                     

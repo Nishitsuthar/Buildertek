@@ -571,7 +571,7 @@ public with sharing class BT_EditExtendedCostController
                         row.add(new fieldWrap('Id',texturaFeeId,false));
                         row.add(new fieldWrap('Single Extended Cost','',false));
                         
-                        String rate = '3750.00';
+                        String rate = '3500.00';
                         String rateValue = '';
                         String proposalAmount = '';
                         String extendedCost = '';

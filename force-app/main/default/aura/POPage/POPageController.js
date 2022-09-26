@@ -952,12 +952,10 @@
 			if(Submittals[i].poRecInner != null){
 				for(var j=0;j<Submittals[i].poRecInner.length;j++){
 					if(Submittals[i].poRecInner[j].poLinesWrapper != null){
-						if(Submittals[i].poRecInner[j].poLinesWrapper != null){
-							for(var k=0;k<Submittals[i].poRecInner[j].poLinesWrapper.length;k++){
-								if (i+'-'+j+'-'+k == id) {
-									Submittals[i].poRecInner[j].poLinesWrapper[k].poLineCheck = !Submittals[i].poRecInner[j].poLinesWrapper[k].poLineCheck;
-								} 
-							}
+						for(var k=0;k<Submittals[i].poRecInner[j].poLinesWrapper.length;k++){
+							if (j+'-'+i+'-'+k == id) {
+								Submittals[i].poRecInner[j].poLinesWrapper[k].poLineCheck = !Submittals[i].poRecInner[j].poLinesWrapper[k].poLineCheck;
+							} 
 						}
 					}
 				}

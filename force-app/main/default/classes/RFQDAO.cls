@@ -222,9 +222,10 @@ Throws [Exceptions]: NA
             accIds.add(acc.Id);
         }
         
+        buildertek__RFQ__c rfq = [SELECT Id, Name FROM buildertek__RFQ__c WHERE Id =: rfqId];
         for (string vendorId : vendorIds){
             RFQ_To_Vendor__c rfqVendor = new RFQ_To_Vendor__c();
-            rfqVendor.Name = vendors.get(vendorId).Name;
+            rfqVendor.Name = rfq.Name;
             rfqVendor.Vendor__c = vendorId;
             rfqVendor.RFQ__c = rfqId; 
             rfqVendors.add(rfqVendor);

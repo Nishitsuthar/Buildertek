@@ -33,7 +33,7 @@ trigger BOMLineTrigger on Select_Sheet__c (after insert,after update)
                     glilStr += (glilStr != '' ? ',' : '') + '{\"singleExtendedCostVal\":null,\"proposalAmountVal\":null,\"productRate\":\"1.01\",\"percentageVal\":null,\"installCostVal\":null,\"extendedCostVal\":null,\"denominatorVal\":\"1000\",\"bomLineId\":"'+thisBOMLine.Id+'\",\"adjustedCost\":null}';
 
                     if(thisBOMLine.Takeoff_Line__r.Product_Code__c == '69201198')
-                    tfStr += (tfStr != '' ? ',' : '') + '{\"singleExtendedCostVal\":null,\"proposalAmountVal\":null,\"productRate\":\"0.0022\",\"percentageVal\":null,\"installCostVal\":null,\"extendedCostVal\":null,\"denominatorVal\":null,\"bomLineId\":"'+thisBOMLine.Id+'\",\"adjustedCost\":null}';
+                    tfStr += (tfStr != '' ? ',' : '') + '{\"singleExtendedCostVal\":null,\"proposalAmountVal\":null,\"productRate\":\"3500.00\",\"percentageVal\":null,\"installCostVal\":null,\"extendedCostVal\":null,\"denominatorVal\":null,\"bomLineId\":"'+thisBOMLine.Id+'\",\"adjustedCost\":null}';
 
                     if(thisBOMLine.Takeoff_Line__r.TL_SERVICE_CATEGORY__c == 'Work Comp')
                     wcStr += (wcStr != '' ? ',' : '') + '{\"singleExtendedCostVal\":\"\",\"proposalAmountVal\":null,\"productRate\":null,\"percentageVal\":null,\"installCostVal\":null,\"extendedCostVal\":null,\"denominatorVal\":\"100\",\"bomLineId\":"'+thisBOMLine.Id+'\",\"adjustedCost\":null}';

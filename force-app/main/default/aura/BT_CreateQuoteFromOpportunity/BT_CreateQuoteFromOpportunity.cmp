@@ -31,13 +31,13 @@
                                 </div>
                             </div>
                         </aura:if>   
-                        <h2 style="font-size:17px;"><center>You want to create Quote</center></h2>
+                        <h2 style="font-size:17px;"><center>Do you want to create a new Quote?</center></h2>
                     </div>
                 </div>
             </div>
              <footer role="contentinfo" class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;">
-                <button class="slds-button slds-button--neutral" style="min-width: 100px;" onclick="{!c.closeModal}"> Cancel </button>
-                <button class="slds-button slds-button--brand" style="min-width: 100px;" onclick="{!c.createNewQuote}"> Yes </button>
+                <button class="slds-button slds-button--neutral" onclick="{!c.closeModal}"> Cancel </button>
+                <button class="slds-button slds-button--brand" onclick="{!c.createNewQuote}"> Yes </button>
             </footer>
         </div>
     </div>

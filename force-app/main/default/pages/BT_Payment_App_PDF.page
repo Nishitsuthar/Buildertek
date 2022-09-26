@@ -261,9 +261,9 @@ Balfour Beatty Construction3100 McKinnon StreetDallas, Texas 75201
                                 <td width="100%" align="left">
                                     <div class="a" style="font-size:10.5px">
                                         5. HOLDBACK:<br/>
-                                        <div style="margin-left:20px">a. ___10 % of Completed Work</div><br/>
+                                        <div style="margin-left:20px">a.{!retainageValue} % of Completed Work</div><br/>
                                         <div style="margin-left:30px">(Column D + E on G703)</div>
-                                        <div style="margin-left:20px">b. ___10 % of Stored Material</div><br/>
+                                        <div style="margin-left:20px">b. Stored Material</div><br/>
                                         <div style="margin-left:30px">(Column F on G703)</div>
                                          <div style="margin-left:30px">Total Retainage (Lines 5a + 5b or Total in Column I of G703)</div>
                                     </div> 

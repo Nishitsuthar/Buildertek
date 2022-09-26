@@ -105,8 +105,8 @@
     <div style="font-family: 'Poppins', sans-serif;">
         <div class="wrapper">
             <c:BT_Message aura:id="infoMessage" type="info" message="{!reviewInfoMessage}" />
-            <header style="background: #1b5297;padding: 11px 20px;">
-                <div class="left-box" style="display: inline-block;vertical-align: middle;width: 15%;">
+            <header style="background: #1b5297;padding: 11px 5px 11px 15px;">
+                <div class="left-box" style="display: inline-block;vertical-align: middle;width: 20%;">
                     <div style="display:flex;">
                         <ui:inputCheckbox aura:id="checkAllRFQs" change="{!c.selectAll}" class="checkAllStyle" />
                         <td style="margin-top: 0px;margin-right: 5px;"
@@ -129,7 +129,7 @@
                     </div>
                 </div>
                 <div class="right-box"
-                     style="display: inline-block;vertical-align: middle;width: 85%;margin-left:-5px;">
+                     style="display: inline-block;vertical-align: middle;width: 80%;margin-left:-5px;">
                     <ul
                         style="padding-left: 0;margin:0;background: #fff;border-radius: 3px;float: right;border: 1px solid #ccc;">
                         

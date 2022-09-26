@@ -1,6 +1,6 @@
 public class deleteRec {
     public static void deleterec(){
-        buildertek__Quote_Item__c[] d=[select id,Name from buildertek__Quote_Item__c where Name='Check Opportunity 24" coil'];
+        buildertek__Quote__c[] d=[select id,buildertek__Status__c from buildertek__Quote__c where buildertek__Status__c='Draft'];
         delete d;
         System.debug('success');
     }

@@ -21,7 +21,7 @@
 		$A.enqueueAction(action);		
     },
 	getdata: function (component, event, helper, isDelete) {
-        debugger;
+        // debugger;
 		var rfq, actionRfqConfig, navigateToStep, rfqToVendorList, config, actionRfqToVendorList;
 		actionRfqToVendorList = component.get("c.getRfqToVendors");
 		actionRfqToVendorList.setParams({

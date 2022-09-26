@@ -393,6 +393,7 @@
 .THIS .checkAllStyle {
     margin-top: 5px;
     margin-right: 20px;
+    min-width: 1rem;
 }
 .THIS.hideDiv {
     display: none;

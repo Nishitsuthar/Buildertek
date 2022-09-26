@@ -1,59 +1,46 @@
 public with sharing class QuoteController {
-     @AuraEnabled
+    @AuraEnabled
     public static string createQuote(String recordId) {
         
-        try {
-         //   OpportunityLineItem oppLine=new OpportunityLineItem();
-            List<OpportunityLineItem> oppList=[select id,Name,TotalPrice,Quantity from OpportunityLineItem where OpportunityId=:recordId];
-            System.debug('OpportunityLineItem====>' + oppList);
-            Decimal unitPrice;
-            if(oppList[0].TotalPrice != NULL && oppList[0].Quantity != Null)
-            {
-            	unitPrice=oppList[0].TotalPrice/oppList[0].Quantity;
-                System.debug('UnitPrice===>'+unitPrice);
-            }
-            Opportunity opp = [Select Id,
-                               		  Name,
-                               		  AccountId, 
-                               		  Account.Name,
-                               		  Account.Billingcity,
-                               		  Account.Billingstate,
-                               		  Account.Billingcountry,
-                               		  Account.Billingstreet,
-                               		  Account.buildertek__Email_Address__c,
-                               		  Account.Phone,
-                               		  Account.Billingpostalcode from Opportunity where Id =: recordId limit 1]; 
+        try {            
+            Opportunity opp = [SELECT Id, Name, AccountId, Account.Name, Account.Billingcity, Account.Billingstate, Account.Billingcountry, Account.Billingstreet, 
+                                Account.buildertek__Email_Address__c, Account.Phone, Account.Billingpostalcode FROM Opportunity WHERE Id =: recordId]; 
             System.debug('Opportunity =>'+opp);
-            ID oppId=opp.Id;
-            buildertek__Quote__c quoteRecord=new buildertek__Quote__c();
-            quoteRecord.buildertek__Opportunity__c=oppId;
-            quoteRecord.Name=opp.Name;    
-            quoteRecord.buildertek__Bill_To_Email_Address__c=opp.Account.buildertek__Email_Address__c;
-            quoteRecord.buildertek__Bill_To_Cell_Phone__c=opp.Account.Phone;
-            quoteRecord.buildertek__Bill_To_Name__c=opp.Account.Name;
-            quoteRecord.buildertek__Bill_To_City__c= opp.Account.Billingcity;
-            quoteRecord.buildertek__Bill_To_Street__c=opp.Account.Billingstreet;
-            quoteRecord.buildertek__Bill_To_Zip_Code__c=opp.Account.Billingpostalcode;
-            System.debug('------unit-----'+unitPrice);
+
+            buildertek__Quote__c quoteRecord = new buildertek__Quote__c();
+            quoteRecord.buildertek__Opportunity__c = opp.Id;
+            quoteRecord.Name = opp.Name;    
+            quoteRecord.buildertek__Status__c = 'Draft';
+            quoteRecord.buildertek__Type__c = 'Standard';
+            quoteRecord.buildertek__Bill_To_Email_Address__c = opp.Account.buildertek__Email_Address__c;
+            quoteRecord.buildertek__Bill_To_Cell_Phone__c = opp.Account.Phone;
+            quoteRecord.buildertek__Bill_To_Name__c = opp.Account.Name;
+            quoteRecord.buildertek__Bill_To_City__c = opp.Account.Billingcity;
+            quoteRecord.buildertek__Bill_To_Street__c = opp.Account.Billingstreet;
+            quoteRecord.buildertek__Bill_To_Zip_Code__c = opp.Account.Billingpostalcode;
+            insert quoteRecord; 
+            System.debug('quoteRecord => '+quoteRecord);
             
-            insert quoteRecord;            
-            
-            List<buildertek__Quote_Item__c> qt=new List<buildertek__Quote_Item__c>();
-            for(integer i=1;i<5;i++){
-                buildertek__Quote_Item__c quoteLine=new buildertek__Quote_Item__c();
-            	ID quoteId=quoteRecord.Id;
-            	quoteLine.buildertek__Quote__c=quoteId;
-            	quoteLine.Name=oppList[0].Name;
-            	quoteLine.buildertek__Unit_Price__c=unitPrice;
-                qt.add(quoteLine);
-            	
-            	System.debug('unitPrice--->'+unitPrice);
-            }
-            insert qt;
-          /*  if(qt.size()>0){
-                insert qt;
-            }*/
-            
+            List<OpportunityLineItem> oppProdList = [SELECT id,Name,TotalPrice,Quantity,ListPrice FROM OpportunityLineItem WHERE OpportunityId=:recordId];
+            System.debug('OpportunityLineItem====>' + oppProdList);
+
+            List<buildertek__Quote_Item__c> quoteItemList=new List<buildertek__Quote_Item__c>();
+           
+            for (OpportunityLineItem prod : oppProdList) {
+                buildertek__Quote_Item__c quoteLine = new buildertek__Quote_Item__c();
+            	quoteLine.buildertek__Quote__c = quoteRecord.Id;
+            	quoteLine.Name = prod.Name;
+                quoteLine.buildertek__Quantity__c = prod.Quantity;
+                quoteLine.buildertek__Unit_Cost__c = prod.ListPrice;
+                if(prod.TotalPrice != null && prod.Quantity != null){
+                    quoteLine.buildertek__Unit_Price__c = prod.TotalPrice/prod.Quantity;
+                }
+                System.debug('quoteLine => '+quoteLine);
+                quoteItemList.add(quoteLine);
+            }            
+            if(quoteItemList.size()>0){
+                insert quoteItemList;
+            }            
             return 'Success';
         }catch (Exception e) {
             System.debug('Error => '+e.getMessage());
