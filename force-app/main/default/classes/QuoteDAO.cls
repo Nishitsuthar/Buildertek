@@ -1904,11 +1904,8 @@ public with sharing class QuoteDAO{
         }else{
             system.debug('elseleseelse');
             if(Ids.size() > 0){
-             productList =  [select id,Name,ProductCode,Description,Family,buildertek__Quote_Group__r.Name,(select UnitPrice,Pricebook2Id,Pricebook2.Name,buildertek__Markup__c,buildertek__Unit_Cost__c,buildertek__Discount__c,IsActive from PricebookEntries where IsActive = True order by CreatedDate ASC )  from Product2 where Id in :Ids ];
-                system.debug('productList--------->'+productList );
-                
-               
-                
+                productList =  [select id,Name,ProductCode,Description,Family,buildertek__Quote_Group__r.Name,(select UnitPrice,Pricebook2Id,Pricebook2.Name,buildertek__Markup__c,buildertek__Unit_Cost__c,buildertek__Discount__c,IsActive from PricebookEntries where IsActive = True order by CreatedDate ASC )  from Product2 where Id in :Ids ];
+                system.debug('productList--------->'+productList );   
             } 
         }
         
@@ -1917,22 +1914,21 @@ public with sharing class QuoteDAO{
         
     @AuraEnabled
     public static List<buildertek__Quote_Item__c> QuoteLinesInsert(List<buildertek__Quote_Item__c> Quotelines,String QuoteId){
-        System.debug('List of records : '+Quotelines);
+        System.debug('Quotelines => '+Quotelines);
         List<buildertek__Quote_Item__c> insertListofQuoteLines = new List<buildertek__Quote_Item__c>();
         for(buildertek__Quote_Item__c qql : Quotelines){
+            System.debug('Record => ' + qql);
             buildertek__Quote_Item__c newQline = new    buildertek__Quote_Item__c();
-            System.debug( qql.buildertek__Grouping__c);
             newQline.Name = qql.Name;
             newQline.buildertek__Product__c = qql.buildertek__Product__c;
             if(qql.buildertek__Unit_Price__c != null){
-                newQline.buildertek__Unit_Price__c = qql.buildertek__Unit_Price__c;
-               
+                newQline.buildertek__Unit_Price__c = qql.buildertek__Unit_Price__c;               
             }
             else{
                 newQline.buildertek__Unit_Price__c = 0;
-               // newQline.buildertek__Unit_Cost__c = 0;
+                // newQline.buildertek__Unit_Cost__c = 0;
             } 
-             newQline.buildertek__Unit_Cost__c = qql.buildertek__Unit_Cost__c;
+            newQline.buildertek__Unit_Cost__c = qql.buildertek__Unit_Cost__c;
             newQline.buildertek__Markup__c = qql.buildertek__Markup__c;
             newQline.buildertek__Additional_Discount__c = qql.buildertek__Additional_Discount__c;
             newQline.buildertek__Grouping__c = qql.buildertek__Grouping__c;   

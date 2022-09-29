@@ -41,7 +41,7 @@ public with sharing class QuoteController {
             if(quoteItemList.size()>0){
                 insert quoteItemList;
             }            
-            return 'Success';
+            return quoteRecord.Id;
         }catch (Exception e) {
             System.debug('Error => '+e.getMessage());
             return 'Error';

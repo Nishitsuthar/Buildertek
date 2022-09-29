@@ -20,7 +20,10 @@
                     } 
                 console.log("Modified : ",y); 
                 component.set("v.templates",response.getReturnValue());
-                component.set("v.selectedTemplate", response.getReturnValue()[0].Id);
+                var objectAPI = component.get("v.objectAPI");
+                if (objectAPI != 'buildertek__Permit__c') {
+                    component.set("v.selectedTemplate", response.getReturnValue()[0].Id);
+                }
             }
         });
         $A.enqueueAction(dbAction);

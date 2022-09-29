@@ -103,6 +103,9 @@
 	        <br/>
 	        <aura:if isTrue="{!v.showTemplate}">
 	            <lightning:select name="templates" label="Select Template" aura:id="template" value="{!v.selectedTemplate}">
+					<aura:if isTrue="{!v.objectAPI == 'buildertek__Permit__c'}">
+						<option text="-- None --" value=""/>
+					</aura:if>
     		        <aura:iteration items="{!v.templates}" var="temp">
     		            <option text="{!temp.Name}" value="{!temp.Id}"/>
     		        </aura:iteration>

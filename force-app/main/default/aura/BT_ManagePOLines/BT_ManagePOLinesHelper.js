@@ -879,665 +879,667 @@
             // console.log('@@dataByGroup FIRST-', allData);
             var map1 = new Map();
             var map2 = new Map();
+            if(allData !=null && allData != undefined){
 
-            for (var i = 0; i < allData.length; i++) {
-
-                var groupedRecords = allData[i].groupedRecordsTmp;
-                var grpData = allData[i].groupData;
-                for (var j = 0; j < grpData.length; j++) {
-                    if (grpData[j].buildertek__Upgrade_Price__c != null) {
-                        bomIdVsUpgradedCost.set(grpData[j].Id, grpData[j].buildertek__Upgrade_Price__c);
+                for (var i = 0; i < allData.length; i++) {
+    
+                    var groupedRecords = allData[i].groupedRecordsTmp;
+                    var grpData = allData[i].groupData;
+                    for (var j = 0; j < grpData.length; j++) {
+                        if (grpData[j].buildertek__Upgrade_Price__c != null) {
+                            bomIdVsUpgradedCost.set(grpData[j].Id, grpData[j].buildertek__Upgrade_Price__c);
+                        }
+                        bomIdVslistPrice.set(grpData[j].Id, grpData[j].buildertek__BL_LIST_PRICE__c);
                     }
-                    bomIdVslistPrice.set(grpData[j].Id, grpData[j].buildertek__BL_LIST_PRICE__c);
-                }
-                // console.log('@@bomIdVsUpgradedCost FIRST-', bomIdVsUpgradedCost);
-                // console.log('@@bomIdVslistPrice FIRST-', bomIdVslistPrice);
-                for (var j = 0; j < groupedRecords.length; j++) {
-                    var record = groupedRecords[j];
-                    var lastindex = record.length - 1;
-
-                    var productCode = '';
-                    var serviceCategory = '';
-                    var sqft = '';
-                    var taxedit;
-                    let quantity = 0;
-                    // var uomString = '';
-
-                    if (grpData[j].buildertek__Takeoff_Line__r != null &&
-                        grpData[j].buildertek__Takeoff_Line__r != undefined &&
-                        /*grpData[j].buildertek__Service_Category__c != null
-                        && grpData[j].buildertek__Service_Category__c != undefined
-                        && grpData[j].buildertek__Service_Category__c != ''*/
-                        grpData[j].buildertek__BL_SERVICE_CATEGORY__c != null &&
-                        grpData[j].buildertek__BL_SERVICE_CATEGORY__c != undefined &&
-                        grpData[j].buildertek__BL_SERVICE_CATEGORY__c != '') {
-                        //  serviceCategory = grpData[j].buildertek__Service_Category__c;
-                        serviceCategory = grpData[j].buildertek__BL_SERVICE_CATEGORY__c;
-                    }
-                    if (grpData[j].buildertek__Product__r != null &&
-                        grpData[j].buildertek__Product__r != undefined &&
-                        grpData[j].buildertek__Product__r.ProductCode != null &&
-                        grpData[j].buildertek__Product__r.ProductCode != undefined &&
-                        grpData[j].buildertek__Product__r.ProductCode != '') {
-                        productCode = grpData[j].buildertek__Product__r.ProductCode;
-                    }
-                    if (grpData[j].buildertek__Takeoff_Line__r != null &&
-                        grpData[j].buildertek__Takeoff_Line__r != undefined &&
-                        grpData[j].buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c != null &&
-                        grpData[j].buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c != undefined &&
-                        grpData[j].buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c != '') {
-                        sqft = grpData[j].buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c;
-                    }
-                    if (grpData[j].buildertek__Quantity__c != null &&
-                        grpData[j].buildertek__Quantity__c != undefined) {
-                        quantity = grpData[j].buildertek__Quantity__c;
-                    }
-                    //  if(grpData[j].buildertek__Tax__c != undefined )
-                    // {
-                    //    taxedit = grpData[j].buildertek__Tax__c;
-                    // }
-                    // if(grpData[j].buildertek__Takeoff_Line__r != null &&
-                    //     grpData[j].buildertek__Takeoff_Line__r != undefined &&
-                    //     grpData[j].buildertek__Takeoff_Line__r.buildertek__UOM_PL__c != null
-                    //     && grpData[j].buildertek__Takeoff_Line__r.buildertek__UOM_PL__c != undefined
-                    //     && grpData[j].buildertek__Takeoff_Line__r.buildertek__UOM_PL__c != '')
-                    // {
-                    //     // uomString = grpData[j].buildertek__Takeoff_Line__r.buildertek__UOM_PL__c;
-                    // }
-                    // console.log('@@sqft-',sqft);
-
-                    //Discount Amount
-                    var extendedcost = 0;
-                    var percentageOnFab = 0;
-                    var properCost = 0;
-                    var markupPercentage = '';
-                    var bomLineId = '';
-                    let grossCost = 0;
-                    let grossLessCost = 0;
-                    let finalExtendedCost = 0;
-                    let totalCost = 0;
-                    let salestax = 0;
-                    
-                    var testo = grpData[j];
-                    console.log('service category--'+testo.buildertek__BL_SERVICE_CATEGORY__c);
-                    console.log('testo===');
-                    console.log({testo});
-                 
-                    var testoId = testo.Id;
-                  
-                    if(map1.size == 0){
-                        
-                        var jsonstring = '';
-                        jsonstring = testo.buildertek__Selection_Sheet_Takeoff__r.buildertek__Options_Rate__c;
-                        var arr = [];
-                        console.log('jsonstring=='+jsonstring);
-                        if(jsonstring != undefined){
-                            console.log('testing');
-                            arr = JSON.parse(jsonstring);
-                        
-                            if(arr.length > 0){
-                                arr.forEach(function (item, index) {
-                                    var test = item;
-                                    map1.set(test.bomLineId, test.taxbvalue);
-
-                                });
-                            }
+                    // console.log('@@bomIdVsUpgradedCost FIRST-', bomIdVsUpgradedCost);
+                    // console.log('@@bomIdVslistPrice FIRST-', bomIdVslistPrice);
+                    for (var j = 0; j < groupedRecords.length; j++) {
+                        var record = groupedRecords[j];
+                        var lastindex = record.length - 1;
+    
+                        var productCode = '';
+                        var serviceCategory = '';
+                        var sqft = '';
+                        var taxedit;
+                        let quantity = 0;
+                        // var uomString = '';
+    
+                        if (grpData[j].buildertek__Takeoff_Line__r != null &&
+                            grpData[j].buildertek__Takeoff_Line__r != undefined &&
+                            /*grpData[j].buildertek__Service_Category__c != null
+                            && grpData[j].buildertek__Service_Category__c != undefined
+                            && grpData[j].buildertek__Service_Category__c != ''*/
+                            grpData[j].buildertek__BL_SERVICE_CATEGORY__c != null &&
+                            grpData[j].buildertek__BL_SERVICE_CATEGORY__c != undefined &&
+                            grpData[j].buildertek__BL_SERVICE_CATEGORY__c != '') {
+                            //  serviceCategory = grpData[j].buildertek__Service_Category__c;
+                            serviceCategory = grpData[j].buildertek__BL_SERVICE_CATEGORY__c;
                         }
-                    }
-
-                    if(map2.size == 0){
-                        // buildertek__Slab_Discount_Rate_LongText__c
-                        var jsonstringslab = '';
-                        jsonstringslab = testo.buildertek__Selection_Sheet_Takeoff__r.buildertek__Slab_Discount_Rate_LongText__c;
-                        var arr = [];
-                        console.log('jsonstringslab=='+jsonstringslab);
-                        if(jsonstringslab != undefined){
-                            console.log('testing');
-                            arr = JSON.parse(jsonstringslab);
-                        
-                            if(arr.length > 0){
-                                arr.forEach(function (item, index) {
-                                    var test = item;
-                                    map2.set(test.bomLineId, test.taxbvalue);
-
-                                });
-                            }
+                        if (grpData[j].buildertek__Product__r != null &&
+                            grpData[j].buildertek__Product__r != undefined &&
+                            grpData[j].buildertek__Product__r.ProductCode != null &&
+                            grpData[j].buildertek__Product__r.ProductCode != undefined &&
+                            grpData[j].buildertek__Product__r.ProductCode != '') {
+                            productCode = grpData[j].buildertek__Product__r.ProductCode;
                         }
-                    }
-
-
-                    for (var k = 0; k < record.length; k++) {
-                        if (record[k].Key == "buildertek__Extended_Cost") {
-                            extendedcost = parseFloat(record[k].Value);
+                        if (grpData[j].buildertek__Takeoff_Line__r != null &&
+                            grpData[j].buildertek__Takeoff_Line__r != undefined &&
+                            grpData[j].buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c != null &&
+                            grpData[j].buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c != undefined &&
+                            grpData[j].buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c != '') {
+                            sqft = grpData[j].buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c;
                         }
-                        var testo1 = record[k];
-                        if (record[k].Key == "Id") {
-                            bomLineId = record[k].Value;
+                        if (grpData[j].buildertek__Quantity__c != null &&
+                            grpData[j].buildertek__Quantity__c != undefined) {
+                            quantity = grpData[j].buildertek__Quantity__c;
                         }
-
-                        if (bomLineId != null && bomLineId != '' && bomIdVsUpgradedCost != null && bomIdVslistPrice != null) {
-                            if (bomIdVsUpgradedCost.has(bomLineId) && bomIdVsUpgradedCost.get(bomLineId) != null) {
-                                properCost = parseFloat(bomIdVsUpgradedCost.get(bomLineId)).toFixed(2);
-                            } else if (bomIdVslistPrice.has(bomLineId) && bomIdVslistPrice.get(bomLineId) != null) {
-                                properCost = parseFloat(bomIdVslistPrice.get(bomLineId)).toFixed(2);
-                            }
-                        }
-
-                        // console.log('#@#@ bomLineId---',bomLineId);
-                        // console.log('#@#@ serviceCategory---',serviceCategory);
-                        // console.log('#@#@ quantity---',quantity);
-                        // console.log('#@#@ properCost---'+properCost+'-----Name---'+record[2].Value);
-                        /* Comment added by Harika, regarding CAES-63 ticket, Date: 09-08-2022*/
-                        //if(serviceCategory == 'Complete')
-                        //{
-                        if (serviceCategory == 'Fab & Install') {
-                            var extendedCOstObj = component.get('v.fabInstallExtndCost');
-
-                            if (extendedCOstObj != null && extendedCOstObj != undefined &&
-                                extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
-                                extendedcost = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
-                            }
-                        } else if (helper.isPresentInSlab(serviceCategory)) {
-                            var discountRateVal = component.get('v.slabDiscountRate');
-                            if (discountRateVal != null && discountRateVal != undefined &&
-                                discountRateVal[bomLineId] != null && discountRateVal[bomLineId] != undefined && discountRateVal[bomLineId] != '') {
-                                slabDiscount = parseFloat(discountRateVal[bomLineId]);
-                                slabDiscount = (slabDiscount * 100).toFixed(2);
-                                // if (slabDiscount == 0 && serviceCategory == 'Slab - Quartz') {
-                                //     slabDiscount = -45.0;
-                                // }
-                            } 
-                            else {
-                                if (serviceCategory == 'Slab - Quartz') {
-                                    slabDiscount = -45.00;
-                                }
-                            }
-                        } else if (serviceCategory == 'Install') {
-                            var extendedCOstObj = component.get('v.installOnlyExtndCost');
-
-                            if (extendedCOstObj != null && extendedCOstObj != undefined &&
-                                extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
-                                extendedcost = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
-                            }
-                        } else if (serviceCategory == 'Fab') {
-                            var extendedCOstObj = component.get('v.fabOnlyExtndCost');
-                            if (extendedCOstObj != null && extendedCOstObj != undefined &&
-                                extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
-                                // extendedcost  = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
-                                percentageOnFab = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
-                            }
-                        } else if (serviceCategory == 'Edge') {
-                            var extendedCOstObj = component.get('v.edgeCost');
-
-                            if (extendedCOstObj != null && extendedCOstObj != undefined &&
-                                extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
-                                extendedcost = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
-                            }
-                        }
-                        /*else if(helper.isNotPresentInSlab(serviceCategory) && serviceCategory != 'Labor' && 
-                                                    serviceCategory != 'Fab' && serviceCategory != 'Edge' &&
-                                                    serviceCategory != 'Install' && serviceCategory != 'Complete' &&
-                                                    serviceCategory != 'Misc' && serviceCategory != 'Option')
-                                            {*/
-                        /* Comment added by Harika, regarding CAES-63 ticket, Date: 09-08-2022*/
-                        else if (helper.isNotPresentInSlab(serviceCategory) && serviceCategory != 'Labor' &&
-                            serviceCategory != 'Fab' && serviceCategory != 'Edge' &&
-                            serviceCategory != 'Install' && serviceCategory != 'Fab & Install' &&
-                            serviceCategory != 'Misc' && serviceCategory != 'Option') {
-                            var extendedCOstObj = component.get('v.nonSlabExtndCost');
-
-                            if (extendedCOstObj != null && extendedCOstObj != undefined &&
-                                extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
-                                extendedcost = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
-                            }
-                        }
-                        /*else if(serviceCategory == 'Fab' || serviceCategory == 'Install' || serviceCategory == 'Edge' || 
-                                              serviceCategory == 'Fab & Install' || serviceCategory == 'Labor')
-                                            {
-                                                 var extendedCOstObj = component.get('v.fabLaborMarkupRate');
-                                                    
-                                                    if(extendedCOstObj != null && extendedCOstObj != undefined && 
-                                                        extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined)
-                                                    {
-                                                        extendedcost  = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
-                                                    }
-                                            }*/
-                        else if (serviceCategory == 'Misc') {
-                            var extendedCOstObj = component.get('v.miscExtndCost');
-
-                            if (extendedCOstObj != null && extendedCOstObj != undefined &&
-                                extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
-                                extendedcost = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
-                            }
-                        } else if (serviceCategory == 'Option') {
-                            var extendedCOstObj = component.get('v.OptionsExtndCost');
-
-                            if (extendedCOstObj != null && extendedCOstObj != undefined &&
-                                extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
-                                extendedcost = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
-                            }
-                        }
-                        /* Comment added by Harika, regarding CAES-63 ticket, Date: 09-08-2022*/
-                        // if(serviceCategory == 'Fab' || serviceCategory == 'Install' || serviceCategory == 'Edge' || serviceCategory == 'Complete' || serviceCategory == 'Labor')
-                        if (serviceCategory == 'Fab' || serviceCategory == 'Install' || serviceCategory == 'Edge' ||
-                            serviceCategory == 'Fab & Install' || serviceCategory == 'Labor') {
-                            var fabLabormarkUpRateVal = component.get('v.fabLaborMarkupRate');
-                            if (fabLabormarkUpRateVal != null && fabLabormarkUpRateVal != undefined &&
-                              
-                                fabLabormarkUpRateVal[bomLineId] != null && fabLabormarkUpRateVal[bomLineId] != undefined && fabLabormarkUpRateVal[bomLineId] != '') {
-                                markupPercentage = parseFloat(fabLabormarkUpRateVal[bomLineId]);
-                                markupPercentage = (markupPercentage * 100).toFixed(2);
-                                if(map1.has(testoId)){
-                                    if(!map1.get(testoId)){
-                                        markupPercentage = 0;
-                                    }
-                                }
-                            } else {
-                                if(map1.has(testoId)){
-                                    if(!map1.get(testoId)){
-                                        markupPercentage = 0;
-                                    }else{
-                                        markupPercentage = 11.5;
-                                    }
-                                }else{
-                                    markupPercentage = 11.5;
-                                }
-                            }
-
-                        }
-                        /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
-                        /* if(serviceCategory != 'Fab' && serviceCategory != 'Complete' && helper.isNotPresentInSlab(serviceCategory) && serviceCategory != 'Install' && serviceCategory != 'Edge' && serviceCategory != 'Work Comp' && serviceCategory != 'Ins' &&
-                          productCode != '69201198'
-                         )
-                         {*/
-                        /* Comment added by Harika, regarding CAES-63 ticket, Date: 09-08-2022*/
-                        if (serviceCategory != 'Fab' && /*serviceCategory != 'Complete'*/
-                            serviceCategory != 'Fab & Install' &&
-                            helper.isNotPresentInSlab(serviceCategory) && serviceCategory != 'Install' && serviceCategory != 'OCIP' &&
-                            serviceCategory != 'Edge' && serviceCategory != 'Work Comp' && serviceCategory != 'Insurance' &&
-                            productCode != '69201198'
-                        ) {
-                            var nonSlabLaborrmarkUp = component.get('v.nonSlabExtndCost');
-                            if (nonSlabLaborrmarkUp != null && nonSlabLaborrmarkUp != undefined &&
-                                nonSlabLaborrmarkUp[bomLineId] != null && nonSlabLaborrmarkUp[bomLineId] != undefined && nonSlabLaborrmarkUp[bomLineId] != '') {
-                                markupPercentage = parseFloat(nonSlabLaborrmarkUp[bomLineId]);
-                                markupPercentage = (markupPercentage * 100).toFixed(2);
-                                if(map1.has(testoId)){
-                                    if(!map1.get(testoId)){
-                                        markupPercentage = 0;
-                                    }
-                                }
-                            } else {
-                                // debugger;
-                                if(map1.has(testoId)){
-                                    if(!map1.get(testoId)){
-                                        markupPercentage = 0;
-                                    }else{
-                                        markupPercentage = 11.5;
-                                    }
-
-                                }else{
-                                    markupPercentage = 11.5;
-                                }
-                            }
-                        }
-                        /* if(serviceCategory != 'Slab - Quartz')
-                         {
-                             var slabDiscountmarkUp = component.get('v.slabDiscountRate');
-                             
-                             if(slabDiscountmarkUp != null && slabDiscountmarkUp != undefined && 
-                                 slabDiscountmarkUp[bomLineId] != null && slabDiscountmarkUp[bomLineId] != undefined)
-                             {
-                                 markupPercentage  = parseFloat(slabDiscountmarkUp[bomLineId]);
-                                 markupPercentage = (markupPercentage * 100).toFixed(2);
-                             }
-                             else {
-                                 markupPercentage = -44.5;
-                             }
-                         }*/
-
-                        if (!bomIdVsExtendCost.has(bomLineId)) {
-                            // console.log('@@NOT FOUND--',bomLineId,'---Cost---',extendedcost);
-                            bomIdVsExtendCost.set(bomLineId, extendedcost);
-                        }
-                        // // console.log('@@extendedcost FINAL--',extendedcost);
-                        // console.log('@@markupPercentage--',markupPercentage);
-                        grossCost = parseFloat(properCost * (parseFloat(quantity))).toFixed(2);
-                        
-                        var discountAmount = grossCost * (parseFloat(Math.abs(slabDiscount)) / 100); // added math.abs() for CAES-79
-                        // grossLessCost = grossCost - Math.abs(discountAmount); // commneted for CAES-79 for correct calculation
-                         grossLessCost = grossCost - discountAmount;
-                         var markupAmount = 0;
-                        console.log('service category====++'+testo.buildertek__Location_Detail_Reference_1__c);
-
-                         console.log('markupPercentage 2==='+markupPercentage);
-                            markupAmount = grossLessCost * (parseFloat(markupPercentage) / 100);
-                        if(markupPercentage == '') markupAmount = 0;
-
-                        // var subTotalAmt = (extendedcost - discountAmount) + markupAmount;
-                        finalExtendedCost = parseFloat(grossLessCost + markupAmount).toFixed(2);
-                        
-                        // console.log('testo service=='+testo.buildertek__BL_SERVICE_CATEGORY__c);
-                        //Extended Cost For Workers Comp and General Liability
-                        /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
-                        // if (serviceCategory == 'Ins' )
-                        if (serviceCategory == 'Insurance') {
-                            console.log('v.generalLiabilityCost 1====='+component.get('v.generalLiabilityCost'));
-                            var extendedCOstObj = component.get('v.generalLiabilityCost');
-                            if (extendedCOstObj != null && extendedCOstObj != undefined) {
-                                extendedCOstObj = Number(extendedCOstObj);
-                                finalExtendedCost = parseFloat(extendedCOstObj).toFixed(2);
-                            } else {
-                                finalExtendedCost = 0;
-                            }
-                        } else if (serviceCategory == 'Work Comp') {
-                            var extendedCOstObj = component.get('v.workersCompCost');
-                            if (extendedCOstObj != null && extendedCOstObj != undefined) {
-                                extendedCOstObj = Number(extendedCOstObj);
-                                finalExtendedCost = parseFloat(extendedCOstObj).toFixed(2);
-                            } else {
-                                finalExtendedCost = 0;
-                            }
-                        } else if (productCode != null && productCode != undefined && productCode == '69201198') {
-                            //Textura Fee Extended Cost
-                            var extendedCOstObj = component.get('v.texturaFeeCost');
-                            if (extendedCOstObj != null && extendedCOstObj != undefined && extendedCOstObj != '') {
-                                extendedCOstObj = Number(extendedCOstObj);
-                                finalExtendedCost = parseFloat(extendedCOstObj).toFixed(2);
-                            } else {
-                                finalExtendedCost = 0;
-                            }
-                        }
-
-                        // let salestax = 0;
-                        
-                        var final = 0.0;
-                        if (record[k].Key == "buildertek__Extended_Cost") {
-                            // record[k].value = finalExtendedCost;
-                            final = finalExtendedCost;
-
-                        }
-                        if (helper.isPresentInSlab(serviceCategory) || serviceCategory == 'Slab - Quartz' || serviceCategory == 'Misc' || serviceCategory == 'Option') {
-                            // if(serviceCategory == 'Option'){
-                            if (record[k].Key == "buildertek__Tax__c") {
-                                // alert('ghgyugih'+record[k].Key);
-                                taxedit = record[k].Value;
-                                if (taxedit == true) {
-
-                                    salestax = finalExtendedCost * (taxRate1 / 100);
-                                    console.log('<<--salestax-->>'+salestax);
-                                }
-                            }
-
-                            //   }else{
-                            //  alert('taxedit***->'+serviceCategory);
-                            //    salestax = finalExtendedCost * (taxRate1 / 100); 
-                            //  }
-
-
-                        } else if (taxOnFabRequired == true && (serviceCategory == 'Fab' /*|| serviceCategory == 'Install' */ || serviceCategory == 'Edge')) {
-                            salestax = finalExtendedCost * (taxRate2 / 100);
-                        }
-                        //These 3 service cats won't have SalesTax
-                        /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
-                        //if (serviceCategory == 'Ins' || serviceCategory == 'Work Comp'  || productCode == '69201198' || serviceCategory == 'Complete' || serviceCategory == 'Misc' ) // Add: serviceCategory == 'Misc'
-                        /* Comment added by Harika, regarding CAES-63 ticket, Date: 09-08-2022*/
-                        if (serviceCategory == 'Insurance' || serviceCategory == 'Work Comp' || productCode == '69201198' || //serviceCategory == 'Slab - Quartz' ||
-                            /*serviceCategory == 'Complete'*/
-                            serviceCategory == 'Fab & Install' || serviceCategory == 'Misc') // Add: serviceCategory == 'Misc'
-                        {
-                            // salestax = 0;
-                            if (serviceCategory == 'Misc'){// || serviceCategory == 'Slab - Quartz') {
-                                if (record[k].Key == "buildertek__Tax__c"){// || record[k].Key == "buildertek__Discount_Amount") {
-                                    taxedit = record[k].Value;
-                                    if (taxedit == true) {
-                                        salestax = finalExtendedCost * (taxRate1 / 100);
-                                    }
-                                }
-
-                            } else {
-                                salestax = 0;
-                            }
-                        }
-
-                        // totalCost = Number(finalExtendedCost) + Number(salestax) ;
-                        // console.log('#@#@ totalCost---'+totalCost+'-----Name---'+record[2].Value);
-                        if (record[k].Key == "buildertek__Discount") {
-                            //alert('slabDiscount'+slabDiscount);
-                            record[k].Value = slabDiscount;
-                            record[k].fieldType = "PERCENTAGE";
-
-                            if (costAdjustmentColumnsPresent == false) {
-                                costAdjustmentColumnsPresent = true;
-                            }
-                        }
-
-                        if (record[k].Key == "buildertek__Discount_Amount") {
-                            record[k].Value = parseFloat(discountAmount).toFixed(2);
-                        }
-
-
-
-                        if (record[k].Key == "buildertek__Markup_Amount") {
-                            record[k].Value = parseFloat(markupAmount).toFixed(2);
-                            
-                        }
-                        if (record[k].Key == "buildertek__Gross_Cost") {
-                            record[k].Value = parseFloat(grossCost).toFixed(2);
-                        }
-                        // if (record[k].Key == "buildertek__Extended_Cost") {
-                        //     var minustotal = parseFloat(finalExtendedCost) - (parseFloat(grossCost) - parseFloat(discountAmount));
-
-                        //     if (parseFloat(grossCost) < 0) {
-                        //         var totals = parseFloat(grossCost) + parseFloat(discountAmount);
-                        //         record[k].Value = totals + minustotal;
-                        //         finalExtendedCost = totals + minustotal;
-                        //     } else {
-                        //         record[k].Value = parseFloat(finalExtendedCost);
-                        //         finalExtendedCost = parseFloat(finalExtendedCost);
-                        //     }
-                        // }
-                        totalCost = Number(finalExtendedCost) + Number(salestax);
-
-                        if (record[k].Key == "buildertek__SalesTax") {
-                            record[k].Value = parseFloat(salestax).toFixed(2);
-                        }
-
-
-                        if (record[k].Key == "buildertek__Markup") {
-                            record[k].Value = markupPercentage;
-                        }
-
-                        if (record[k].Key == "buildertek__Total_Cost") {
-                             //  record[k].Value = parseFloat(totalCost).toFixed(2);
-                            //  record[k].Value = parseFloat(record[k].get(buildertek__SalesTax)).toFixed(2) + finalExtendedCost;
-                        }
-
-                        // if (record[k].Key == "buildertek__UOM_PL") 
+                        //  if(grpData[j].buildertek__Tax__c != undefined )
                         // {
-                        //     record[k].Value = uomString;
+                        //    taxedit = grpData[j].buildertek__Tax__c;
                         // }
-
-
-
-                    }
-                    console.log('<--!costAdjustmentColumnsPresent!-->',costAdjustmentColumnsPresent);
-                    if (costAdjustmentColumnsPresent == false) {
-                      
-
-                        if (bomIdVsExtendCost.has(grpData[j].Id)) {
-                            extendedcost = parseFloat(bomIdVsExtendCost.get(grpData[j].Id)).toFixed(2);
-                        }
-                        //Discount Percentage
-                        record[lastindex + 1] = JSON.parse('{"fieldType": "PERCENTAGE", "Key": "buildertek__Discount", "Value": "' + slabDiscount + '"}');
-                        grossCost = parseFloat(properCost * (parseFloat(quantity))).toFixed(2);
-                        
-                        var discountAmount = grossCost * (parseFloat(Math.abs(slabDiscount)) / 100); // added math.abs() for CAES-79
-                        // grossLessCost = grossCost - Math.abs(discountAmount); // commneted for CAES-79 for correct calculation
-                         grossLessCost = grossCost - discountAmount;
-                        record[lastindex + 2] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Discount_Amount", "Value": "' + parseFloat(discountAmount).toFixed(2) + '"}');
-
-                        //MarkUp
-                        var t = map1.keys();
-                        var testoId = testo.Id;
-
-                        record[lastindex + 3] = JSON.parse('{"fieldType": "PERCENTAGE", "Key": "buildertek__Markup", "Value": "' + markupPercentage + '"}');
-
-                        //MarkUp Amount
-                        console.log('service category====3 ++'+testo.buildertek__Location_Detail_Reference_1__c);
-                        console.log('markupPercentage 3==='+markupPercentage);
-                        var markupAmount = grossLessCost * (parseFloat(markupPercentage) / 100);
-                        if(markupPercentage == '') markupAmount = 0;
-                        finalExtendedCost = parseFloat(grossLessCost + markupAmount).toFixed(2);
-                        
-
-                        //Extended Cost For Workers Comp and General Liability
-                        /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
-                        // if (serviceCategory == 'Ins') 	
-                       
-                       
-                        if (serviceCategory == 'Insurance') {
-                            console.log('v.generalLiabilityCost==='+component.get('v.generalLiabilityCost'));
-                            var extendedCOstObj = component.get('v.generalLiabilityCost');
-                            if (extendedCOstObj != null && extendedCOstObj != undefined) {
-                                extendedCOstObj = Number(extendedCOstObj);
-                                finalExtendedCost = parseFloat(extendedCOstObj).toFixed(2);
-                            } else {
-                                finalExtendedCost = 0;
-                            }
-                        } else if (serviceCategory == 'Work Comp') {
-
-                            var extendedCOstObj = component.get('v.workersCompCost');
-                            if (extendedCOstObj != null && extendedCOstObj != undefined) {
-                                extendedCOstObj = Number(extendedCOstObj);
-                                finalExtendedCost = parseFloat(extendedCOstObj).toFixed(2);
-                            } else {
-                                finalExtendedCost = 0;
-                            }
-                        } else if (productCode != null && productCode != undefined && productCode == '69201198') {
-                            //Textura Fee Extended Cost
-                            var extendedCOstObj = component.get('v.texturaFeeCost');
-                            if (extendedCOstObj != null && extendedCOstObj != undefined && extendedCOstObj != '') {
-                                extendedCOstObj = Number(extendedCOstObj);
-                                finalExtendedCost = parseFloat(extendedCOstObj).toFixed(2);
-                            } else {
-                                finalExtendedCost = 0;
-                            }
-                        }
-
-                        // var minustotal = parseFloat(finalExtendedCost) - (parseFloat(grossCost) - parseFloat(discountAmount));
-                        // console.log('minustotal=='+minustotal);
-                        // if (parseFloat(grossCost) < 0) {
-                        //     var totals = parseFloat(grossCost) + parseFloat(discountAmount);
-                        //     record[k].Value = totals + minustotal;
-                        //     finalExtendedCost = totals + minustotal;
-                        // } 
-                        // else {
-                        //     record[k].Value = parseFloat(finalExtendedCost);
-                        //     finalExtendedCost = parseFloat(finalExtendedCost);
+                        // if(grpData[j].buildertek__Takeoff_Line__r != null &&
+                        //     grpData[j].buildertek__Takeoff_Line__r != undefined &&
+                        //     grpData[j].buildertek__Takeoff_Line__r.buildertek__UOM_PL__c != null
+                        //     && grpData[j].buildertek__Takeoff_Line__r.buildertek__UOM_PL__c != undefined
+                        //     && grpData[j].buildertek__Takeoff_Line__r.buildertek__UOM_PL__c != '')
+                        // {
+                        //     // uomString = grpData[j].buildertek__Takeoff_Line__r.buildertek__UOM_PL__c;
                         // }
+                        // console.log('@@sqft-',sqft);
+    
+                        //Discount Amount
+                        var extendedcost = 0;
+                        var percentageOnFab = 0;
+                        var properCost = 0;
+                        var markupPercentage = '';
+                        var bomLineId = '';
+                        let grossCost = 0;
+                        let grossLessCost = 0;
+                        let finalExtendedCost = 0;
+                        let totalCost = 0;
+                        let salestax = 0;
                         
-                        record[lastindex + 4] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Markup_Amount", "Value": "' + parseFloat(markupAmount).toFixed(2) + '"}');
-                        record[lastindex + 5] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Gross_Cost", "Value": "' + parseFloat(grossCost).toFixed(2) + '"}');
-
-                        //Sub Total Amount
-                        record[lastindex + 6] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Extended_Cost", "Value": "' + parseFloat(finalExtendedCost).toFixed(2) + '"}');
-
-
-                        //Sales Tax                    
+                        var testo = grpData[j];
+                        console.log('service category--'+testo.buildertek__BL_SERVICE_CATEGORY__c);
+                        console.log('testo===');
+                        console.log({testo});
                      
-                        if (helper.isPresentInSlab(serviceCategory) || serviceCategory == 'Slab - Quartz' || serviceCategory == 'Misc' || serviceCategory == 'Option') {
-                            if(serviceCategory == 'Option'){
-                                if(map1.has(testoId)){
-                                    if(map1.get(testoId)){
-                                        salestax = finalExtendedCost * (taxRate1 / 100);
-                                    }else{
-                                        salestax = 0;
-                                    }
-                                }   
-                            }else if(serviceCategory == 'Slab - Quartz'){
-                                if(map2.has(testoId)){
-                                    if(map2.get(testoId)){
-                                        salestax = finalExtendedCost * (taxRate1 / 100);
-                                    }else{
-                                        salestax = 0;
+                        var testoId = testo.Id;
+                      
+                        if(map1.size == 0){
+                            
+                            var jsonstring = '';
+                            jsonstring = testo.buildertek__Selection_Sheet_Takeoff__r.buildertek__Options_Rate__c;
+                            var arr = [];
+                            console.log('jsonstring=='+jsonstring);
+                            if(jsonstring != undefined){
+                                console.log('testing');
+                                arr = JSON.parse(jsonstring);
+                            
+                                if(arr.length > 0){
+                                    arr.forEach(function (item, index) {
+                                        var test = item;
+                                        map1.set(test.bomLineId, test.taxbvalue);
+    
+                                    });
+                                }
+                            }
+                        }
+    
+                        if(map2.size == 0){
+                            // buildertek__Slab_Discount_Rate_LongText__c
+                            var jsonstringslab = '';
+                            jsonstringslab = testo.buildertek__Selection_Sheet_Takeoff__r.buildertek__Slab_Discount_Rate_LongText__c;
+                            var arr = [];
+                            console.log('jsonstringslab=='+jsonstringslab);
+                            if(jsonstringslab != undefined){
+                                console.log('testing');
+                                arr = JSON.parse(jsonstringslab);
+                            
+                                if(arr.length > 0){
+                                    arr.forEach(function (item, index) {
+                                        var test = item;
+                                        map2.set(test.bomLineId, test.taxbvalue);
+    
+                                    });
+                                }
+                            }
+                        }
+    
+    
+                        for (var k = 0; k < record.length; k++) {
+                            if (record[k].Key == "buildertek__Extended_Cost") {
+                                extendedcost = parseFloat(record[k].Value);
+                            }
+                            var testo1 = record[k];
+                            if (record[k].Key == "Id") {
+                                bomLineId = record[k].Value;
+                            }
+    
+                            if (bomLineId != null && bomLineId != '' && bomIdVsUpgradedCost != null && bomIdVslistPrice != null) {
+                                if (bomIdVsUpgradedCost.has(bomLineId) && bomIdVsUpgradedCost.get(bomLineId) != null) {
+                                    properCost = parseFloat(bomIdVsUpgradedCost.get(bomLineId)).toFixed(2);
+                                } else if (bomIdVslistPrice.has(bomLineId) && bomIdVslistPrice.get(bomLineId) != null) {
+                                    properCost = parseFloat(bomIdVslistPrice.get(bomLineId)).toFixed(2);
+                                }
+                            }
+    
+                            // console.log('#@#@ bomLineId---',bomLineId);
+                            // console.log('#@#@ serviceCategory---',serviceCategory);
+                            // console.log('#@#@ quantity---',quantity);
+                            // console.log('#@#@ properCost---'+properCost+'-----Name---'+record[2].Value);
+                            /* Comment added by Harika, regarding CAES-63 ticket, Date: 09-08-2022*/
+                            //if(serviceCategory == 'Complete')
+                            //{
+                            if (serviceCategory == 'Fab & Install') {
+                                var extendedCOstObj = component.get('v.fabInstallExtndCost');
+    
+                                if (extendedCOstObj != null && extendedCOstObj != undefined &&
+                                    extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
+                                    extendedcost = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
+                                }
+                            } else if (helper.isPresentInSlab(serviceCategory)) {
+                                var discountRateVal = component.get('v.slabDiscountRate');
+                                if (discountRateVal != null && discountRateVal != undefined &&
+                                    discountRateVal[bomLineId] != null && discountRateVal[bomLineId] != undefined && discountRateVal[bomLineId] != '') {
+                                    slabDiscount = parseFloat(discountRateVal[bomLineId]);
+                                    slabDiscount = (slabDiscount * 100).toFixed(2);
+                                    // if (slabDiscount == 0 && serviceCategory == 'Slab - Quartz') {
+                                    //     slabDiscount = -45.0;
+                                    // }
+                                } 
+                                else {
+                                    if (serviceCategory == 'Slab - Quartz') {
+                                        slabDiscount = -45.00;
                                     }
                                 }
-                            }else{
+                            } else if (serviceCategory == 'Install') {
+                                var extendedCOstObj = component.get('v.installOnlyExtndCost');
+    
+                                if (extendedCOstObj != null && extendedCOstObj != undefined &&
+                                    extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
+                                    extendedcost = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
+                                }
+                            } else if (serviceCategory == 'Fab') {
+                                var extendedCOstObj = component.get('v.fabOnlyExtndCost');
+                                if (extendedCOstObj != null && extendedCOstObj != undefined &&
+                                    extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
+                                    // extendedcost  = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
+                                    percentageOnFab = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
+                                }
+                            } else if (serviceCategory == 'Edge') {
+                                var extendedCOstObj = component.get('v.edgeCost');
+    
+                                if (extendedCOstObj != null && extendedCOstObj != undefined &&
+                                    extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
+                                    extendedcost = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
+                                }
+                            }
+                            /*else if(helper.isNotPresentInSlab(serviceCategory) && serviceCategory != 'Labor' && 
+                                                        serviceCategory != 'Fab' && serviceCategory != 'Edge' &&
+                                                        serviceCategory != 'Install' && serviceCategory != 'Complete' &&
+                                                        serviceCategory != 'Misc' && serviceCategory != 'Option')
+                                                {*/
+                            /* Comment added by Harika, regarding CAES-63 ticket, Date: 09-08-2022*/
+                            else if (helper.isNotPresentInSlab(serviceCategory) && serviceCategory != 'Labor' &&
+                                serviceCategory != 'Fab' && serviceCategory != 'Edge' &&
+                                serviceCategory != 'Install' && serviceCategory != 'Fab & Install' &&
+                                serviceCategory != 'Misc' && serviceCategory != 'Option') {
+                                var extendedCOstObj = component.get('v.nonSlabExtndCost');
+    
+                                if (extendedCOstObj != null && extendedCOstObj != undefined &&
+                                    extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
+                                    extendedcost = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
+                                }
+                            }
+                            /*else if(serviceCategory == 'Fab' || serviceCategory == 'Install' || serviceCategory == 'Edge' || 
+                                                  serviceCategory == 'Fab & Install' || serviceCategory == 'Labor')
+                                                {
+                                                     var extendedCOstObj = component.get('v.fabLaborMarkupRate');
+                                                        
+                                                        if(extendedCOstObj != null && extendedCOstObj != undefined && 
+                                                            extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined)
+                                                        {
+                                                            extendedcost  = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
+                                                        }
+                                                }*/
+                            else if (serviceCategory == 'Misc') {
+                                var extendedCOstObj = component.get('v.miscExtndCost');
+    
+                                if (extendedCOstObj != null && extendedCOstObj != undefined &&
+                                    extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
+                                    extendedcost = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
+                                }
+                            } else if (serviceCategory == 'Option') {
+                                var extendedCOstObj = component.get('v.OptionsExtndCost');
+    
+                                if (extendedCOstObj != null && extendedCOstObj != undefined &&
+                                    extendedCOstObj[bomLineId] != null && extendedCOstObj[bomLineId] != undefined) {
+                                    extendedcost = parseFloat(extendedCOstObj[bomLineId]).toFixed(2);
+                                }
+                            }
+                            /* Comment added by Harika, regarding CAES-63 ticket, Date: 09-08-2022*/
+                            // if(serviceCategory == 'Fab' || serviceCategory == 'Install' || serviceCategory == 'Edge' || serviceCategory == 'Complete' || serviceCategory == 'Labor')
+                            if (serviceCategory == 'Fab' || serviceCategory == 'Install' || serviceCategory == 'Edge' ||
+                                serviceCategory == 'Fab & Install' || serviceCategory == 'Labor') {
+                                var fabLabormarkUpRateVal = component.get('v.fabLaborMarkupRate');
+                                if (fabLabormarkUpRateVal != null && fabLabormarkUpRateVal != undefined &&
+                                  
+                                    fabLabormarkUpRateVal[bomLineId] != null && fabLabormarkUpRateVal[bomLineId] != undefined && fabLabormarkUpRateVal[bomLineId] != '') {
+                                    markupPercentage = parseFloat(fabLabormarkUpRateVal[bomLineId]);
+                                    markupPercentage = (markupPercentage * 100).toFixed(2);
+                                    if(map1.has(testoId)){
+                                        if(!map1.get(testoId)){
+                                            markupPercentage = 0;
+                                        }
+                                    }
+                                } else {
+                                    if(map1.has(testoId)){
+                                        if(!map1.get(testoId)){
+                                            markupPercentage = 0;
+                                        }else{
+                                            markupPercentage = 11.5;
+                                        }
+                                    }else{
+                                        markupPercentage = 11.5;
+                                    }
+                                }
+    
+                            }
+                            /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
+                            /* if(serviceCategory != 'Fab' && serviceCategory != 'Complete' && helper.isNotPresentInSlab(serviceCategory) && serviceCategory != 'Install' && serviceCategory != 'Edge' && serviceCategory != 'Work Comp' && serviceCategory != 'Ins' &&
+                              productCode != '69201198'
+                             )
+                             {*/
+                            /* Comment added by Harika, regarding CAES-63 ticket, Date: 09-08-2022*/
+                            if (serviceCategory != 'Fab' && /*serviceCategory != 'Complete'*/
+                                serviceCategory != 'Fab & Install' &&
+                                helper.isNotPresentInSlab(serviceCategory) && serviceCategory != 'Install' && serviceCategory != 'OCIP' &&
+                                serviceCategory != 'Edge' && serviceCategory != 'Work Comp' && serviceCategory != 'Insurance' &&
+                                productCode != '69201198'
+                            ) {
+                                var nonSlabLaborrmarkUp = component.get('v.nonSlabExtndCost');
+                                if (nonSlabLaborrmarkUp != null && nonSlabLaborrmarkUp != undefined &&
+                                    nonSlabLaborrmarkUp[bomLineId] != null && nonSlabLaborrmarkUp[bomLineId] != undefined && nonSlabLaborrmarkUp[bomLineId] != '') {
+                                    markupPercentage = parseFloat(nonSlabLaborrmarkUp[bomLineId]);
+                                    markupPercentage = (markupPercentage * 100).toFixed(2);
+                                    if(map1.has(testoId)){
+                                        if(!map1.get(testoId)){
+                                            markupPercentage = 0;
+                                        }
+                                    }
+                                } else {
+                                    // debugger;
+                                    if(map1.has(testoId)){
+                                        if(!map1.get(testoId)){
+                                            markupPercentage = 0;
+                                        }else{
+                                            markupPercentage = 11.5;
+                                        }
+    
+                                    }else{
+                                        markupPercentage = 11.5;
+                                    }
+                                }
+                            }
+                            /* if(serviceCategory != 'Slab - Quartz')
+                             {
+                                 var slabDiscountmarkUp = component.get('v.slabDiscountRate');
+                                 
+                                 if(slabDiscountmarkUp != null && slabDiscountmarkUp != undefined && 
+                                     slabDiscountmarkUp[bomLineId] != null && slabDiscountmarkUp[bomLineId] != undefined)
+                                 {
+                                     markupPercentage  = parseFloat(slabDiscountmarkUp[bomLineId]);
+                                     markupPercentage = (markupPercentage * 100).toFixed(2);
+                                 }
+                                 else {
+                                     markupPercentage = -44.5;
+                                 }
+                             }*/
+    
+                            if (!bomIdVsExtendCost.has(bomLineId)) {
+                                // console.log('@@NOT FOUND--',bomLineId,'---Cost---',extendedcost);
+                                bomIdVsExtendCost.set(bomLineId, extendedcost);
+                            }
+                            // // console.log('@@extendedcost FINAL--',extendedcost);
+                            // console.log('@@markupPercentage--',markupPercentage);
+                            grossCost = parseFloat(properCost * (parseFloat(quantity))).toFixed(2);
+                            
+                            var discountAmount = grossCost * (parseFloat(Math.abs(slabDiscount)) / 100); // added math.abs() for CAES-79
+                            // grossLessCost = grossCost - Math.abs(discountAmount); // commneted for CAES-79 for correct calculation
+                             grossLessCost = grossCost - discountAmount;
+                             var markupAmount = 0;
+                            console.log('service category====++'+testo.buildertek__Location_Detail_Reference_1__c);
+    
+                             console.log('markupPercentage 2==='+markupPercentage);
+                                markupAmount = grossLessCost * (parseFloat(markupPercentage) / 100);
+                            if(markupPercentage == '') markupAmount = 0;
+    
+                            // var subTotalAmt = (extendedcost - discountAmount) + markupAmount;
+                            finalExtendedCost = parseFloat(grossLessCost + markupAmount).toFixed(2);
+                            
+                            // console.log('testo service=='+testo.buildertek__BL_SERVICE_CATEGORY__c);
+                            //Extended Cost For Workers Comp and General Liability
+                            /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
+                            // if (serviceCategory == 'Ins' )
+                            if (serviceCategory == 'Insurance') {
+                                console.log('v.generalLiabilityCost 1====='+component.get('v.generalLiabilityCost'));
+                                var extendedCOstObj = component.get('v.generalLiabilityCost');
+                                if (extendedCOstObj != null && extendedCOstObj != undefined) {
+                                    extendedCOstObj = Number(extendedCOstObj);
+                                    finalExtendedCost = parseFloat(extendedCOstObj).toFixed(2);
+                                } else {
+                                    finalExtendedCost = 0;
+                                }
+                            } else if (serviceCategory == 'Work Comp') {
+                                var extendedCOstObj = component.get('v.workersCompCost');
+                                if (extendedCOstObj != null && extendedCOstObj != undefined) {
+                                    extendedCOstObj = Number(extendedCOstObj);
+                                    finalExtendedCost = parseFloat(extendedCOstObj).toFixed(2);
+                                } else {
+                                    finalExtendedCost = 0;
+                                }
+                            } else if (productCode != null && productCode != undefined && productCode == '69201198') {
+                                //Textura Fee Extended Cost
+                                var extendedCOstObj = component.get('v.texturaFeeCost');
+                                if (extendedCOstObj != null && extendedCOstObj != undefined && extendedCOstObj != '') {
+                                    extendedCOstObj = Number(extendedCOstObj);
+                                    finalExtendedCost = parseFloat(extendedCOstObj).toFixed(2);
+                                } else {
+                                    finalExtendedCost = 0;
+                                }
+                            }
+    
+                            // let salestax = 0;
+                            
+                            var final = 0.0;
+                            if (record[k].Key == "buildertek__Extended_Cost") {
+                                // record[k].value = finalExtendedCost;
+                                final = finalExtendedCost;
+    
+                            }
+                            if (helper.isPresentInSlab(serviceCategory) || serviceCategory == 'Slab - Quartz' || serviceCategory == 'Misc' || serviceCategory == 'Option') {
+                                // if(serviceCategory == 'Option'){
                                 if (record[k].Key == "buildertek__Tax__c") {
+                                    // alert('ghgyugih'+record[k].Key);
                                     taxedit = record[k].Value;
                                     if (taxedit == true) {
+    
                                         salestax = finalExtendedCost * (taxRate1 / 100);
+                                        console.log('<<--salestax-->>'+salestax);
+                                    }
+                                }
+    
+                                //   }else{
+                                //  alert('taxedit***->'+serviceCategory);
+                                //    salestax = finalExtendedCost * (taxRate1 / 100); 
+                                //  }
+    
+    
+                            } else if (taxOnFabRequired == true && (serviceCategory == 'Fab' /*|| serviceCategory == 'Install' */ || serviceCategory == 'Edge')) {
+                                salestax = finalExtendedCost * (taxRate2 / 100);
+                            }
+                            //These 3 service cats won't have SalesTax
+                            /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
+                            //if (serviceCategory == 'Ins' || serviceCategory == 'Work Comp'  || productCode == '69201198' || serviceCategory == 'Complete' || serviceCategory == 'Misc' ) // Add: serviceCategory == 'Misc'
+                            /* Comment added by Harika, regarding CAES-63 ticket, Date: 09-08-2022*/
+                            if (serviceCategory == 'Insurance' || serviceCategory == 'Work Comp' || productCode == '69201198' || //serviceCategory == 'Slab - Quartz' ||
+                                /*serviceCategory == 'Complete'*/
+                                serviceCategory == 'Fab & Install' || serviceCategory == 'Misc') // Add: serviceCategory == 'Misc'
+                            {
+                                // salestax = 0;
+                                if (serviceCategory == 'Misc'){// || serviceCategory == 'Slab - Quartz') {
+                                    if (record[k].Key == "buildertek__Tax__c"){// || record[k].Key == "buildertek__Discount_Amount") {
+                                        taxedit = record[k].Value;
+                                        if (taxedit == true) {
+                                            salestax = finalExtendedCost * (taxRate1 / 100);
+                                        }
+                                    }
+    
+                                } else {
+                                    salestax = 0;
+                                }
+                            }
+    
+                            // totalCost = Number(finalExtendedCost) + Number(salestax) ;
+                            // console.log('#@#@ totalCost---'+totalCost+'-----Name---'+record[2].Value);
+                            if (record[k].Key == "buildertek__Discount") {
+                                //alert('slabDiscount'+slabDiscount);
+                                record[k].Value = slabDiscount;
+                                record[k].fieldType = "PERCENTAGE";
+    
+                                if (costAdjustmentColumnsPresent == false) {
+                                    costAdjustmentColumnsPresent = true;
+                                }
+                            }
+    
+                            if (record[k].Key == "buildertek__Discount_Amount") {
+                                record[k].Value = parseFloat(discountAmount).toFixed(2);
+                            }
+    
+    
+    
+                            if (record[k].Key == "buildertek__Markup_Amount") {
+                                record[k].Value = parseFloat(markupAmount).toFixed(2);
+                                
+                            }
+                            if (record[k].Key == "buildertek__Gross_Cost") {
+                                record[k].Value = parseFloat(grossCost).toFixed(2);
+                            }
+                            // if (record[k].Key == "buildertek__Extended_Cost") {
+                            //     var minustotal = parseFloat(finalExtendedCost) - (parseFloat(grossCost) - parseFloat(discountAmount));
+    
+                            //     if (parseFloat(grossCost) < 0) {
+                            //         var totals = parseFloat(grossCost) + parseFloat(discountAmount);
+                            //         record[k].Value = totals + minustotal;
+                            //         finalExtendedCost = totals + minustotal;
+                            //     } else {
+                            //         record[k].Value = parseFloat(finalExtendedCost);
+                            //         finalExtendedCost = parseFloat(finalExtendedCost);
+                            //     }
+                            // }
+                            totalCost = Number(finalExtendedCost) + Number(salestax);
+    
+                            if (record[k].Key == "buildertek__SalesTax") {
+                                record[k].Value = parseFloat(salestax).toFixed(2);
+                            }
+    
+    
+                            if (record[k].Key == "buildertek__Markup") {
+                                record[k].Value = markupPercentage;
+                            }
+    
+                            if (record[k].Key == "buildertek__Total_Cost") {
+                                 //  record[k].Value = parseFloat(totalCost).toFixed(2);
+                                //  record[k].Value = parseFloat(record[k].get(buildertek__SalesTax)).toFixed(2) + finalExtendedCost;
+                            }
+    
+                            // if (record[k].Key == "buildertek__UOM_PL") 
+                            // {
+                            //     record[k].Value = uomString;
+                            // }
+    
+    
+    
+                        }
+                        console.log('<--!costAdjustmentColumnsPresent!-->',costAdjustmentColumnsPresent);
+                        if (costAdjustmentColumnsPresent == false) {
+                          
+    
+                            if (bomIdVsExtendCost.has(grpData[j].Id)) {
+                                extendedcost = parseFloat(bomIdVsExtendCost.get(grpData[j].Id)).toFixed(2);
+                            }
+                            //Discount Percentage
+                            record[lastindex + 1] = JSON.parse('{"fieldType": "PERCENTAGE", "Key": "buildertek__Discount", "Value": "' + slabDiscount + '"}');
+                            grossCost = parseFloat(properCost * (parseFloat(quantity))).toFixed(2);
+                            
+                            var discountAmount = grossCost * (parseFloat(Math.abs(slabDiscount)) / 100); // added math.abs() for CAES-79
+                            // grossLessCost = grossCost - Math.abs(discountAmount); // commneted for CAES-79 for correct calculation
+                             grossLessCost = grossCost - discountAmount;
+                            record[lastindex + 2] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Discount_Amount", "Value": "' + parseFloat(discountAmount).toFixed(2) + '"}');
+    
+                            //MarkUp
+                            var t = map1.keys();
+                            var testoId = testo.Id;
+    
+                            record[lastindex + 3] = JSON.parse('{"fieldType": "PERCENTAGE", "Key": "buildertek__Markup", "Value": "' + markupPercentage + '"}');
+    
+                            //MarkUp Amount
+                            console.log('service category====3 ++'+testo.buildertek__Location_Detail_Reference_1__c);
+                            console.log('markupPercentage 3==='+markupPercentage);
+                            var markupAmount = grossLessCost * (parseFloat(markupPercentage) / 100);
+                            if(markupPercentage == '') markupAmount = 0;
+                            finalExtendedCost = parseFloat(grossLessCost + markupAmount).toFixed(2);
+                            
+    
+                            //Extended Cost For Workers Comp and General Liability
+                            /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
+                            // if (serviceCategory == 'Ins') 	
+                           
+                           
+                            if (serviceCategory == 'Insurance') {
+                                console.log('v.generalLiabilityCost==='+component.get('v.generalLiabilityCost'));
+                                var extendedCOstObj = component.get('v.generalLiabilityCost');
+                                if (extendedCOstObj != null && extendedCOstObj != undefined) {
+                                    extendedCOstObj = Number(extendedCOstObj);
+                                    finalExtendedCost = parseFloat(extendedCOstObj).toFixed(2);
+                                } else {
+                                    finalExtendedCost = 0;
+                                }
+                            } else if (serviceCategory == 'Work Comp') {
+    
+                                var extendedCOstObj = component.get('v.workersCompCost');
+                                if (extendedCOstObj != null && extendedCOstObj != undefined) {
+                                    extendedCOstObj = Number(extendedCOstObj);
+                                    finalExtendedCost = parseFloat(extendedCOstObj).toFixed(2);
+                                } else {
+                                    finalExtendedCost = 0;
+                                }
+                            } else if (productCode != null && productCode != undefined && productCode == '69201198') {
+                                //Textura Fee Extended Cost
+                                var extendedCOstObj = component.get('v.texturaFeeCost');
+                                if (extendedCOstObj != null && extendedCOstObj != undefined && extendedCOstObj != '') {
+                                    extendedCOstObj = Number(extendedCOstObj);
+                                    finalExtendedCost = parseFloat(extendedCOstObj).toFixed(2);
+                                } else {
+                                    finalExtendedCost = 0;
+                                }
+                            }
+    
+                            // var minustotal = parseFloat(finalExtendedCost) - (parseFloat(grossCost) - parseFloat(discountAmount));
+                            // console.log('minustotal=='+minustotal);
+                            // if (parseFloat(grossCost) < 0) {
+                            //     var totals = parseFloat(grossCost) + parseFloat(discountAmount);
+                            //     record[k].Value = totals + minustotal;
+                            //     finalExtendedCost = totals + minustotal;
+                            // } 
+                            // else {
+                            //     record[k].Value = parseFloat(finalExtendedCost);
+                            //     finalExtendedCost = parseFloat(finalExtendedCost);
+                            // }
+                            
+                            record[lastindex + 4] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Markup_Amount", "Value": "' + parseFloat(markupAmount).toFixed(2) + '"}');
+                            record[lastindex + 5] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Gross_Cost", "Value": "' + parseFloat(grossCost).toFixed(2) + '"}');
+    
+                            //Sub Total Amount
+                            record[lastindex + 6] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Extended_Cost", "Value": "' + parseFloat(finalExtendedCost).toFixed(2) + '"}');
+    
+    
+                            //Sales Tax                    
+                         
+                            if (helper.isPresentInSlab(serviceCategory) || serviceCategory == 'Slab - Quartz' || serviceCategory == 'Misc' || serviceCategory == 'Option') {
+                                if(serviceCategory == 'Option'){
+                                    if(map1.has(testoId)){
+                                        if(map1.get(testoId)){
+                                            salestax = finalExtendedCost * (taxRate1 / 100);
+                                        }else{
+                                            salestax = 0;
+                                        }
+                                    }   
+                                }else if(serviceCategory == 'Slab - Quartz'){
+                                    if(map2.has(testoId)){
+                                        if(map2.get(testoId)){
+                                            salestax = finalExtendedCost * (taxRate1 / 100);
+                                        }else{
+                                            salestax = 0;
+                                        }
                                     }
                                 }else{
-                                  salestax = finalExtendedCost * (taxRate1 / 100); 
-                                }
-                            }
-                            //  salestax = finalExtendedCost * (taxRate1 / 100);
-                        } else if (taxOnFabRequired == true && (serviceCategory == 'Fab' /*|| serviceCategory == 'Install'*/ || serviceCategory == 'Edge')) {
-                            salestax = finalExtendedCost * (taxRate2 / 100);
-                        }
-                        /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
-                        //   if (serviceCategory == 'Ins' || serviceCategory == 'Work Comp' || productCode == '69201198' || serviceCategory == 'Complete' || serviceCategory == 'Misc' )  // Add: serviceCategory == 'Misc'
-                        if (serviceCategory == 'Insurance' || serviceCategory == 'Work Comp' || productCode == '69201198' ||// serviceCategory == 'Slab - Quartz'||
-                            /*serviceCategory == 'Complete'*/
-                            serviceCategory == 'Fab & Install' || serviceCategory == 'Misc') // Add: serviceCategory == 'Misc'
-                        {
-                            // salestax = 0;
-                            if (serviceCategory == 'Misc' ){//| serviceCategory == 'Slab - Quartz') {
-                                if (record[k].Key == "buildertek__Tax__c"){// || record[k].Key == "buildertek__Discount") {
-                                    taxedit = record[k].Value;
-                                    if (taxedit == true) {
-                                        salestax = finalExtendedCost * (taxRate1 / 100);
+                                    if (record[k].Key == "buildertek__Tax__c") {
+                                        taxedit = record[k].Value;
+                                        if (taxedit == true) {
+                                            salestax = finalExtendedCost * (taxRate1 / 100);
+                                        }
+                                    }else{
+                                      salestax = finalExtendedCost * (taxRate1 / 100); 
                                     }
                                 }
-
-                            } else {
-                                salestax = 0;
+                                //  salestax = finalExtendedCost * (taxRate1 / 100);
+                            } else if (taxOnFabRequired == true && (serviceCategory == 'Fab' /*|| serviceCategory == 'Install'*/ || serviceCategory == 'Edge')) {
+                                salestax = finalExtendedCost * (taxRate2 / 100);
                             }
+                            /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/
+                            //   if (serviceCategory == 'Ins' || serviceCategory == 'Work Comp' || productCode == '69201198' || serviceCategory == 'Complete' || serviceCategory == 'Misc' )  // Add: serviceCategory == 'Misc'
+                            if (serviceCategory == 'Insurance' || serviceCategory == 'Work Comp' || productCode == '69201198' ||// serviceCategory == 'Slab - Quartz'||
+                                /*serviceCategory == 'Complete'*/
+                                serviceCategory == 'Fab & Install' || serviceCategory == 'Misc') // Add: serviceCategory == 'Misc'
+                            {
+                                // salestax = 0;
+                                if (serviceCategory == 'Misc' ){//| serviceCategory == 'Slab - Quartz') {
+                                    if (record[k].Key == "buildertek__Tax__c"){// || record[k].Key == "buildertek__Discount") {
+                                        taxedit = record[k].Value;
+                                        if (taxedit == true) {
+                                            salestax = finalExtendedCost * (taxRate1 / 100);
+                                        }
+                                    }
+    
+                                } else {
+                                    salestax = 0;
+                                }
+                            }
+                            
+                            salestax = parseFloat(salestax).toFixed(2);
+                            finalExtendedCost = parseFloat(finalExtendedCost).toFixed(2);
+                            console.log('--salestax--'+salestax);
+                            console.log('--finalExtendedCost--'+finalExtendedCost);
+                            totalCost = Number(finalExtendedCost) + Number(salestax);
+                            if(serviceCategory == 'Insurance'){
+                                console.log('finalExtendedCost=='+finalExtendedCost);
+                                console.log('totalCost==='+totalCost);
+                            }
+                            record[lastindex + 8] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Total_Cost", "Value": "' + parseFloat(totalCost).toFixed(2) + '"}');
+                            //    record[lastindex + 6] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__SalesTax", "Value": "' + parseFloat(salestax).toFixed(2) + '"}');
+                            record[lastindex + 7] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__SalesTax", "Value": "' + salestax + '"}');
+    
+                            //Total Cost
+    
+                            /*   var minustotal = parseFloat(finalExtendedCost) - (parseFloat(grossCost) - parseFloat(discountAmount));
+                               
+                               if(parseFloat(grossCost) < 0){
+                                   var totals = parseFloat(grossCost) + parseFloat(discountAmount);
+                                   finalExtendedCost = totals + minustotal;
+                               }
+                               else{
+                                   finalExtendedCost = parseFloat(finalExtendedCost);
+                               }*/
+    
+                            // salestax = parseFloat(salestax).toFixed(2);
+    
+                            //alert('totalCost'+totalCost);
+                            // console.log('#@#@ totalCost---'+totalCost+'-----Name---'+record[2].Value);
+                            //       record[lastindex + 7] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Total_Cost", "Value": "' + parseFloat(totalCost).toFixed(2) + '"}');
+    
+                            // record[lastindex + 8] = JSON.parse('{"fieldType": "STRING", "Key": "buildertek__UOM_PL", "Value": "' + uomString + '"}');
+    
                         }
-                        
-                        salestax = parseFloat(salestax).toFixed(2);
-                        finalExtendedCost = parseFloat(finalExtendedCost).toFixed(2);
-                        console.log('--salestax--'+salestax);
-                        console.log('--finalExtendedCost--'+finalExtendedCost);
-                        totalCost = Number(finalExtendedCost) + Number(salestax);
-                        if(serviceCategory == 'Insurance'){
-                            console.log('finalExtendedCost=='+finalExtendedCost);
-                            console.log('totalCost==='+totalCost);
-                        }
-                        record[lastindex + 8] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Total_Cost", "Value": "' + parseFloat(totalCost).toFixed(2) + '"}');
-                        //    record[lastindex + 6] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__SalesTax", "Value": "' + parseFloat(salestax).toFixed(2) + '"}');
-                        record[lastindex + 7] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__SalesTax", "Value": "' + salestax + '"}');
-
-                        //Total Cost
-
-                        /*   var minustotal = parseFloat(finalExtendedCost) - (parseFloat(grossCost) - parseFloat(discountAmount));
-                           
-                           if(parseFloat(grossCost) < 0){
-                               var totals = parseFloat(grossCost) + parseFloat(discountAmount);
-                               finalExtendedCost = totals + minustotal;
-                           }
-                           else{
-                               finalExtendedCost = parseFloat(finalExtendedCost);
-                           }*/
-
-                        // salestax = parseFloat(salestax).toFixed(2);
-
-                        //alert('totalCost'+totalCost);
-                        // console.log('#@#@ totalCost---'+totalCost+'-----Name---'+record[2].Value);
-                        //       record[lastindex + 7] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Total_Cost", "Value": "' + parseFloat(totalCost).toFixed(2) + '"}');
-
-                        // record[lastindex + 8] = JSON.parse('{"fieldType": "STRING", "Key": "buildertek__UOM_PL", "Value": "' + uomString + '"}');
-
+    
+    
+                        slabDiscount = 0;
+                        markupPercentage = 0;
+                        percentageOnFab = 0;
                     }
-
-
-                    slabDiscount = 0;
-                    markupPercentage = 0;
-                    percentageOnFab = 0;
+    
                 }
-
             }
         }
 
@@ -1807,28 +1809,19 @@
                                             serviceCategory != 'Ins' && serviceCategory != 'Work Comp' && thisProductCode != '69201198') 
                                             {*/
                                         if (thisProductCode != null && thisProductCode != undefined && thisProductCode != '' &&
-                                            serviceCategory != 'Insurance' && serviceCategory != 'Work Comp' && thisProductCode != '69201198' && thisBuildPhaseName == 'Base') {
-                                            if (ocipreq != false) {
-                                                proposalAmount = Number(proposalAmount) + Number(record[k].Value);
-                                                proposalAmount = parseFloat(proposalAmount).toFixed(2);
-                                            } else {
-                                                proposalAmount = 0;
-                                            }
-        
+                                            serviceCategory != 'Insurance' && serviceCategory != 'Work Comp' && thisBuildPhaseName == 'Base') {
+                                            proposalAmount = Number(proposalAmount) + Number(record[k].Value);
+                                            console.log('<--proposalAmount-->'+proposalAmount);
+                                            proposalAmount = parseFloat(proposalAmount).toFixed(2);
+                                            console.log('<--proposalAmount-->'+proposalAmount);
+                                            
                                         }
         
-                                        console.log('keys()-->',serviceCatVsTotalCostMap);
-                                        console.log('serviceCategory-->'+serviceCategory);
-                                        console.log('thisProductCode-->'+thisProductCode);
                                         if (serviceCatVsTotalCostMap.has(serviceCategory) /*&& thisProductCode != '69201198'*/) {
                                             let existingTotalCost = Number(serviceCatVsTotalCostMap.get(serviceCategory));
-                                            console.log('existingTotalCost-->'+existingTotalCost);
                                             let currentVal = Number(record[k].Value);
-                                            console.log('currentVal-->'+currentVal);
                                             let updatedVal = existingTotalCost + currentVal;
-                                            console.log('updatedVal-->'+updatedVal);
                                             updatedVal = parseFloat(updatedVal).toFixed(2);
-                                            console.log('updatedVal-->'+updatedVal);
                                             serviceCatVsTotalCostMap.set(serviceCategory, String(updatedVal));
                                         }
                                         // else {
@@ -1966,7 +1959,8 @@
         component.set('v.servCatVsExtendedCostMap', servCatVsTotalCost);
         component.set('v.totalInstallCost', installCost);
         component.set('v.totalProposalAmount', proposalAmount);
-        helper.reCalculateTable(component, event, helper, installCost, proposalAmount, ocipextendedcost)
+        console.log('<--proposalAmount-->'+proposalAmount);
+        helper.reCalculateTable(component, event, helper, installCost, proposalAmount, ocipextendedcost, ocipreq);
 
         // alert('** Reached process');
         // debugger;
@@ -1989,7 +1983,7 @@
         component.set('v.totalProposalBaseValue', totalProposalBaseValue.toString());
         // $A.get('e.force:refreshView').fire();
     },
-    reCalculateTable: function(component, event, helper, installCost, proposalAmount, ocipextendedcost) {
+    reCalculateTable: function(component, event, helper, installCost, proposalAmount, ocipextendedcost, ocipreq) {
         console.log(proposalAmount + '{..............}' + installCost + 'Recalculate table+++++++++++++++++++++===========================');
         const bomlineIdVsTexturaFee = new Map();
         const bomlineIdVsGLFee = new Map();
@@ -2033,7 +2027,7 @@
                 }
             }
 
-            if (bomList[0].buildertek__General_Liability_Insurance_Long__c != null && bomList[0].buildertek__General_Liability_Insurance_Long__c != undefined) {
+            if (bomList[0].buildertek__General_Liability_Insurance_Long__c != null && bomList[0].buildertek__General_Liability_Insurance_Long__c != undefined && ocipreq) {
                 var generalLiability = [];
                 generalLiability = JSON.parse(bomList[0].buildertek__General_Liability_Insurance_Long__c);
                 if (generalLiability != null && generalLiability != undefined && generalLiability.length > 0) {
@@ -2063,7 +2057,7 @@
             }
 
 
-            if (bomList[0].buildertek__Workers_Comp__c != null && bomList[0].buildertek__Workers_Comp__c != undefined) {
+            if (bomList[0].buildertek__Workers_Comp__c != null && bomList[0].buildertek__Workers_Comp__c != undefined && ocipreq) {
                 var workersComp = [];
                 workersComp = JSON.parse(bomList[0].buildertek__Workers_Comp__c);
                 if (workersComp != null && workersComp != undefined && workersComp.length > 0) {
@@ -2115,7 +2109,7 @@
             console.log(component.get('v.buildPhaseName') +'phase name is --------');
             var phaseName = component.get('v.buildPhaseName');
             let OCIPVal = 0.0;
-            if ((phaseName == 'Base' || phaseName == 'Option') && wcRateValue != null && wcRateValue != undefined && glRateValue != null && glRateValue != undefined) {
+            if ((phaseName == 'Base' || phaseName == 'Option') && wcRateValue != null && wcRateValue != undefined && glRateValue != null && glRateValue != undefined && ocipreq) {
                 OCIPVal = (Number(wcRateValue) + Number(glRateValue)) * -1;
                 bomList[0].buildertek__OCIP_CCIP__c = OCIPVal;
                 console.log(OCIPVal + 'Ocip vaalue is :)---------');

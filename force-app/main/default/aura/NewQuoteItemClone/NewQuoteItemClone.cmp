@@ -1443,7 +1443,7 @@
                                                             <option value="">No Grouping</option>
                                                             <aura:iteration items="{!v.quotelineRecords}" var="rec">
                                                                 <aura:if isTrue="{!rec.Name != 'No Grouping'}">
-                                                                    <aura:if isTrue="{!(rec.Name == item.buildertek__Grouping__c)}">
+                                                                    <aura:if isTrue="{!(rec.Id == item.buildertek__Grouping__c)}">
                                                                         <option text="{!rec.Name}" value="{!rec.Id}" selected="true" />
                                                                         <aura:set attribute="else">
                                                                             <option text="{!rec.Name}" value="{!rec.Id}" selected="false" />

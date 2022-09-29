@@ -1,5 +1,5 @@
 ({
-    createNewQuote: function (component, event, helper) {
+    createNewQuote: function(component, event, helper) {
         component.set("v.Spinner", true);
         var recordId = component.get("v.recordId");
         console.log('recordId =>', { recordId });
@@ -7,11 +7,24 @@
         action.setParams({
             recordId: recordId
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var result = response.getReturnValue();
             console.log('Result =>', { result });
 
-            if (result == 'Success') {
+            if (result == 'Error') {
+
+                tst.setParams({
+                    title: 'Error',
+                    message: 'Something Went Wrong',
+                    type: 'Error',
+                    duration: 5000
+                });
+                tst.fire();
+
+
+
+            } else {
+
                 var tst = $A.get("e.force:showToast");
                 tst.setParams({
                     title: 'Complete',
@@ -20,21 +33,21 @@
                     duration: 5000
                 });
                 tst.fire();
-            } else {
-                tst.setParams({
-                    title: 'Error',
-                    message: 'Something Went Wrong',
-                    type: 'Error',
-                    duration: 5000
+                var navEvent = $A.get("e.force:navigateToSObject");
+
+                navEvent.setParams({
+                    "recordId": result,
                 });
-                tst.fire();
+
+                navEvent.fire();
+
             }
             component.set("v.Spinner", false);
             $A.get("e.force:closeQuickAction").fire();
         });
         $A.enqueueAction(action);
     },
-    closeModal: function (component, event, helper) {
+    closeModal: function(component, event, helper) {
         $A.get("e.force:closeQuickAction").fire();
     }
 })

@@ -4,7 +4,7 @@
         
 	},
     computeProgress : function(component, event, helper)  {
-        debugger;
+        // debugger;
         var totalVal = component.get("v.totalProgress");
         var actualVal = component.get("v.actualProgress"); 
         console.log('totalVal:;',totalVal);

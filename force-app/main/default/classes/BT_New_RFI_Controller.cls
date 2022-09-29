@@ -184,6 +184,7 @@ public without sharing class BT_New_RFI_Controller {
     @AuraEnabled 
     public static User fetchUser1(){
         User u = [select id,Name, AccountId from User where id =: userInfo.getUserId()];
+        system.debug('Please check data flow here ==> '+u);
         return u;
     }
     @AuraEnabled 

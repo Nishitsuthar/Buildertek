@@ -998,7 +998,8 @@ global with sharing class BT_TreeRemotingModel{
 						                          where buildertek__Question_Group__c = :parentId];
 						for (sobject obj : controls){
 							TreeNode n = new TreeNode(id + '/' + obj.Id, (String)obj.get('Name'), objType, '', true, BT_UIConfig.getNodeIconImage(objType, false, obj.Id, '', obj), queryParameters);
-							n.tooltip = null;
+							// n.tooltip = null;
+							n.tooltip = (String)obj.get('Name');
 							//n.expand=false;
 							n.userData.objSelectedRecord = obj;
 							if (String.isNotEmpty((String)obj.get('Name'))){

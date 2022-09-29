@@ -402,11 +402,24 @@ public with sharing class BT_SendEmailController{
                 subject = subject + ' - [ref:' + recordId + ']';
                 body = body;
             }
-              if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Permit__c'){
+            if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Permit__c'){
                 buildertek__Permit__c permit = new buildertek__Permit__c(); 
-                permit = [SELECT Id,Name from buildertek__Permit__c where Id =:recordId];
-                //mail.setTemplateId(templateId);
-                subject = subject + permit.Name +' - [ref:' + recordId + ']';
+                permit = [SELECT Id, Name, buildertek__Permit_Number__c FROM buildertek__Permit__c WHERE Id =:recordId];
+
+                if (templateId != null && templateId != '') {
+                    mail.setTemplateId(templateId);
+                    mail.setWhatId(recordId);
+                    mail.setTargetObjectId(conList[0].Id);
+    
+                    Savepoint sp = Database.setSavepoint();
+                    Messaging.SendEmailResult[] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
+                    Database.rollback(sp);
+
+                    body = mail.getHTMLBody();
+                }
+
+                // subject = subject + permit.Name +' - [ref:' + recordId + ']';
+                subject = subject + permit.Name +' - ' + permit.buildertek__Permit_Number__c;
                 body = body;
             }
             if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Contract__c'){
@@ -510,7 +523,7 @@ public with sharing class BT_SendEmailController{
 
             // Attached record pdf as an attachment
             List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
-            if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__RFQ__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__RFI__c'){
+            if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__RFQ__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__RFI__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__Permit__c'){
                 if (String.isNotBlank(templateId)){
                     Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
                     efa.setFileName(pdfFileName + '.pdf');
