@@ -1,29 +1,24 @@
 ({
-    createPO: function(component, event, helper){
-        var recordId = component.get("v.recordId");
-        console.log('recordId => '+recordId);
-        var action = component.get("c.createPO");
-        action.setParams({
-            recordId: recordId
-        });
-        action.setCallback(this, function(response) {
-            var result = response.getReturnValue();
-            console.log('Result =>', { result });
-            if (result != 'Error') {
-                helper.showToast("Success", "Success", "New PO Line Created.", "5000");
-                var navEvent = $A.get("e.force:navigateToSObject");
-                navEvent.setParams({
-                    "recordId": result,
-                });
-                navEvent.fire();
-            } else {
-                helper.showToast("Error", "Error", "Something Went Wrong", "5000");
-            }
+    doInit: function(component, event, helper){
+        helper.doInitHelper(component, event, helper);
+    },
 
-            component.set("v.Spinner", false);
-            $A.get("e.force:closeQuickAction").fire();
-        });
-        $A.enqueueAction(action);
+    updateColumnSorting: function (component, event, helper) {
+        var fieldName = event.getParam('fieldName');
+        var sortDirection = event.getParam('sortDirection');
+        component.set("v.sortedBy", fieldName);
+        component.set("v.sortedDirection", sortDirection);
+        helper.sortData(component, fieldName, sortDirection);
+    },
+
+    updateSelectedText: function (component, event, helper) {
+        var selectedRows = event.getParam('selectedRows');
+        console.log('selectedRows => ', {selectedRows});
+        component.set("v.selectedRowList", selectedRows);
+    },
+
+    createRecord: function(component, event, helper){
+        helper.createRecord(component, event, helper);
     },
 
     closeModal: function(component, event, helper) {

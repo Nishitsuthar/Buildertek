@@ -93,8 +93,9 @@
                 action.setCallback(this, function (response) {
                     var state = response.getState();
                     var subject = 'PurchaseOrder[ref:' + component.get("v.recordId") + ']';
+                    var result = response.getReturnValue();
+                    console.log('Result =>', {result});
                     if (state === "SUCCESS") {
-                        var result = response.getReturnValue();
                         if (result === 'Success') {
                             component.set("v.Spinner", false);
                             $A.get("e.force:closeQuickAction").fire();

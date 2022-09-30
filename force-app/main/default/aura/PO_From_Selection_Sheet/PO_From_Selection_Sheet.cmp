@@ -1,4 +1,4 @@
-<aura:component controller="Create_PO_From_Option" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
+<aura:component controller="PO_From_Selection_Sheet" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
 
     <aura:attribute name="Spinner" type="Boolean" default="false"/>
     <ltng:require styles="{!$Resource.ModalPreviewCSS}" />

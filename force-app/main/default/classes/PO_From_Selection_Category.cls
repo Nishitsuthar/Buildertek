@@ -1,12 +1,12 @@
-public with sharing class Create_PO_From_Selection {
-
+public with sharing class PO_From_Selection_Category {
     @AuraEnabled
-    public static void createPO(String recordId, List<buildertek__Question__c> selectedRowList) {
-        
+    public static void createPO(String recordId){
+        List<buildertek__Question__c> optionList = [SELECT Id, Name, buildertek__Selected__c, buildertek__Product__c, buildertek__Product__r.Name , buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Quantity__c, buildertek__Cost__c, buildertek__Purchase_Order__c, buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c FROM buildertek__Question__c WHERE buildertek__Question_Group__r.buildertek__Section__c =: recordId AND buildertek__Selected__c = true AND buildertek__Manufacturer__c != null AND buildertek__Product__c != null AND buildertek__Purchase_Order__c = null];
+
         List<String> manufacturerIds = new List<String>();
         List<Account> manufacturerList = new List<Account>();
 
-        for (buildertek__Question__c option : selectedRowList) {
+        for (buildertek__Question__c option : optionList) {
             System.debug('Option => '+option);
             if (!manufacturerIds.contains(option.buildertek__Manufacturer__c)) {
                 manufacturerIds.add(option.buildertek__Manufacturer__c);
@@ -20,8 +20,8 @@ public with sharing class Create_PO_From_Selection {
             System.debug('manufacturer => '+manufacturer);
             po.buildertek__Description__c = manufacturer.Name;
             po.buildertek__Vendor__c = manufacturer.Id;
-            if (selectedRowList[0].buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c != null) {
-                po.buildertek__Project__c = selectedRowList[0].buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c;
+            if (optionList[0].buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c != null) {
+                po.buildertek__Project__c = optionList[0].buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c;
             }
             poList.add(po);
             System.debug('po => '+po);
@@ -29,7 +29,7 @@ public with sharing class Create_PO_From_Selection {
         insert poList;
 
         Map<Id, buildertek__Purchase_Order_Item__c> poItemMap = new Map<Id, buildertek__Purchase_Order_Item__c>();
-        for (buildertek__Question__c option : selectedRowList){
+        for (buildertek__Question__c option : optionList){
             for (buildertek__Purchase_Order__c po : poList) {
                 if (option.buildertek__Manufacturer__c == po.buildertek__Vendor__c) {
                     buildertek__Purchase_Order_Item__c poLine = new buildertek__Purchase_Order_Item__c();
@@ -43,7 +43,7 @@ public with sharing class Create_PO_From_Selection {
         }
         insert poItemMap.values();
 
-        for (buildertek__Question__c option : selectedRowList){
+        for (buildertek__Question__c option : optionList){
             for (Id key : poItemMap.keySet()) {
                 if (option.Id == key) {
                     option.buildertek__Purchase_Order_Line__c = poItemMap.get(key).Id;
@@ -52,14 +52,7 @@ public with sharing class Create_PO_From_Selection {
                 }
             }
         }
-        update selectedRowList;
-        
-    }
+        update optionList;
 
-    @AuraEnabled
-    public static List<buildertek__Question__c> getOption(String recordId) {
-        List<buildertek__Question__c> optionList = [SELECT Id, Name, buildertek__Selected__c, buildertek__Product__c, buildertek__Product__r.Name , buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Quantity__c, buildertek__Cost__c, buildertek__Purchase_Order__c, buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c FROM buildertek__Question__c WHERE buildertek__Question_Group__c =: recordId AND buildertek__Selected__c = true AND buildertek__Manufacturer__c != null AND buildertek__Product__c != null AND buildertek__Purchase_Order__c = null];
-        System.debug('optionList => '+optionList);
-        return optionList;
     }
 }

@@ -18,11 +18,29 @@ public with sharing class QuestionTriggerHandler {
     }
     
     public void OnBeforeInsert(Question__c[] newQuestions){
-        
+        for(Question__c q : newQuestions){
+            if (q.buildertek__Product__c != null) {
+                Product2 prod = [SELECT Id, Name, (SELECT UnitPrice FROM PricebookEntries WHERE IsActive = True) FROM Product2 WHERE Id =: q.buildertek__Product__c];
+                if (q.buildertek__Cost__c == null) {
+                    if (prod.PricebookEntries.size() > 0) {
+                        q.buildertek__Cost__c = prod.PricebookEntries[0].UnitPrice;
+                    }
+                }
+            }
+        }
     }
      
     public void OnBeforeUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap){
-        
+        for(Question__c q : updatedQuestions){
+            if (q.buildertek__Product__c != null) {
+                Product2 prod = [SELECT Id, Name, (SELECT UnitPrice FROM PricebookEntries WHERE IsActive = True) FROM Product2 WHERE Id =: q.buildertek__Product__c];
+                if (q.buildertek__Cost__c == null) {
+                    if (prod.PricebookEntries.size() > 0) {
+                        q.buildertek__Cost__c = prod.PricebookEntries[0].UnitPrice;
+                    }
+                }
+            }
+        }
     }
      
     public void OnBeforeDelete(Question__c[] QuestionsToDelete, Map<ID, Question__c> QuestionsMap){

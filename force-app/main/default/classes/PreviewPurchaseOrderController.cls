@@ -53,154 +53,515 @@ public with sharing class PreviewPurchaseOrderController {
    }
    
    @AuraEnabled
-    public static String sendProposal(String htmlBody, String recordId, String templateId, List<String> to, List<String> cc,String fileid, List<Id> attacheDocs){
+    public static List<String> sendProposal(String htmlBody, String recordId, String templateId, List<String> to, List<String> cc,String fileid, List<Id> attacheDocs){
+        
+        List<string> stringList = new List<string>();
+        string apexData = 'Start';
+        stringList.add(apexData);
+
         try{
+
+            apexData = 'htmlBody => '+htmlBody;
+            stringList.add(apexData);
+            apexData = 'recordId => '+recordId;
+            stringList.add(apexData);
+            apexData = 'templateId => '+templateId;
+            stringList.add(apexData);
+
+            apexData = 'Step 1';
+            stringList.add(apexData);
 
             System.debug('attacheDocs ==> '+attacheDocs);
             String body = '';
             //String subject = 'PurchaseOrder';
             String subject = ''; 
+
+            apexData = 'Step 2';
+            stringList.add(apexData);
+
             list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
                                                                                                  buildertek__Quote_Configuration__c,buildertek__Email_Subject__c 
                                                                                                  from buildertek__Admin_Interface_Node_Configuration__c
                                                                                                  WHERE Name=:'Purchase Order Configuration' and buildertek__Email_Subject__c !=null limit 1];
+            
+            apexData = 'Step 3';
+            stringList.add(apexData);
+
            if(adminInterfaceNodeConfigurations.size()>0){
+
+            apexData = 'Step 4 + adminInterfaceNodeConfigurations[0] => '+adminInterfaceNodeConfigurations[0].Id;
+            stringList.add(apexData);
+
                subject = adminInterfaceNodeConfigurations[0].buildertek__Email_Subject__c;
+
+               apexData = 'Step 5 + buildertek__Email_Subject__c => '+adminInterfaceNodeConfigurations[0].buildertek__Email_Subject__c;
+               stringList.add(apexData);
+
            }else{
+
+            apexData = 'Step 6';
+            stringList.add(apexData);
+
                subject = 'PurchaseOrder'; 
+
+               apexData = 'Step 7';
+               stringList.add(apexData);
+
            } 
+
+           apexData = 'Step 8';
+           stringList.add(apexData);
+
            List<buildertek__ConfirmationPageSiteURL__c> confirmationurl = buildertek__ConfirmationPageSiteURL__c.getall().values();
+           
+           apexData = 'Step 9';
+           stringList.add(apexData);
+
             string SiteUrl;
             if(confirmationurl.size() > 0){
+
+                apexData = 'Step 10 + confirmationurl => '+confirmationurl[0].Id;
+                stringList.add(apexData);
+
               SiteUrl = confirmationurl[0].buildertek__SiteURL__c ;
+
+              apexData = 'Step 11 + buildertek__SiteURL__c => '+confirmationurl[0].buildertek__SiteURL__c;
+              stringList.add(apexData);
+
             }
+
+            apexData = 'Step 12';
+            stringList.add(apexData);
+
            List<string> strTO = new List<string>();
            List<string> strCC = new List<string>();
            SET<Id> contactIdSet = new SET<Id>();
            List<Contact> conList = new List<Contact>();
+
+           apexData = 'Step 13';
+           stringList.add(apexData);
+
            if(Schema.sObjectType.Contact.fields.Id.isAccessible()
                && Schema.sObjectType.Contact.fields.email.isAccessible()){
+
+                apexData = 'Step 14';
+                stringList.add(apexData);
+
                conList = [Select Id, email from Contact where Id IN:to and email != null];        
+
+               apexData = 'Step 15';
+               stringList.add(apexData);
+
            }
+
+           apexData = 'Step 16';
+           stringList.add(apexData);
+
            system.debug('conList -------> '+conList);
            for(Contact con: conList){
+
+            apexData = 'Step 17 + con => '+con.Id;
+            stringList.add(apexData);
+
                strTO.add(con.email);
+
+               apexData = 'Step 18 + con.email => '+con.email;
+               stringList.add(apexData);
+
            }
+
+           apexData = 'Step 19';
+           stringList.add(apexData);
+
            List<Contact> ccConList = new List<Contact>(); 
            if(cc.size() > 0 && Schema.sObjectType.Contact.fields.Id.isAccessible()
                && Schema.sObjectType.Contact.fields.Email.isAccessible()){
-               ccConList = [Select Id, email from Contact where Id IN:cc and Email != null];        
+
+                apexData = 'Step 20';
+                stringList.add(apexData);
+
+               ccConList = [Select Id, email from Contact where Id IN:cc and Email != null]; 
+
+               apexData = 'Step 21';
+               stringList.add(apexData);
+
            }
+
+           apexData = 'Step 22';
+           stringList.add(apexData);
+
            if(ccConList.size() > 0){
+
+            apexData = 'Step 23';
+            stringList.add(apexData);
+
                for(Contact con: ccConList){
+
+                apexData = 'Step 24 + conId => '+con.Id;
+                stringList.add(apexData);
+
                    strCC.add(con.email);
+
+                   apexData = 'Step 25 + con.email =>'+con.email;
+                   stringList.add(apexData);
+
                }    
+
+               apexData = 'Step 26';
+               stringList.add(apexData);
+
            }
-            
+
+           apexData = 'Step 27';
+           stringList.add(apexData);
+
            List<ContentVersion> contentList = [SELECT id, Title, Versiondata, FileType FROM ContentVersion WHERE ContentDocumentId IN: attacheDocs];
+
+           apexData = 'Step 28';
+           stringList.add(apexData);
+
            System.debug('contentList => '+contentList);
 
             List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
             system.debug('strTO ---------> '+strTO);
             mail.setToAddresses(strTO);
+
+            apexData = 'Step 29';
+           stringList.add(apexData);
+
             if(strCC != null && strCC.size() > 0) {
+
+                apexData = 'Step 30';
+                stringList.add(apexData);
+
                 system.debug('strCC -------> '+strCC);
                mail.setCcAddresses(strCC);
+
+                apexData = 'Step 31';
+                stringList.add(apexData);
+
             }
+
+            apexData = 'Step 32';
+            stringList.add(apexData);
+
             EmailServicesAddress eServices;
             if(Schema.sObjectType.EmailServicesAddress.fields.Id.isAccessible()&&
                Schema.sObjectType.EmailServicesAddress.fields.AuthorizedSenders.isAccessible() &&
                Schema.sObjectType.EmailServicesAddress.fields.EmailDomainName.isAccessible() &&
                Schema.sObjectType.EmailServicesAddress.fields.LocalPart.isAccessible() &&
                Schema.sObjectType.EmailServicesAddress.fields.IsActive.isAccessible()){
+
+                apexData = 'Step 32';
+                stringList.add(apexData);
+
                 eServices =  [SELECT Id,AuthorizedSenders,EmailDomainName,IsActive,LocalPart FROM EmailServicesAddress where LocalPart = 'projects'];
+
+                apexData = 'Step 33 + eServices => '+eServices;
+                stringList.add(apexData);
+
            } 
+
+            apexData = 'Step 33';
+            stringList.add(apexData);
+
             string fromAddress = eServices.LocalPart+'@'+eServices.EmailDomainName;
+
+            apexData = 'Step 34 + fromAddress => '+fromAddress;
+            stringList.add(apexData);
+
              body += 'Hi, <br/><br/> ';
             body += '</br> Please &nbsp;'; 
             body += '<a href='+ SiteUrl +'buildertek__ConfirmationPage?Id='+recordId+'&templateId='+templateId+'>Click here</a>';
             body += '&nbsp;to confirm your Purchase Order details.' ;
+
+            apexData = 'Step 35 + body => '+body;
+            stringList.add(apexData);
+
             mail.setReplyTo(fromAddress);
+
+            apexData = 'Step 36';
+            stringList.add(apexData);
+
             subject = subject +'[ref:'+recordId+']'; 
+
+            apexData = 'Step 37 + subject => '+subject;
+            stringList.add(apexData);
+
             mail.setSubject(subject);
+
+            apexData = 'Step 38';
+            stringList.add(apexData);
+
             mail.setHTMLBody(body);
+
+            apexData = 'Step 39';
+            stringList.add(apexData);
+            
             mail.setSaveAsActivity(true);
+
+            apexData = 'Step 40';
+            stringList.add(apexData);
+            
             List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
             Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
             efa.setFileName('PurchaseOrder.pdf');
+
+            apexData = 'Step 41';
+            stringList.add(apexData);
+
             system.debug('Blob ---> '+setAttachmentBody(recordId, templateId,fileid));
             efa.setBody(setAttachmentBody(recordId, templateId,fileid));
+
+            apexData = 'Step 42';
+            stringList.add(apexData);
+
+            apexData = 'Step 43';
+            stringList.add(apexData);
+
             fileAttachments.add(efa); 
+
+            apexData = 'Step 44';
+            stringList.add(apexData);
+
             for (ContentVersion condocs : contentList) {
+
+                apexData = 'Step 45 + condocs => '+condocs.Id;
+                stringList.add(apexData);
+
                 System.debug('condocs=> '+condocs);
                 Messaging.Emailfileattachment efat = new Messaging.Emailfileattachment();
                 efat.setFileName(condocs.Title+'.'+condocs.FileType);
+
+                apexData = 'Step 46 + setFileName => '+condocs.Title+'.'+condocs.FileType;
+                stringList.add(apexData);
+
                 efat.setBody(condocs.Versiondata);
+
+                apexData = 'Step 47';
+                stringList.add(apexData);
+
                 fileAttachments.add(efat);
+
+                apexData = 'Step 48';
+                stringList.add(apexData);
+
             }
+
+            apexData = 'Step 49';
+            stringList.add(apexData);
+
             System.debug('fileAttachments => '+fileAttachments);
             mail.setFileAttachments(fileAttachments);
+
+            apexData = 'Step 50';
+            stringList.add(apexData);
+
             mails.add(mail);
+
+            apexData = 'Step 51';
+            stringList.add(apexData);
+
             Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);
             String message = 'Success';
+
+            apexData = 'Step 52';
+            stringList.add(apexData);
+            
                if(results.size() > 0){
+
+                apexData = 'Step 53';
+                stringList.add(apexData);
+                
                if (results[0].isSuccess()) {
+
+                apexData = 'Step 54';
+                stringList.add(apexData);
+
                    string Toaddresses= '';
                    string CCaddresses= '';
                    integer i = 0;
+
+                   apexData = 'Step 55';
+                   stringList.add(apexData);
+
                    for(String Str : strTO){
+
+                    apexData = 'Step 56 + Str => '+Str;
+                    stringList.add(apexData);
+
                        Toaddresses += Str;
+
+                       apexData = 'Step 56 + Toaddresses => '+Toaddresses;
+                       stringList.add(apexData);
+                       
                        if(strTO.size() > i){
+
+                        apexData = 'Step 57';
+                        stringList.add(apexData);
+
                            Toaddresses += ';';
+
+                           apexData = 'Step 58 + Toaddresses => '+Toaddresses;
+                           stringList.add(apexData);
                        }
+
+                       apexData = 'Step 59';
+                       stringList.add(apexData);
+
                        i++;
                    }
+
+                   apexData = 'Step 60';
+                   stringList.add(apexData);
+
                    for(String Str : strCC){
+
+                    apexData = 'Step + 61 Str => '+Str;
+                    stringList.add(apexData);
+
                        CCaddresses += Str;
+
+                       apexData = 'Step 62 + CCaddresses => '+CCaddresses;
+                       stringList.add(apexData);
+
                        if(strCC.size() > i){
+
+                        apexData = 'Step 63';
+                        stringList.add(apexData);
+
                            CCaddresses += ';';
+
+                           apexData = 'Step 64 + CCaddresses => '+CCaddresses;
+                           stringList.add(apexData);
+
                        }
                        i++;
                        
+                       apexData = 'Step 65';
+                       stringList.add(apexData);
+
                    }
+
+                   apexData = 'Step 67';
+                   stringList.add(apexData);
+
                    system.debug('CCaddresses ----------> '+CCaddresses);
                     EmailMessage caseEmailMessage = new EmailMessage();
                    caseEmailMessage.fromAddress= UserInfo.getUserEmail();
+
+                   apexData = 'Step 68 + UserInfo.getUserEmail() => '+UserInfo.getUserEmail();
+                   stringList.add(apexData);
+
                    caseEmailMessage.ToAddress = Toaddresses;
+
+                   apexData = 'Step 69 + Toaddresses => '+Toaddresses;
+                   stringList.add(apexData);
+
                    caseEmailMessage.FromName = UserInfo.getUserName();
+
+                   apexData = 'Step 70 + UserInfo.getUserName() => '+UserInfo.getUserName();
+                   stringList.add(apexData);
+
                    caseEmailMessage.CcAddress = CCaddresses;
+
+                   apexData = 'Step 71 + CCaddresses => '+CCaddresses;
+                   stringList.add(apexData);
+
                    caseEmailMessage.Subject = subject;
+
+                   apexData = 'Step 72';
+                   stringList.add(apexData);
+
                    caseEmailMessage.HtmlBody = body;
+
+                   apexData = 'Step 73';
+                   stringList.add(apexData);
+
                    caseEmailMessage.Incoming= False;
+
+                   apexData = 'Step 74';
+                   stringList.add(apexData);
+
                    //caseEmailMessage.IsTracked=true;
                    caseEmailMessage.buildertek__Is_Incoming_Email__c = false;
+
+                   apexData = 'Step 75';
+                   stringList.add(apexData);
+
                    caseEmailMessage.MessageDate = system.now();
+
+                   apexData = 'Step 76';
+                   stringList.add(apexData);
+
                    caseEmailMessage.TextBody = body.replaceAll('<br/>', '\n');
+
+                   apexData = 'Step 77';
+                   stringList.add(apexData);
+
                    system.debug('Content length ---------> '+body.length());
                    caseEmailMessage.status = '5';
+
+                   apexData = 'Step 78';
+                   stringList.add(apexData);
+
                    caseEmailMessage.RelatedToId = recordId;
+
+                   apexData = 'Step 79';
+                   stringList.add(apexData);
+
                    caseEmailMessage.buildertek__Subject__c = 'Re: '+subject;
+
+                   apexData = 'Step 80';
+                   stringList.add(apexData);
                    
                    insert caseEmailMessage;        
                    
-                   
+                   apexData = 'Step 81';
+                   stringList.add(apexData);
                    
                    EmailMessageRelation emr = new EmailMessageRelation();
                    emr.emailMessageId = caseEmailMessage.id;
+
+                   apexData = 'Step 82';
+                   stringList.add(apexData);
+
                    emr.relationId = UserInfo.getUserId(); // user id / contact Id of the sender
+
+                   apexData = 'Step 83';
+                   stringList.add(apexData);
+
                    emr.relationType = 'FromAddress';
+
+                   apexData = 'Step 84';
+                   stringList.add(apexData);
+
                    emr.relationAddress = caseEmailMessage.fromAddress;
-                   insert emr;        
+
+                   apexData = 'Step 85';
+                   stringList.add(apexData);
+
+                   insert emr;    
+                   
+                   apexData = 'Step 86';
+                   stringList.add(apexData);
                   
                }
            }
-            return message;                   
+            return null;                   
         }
         catch(Exception exp){
             system.debug('Error Message --------> '+exp);
            String message = exp.getMessage();
-           return message;    
+
+           String errorMessage = 'Error Message => '+exp.getMessage();
+           stringList.add(errorMessage);
+
+           String errorLine = 'Error Line no => '+exp.getLineNumber();
+           stringList.add(errorLine);
+
+           return stringList;    
         }
     }
     
@@ -224,6 +585,7 @@ public with sharing class PreviewPurchaseOrderController {
             if(confirmationurl.size() > 0){
               SiteUrl = confirmationurl[0].buildertek__SiteURL__c ;
             }
+
            List<string> strTO = new List<string>();
            List<string> strCC = new List<string>();
            SET<Id> contactIdSet = new SET<Id>();
