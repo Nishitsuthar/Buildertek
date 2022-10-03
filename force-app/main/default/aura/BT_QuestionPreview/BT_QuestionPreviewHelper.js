@@ -338,7 +338,9 @@
               }
             }
           }
-          console.log('Questions::', questions);
+          console.log('Questions::::');
+          console.log({questions});
+
           component.set("v.questions", questions);
           component.set("v.requiredReload", false);
           $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -361,5 +363,22 @@
       }
     });
     $A.enqueueAction(action);
+
+  //   var recordId = component.get("v.recordId");
+  //       console.log('recordId => ' + recordId);
+  //       var action = component.get("c.getProductFiles");
+  //       action.setParams({
+  //           recordId: recordId
+  //       });
+  //       action.setCallback(this, function (response) {
+  //           var state = response.getState();
+  //           console.log('Status =>', {state});
+  //           var result = response.getReturnValue();
+  //           console.log('Result =>', {result});
+  //           if (result[0] != 'Error') {
+  //               component.set("v.contentDocsList", result);
+  //           }
+  //       });
+  //       $A.enqueueAction(action);
   },
 });

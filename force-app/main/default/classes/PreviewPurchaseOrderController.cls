@@ -444,34 +444,34 @@ public with sharing class PreviewPurchaseOrderController {
 
                    }
 
-                   apexData = 'Step 67';
+                   apexData = 'Step 67 + UserInfo.getUserEmail() => '+UserInfo.getUserEmail();
                    stringList.add(apexData);
 
                    system.debug('CCaddresses ----------> '+CCaddresses);
                     EmailMessage caseEmailMessage = new EmailMessage();
                    caseEmailMessage.fromAddress= UserInfo.getUserEmail();
 
-                   apexData = 'Step 68 + UserInfo.getUserEmail() => '+UserInfo.getUserEmail();
+                   apexData = 'Step 68 + Toaddresses => '+Toaddresses;
                    stringList.add(apexData);
 
                    caseEmailMessage.ToAddress = Toaddresses;
 
-                   apexData = 'Step 69 + Toaddresses => '+Toaddresses;
+                   apexData = 'Step 69 + UserInfo.getUserName() => '+UserInfo.getUserName();
                    stringList.add(apexData);
 
                    caseEmailMessage.FromName = UserInfo.getUserName();
 
-                   apexData = 'Step 70 + UserInfo.getUserName() => '+UserInfo.getUserName();
+                   apexData = 'Step 70 + CCaddresses => '+CCaddresses;
                    stringList.add(apexData);
 
                    caseEmailMessage.CcAddress = CCaddresses;
 
-                   apexData = 'Step 71 + CCaddresses => '+CCaddresses;
+                   apexData = 'Step 71 + subject =>'+subject;
                    stringList.add(apexData);
 
                    caseEmailMessage.Subject = subject;
 
-                   apexData = 'Step 72';
+                   apexData = 'Step 72 + body => '+body;
                    stringList.add(apexData);
 
                    caseEmailMessage.HtmlBody = body;
@@ -487,12 +487,12 @@ public with sharing class PreviewPurchaseOrderController {
                    //caseEmailMessage.IsTracked=true;
                    caseEmailMessage.buildertek__Is_Incoming_Email__c = false;
 
-                   apexData = 'Step 75';
+                   apexData = 'Step 75 + system.now() => '+system.now();
                    stringList.add(apexData);
 
                    caseEmailMessage.MessageDate = system.now();
 
-                   apexData = 'Step 76';
+                   apexData = 'Step 76 + Body => '+body.replaceAll('<br/>', '\n');
                    stringList.add(apexData);
 
                    caseEmailMessage.TextBody = body.replaceAll('<br/>', '\n');
@@ -503,7 +503,7 @@ public with sharing class PreviewPurchaseOrderController {
                    system.debug('Content length ---------> '+body.length());
                    caseEmailMessage.status = '5';
 
-                   apexData = 'Step 78';
+                   apexData = 'Step 78 + recordId => '+recordId;
                    stringList.add(apexData);
 
                    caseEmailMessage.RelatedToId = recordId;
@@ -524,7 +524,7 @@ public with sharing class PreviewPurchaseOrderController {
                    EmailMessageRelation emr = new EmailMessageRelation();
                    emr.emailMessageId = caseEmailMessage.id;
 
-                   apexData = 'Step 82';
+                   apexData = 'Step 82 + UserInfo.getUserId() => '+UserInfo.getUserId();
                    stringList.add(apexData);
 
                    emr.relationId = UserInfo.getUserId(); // user id / contact Id of the sender
@@ -534,7 +534,7 @@ public with sharing class PreviewPurchaseOrderController {
 
                    emr.relationType = 'FromAddress';
 
-                   apexData = 'Step 84';
+                   apexData = 'Step 84 + caseEmailMessage.fromAddress => '+caseEmailMessage.fromAddress;
                    stringList.add(apexData);
 
                    emr.relationAddress = caseEmailMessage.fromAddress;
@@ -546,10 +546,10 @@ public with sharing class PreviewPurchaseOrderController {
                    
                    apexData = 'Step 86';
                    stringList.add(apexData);
-                  
                }
            }
-            return null;                   
+           List<string> listName = new List<string>{'Success'};
+            return listName;                   
         }
         catch(Exception exp){
             system.debug('Error Message --------> '+exp);

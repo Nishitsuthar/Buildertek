@@ -662,8 +662,9 @@
                                 onchange="{!c.selectedItem}" />
                         </td>
 
-                        <!--image -->
-                        <aura:if isTrue="{!!v.imageVisibility}">
+                        
+                        <!--for images check this code -->
+                        <!-- <aura:if isTrue="{!!v.imageVisibility}">
                             <td data-label="Option Image" scope="row">
                                 <div class="slds-truncate">
                             <td
@@ -693,14 +694,7 @@
                                                 <lightning:icon iconName="utility:delete" size="x-small" />
                                             </span>
                                         </div>
-                                      <!--  <aura:set attribute="else">
-                                            <span data-id="{!index}" data-checkId="{!question.check.Id}"
-                                                onclick="{!c.onReuploadPhoto}" style="float:right;">
-                                                <lightning:icon iconName="utility:edit" size="xx-small" title="Edit" />
-                                            </span>
-                                            <img src="{!$Resource.NoImageFound}" width="150" height="150"
-                                                data-id="{!index}" data-checkId="{!question.check.Id}" />
-                                        </aura:set>-->
+                                      
                                         <aura:if isTrue="{!v.isCustomerCommunity}">
                                             <img src="{!'/Customer/sfc/servlet.shepherd/version/download/'+question.check.buildertek__Temp_Image_Id__c}"
                                                 width="150" height="150" data-id="{!index}" onclick="{!c.onPhotoShow}"
@@ -747,7 +741,38 @@
                             </td>
                             </div>
                             </td>
+                        </aura:if> -->
+                        <aura:if isTrue="{!!v.imageVisibility}">
+                            <td>
+                                {!question}
+                                <div style="margin: 1rem 0.1rem 0.1rem 0.1rem;">
+                                    <lightning:carousel disableAutoRefresh="false" disableAutoScroll="true">
+                                        <lightning:carouselImage
+                                            src = "https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-600w-1725825019.jpg"
+                                            
+                                            description = ""
+                                            alternativeText = "First card accessible description."
+                                            href = "">
+                                        </lightning:carouselImage>
+                                        <lightning:carouselImage
+                                            src = "https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-600w-1725825019.jpg"
+                                            
+                                            description = ""
+                                            alternativeText = "Second card accessible description."
+                                            href = "">
+                                        </lightning:carouselImage>
+                                        <lightning:carouselImage
+                                            src = "https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-600w-1725825019.jpg"
+                                            
+                                            description = ""
+                                            alternativeText = "Third card accessible description."
+                                            href = "">
+                                        </lightning:carouselImage>
+                                    </lightning:carousel>
+                                </div>
+                            </td>
                         </aura:if>
+
 
                         <!-- Question text with help text -->
                         <td data-label="Option Name" scope="row">

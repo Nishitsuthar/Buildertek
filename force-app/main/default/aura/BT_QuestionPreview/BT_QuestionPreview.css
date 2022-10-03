@@ -88,5 +88,10 @@
     visibility: hidden;
 }
 
+.THIS .slds-carousel__content{
+    display: none; 
+    visibility: hidden;
+}
+
 .THIS .tr:hover {background-color:#f5f5f5;}
 .THIS .td:hover {background-color:#f5f5f5;}

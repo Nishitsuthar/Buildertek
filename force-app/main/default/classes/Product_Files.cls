@@ -12,17 +12,18 @@ public with sharing class Product_Files {
                 System.debug('contentLinkList => '+contentLinkList);
 
                 if (contentLinkList.size() > 0) {
-                    Set<Id> contentLinkSet = new Set<Id>();
+                    // Set<Id> contentLinkSet = new Set<Id>();
                     for (ContentDocumentLink link : contentLinkList) {
-                        contentLinkSet.add(link.ContentDocumentId);
+                        // contentLinkSet.add(link.ContentDocumentId);
+                        returnList.add(link.ContentDocumentId);
                     }
-                    System.debug('contentLinkSet =>'+contentLinkSet);
-                    List<ContentVersion> contentList = [SELECT id, Title, ContentDocumentId FROM ContentVersion WHERE ContentDocumentId IN: contentLinkSet];
-                    System.debug('contentList => '+contentList);
+                    // System.debug('contentLinkSet =>'+contentLinkSet);
+                    // List<ContentVersion> contentList = [SELECT id, Title, ContentDocumentId FROM ContentVersion WHERE ContentDocumentId IN: contentLinkSet];
+                    // System.debug('contentList => '+contentList);
 
-                    for (ContentVersion contentDocs : contentList) {
-                        returnList.add(contentDocs.ContentDocumentId);
-                    }
+                    // for (ContentVersion contentDocs : contentList) {
+                    //     returnList.add(contentDocs.ContentDocumentId);
+                    // }
                     return returnList; 
                 } else{
                     System.debug('There Are No Files');

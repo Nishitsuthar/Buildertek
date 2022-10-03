@@ -96,7 +96,7 @@
                     var result = response.getReturnValue();
                     console.log('Result =>', {result});
                     if (state === "SUCCESS") {
-                        if (result === 'Success') {
+                        if (result[0] === 'Success') {
                             component.set("v.Spinner", false);
                             $A.get("e.force:closeQuickAction").fire();
                             var toastEvent = $A.get("e.force:showToast");
