@@ -1176,6 +1176,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
     createGantt() {
         try {
+            console.log('scheduleData check => ',this.scheduleData);
+            console.log('scheduleItemsData check => ',this.scheduleItemsData);
+            console.log('scheduleItemsDataList check => ',this.scheduleItemsDataList);
             var GanttToolbar;
             var loc = window.location.href
             var domName = loc.split('.lightning.force.com')[0].split('https://')[1]
@@ -1197,6 +1200,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             var assignmentRowData = [];
             var rows = [];
             var formatedSchData = formatData(this.scheduleData, this.scheduleItemsData, this.scheduleItemsDataList)
+            console.log('formatedSchData => ',{formatedSchData});
             tasks['rows'] = formatedSchData['rows'];
             resources['rows'] = formatedSchData['resourceRowData'];
             assignments['rows'] = formatedSchData['assignmentRowData'];
@@ -1338,7 +1342,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                             var endDate;
                             var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                             if (record.value) {
-                                console.log('Record =>',{record});
+                                // console.log('Record of endDate =>',{record});
                                 if (record.record._data.duration >= 1 && record.record._data.type == "Task" && record.record._data.name != 'Milestone Complete') {
                                     var start;
                                     var endDate = new Date(record.value);

@@ -203,6 +203,7 @@ public class BT_NewGanttChartCls {
         dataTableDtls.profileName = profileName;
         //BT_FormatGanttData formatsch = new BT_FormatGanttData();
         //dataTableDtls.ganttJSON = BT_FormatGanttData.formatScheduleData(dataTableDtls.lstOfSObjs,dataTableDtls.scheduleObj);
+        
         return dataTableDtls;
     } 
 
