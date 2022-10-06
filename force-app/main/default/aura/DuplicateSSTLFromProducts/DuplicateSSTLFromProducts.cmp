@@ -26,7 +26,8 @@
     <aura:attribute name="isMoreProductSelected" type="Boolean" default="false" />
     <aura:attribute name="divHeight" type="Integer" />
     <aura:attribute name="NewProduct" type="List" default="[]" />
-     <aura:attribute name="isDelete" type="Boolean" default="false" />
+    <!-- <aura:attribute name="selectedpricebookName" type="String" default="All" /> -->
+        <aura:attribute name="isDelete" type="Boolean" default="false" />
      <aura:attribute name="priceBookFlag" type="Integer" default="1" />
     
     <aura:attribute name="isReplaceAll" type="Boolean" default="false" />
@@ -96,7 +97,7 @@
     <aura:attribute name="bomLineselectedFieldsLength" type="Integer" />	
     
     <!-- price book -->
-    <aura:attribute name="pricebookName" type="string" />
+    <aura:attribute name="pricebookName" type="string"/>
     <aura:attribute name="pricebookoptions" type="List" />
     <!-- price book end -->
     
@@ -680,7 +681,7 @@
                         <div class="slds-col slds-size_1-of-6" style="padding-left: 0px; font-size: 0.7rem;">
                             <span>
                                 <lightning:button class="slds-button slds-button_neutral fullWidth" aura:id="addSSTL"
-                                                  label="Add Products" onclick="{!c.addSSTL}" /> <!-- Add To SSTL -->
+                                    label="Add Products" onclick="{!c.addSSTL}" /> <!-- Add To SSTL -->
                             </span>
                         </div>
                     </div>

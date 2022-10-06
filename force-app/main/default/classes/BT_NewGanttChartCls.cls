@@ -505,6 +505,7 @@ public class BT_NewGanttChartCls {
         buildertek__Project_Task__c task = [select Id,buildertek__Type__c,buildertek__Indent_Task__c,Name,buildertek__Order__c,buildertek__Phase__c,buildertek__Dependency__c,buildertek__Completion__c,
         buildertek__Start__c,buildertek__Finish__c,buildertek__Duration__c,buildertek__Lag__c,buildertek__Resource__c,buildertek__Contractor__c,
         buildertek__Contractor_Resource__c,buildertek__Budget__c,buildertek__Add_To_All_Active_Schedules__c,buildertek__Notes__c,buildertek__Schedule__c From buildertek__Project_Task__c Where Id=:taskId ];
+        System.debug('Task String checking ==> '+task);
         return task;
     }
 

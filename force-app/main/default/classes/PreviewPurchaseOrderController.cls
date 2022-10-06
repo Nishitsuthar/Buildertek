@@ -12,7 +12,7 @@ public with sharing class PreviewPurchaseOrderController {
            }
        return temrec;
    }
-//    just coment
+   
    @AuraEnabled
    public static string getPurchaseOrderLines(String recordId, String templateId){
         string templateBody = '';

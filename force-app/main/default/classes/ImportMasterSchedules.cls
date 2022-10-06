@@ -265,7 +265,7 @@ public static MessageClass importMasterScheduleLines(List<String> scheduleRecIds
         } else{
             system.debug('Error---');
             msg.Status = 'Failed';
-            msg.Message = 'There were no schedule Lines for the selected schedule';
+            msg.Message = 'There are no schedule lines for the selected schedule.';
         }
         return msg;
     } catch (Exception e){

@@ -37,36 +37,38 @@
             <tbody class = "slds-scrollable">
                 <aura:if isTrue="{!v.permitList != null}">
                     <aura:iteration items="{!v.permitList}" var="record"> 
-                        <td role="gridcell" class="slds-truncate">
-                            <lightning:input aura:id="checkContractor" type="checkbox" checked="{record.Id}" name="{!record.Id}" onchange="{!c.handleCheck}"/>
-                        </td>
-                        <td role="gridcell" class="slds-truncate">
-                            {!record.buildertek__Permit__c}
-                        </td>
-                        <td role="gridcell" class="slds-truncate">
-                          
-                            <ui:outputURL
-                                                          value="{!'/one/one.app?#/sObject/'+ record.Id + '/view'}"
-                                                          target="_blank" label="{!record.Name}" />
-                        </td>
-                        <td role="gridcell" class="slds-truncate">
-                            {!record.buildertek__Permit_Type__c}
-                        </td>
-                        <td role="gridcell" class="slds-truncate">
-                            {!record.buildertek__Status__c}
-                        </td>
-                        <td role="gridcell" class="slds-truncate">
-                            {!record.buildertek__Date_Ordered__c}
-                        </td>
-                        <td role="gridcell" class="slds-truncate">
-                            {!record.buildertek__Date_Scheduled__c}
-                        </td>
-                        <td role="gridcell" class="slds-truncate">
-                            {!record.buildertek__Date_Completed__c}
-                        </td>
-                        <td role="gridcell" class="slds-truncate">
-                            {!record.buildertek__Inspector__c}
-                        </td>
+                        <tr>
+                            <td role="gridcell" class="slds-truncate">
+                                <lightning:input aura:id="checkContractor" type="checkbox" checked="{record.Id}" name="{!record.Id}" onchange="{!c.handleCheck}"/>
+                            </td>
+                            <td role="gridcell" class="slds-truncate">
+                                {!record.buildertek__Permit__c}
+                            </td>
+                            <td role="gridcell" class="slds-truncate">
+                            
+                                <ui:outputURL
+                                                            value="{!'/one/one.app?#/sObject/'+ record.Id + '/view'}"
+                                                            target="_blank" label="{!record.Name}" />
+                            </td>
+                            <td role="gridcell" class="slds-truncate">
+                                {!record.buildertek__Permit_Type__c}
+                            </td>
+                            <td role="gridcell" class="slds-truncate">
+                                {!record.buildertek__Status__c}
+                            </td>
+                            <td role="gridcell" class="slds-truncate">
+                                {!record.buildertek__Date_Ordered__c}
+                            </td>
+                            <td role="gridcell" class="slds-truncate">
+                                {!record.buildertek__Date_Scheduled__c}
+                            </td>
+                            <td role="gridcell" class="slds-truncate">
+                                {!record.buildertek__Date_Completed__c}
+                            </td>
+                            <td role="gridcell" class="slds-truncate">
+                                {!record.buildertek__Inspector__c}
+                            </td>
+                        </tr>
                     </aura:iteration>
                     <aura:set attribute="else">
                         <div class="slds-p-left_medium" style="text-align:center;">

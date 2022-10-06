@@ -315,6 +315,7 @@ public class ClonePaymentApp {
                     }
                 }  
                 
+                System.debug('COPayAppTrackRecs => '+COPayAppTrackRecs);
                 if(COPayAppTrackRecs.size() > 0){
                     Insert COPayAppTrackRecs;
                 } 

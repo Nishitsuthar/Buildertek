@@ -69,11 +69,24 @@ public class ScheduleItemBatchClass implements Database.Batchable<sObject>
                                                              buildertek__End_Date__c, 
                                                              buildertek__Original_Start_Date__c, 
                                                              buildertek__Original_End_Date__c FROM buildertek__Schedule__c where Id=:schId FOR UPDATE];
-                System.debug('scheduleList-----------'+scheduleList[0].buildertek__Start_Date__c);
-                System.debug('scheduleList-----------'+scheduleList[0].buildertek__End_Date__c);
-                System.debug('scheduleList-----------'+scheduleList[0].buildertek__Original_Start_Date__c);
-                System.debug('scheduleList-----------'+scheduleList[0].buildertek__Original_End_Date__c);
-                System.debug('scheduleList-----------'+scheduleList[0].buildertek__Original_Dates_Filled__c);
+                // System.debug('scheduleList-----------'+scheduleList[0].buildertek__Start_Date__c);
+                // System.debug('scheduleList-----------'+scheduleList[0].buildertek__End_Date__c);
+                // System.debug('scheduleList-----------'+scheduleList[0].buildertek__Original_Start_Date__c);
+                // System.debug('scheduleList-----------'+scheduleList[0].buildertek__Original_End_Date__c);
+                // System.debug('scheduleList-----------'+scheduleList[0].buildertek__Original_Dates_Filled__c);
+
+
+                for (buildertek__Schedule__c schedule : scheduleList) {
+                    System.debug('schedule.Id-----------'+schedule.Id);
+                    System.debug('schedule.buildertek__Start_Date__c-----------'+schedule.buildertek__Start_Date__c);
+                    System.debug('schedule.buildertek__End_Date__c-----------'+schedule.buildertek__End_Date__c);
+                    System.debug('schedule.buildertek__Original_Start_Date__c-----------'+schedule.buildertek__Original_Start_Date__c);
+                    System.debug('schedule.buildertek__Original_End_Date__c-----------'+schedule.buildertek__Original_End_Date__c);
+                    System.debug('schedule.buildertek__Original_Dates_Filled__c-----------'+schedule.buildertek__Original_Dates_Filled__c);
+    
+                }
+
+
                 List<buildertek__Schedule__c> scheduleListNew=new List<buildertek__Schedule__c>();
                 for(buildertek__Schedule__c scheduleRec:scheduleList){
                     if(scheduleRec.buildertek__Start_Date__c!=null && scheduleRec.buildertek__End_Date__c!=null){

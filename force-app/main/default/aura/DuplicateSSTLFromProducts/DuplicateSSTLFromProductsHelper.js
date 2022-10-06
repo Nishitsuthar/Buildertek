@@ -192,7 +192,7 @@
         }*/
     },
     getRecords: function (component, event, helper) {
-        debugger;
+        
         var productPageNumber = component.get("v.productPageNumber");
         var productPageSize = component.get("v.productPageSize");
         var pageNumber = component.get("v.pageNumber");
@@ -211,7 +211,7 @@
             selectPriceBook : component.get("v.pricebookName")
         });
         action.setCallback(this, function (response) {
-            debugger;
+            
             var state = response.getState();
             if (state === "SUCCESS") { 
                 var result = response.getReturnValue();
@@ -240,7 +240,7 @@
                     //    helper.setPriceBookName(component, event, helper);
                     }
                     if (result.selectionSheetTakeOffLines != undefined) {
-                        debugger;
+                        
                         console.log('result.selectionSheetTakeOffLines::::',result.selectionSheetTakeOffLines);
                         console.log('result.SSTLTotalRecords::::',result.SSTLTotalRecords);
                         result.selectionSheetTakeOffLines != undefined ? helper.setSSTLRecords(component, SSTLPageNumber, SSTLPageSize, result.selectionSheetTakeOffLines.length, result.SSTLTotalRecords) : '';
@@ -294,7 +294,7 @@
                 var getFieldMapAction =  component.get("c.getFiledNameAndApi")
                 component.set("v.isSpinner",true)
                 getFieldMapAction.setCallback(this, function (response) {
-                    debugger;
+                    
                     var state = response.getState();
                     if (state === "SUCCESS") {
                         component.set("v.isSpinner",true)
@@ -313,7 +313,7 @@
                 var getProductFieldMapAction =  component.get("c.getProductFiledNameAndApi")
                 component.set("v.isSpinner",true)
                 getProductFieldMapAction.setCallback(this, function (response) {
-                    debugger;
+                    
                     var state = response.getState();
                     if (state === "SUCCESS") {
                         component.set("v.isSpinner",true)
@@ -331,7 +331,7 @@
                 var getBOMLineFieldMapAction =  component.get("c.getBOMLineFiledNameAndApi")
                 component.set("v.isSpinner",true)
                 getBOMLineFieldMapAction.setCallback(this, function (response) {
-                    debugger;
+                    
                     var state = response.getState();
                     if (state === "SUCCESS") {
                         component.set("v.isSpinner",true)
@@ -478,7 +478,7 @@
 
     //Set SSTL Response
     setSSTLRecords: function (component, pageNumber, pageSize, recordLength, totalRecords) {
-        debugger;
+        
         // SSTL
         component.set("v.SSTLIsNextDisabled", true);
         component.set("v.SSTLPageNumber", pageNumber);
@@ -495,7 +495,7 @@
 
     //Group by Trade Type
     groupRecords: function (data) {
-        debugger;
+        
         var listOfRecords = [];
         let recordMap = new Map();
         for (var i in data) {
@@ -537,7 +537,7 @@
        console.log('selectedFields>>>>'+selectedFields);
         var selectedFields = selectedFields;
         var selectedFieldsArray = selectedFields.split(",");         
-         debugger;
+         
          var listOfRecords = [];
          let recordMap = new Map();
         console.log('data>>>>',data);
@@ -634,7 +634,7 @@
        console.log('selectedFields>>>>'+selectedFields);
         var selectedFields = selectedFields;
         var selectedFieldsArray = selectedFields.split(",");         
-         debugger;
+         
          var listOfRecords = [];
          let recordMap = new Map();
         console.log('data>>>>',data);
@@ -1338,7 +1338,7 @@
             productTypeSSTL: productTypeSSTL*/
         });
         action.setCallback(this, function (response) {
-            debugger;
+            
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
@@ -1828,7 +1828,7 @@
      fetchTakeOffLinesData: function (component, event, helper) {       
         var action = component.get("c.getTakeOffLinesData");        
         action.setCallback(this, function (response) {
-            debugger;
+            
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
@@ -1898,6 +1898,7 @@
                         value: result[key],
                     });
                 }
+                console.log('opts',{opts});
                 component.set("v.pricebookoptions", opts);
             }
         });
@@ -1971,6 +1972,7 @@
                         value: result[key]
                     });
                 }
+                console.log('opts',{opts});
                 component.set("v.pricebookoptions", opts);
                 component.set("v.Spinner", false);
             }
@@ -1980,7 +1982,7 @@
     
      
     getPackageRecords: function (component, event, helper) {
-        debugger;
+        
         var pageSize = component.get("v.pageSize");
         var paginationList = [];
         var action = component.get("c.getPackageTakeoff");
@@ -2007,7 +2009,7 @@
     
     
    importTOffLinesPackage: function (component, event, helper, takeOffLinesIds) {
-        debugger;
+        
         var action = component.get("c.importPackageLinesRecords");
         action.setParams({
             takeOffLinesIds: takeOffLinesIds,

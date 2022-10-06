@@ -1204,6 +1204,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             resourceRowData = formatedSchData['resourceRowData'];
             assignmentRowData = formatedSchData['assignmentRowData'];
 
+            console.log('tasks  ==> ',{tasks});
+
             const project = new bryntum.gantt.ProjectModel({
                 //enableProgressNotifications : true,
                 calendar: data.project.calendar,
@@ -1336,6 +1338,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                             var endDate;
                             var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                             if (record.value) {
+                                console.log('Record =>',{record});
                                 if (record.record._data.duration >= 1 && record.record._data.type == "Task" && record.record._data.name != 'Milestone Complete') {
                                     var start;
                                     var endDate = new Date(record.value);
@@ -1861,6 +1864,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                         var start = taskRecord.startDate ? new Date(taskRecord.startDate.getTime()) : new Date(taskRecord._data.startDate.getTime())
                         var duration = taskRecord.duration
                         var eDate = new Date(start)
+                        // console.log('Start date ==> ',{start});
+                        // console.log({duration});
+                        // console.log({eDate});
                         for (var i = 0; i < duration; i++) {
                             if (i == 0) {
                                 eDate = new Date(start.setDate(start.getDate() + i))

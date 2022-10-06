@@ -374,6 +374,7 @@ public with sharing class BT_QuestionnaireBuilder{
 
 	@AuraEnabled
 	public static List<questionDetails> retrieveQuestions(String controlId){
+		System.debug('=== === retrieveQuestions === ===');
 
 		//SOQL query on checks based on check ids which are in set of check id.
 		String checkQuery = 'SELECT buildertek__Product__r.Name, buildertek__Section__r.buildertek__Visible_to_Customer__c,buildertek__Section__r.buildertek__Create_Change_Order_on_Overage__c,buildertek__Question_Group__r.buildertek__of_Options_Required__c,buildertek__Question_Group__r.buildertek__Allowance_Available__c,buildertek__Question_Group__r.buildertek__Allowance_Remaining__c,buildertek__Question_Group__r.buildertek__Is_Saved_Items__c,' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question__c');
@@ -434,12 +435,16 @@ public with sharing class BT_QuestionnaireBuilder{
 		fileType.add('PNG');
 		fileType.add('JPEG');
 		for (ContentDocumentLink conLink : contentDocumentLinkRecs){
-			if (!fileType.contains(conLink.ContentDocument.fileType)){
+			System.debug('conLink => '+conLink);
+			System.debug(fileType.contains(conLink.ContentDocument.fileType));
+			// if (!fileType.contains(conLink.ContentDocument.fileType)){
+				System.debug(productToDocumentMap.containsKey(conLink.LinkedEntityId));
 				if (!productToDocumentMap.containsKey(conLink.LinkedEntityId)){
 					productToDocumentMap.put(conLink.LinkedEntityId, new List<ContentDocumentLink>());
 				}
 				productToDocumentMap.get(conLink.LinkedEntityId).add(conLink);
-			}
+			// }
+			System.debug('productToDocumentMap => '+productToDocumentMap);
 		}
 		List<String> imageIds = new List<String>();
 		for (Question__c check : checks){
@@ -460,8 +465,17 @@ public with sharing class BT_QuestionnaireBuilder{
 			}
 			questionDetails question = new questionDetails();
 			question.check = check;
+
+			for(String key: productToDocumentMap.keySet()){
+				System.debug('key => '+key);
+				//Loop through list of accounts for each key
+				System.debug('Value => ' +productToDocumentMap.get(key)); 
+			}
+
+
 			if (productToDocumentMap.containsKey(check.buildertek__Product__c)){
 				question.contentDocumentLink = productToDocumentMap.get(check.buildertek__Product__c);
+				System.debug('question.contentDocumentLink => '+question.contentDocumentLink);
 			}
 
 			question.answerChoices = new List<answerChoice>();
@@ -487,6 +501,7 @@ public with sharing class BT_QuestionnaireBuilder{
 					}
 				}
 			}
+			System.debug('*** question *** '+question);
 			questions.add(question);
 			question.otherDetailsfields = otherfields;
 		}
@@ -897,6 +912,9 @@ public with sharing class BT_QuestionnaireBuilder{
 		public Question__c check{ get; set; }
 
 		@AuraEnabled
+		public String errorMessage{ get; set; }
+
+		@AuraEnabled
 		List<ContentDocumentLink> contentDocumentLink{ get; set; }
 
 		@AuraEnabled
@@ -910,6 +928,7 @@ public with sharing class BT_QuestionnaireBuilder{
 
 		public questionDetails(){
 			check = New Question__c();
+			errorMessage = '';
 			answerChoices = new List<answerChoice>();
 			multiSelectChoiceValues = new List<String>();
 			contentDocumentLink = new List<ContentDocumentLink>();
@@ -1249,10 +1268,10 @@ public with sharing class BT_QuestionnaireBuilder{
 
 	// method for showing images in slider
 	@AuraEnabled
-    public static List<string> getProductFiles(String recordId) {
+    public static List<string> getProductFiles(String optiondId) {
         List<String> returnList = new List<String>();          
         try {  
-            List<buildertek__Question__c> option = [SELECT Id, Name, buildertek__Product__c FROM buildertek__Question__c WHERE Id =: recordId];
+            List<buildertek__Question__c> option = [SELECT Id, Name, buildertek__Product__c FROM buildertek__Question__c WHERE Id =: optiondId];
             System.debug('option => '+option);
 
             if (option.size() > 0) {
@@ -1260,16 +1279,8 @@ public with sharing class BT_QuestionnaireBuilder{
                 System.debug('contentLinkList => '+contentLinkList);
 
                 if (contentLinkList.size() > 0) {
-                    Set<Id> contentLinkSet = new Set<Id>();
                     for (ContentDocumentLink link : contentLinkList) {
-                        contentLinkSet.add(link.ContentDocumentId);
-                    }
-                    System.debug('contentLinkSet =>'+contentLinkSet);
-                    List<ContentVersion> contentList = [SELECT id, Title, ContentDocumentId FROM ContentVersion WHERE ContentDocumentId IN: contentLinkSet];
-                    System.debug('contentList => '+contentList);
-
-                    for (ContentVersion contentDocs : contentList) {
-                        returnList.add(contentDocs.ContentDocumentId);
+                        returnList.add(link.ContentDocumentId);
                     }
                     return returnList; 
                 } else{

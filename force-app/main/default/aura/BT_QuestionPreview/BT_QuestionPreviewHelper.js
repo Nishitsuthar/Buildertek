@@ -29,6 +29,9 @@
           );
 
           var questions = response.getReturnValue();
+          console.log('====================================');
+          console.log('question see here ==>', { questions });
+          console.log('====================================');
 
           if (questions != undefined) {
             var multiOutput = [
@@ -38,13 +41,17 @@
             ];
             for (var index = 0; index < questions.length; index++) {
               var question = questions[index];
+              // console.log('question check ID ==>', question.check.Id);
+              var recordId = question.check.Id;
+              this.returnImages(component, recordId);
               if (
                 question.check != undefined &&
                 question.check.buildertek__Answer_Choices__r != undefined
               ) {
+
                 var answerChoices =
                   question.check.buildertek__Answer_Choices__r;
-                  debugger;
+                debugger;
                 var inputOption = [
                   "Date~Date Picker",
                   "Text~Text Area",
@@ -54,6 +61,7 @@
                 var myMap = new Map();
                 var createChangeOrderonOverage = {};
                 debugger;
+
 
                 for (var i = 0; i < answerChoices.length; i++) {
                   var answerChoice = answerChoices[i];
@@ -86,8 +94,8 @@
                       answerChoice.buildertek__Document_Id__c;
                     responseAtt.buildertek__ParentId__c =
                       answerChoice.buildertek__ParentId__c != undefined ?
-                      answerChoice.buildertek__ParentId__c :
-                      "";
+                        answerChoice.buildertek__ParentId__c :
+                        "";
                     responseAtt.isVisible =
                       answerChoice.buildertek__ParentId__c != "" ? true : false;
                     responseAtt.buildertek__Text_Value__c =
@@ -141,8 +149,8 @@
                       answerChoice.buildertek__Document_Id__c;
                     responseType.buildertek__ParentId__c =
                       answerChoice.buildertek__ParentId__c != undefined ?
-                      answerChoice.buildertek__ParentId__c :
-                      "";
+                        answerChoice.buildertek__ParentId__c :
+                        "";
                     responseType.isVisible =
                       answerChoice.buildertek__ParentId__c != "" ? true : false;
                     responseType.buildertek__Additional_Cost__c =
@@ -164,6 +172,7 @@
 
                     inputObj.items = [];
                     var selectionChoice = responseType.selectionChoices;
+
                     if (selectionChoice != undefined) {
                       for (var k = 0; k < selectionChoice.length; k++) {
                         var choice = selectionChoice[k];
@@ -249,8 +258,8 @@
                           choice.buildertek__Additional_Cost__c;
                         Option.buildertek__ParentId__c =
                           choice.buildertek__ParentId__c != undefined ?
-                          choice.buildertek__ParentId__c :
-                          "";
+                            choice.buildertek__ParentId__c :
+                            "";
                         Option.buildertek__Image_Id__c =
                           choice.buildertek__Image_Id__c;
                         Option.buildertek__Document_Id__c =
@@ -301,12 +310,12 @@
                         responseType.buildertek__Additional_Cost__c;
                       inputObj.buildertek__ParentId__c =
                         responseType.buildertek__ParentId__c != undefined ?
-                        responseType.buildertek__ParentId__c :
-                        "";
+                          responseType.buildertek__ParentId__c :
+                          "";
                       inputObj.isVisible =
                         responseType.buildertek__ParentId__c != "" ?
-                        false :
-                        true;
+                          false :
+                          true;
                       inputObj.buildertek__Image_Id__c =
                         responseType.buildertek__Image_Id__c;
                       inputObj.buildertek__Document_Id__c =
@@ -339,7 +348,7 @@
             }
           }
           console.log('Questions::::');
-          console.log({questions});
+          console.log({ questions });
 
           component.set("v.questions", questions);
           component.set("v.requiredReload", false);
@@ -350,6 +359,28 @@
       });
       $A.enqueueAction(action);
     }
+  },
+
+  returnImages: function (component, recordId) {
+    // console.log('Aa gaye aap returnImage method me==> ');
+    // console.log(typeof (recordId));
+
+    // console.log('optionID check here ==> ', { recordId });
+
+    // var action = component.get("c.getProductFiles");
+    // action.setParams({
+    //   optiondId: recordId
+    // });
+    // action.setCallback(this, function (response) {
+    //   var state = response.getState();
+    //   console.log('Status =>', { state });
+    //   var result = response.getReturnValue();
+    //   console.log('Result =>', { result });
+    //   if (result[0] != 'Error') {
+    //     component.set("v.optionDocList", result);
+    //   }
+    // });
+    // $A.enqueueAction(action);
   },
 
   getImgVisibility: function (component, event, helper) {
@@ -364,21 +395,21 @@
     });
     $A.enqueueAction(action);
 
-  //   var recordId = component.get("v.recordId");
-  //       console.log('recordId => ' + recordId);
-  //       var action = component.get("c.getProductFiles");
-  //       action.setParams({
-  //           recordId: recordId
-  //       });
-  //       action.setCallback(this, function (response) {
-  //           var state = response.getState();
-  //           console.log('Status =>', {state});
-  //           var result = response.getReturnValue();
-  //           console.log('Result =>', {result});
-  //           if (result[0] != 'Error') {
-  //               component.set("v.contentDocsList", result);
-  //           }
-  //       });
-  //       $A.enqueueAction(action);
+    //   var recordId = component.get("v.recordId");
+    //       console.log('recordId => ' + recordId);
+    //       var action = component.get("c.getProductFiles");
+    //       action.setParams({
+    //           recordId: recordId
+    //       });
+    //       action.setCallback(this, function (response) {
+    //           var state = response.getState();
+    //           console.log('Status =>', {state});
+    //           var result = response.getReturnValue();
+    //           console.log('Result =>', {result});
+    //           if (result[0] != 'Error') {
+    //               component.set("v.contentDocsList", result);
+    //           }
+    //       });
+    //       $A.enqueueAction(action);
   },
 });

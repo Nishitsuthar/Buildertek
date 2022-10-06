@@ -233,7 +233,7 @@
                         component.set("v.Spinner", false);
                         component.set("v.showMessage",false);
                         component.set("v.isError", true);
-                        component.set("v.ErrorMessage", 'There were no schedule Lines for the selected schedule');
+                        component.set("v.ErrorMessage", 'There are no schedule lines for the selected schedule.');
                     }
                 }
             });
@@ -241,7 +241,7 @@
         } else {
             component.set("v.Spinner", false);
             component.set("v.isError", true);
-            component.set("v.ErrorMessage", 'Please select atleast one Schedule record');
+            component.set("v.ErrorMessage", 'Please select at least one schedule to import.');
 
         }
     },

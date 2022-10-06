@@ -16,9 +16,9 @@
         // Set checkable attribute based on tree attribute
         var checkableSObjectTypes = component.get("v.checkableSObjectTypes");
         var nodeData = component.get("v.userData");
-        console.log('nodeData:::',nodeData);
-        console.log('totalOptions`:::',nodeData.totalOptions);
-        console.log('totalTestedOptions:::',nodeData.totalTestedOptions);
+        // console.log('nodeData:::',nodeData);
+        // console.log('totalOptions`:::',nodeData.totalOptions);
+        // console.log('totalTestedOptions:::',nodeData.totalTestedOptions);
         var objectType = nodeData.objectType;
         var childNodeObjectType = nodeData.childObjectType;
         var nodeRecordType = nodeData.recordType;

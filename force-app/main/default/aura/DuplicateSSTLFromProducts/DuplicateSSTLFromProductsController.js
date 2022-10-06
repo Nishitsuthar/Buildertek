@@ -246,82 +246,86 @@
     
     //Add Selected Products into SSTL.
     addSSTL: function (component, event, helper) {
-        debugger;
-        component.set("v.isSpinner", true);
-        var takeOffLinesList = component.get('v.takeOffLinesList');
-        var productsList = component.get('v.productsList');
-        var productPageNumber = component.get("v.productPageNumber");
-        var productPageSize = component.get("v.productPageSize");
-        var pageNumber = component.get("v.pageNumber");
-        var pageSize = component.get("v.pageSize");
-        var SSTLPageNumber = component.get("v.SSTLPageNumber");
-        var SSTLPageSize = component.get("v.SSTLPageSize");
-        // Product Search
-        var packageLinesSearchTradeType = '';
-        var packageLinesSearchCategory = '';
-        var packageLinesSearchProductType = '';
-        var collection ='';
-        
-        /* var packageLinesSearchTradeType = component.find('packageLinesTradeType').get('v.value');
-        var packageLinesSearchCategory = component.find('packageLinesCategory').get('v.value');
-        var packageLinesSearchProductType = component.find('packageLinesProductType').get('v.value');
-        var collection = component.find('collection').get('v.value');*/
-        
-        // TakeOff Lines Search
-        var tradeType
-        var category
-        var locationSearch
-        var productType
-        /*  var tradeType = component.find('tradeType').get('v.value');
-        var category = component.find('category').get('v.value');
-        var productType = component.find('productType').get('v.value');
-        var locationSearch = component.find('locationSearch').get('v.value');*/
-        // SSTL
-        // 
-        var tradeTypeSSTL = ''
-        var categorySSTL = ''
-        var productTypeSSTL = ''
-        /* var tradeTypeSSTL = component.find('tradeTypeSSTL').get('v.value');
-        var categorySSTL = component.find('categorySSTL').get('v.value');
-        var productTypeSSTL = component.find('productTypeSSTL').get('v.value');*/
-        
-        var productIdList = [];
-        var takeOffLineList = [];
-        /* for (var i in productsList) {
-            for (var j in productsList[i].groupedRecords) {
-                if (productsList[i].groupedRecords[j].isSelected) {
-                    productIdList.push(productsList[i].groupedRecords[j].Id);
+        // debugger;
+        var x = '';
+        x = component.get('v.pricebookName');
+        if(x != '' && x != null){
+            component.set("v.isSpinner", true);
+            var takeOffLinesList = component.get('v.takeOffLinesList');
+            var productsList = component.get('v.productsList');
+            var productPageNumber = component.get("v.productPageNumber");
+            var productPageSize = component.get("v.productPageSize");
+            var pageNumber = component.get("v.pageNumber");
+            var pageSize = component.get("v.pageSize");
+            var SSTLPageNumber = component.get("v.SSTLPageNumber");
+            var SSTLPageSize = component.get("v.SSTLPageSize");
+            // Product Search
+            var packageLinesSearchTradeType = '';
+            var packageLinesSearchCategory = '';
+            var packageLinesSearchProductType = '';
+            var collection ='';
+            
+            /* var packageLinesSearchTradeType = component.find('packageLinesTradeType').get('v.value');
+            var packageLinesSearchCategory = component.find('packageLinesCategory').get('v.value');
+            var packageLinesSearchProductType = component.find('packageLinesProductType').get('v.value');
+            var collection = component.find('collection').get('v.value');*/
+            
+            // TakeOff Lines Search
+            var tradeType
+            var category
+            var locationSearch
+            var productType
+            /*  var tradeType = component.find('tradeType').get('v.value');
+            var category = component.find('category').get('v.value');
+            var productType = component.find('productType').get('v.value');
+            var locationSearch = component.find('locationSearch').get('v.value');*/
+            // SSTL
+            // 
+            var tradeTypeSSTL = ''
+            var categorySSTL = ''
+            var productTypeSSTL = ''
+            /* var tradeTypeSSTL = component.find('tradeTypeSSTL').get('v.value');
+            var categorySSTL = component.find('categorySSTL').get('v.value');
+            var productTypeSSTL = component.find('productTypeSSTL').get('v.value');*/
+            
+            var productIdList = [];
+            var takeOffLineList = [];
+            /* for (var i in productsList) {
+                for (var j in productsList[i].groupedRecords) {
+                    if (productsList[i].groupedRecords[j].isSelected) {
+                        productIdList.push(productsList[i].groupedRecords[j].Id);
+                    }
+                }
+            }*/
+            
+            for (var i in productsList) {
+                for (var j in productsList[i]['groupedRecordsTmp']) {
+                    if (productsList[i].groupedRecordsTmp[j].isSelected) {
+                        productIdList.push(productsList[i].groupedRecords[j].Id);
+                    }
                 }
             }
-        }*/
-        
-        for (var i in productsList) {
-            for (var j in productsList[i]['groupedRecordsTmp']) {
-                if (productsList[i].groupedRecordsTmp[j].isSelected) {
-                    productIdList.push(productsList[i].groupedRecords[j].Id);
+            
+            for (var i in takeOffLinesList) {
+                for (var j in takeOffLinesList[i]['groupedRecordsTmp']) {
+                    if (takeOffLinesList[i].groupedRecordsTmp[j].isSelected) {
+                        takeOffLineList.push(takeOffLinesList[i].groupedRecords[j].Id);
+                    }
                 }
             }
-        }
-        
-        for (var i in takeOffLinesList) {
-            for (var j in takeOffLinesList[i]['groupedRecordsTmp']) {
-                if (takeOffLinesList[i].groupedRecordsTmp[j].isSelected) {
-                    takeOffLineList.push(takeOffLinesList[i].groupedRecords[j].Id);
-                }
+            
+            
+            
+            if(takeOffLineList.length > 0 ){
+                productIdList.length > 0 ?
+                    helper.createTakeOffLines(component, event, helper, productPageNumber, productPageSize, pageNumber, pageSize, SSTLPageNumber, SSTLPageSize, packageLinesSearchTradeType, packageLinesSearchCategory, packageLinesSearchProductType, collection, tradeType, category, productType, locationSearch, tradeTypeSSTL, categorySSTL, productTypeSSTL, productIdList, takeOffLineList) :
+                helper.showToast(component, event, helper, 'Warning!', 'Please select a Product.', 'warning');
+            }else{
+                helper.showToast(component, event, helper, 'Warning!', 'You need to select Takeoff Line to associate this Product with.', 'warning'); 
             }
-        }
-        
-        
-        
-        if(takeOffLineList.length > 0 ){
-            productIdList.length > 0 ?
-                helper.createTakeOffLines(component, event, helper, productPageNumber, productPageSize, pageNumber, pageSize, SSTLPageNumber, SSTLPageSize, packageLinesSearchTradeType, packageLinesSearchCategory, packageLinesSearchProductType, collection, tradeType, category, productType, locationSearch, tradeTypeSSTL, categorySSTL, productTypeSSTL, productIdList, takeOffLineList) :
-            helper.showToast(component, event, helper, 'Warning!', 'Please select a Product.', 'warning');
         }else{
-            helper.showToast(component, event, helper, 'Warning!', 'You need to select Takeoff Line to associate this Product with.', 'warning'); 
+            helper.showToast(component, event, helper, 'Warning!', 'Pricebook not selected - Product will not be added to Takeoff Line. Please select proper pricebook', 'warning'); 
         }
-        
-        
     },
     
     //Search
@@ -381,6 +385,7 @@
         var packageLinesSearchCategory = '';
         var packageLinesSearchProductType = '';
         var collection = '';
+        console.log('v.pricebookName-->',component.get("v.pricebookName"));
         
         /*var packageLinesSearchTradeType = component.find('packageLinesTradeType').get('v.value');
         var packageLinesSearchCategory = component.find('packageLinesCategory').get('v.value');

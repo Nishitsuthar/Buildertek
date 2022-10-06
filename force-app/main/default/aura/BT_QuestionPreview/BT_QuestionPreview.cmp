@@ -6,6 +6,9 @@
     <aura:attribute name="questionGroupId" type="String" access="public" description="Question group Id" />
     <aura:attribute name="isOptionSaved" type="Boolean" access="public" default="false" />
     <aura:attribute name="questionGroup" type="object" access="public" description="Question group details" />
+    
+    <!-- list which contains the id of files for option -->
+    <aura:attribute name="optionDocList" type="List" access="public" />
 
     <aura:attribute name="questions" type="List" access="public" description="Question details" />
     <aura:attribute name="questionsCopy" type="List" access="public" description="Question details" />
@@ -744,32 +747,33 @@
                         </aura:if> -->
                         <aura:if isTrue="{!!v.imageVisibility}">
                             <td>
-                                {!question}
-                                <div style="margin: 1rem 0.1rem 0.1rem 0.1rem;">
-                                    <lightning:carousel disableAutoRefresh="false" disableAutoScroll="true">
-                                        <lightning:carouselImage
-                                            src = "https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-600w-1725825019.jpg"
-                                            
-                                            description = ""
-                                            alternativeText = "First card accessible description."
-                                            href = "">
-                                        </lightning:carouselImage>
-                                        <lightning:carouselImage
-                                            src = "https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-600w-1725825019.jpg"
-                                            
-                                            description = ""
-                                            alternativeText = "Second card accessible description."
-                                            href = "">
-                                        </lightning:carouselImage>
-                                        <lightning:carouselImage
-                                            src = "https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-600w-1725825019.jpg"
-                                            
-                                            description = ""
-                                            alternativeText = "Third card accessible description."
-                                            href = "">
-                                        </lightning:carouselImage>
-                                    </lightning:carousel>
-                                </div>
+                                <aura:iteration items="{!v.optionDocList}" var="item">
+                                    <div style="margin: 1rem 0.1rem 0.1rem 0.1rem;">
+                                        <lightning:carousel disableAutoRefresh="false" disableAutoScroll="true">
+                                            <lightning:carouselImage
+                                                src = "{!'https://btservice360-dev-ed.lightning.force.com/sfc/servlet.shepherd/document/download/'+item}"
+                                                
+                                                description = ""
+                                                alternativeText = "First card accessible description."
+                                                href = "">
+                                            </lightning:carouselImage>
+                                            <!-- <lightning:carouselImage
+                                                src = "https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-600w-1725825019.jpg"
+                                                
+                                                description = ""
+                                                alternativeText = "Second card accessible description."
+                                                href = "">
+                                            </lightning:carouselImage>
+                                            <lightning:carouselImage
+                                                src = "https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-600w-1725825019.jpg"
+                                                
+                                                description = ""
+                                                alternativeText = "Third card accessible description."
+                                                href = "">
+                                            </lightning:carouselImage> -->
+                                        </lightning:carousel>
+                                    </div>
+                                </aura:iteration>
                             </td>
                         </aura:if>
 

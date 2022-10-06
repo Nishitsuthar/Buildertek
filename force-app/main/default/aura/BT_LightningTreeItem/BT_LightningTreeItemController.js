@@ -99,13 +99,13 @@
 
 		// Get active node
 		var activeNode = component.get("v.activeNode");
-		console.log('activeNode', activeNode.id);
-		console.log('currentNode', currentNode.id);
+		// console.log('activeNode', activeNode.id);
+		// console.log('currentNode', currentNode.id);
 		// Set active flag
 		if (currentNode.id == activeNode.id) {
 			component.set("v.active", true);
 		} else {
-			console.log('else');
+			// console.log('else');
 			component.set("v.active", false);
 		}
 	},

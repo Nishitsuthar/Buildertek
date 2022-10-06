@@ -42,7 +42,7 @@
     },
 
     handleTreeNodeClick: function (component, event, helper) {
-        console.log('Section Accordion..');
+        // console.log('Section Accordion..');
         var elem, nodeData = event.getParam("nodeData"),
             sectionId = component.get("v.section").Id,
             actionType = event.getParam("actionType"),
@@ -71,7 +71,7 @@
                 }
             }
         }
-        console.log('nodeData Event::', JSON.stringify(nodeData));
+        // console.log('nodeData Event::', JSON.stringify(nodeData));
     },
 
     /* This method will display the new section component for edit section record*/
