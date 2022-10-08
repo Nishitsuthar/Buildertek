@@ -659,6 +659,9 @@
     updateMassRecords: function(component, event, helper) {
         // debugger;
         component.set('v.isLoading', true);
+        var x = component.get("v.dataByGroup");
+        console.log('<-- @@ dataByGroup @@ -->');
+        console.log({x});
         var data = JSON.parse(JSON.stringify(component.get("v.dataByGroup")));
         var newList = []
         for (var i in data) {
@@ -670,7 +673,7 @@
             }
         }
         var action = component.get("c.updateRecords");
-        // console.log('@@ JSON.stringifyt--', JSON.stringify(newList));
+        console.log('@@ JSON.stringifyt--', {newList});
 
         action.setParams({
             recordId: component.get('v.recordId'),
@@ -776,6 +779,8 @@
         var taxOnFabRequired;
 
         var adjustmentTableData = component.get('v.bomList');
+        console.log('<-- adjustmentTableData -->');
+        console.log({adjustmentTableData});
         if (adjustmentTableData != null && adjustmentTableData != undefined && adjustmentTableData.length > 0 &&
             bomLineFields != null && bomLineFields != undefined && bomLineFields.length > 0) {
             for (var i = 0; i < adjustmentTableData.length; i++) {

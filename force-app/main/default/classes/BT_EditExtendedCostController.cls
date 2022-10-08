@@ -79,7 +79,7 @@ public with sharing class BT_EditExtendedCostController
                 System.debug('bomId=='+bomId);
                 String query = 'SELECT ';
                 String fields= ' Id, Name,buildertek__Selection_Sheet_Takeoff__r.buildertek__OCIP_CCIP_Required__c,buildertek__Tax__c,buildertek__BL_LIST_PRICE_F__c,buildertek__BL_LIST_PRICE__c, buildertek__Pricebook_Name__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Options_Rate__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Fabrication_Labor_Mark_up_LongText__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Slab_Discount_Rate_LongText__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Textura_Fee__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__General_Liability_Insurance_Long__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Fabrication_Install_Rate__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Miscellaneous_Rates__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__Fab_Only_Rate__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Edge__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__Install_Only__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__Mark_Up_Non_Slab_or_Labor__c, ';
-                fields = fields + 'buildertek__Product__r.ProductCode , buildertek__Selection_Sheet_Takeoff__r.buildertek__Workers_Comp__c,buildertek__Takeoff_Line__r.buildertek__Product_Code__c, buildertek__Service_Category__c, buildertek__BL_SERVICE_CATEGORY__c, buildertek__Takeoff_Line__r.buildertek__Build_Phase__c, buildertek__Takeoff_Line__r.buildertek__Build_Phase__r.Name,buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c, buildertek__Takeoff_Line__r.Name, buildertek__BL_UNIT_COST__c, buildertek__Quantity__c, buildertek__Takeoff_Line__r.buildertek__UOM_PL__c  ';
+                fields = fields + 'buildertek__Product__r.ProductCode , buildertek__Upgrade_Price__c, buildertek__Selection_Sheet_Takeoff__r.buildertek__Workers_Comp__c,buildertek__Takeoff_Line__r.buildertek__Product_Code__c, buildertek__Service_Category__c, buildertek__BL_SERVICE_CATEGORY__c, buildertek__Takeoff_Line__r.buildertek__Build_Phase__c, buildertek__Takeoff_Line__r.buildertek__Build_Phase__r.Name,buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c, buildertek__Takeoff_Line__r.Name, buildertek__BL_UNIT_COST__c, buildertek__Quantity__c, buildertek__Takeoff_Line__r.buildertek__UOM_PL__c  ';
                 query = query+fields+' FROM buildertek__Select_Sheet__c WHERE (buildertek__Selection_Sheet_Takeoff__c =: bomId) ';
                 system.debug('#@#@#Query---'+query);
                 List<buildertek__Select_Sheet__c> recList = Database.query(query);
@@ -113,7 +113,8 @@ public with sharing class BT_EditExtendedCostController
                                 row.add(new fieldWrap('TakeOff Line',thisBomLine.buildertek__Takeoff_Line__r.Name,false));
                                 row.add(new fieldWrap('Name',thisBomLine.Name,false));
                                 row.add(new fieldWrap('List Price',String.valueOf(thisBomLine.buildertek__BL_LIST_PRICE__c),false));
-                                row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Fabrication_Install_Rate__c),false));
+                                // row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Fabrication_Install_Rate__c),false));
+                                row.add(new fieldWrap('Adjusted Price',String.valueOf(thisBomLine.buildertek__Upgrade_Price__c),false));
                                 row.add(new fieldWrap('Quantity',String.valueOf(thisBomLine.buildertek__Quantity__c),false));
                                 row.add(new fieldWrap('Sq Ft',String.valueOf(thisBomLine.buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c),false));
                                 row.add(new fieldWrap('UOM',thisBomLine.buildertek__Takeoff_Line__r.buildertek__UOM_PL__c,false));
@@ -143,7 +144,8 @@ public with sharing class BT_EditExtendedCostController
                                 row.add(new fieldWrap('TakeOff Line',thisBomLine.buildertek__Takeoff_Line__r.Name,false));
                                 row.add(new fieldWrap('Name',thisBomLine.Name,false));
                                 row.add(new fieldWrap('List Price',String.valueOf(thisBomLine.buildertek__BL_LIST_PRICE__c),false));
-                                row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Install_Only__c),false));
+                                // row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Install_Only__c),false));
+                                row.add(new fieldWrap('Adjusted Price',String.valueOf(thisBomLine.buildertek__Upgrade_Price__c),false));
                                 row.add(new fieldWrap('Quantity',String.valueOf(thisBomLine.buildertek__Quantity__c),false));
                                 row.add(new fieldWrap('Sq Ft',String.valueOf(thisBomLine.buildertek__Takeoff_Line__r.buildertek__Sq_Ft__c),false));
                                 row.add(new fieldWrap('UOM',thisBomLine.buildertek__Takeoff_Line__r.buildertek__UOM_PL__c,false));
@@ -230,7 +232,8 @@ public with sharing class BT_EditExtendedCostController
                                 row.add(new fieldWrap('TakeOff Line',thisBomLine.buildertek__Takeoff_Line__r.Name,false));
                                 row.add(new fieldWrap('Name',thisBomLine.Name,false));
                                 row.add(new fieldWrap('List Price',String.valueOf(thisBomLine.buildertek__BL_LIST_PRICE__c),false));
-                                row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Fab_Only_Rate__c),false));
+                                // row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Fab_Only_Rate__c),false));
+                                row.add(new fieldWrap('Adjusted Price',String.valueOf(thisBomLine.buildertek__Upgrade_Price__c),false));
                                 // row.add(new fieldWrap('Percentage To Apply',getParcentValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Fab_Only_Rate__c)));
                                 row.add(new fieldWrap('Quantity',String.valueOf(thisBomLine.buildertek__Quantity__c),false));
                                 row.add(new fieldWrap('UOM',thisBomLine.buildertek__Takeoff_Line__r.buildertek__UOM_PL__c,false));
@@ -259,7 +262,8 @@ public with sharing class BT_EditExtendedCostController
                             row.add(new fieldWrap('TakeOff Line',thisBomLine.buildertek__Takeoff_Line__r.Name,false));
                             row.add(new fieldWrap('Name',thisBomLine.Name,false));
                             row.add(new fieldWrap('List Price',String.valueOf(thisBomLine.buildertek__BL_LIST_PRICE__c),false));
-                            row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Edge__c),false));
+                            // row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Edge__c),false));
+                            row.add(new fieldWrap('Adjusted Price',String.valueOf(thisBomLine.buildertek__Upgrade_Price__c),false));
                             row.add(new fieldWrap('Quantity',String.valueOf(thisBomLine.buildertek__Quantity__c),false));
                             row.add(new fieldWrap('UOM',thisBomLine.buildertek__Takeoff_Line__r.buildertek__UOM_PL__c,false));
                            // row.add(new fieldWrap('Service Category',thisBomLine.buildertek__Service_Category__c,false));
@@ -290,7 +294,8 @@ public with sharing class BT_EditExtendedCostController
                             row.add(new fieldWrap('TakeOff Line',thisBomLine.buildertek__Takeoff_Line__r.Name,false));
                             row.add(new fieldWrap('Name',thisBomLine.Name,false));
                             row.add(new fieldWrap('List Price',String.valueOf(thisBomLine.buildertek__BL_LIST_PRICE__c),false));
-                            row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Options_Rate__c),false));
+                            // row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Options_Rate__c),false));
+                            row.add(new fieldWrap('Adjusted Price',String.valueOf(thisBomLine.buildertek__Upgrade_Price__c),false));
                             row.add(new fieldWrap('Tax','',thisBomLine.buildertek__Tax__c));
                             row.add(new fieldWrap('Quantity',String.valueOf(thisBomLine.buildertek__Quantity__c),false));
                             row.add(new fieldWrap('UOM',thisBomLine.buildertek__Takeoff_Line__r.buildertek__UOM_PL__c,false));
@@ -320,7 +325,8 @@ public with sharing class BT_EditExtendedCostController
                                 row.add(new fieldWrap('TakeOff Line',thisBomLine.buildertek__Takeoff_Line__r.Name,false));
                                 row.add(new fieldWrap('Name',thisBomLine.Name,false));
                                 row.add(new fieldWrap('List Price',String.valueOf(thisBomLine.buildertek__BL_LIST_PRICE__c),false));
-                                row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Miscellaneous_Rates__c),false));
+                                // row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Miscellaneous_Rates__c),false));
+                                row.add(new fieldWrap('Adjusted Price',String.valueOf(thisBomLine.buildertek__Upgrade_Price__c),false));
                                 row.add(new fieldWrap('Tax','',thisBomLine.buildertek__Tax__c));
                                 row.add(new fieldWrap('Quantity',String.valueOf(thisBomLine.buildertek__Quantity__c),false));
                                 row.add(new fieldWrap('UOM',thisBomLine.buildertek__Takeoff_Line__r.buildertek__UOM_PL__c,false));
@@ -355,7 +361,8 @@ public with sharing class BT_EditExtendedCostController
                                 row.add(new fieldWrap('Name',thisBomLine.Name,false));
                                 // row.add(new fieldWrap('Cost Adjustment Rate',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Fab_Only_Rate__c)));
                                 row.add(new fieldWrap('List Price',String.valueOf(thisBomLine.buildertek__BL_LIST_PRICE__c),false));
-                                row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Slab_Discount_Rate_LongText__c),false));
+                                // row.add(new fieldWrap('Adjusted Price',getRateValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Slab_Discount_Rate_LongText__c),false));
+                                row.add(new fieldWrap('Adjusted Price',String.valueOf(thisBomLine.buildertek__Upgrade_Price__c),false));
                                 String placeholderDefaultValuefordiscount = getParcentValueFromDB(thisBomLine.Id,thisBomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Slab_Discount_Rate_LongText__c);
                                 System.debug('placeholderDefaultValuefordiscount-->'+placeholderDefaultValuefordiscount);
                                 if(String.isBlank(placeholderDefaultValuefordiscount)) {

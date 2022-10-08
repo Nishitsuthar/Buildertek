@@ -1,5 +1,6 @@
 ({
     doInit : function(component, event, helper) {
+        console.log('===doInit===');
         var value = helper.getParameterByName(component, event, 'inContextOfRef');
         console.log("value ===  "+JSON.stringify(value));
         var context = '';
@@ -81,6 +82,7 @@
         // alert(component.get("v.recordId"))
     },
     handleOnSubmit : function(component, event, helper) {
+        console.log('===handleOnSubmit===');
         component.set("v.Spinner", true);
         component.set("v.showMessage",true);
         event.preventDefault(); // stop form submission
@@ -103,6 +105,7 @@
     },
     
     handleOnSuccess : function(component, event, helper) {
+        console.log('===handleOnSuccess===');
         var record = event.getParams().response;
         var newSchId = record.id;
         component.set('v.schedulerecId',newSchId)
@@ -124,6 +127,7 @@
     
     
     closeModel: function (component, event, helper) {
+        console.log('===closeModel===');
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getFocusedTabInfo().then(function (response) {
             var focusedTabId = response.tabId;
@@ -176,17 +180,20 @@
 },*/
     
     handleOnError : function(component, event, helper) {
+        console.log('===handleOnError===');
         var record = event.getParams().response;
         //alert(record.Id);
     },
     
     radioGroup : function(component, event, helper) {
+        console.log('===radioGroup===');
         var radioGrpValue = component.get("v.masterItem.Id");
         console.log('radioGrpValue',radioGrpValue);
     },
     
     
     handleClose : function(component, event, helper) {
+        console.log('===handleClose===');
         // Close the action panel
         var dismissActionPanel = $A.get("e.force:closeQuickAction");
         // alert('cancel function called');
@@ -195,6 +202,7 @@
         
     },
     saveSelectedPO : function (component, event, helper) {
+        console.log('===saveSelectedPO===');
         //  alert("MasterId--->"+event.currentTarget.id);
         component.set("v.selectedMasterId",event.currentTarget.id);
         var action = component.get("c.getScheduleItemList");
@@ -210,6 +218,7 @@
     },
     
     onSaveandNew : function(component, event, helper) {
+        console.log('===onSaveandNew===');
         //helper.savefunc(component, event, helper);
         component.set('v.isLoading', true);
         /*event.preventDefault(); // Prevent default submit

@@ -1370,10 +1370,10 @@
                                                 <th style="width: 200px;padding-left: 10px">
                                                     Price Book
                                                 </th>
-                                                <th style="width: 200px;padding-left: 10px">
+                                                <th style="width: 270px;padding-left: 10px">
                                                     Product
                                                 </th>
-                                                <th style="padding-left: 12px">
+                                                <th style="width: 150px;padding-left: 12px">
                                                     Unit Cost
                                                 </th>
                                                 <th style="width: 100px; padding-left: 12px">
@@ -1382,16 +1382,16 @@
                                                 <!--    <th style = "width: 100px; padding-left: 10px">
                                                     Sales Price
                                                 </th> -->
-                                                <th style="width: 140px; padding-left: 10px">
+                                                <th style="width: 200px; padding-left: 10px">
                                                     Grouping
                                                 </th>
                                                 <th style="width: 100px; padding-left: 10px">
                                                     Quantity
                                                 </th>
-                                                <th style="padding-left: 10px">
+                                                <th style="width: 100px;padding-left: 10px">
                                                     Markup %
                                                 </th>
-                                                <th style="padding-left: 10px">
+                                                <th style="width: 100px;padding-left: 10px">
                                                     Discount %
                                                 </th>
 

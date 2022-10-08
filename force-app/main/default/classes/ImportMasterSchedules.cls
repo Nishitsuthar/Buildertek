@@ -111,7 +111,7 @@ public static MessageClass importMasterScheduleLines(List<String> scheduleRecIds
                         schItem.buildertek__Project_Manager__c = schRecords[0].buildertek__Project_Manager__c;
                         }
                     }  */
-                    schItem.buildertek__Dependency__c = scheduleitem.buildertek__Dependency__c;
+                    // schItem.buildertek__Dependency__c = scheduleitem.buildertek__Dependency__c;
                     schItem.buildertek__Finish__c = scheduleitem.buildertek__Finish__c;
                     schItem.buildertek__Resource__c = scheduleitem.buildertek__Resource__c;
                     schItem.buildertek__Lag__c = scheduleitem.buildertek__Lag__c;
@@ -152,10 +152,11 @@ public static MessageClass importMasterScheduleLines(List<String> scheduleRecIds
             
             system.debug('projectTaskMap.values()'+projectTaskMap.values());
             
-            for(buildertek__Project_Task__c item:projectTaskMap.values() ){
-                system.debug(item.Name+' '+item.buildertek__Phase__c);
-            }
-            insert projectTaskMap.values();
+            // for(buildertek__Project_Task__c item:projectTaskMap.values() ){
+            //     system.debug('item ===> '+item);
+            // }
+            insert projectTaskMap.values();            
+            
             futureContoller.updateScheduleRec(recordId);
             
             System.debug('Check Project Manager 1');

@@ -329,7 +329,7 @@
 
     //Remove All selected Additional Cost from existing
     for (var i in questions) {
-      if (
+      if ( 
         questions[i].check != undefined &&
         questions[i].check.Id != undefined &&
         questions[i].check.Id == questionId
