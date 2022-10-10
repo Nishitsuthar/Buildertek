@@ -177,6 +177,7 @@
                 var state = response.getState();
                 if (state === "SUCCESS") {
                     var result = response.getReturnValue();
+                    console.log('result ===>', {result});
                     if (result.Status === 'Success') {
                         component.set("v.isSucess", true);
                         component.set("v.SucessMessage", result.Message);

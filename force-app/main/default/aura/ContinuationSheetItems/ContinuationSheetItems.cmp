@@ -597,6 +597,8 @@
                                                 </td>
                                                 
                                                 <td style = "padding-top: 5px;padding-bottom: 5px;padding-right: 10px;-left: 10px;">
+                                                    {!item.buildertek__Vendor_Work_Completed_This_Period__c}
+                                                    {!item.buildertek__Work_Completed__c}
                                                     <aura:if isTrue="{!and(v.IsCOEnable, group1.grouping1Name == 'Change Orders')}">
                                                         <aura:if isTrue="{!v.isCommUser}">
                                                             <lightning:input type="number" value="{!item.buildertek__Vendor_Work_Completed_This_Period__c ? item.buildertek__Vendor_Work_Completed_This_Period__c : ''}" aura:id="buildertek__Work_Completed__c" variant="label-hidden"  step="0.01" onchange="{!c.changeValueInGrp}"  name="{!'customrec_'+parentGroupIndex+'_'+subGroupIndex+'_'+recIndex}" disabled="true"/> <!-- {!c.changeValue} -->
@@ -615,7 +617,7 @@
                                                                                 <aura:if isTrue="{!item.buildertek__Vendor_G_C__c == 100}">
                                                                                     <lightning:input type="number" value="{!item.buildertek__Vendor_Work_Completed_This_Period__c ? item.buildertek__Vendor_Work_Completed_This_Period__c : ''}" aura:id="buildertek__Work_Completed__c" variant="label-hidden" formatter="currency" step="0.01" onchange="{!c.changeValueInGrp}"  name="{!'customrec_'+parentGroupIndex+'_'+subGroupIndex+'_'+recIndex}" disabled="true"/> <!-- {!c.changeValue} -->
                                                                                     <aura:set attribute="else">
-                                                                                        <lightning:input type="number" value="{!item.buildertek__Vendor_Work_Completed_This_Period__c ? item.buildertek__Vendor_Work_Completed_This_Period__c : ''}" aura:id="buildertek__Work_Completed__c" variant="label-hidden" formatter="currency" step="0.01" onchange="{!c.changeValueInGrp}"  name="{!'customrec_'+parentGroupIndex+'_'+subGroupIndex+'_'+recIndex}" disabled="false"/> <!-- {!c.changeValue} -->
+                                                                                        <lightning:input type="number" value="{!item.buildertek__Vendor_Work_Completed_This_Period__c  ? item.buildertek__Vendor_Work_Completed_This_Period__c : ''}" aura:id="buildertek__Work_Completed__c" variant="label-hidden" formatter="currency" step="0.01" onchange="{!c.changeValueInGrp}"  name="{!'customrec_'+parentGroupIndex+'_'+subGroupIndex+'_'+recIndex}" disabled="false"/> <!-- {!c.changeValue} -->
                                                                                     </aura:set>
                                                                                 </aura:if>
                                                                             </aura:set>

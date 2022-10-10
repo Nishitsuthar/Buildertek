@@ -12,6 +12,13 @@ public class BT_NewGanttChartCls {
         return objectName;
     }
 
+    @AuraEnabled
+    public static List<AggregateResult> getPhaseDates(string scheduleId){
+        List<AggregateResult> taskList = new List<AggregateResult>();
+        taskList = [SELECT COUNT(Id),MIN(buildertek__Start__c),MAX(buildertek__Finish__c),buildertek__Phase__c FROM buildertek__Project_Task__c WHERE buildertek__Schedule__c =: scheduleId GROUP BY buildertek__Phase__c];
+        return taskList;
+    }
+
     
     @AuraEnabled
     public static DataTableDetails getScheduleItemRecords(String objApi,string scheduleid){

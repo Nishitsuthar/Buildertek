@@ -1,5 +1,6 @@
 ({
     getParameterByName: function (component, event, name) {
+        console.log('===getParameterByName===');
         console.log("name1 : "+name);
         name = name.replace(/[\[\]]/g, "\\$&");
          console.log("name2 : "+name);
@@ -11,6 +12,7 @@
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     },
     getFields: function (component, event, helper) {
+        console.log('===getFields===');
         var action = component.get("c.getFieldSet");
         action.setParams({
             objectName: 'buildertek__Schedule__c',
@@ -28,12 +30,14 @@
     },
     
     savefunc: function (component, event, helper) {
+        console.log('===savefunc===');
         
         var newSchId = component.get('v.schedulerecId');    
         var masterItems = component.get("v.scheduleLineItems");
         var action = component.get("c.newSchedule");
         var scheduleId = [];
         scheduleId.push(component.get("v.selectedMasterId"));
+        console.log('scheduleId => '+scheduleId);
         action.setParams({
             "newScheduleId" : newSchId,
             "masterId": scheduleId
@@ -129,6 +133,7 @@
     },
     
     getProjectManagerId : function (component, event,RecordId) {
+        console.log('===getProjectManagerId===');
         var action = component.get("c.getProjectManager");
         action.setParams({ recordId : RecordId });
         action.setCallback(this, function(response) {

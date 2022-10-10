@@ -111,13 +111,14 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                 //rowChilObj["constraintDate"] = new Date(constraintDate)
                 if(taskListForPhase[i].buildertek__Milestone__c){
                     rowChilObj["duration"] = 0
+                    rowChilObj["durationMile"] = taskListForPhase[i].buildertek__Duration__c;
                     rowChilObj["cls"] = 'milestoneCompleteColor'
                     rowChilObj['orgmilestone'] = taskListForPhase[i].buildertek__Milestone__c;
-                    //rowChilObj['milestone'] = true;
+                    //rowChilObj['milestone'] = true;                           
                 }
                 rowChilObj["expanded"] = true
                 rowChilObj["order"] = taskListForPhase[i].buildertek__Order__c
-                //rowChilObj["endDate"] = taskData[i].value[j].buildertek__Finish__c
+                // rowChilObj["endDate"] = taskData[i].value[j].buildertek__Finish__c
                 //row["children"].push(rowChilObj);
                 var dependencyRow = {};
                 if(taskListForPhase[i].buildertek__Dependency__c){

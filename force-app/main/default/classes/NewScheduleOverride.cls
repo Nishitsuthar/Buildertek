@@ -127,7 +127,7 @@ public class NewScheduleOverride {
     }
     
     @AuraEnabled
-    public static String newSchedule(String newScheduleId, List<String>masterId ){
+    public static String newSchedule(String newScheduleId, List<String> masterId ){
         /*string SchId = newScheduleId;
         Date initialDate = [select Id,buildertek__Initial_Start_Date__c from buildertek__Schedule__c where id =:SchId].buildertek__Initial_Start_Date__c;
         system.debug('initialDate'+initialDate);

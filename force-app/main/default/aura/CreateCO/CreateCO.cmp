@@ -1,0 +1,38 @@
+<aura:component controller="createCO" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- <aura:attribute name="purchanseOrder" type="buildertek__Vendor__c"/> -->
+
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="optionId" type="String" />
+    <aura:attribute name="purchaseOrder" type="String" />
+
+    <aura:attribute name="changeOrder" type="Change_Order__c" default="{'sobjectType':'Change_Order__c',
+    'Name':'',
+    'buildertek__Details__c':'',
+    'buildertek__Due_Date__c':''}" />
+
+
+    <lightning:recordEditForm objectApiName="buildertek__Purchase_Order__c">
+        <lightning:inputField fieldName="buildertek__Vendor__c" value='{!v.purchaseOrder}' />
+
+    </lightning:recordEditForm>
+
+    <lightning:recordEditForm objectApiName="buildertek__Change_Order__c">
+        <lightning:inputField fieldName="Name" value="{!v.changeOrder.Name}" />
+        <lightning:inputField fieldName="buildertek__Details__c" value="{!v.changeOrder.buildertek__Details__c}" />
+        <lightning:inputField fieldName="buildertek__Due_Date__c" value="{!v.changeOrder.buildertek__Due_Date__c}" />
+
+
+    </lightning:recordEditForm>
+
+    <!-- <lightning:input type="text" label="Name" name="Name" value="{!v.changeOrder.Name}" />
+    <lightning:input type="text" label="Notes" name="Details" value="{!v.changeOrder.buildertek__Details__c}" />
+    <lightning:input type="date" label="Due Date" name="Due date" value="{!v.changeOrder.buildertek__Due_Date__c}" />
+    <br/>
+    <br/> -->
+    <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" />
+    <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRecord}" />
+
+
+</aura:component>

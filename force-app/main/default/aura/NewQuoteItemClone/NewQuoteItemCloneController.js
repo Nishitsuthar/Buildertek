@@ -198,6 +198,7 @@
                 component.set("v.Spinner2", true)
                 if (response.getState() == "SUCCESS") {
                     var rows = response.getReturnValue();
+                    console.log('Rows =>',{rows});
                     for (var i = 0; i < rows.length; i++) {
                         var row = rows[i];
                         if (row.PricebookEntries) {

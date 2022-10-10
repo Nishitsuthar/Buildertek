@@ -90,7 +90,7 @@ public with sharing class BT_QuestionnaireBuilder{
 	@AuraEnabled
 	public Static String deleteImage(String questionId){
 		if (String.isNotBlank(questionId)){
-			List<buildertek__Question__c> questions = [SELECT Id, buildertek__Document_Id__c, buildertek__Image_Id__c
+			List<buildertek__Question__c> questions = [SELECT Id, buildertek__Image_Id__c
 			                                           FROM buildertek__Question__c
 			                                           where Id = :questionId
 			                                           Limit 1];
@@ -378,7 +378,9 @@ public with sharing class BT_QuestionnaireBuilder{
 
 		//SOQL query on checks based on check ids which are in set of check id.
 		String checkQuery = 'SELECT buildertek__Product__r.Name, buildertek__Section__r.buildertek__Visible_to_Customer__c,buildertek__Section__r.buildertek__Create_Change_Order_on_Overage__c,buildertek__Question_Group__r.buildertek__of_Options_Required__c,buildertek__Question_Group__r.buildertek__Allowance_Available__c,buildertek__Question_Group__r.buildertek__Allowance_Remaining__c,buildertek__Question_Group__r.buildertek__Is_Saved_Items__c,' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question__c');
+		System.debug('checkQuery---->'+checkQuery);
 		checkQuery += ' ,(SELECT Id,Name,buildertek__Question__c,buildertek__Selection_Type__c,buildertek__Choice_Value__c,buildertek__Text_Value__c,buildertek__Choice_Text__c,buildertek__Single_Select_Drop_Down__c, buildertek__Single_Select_Radio__c, buildertek__Single_Select_Horizontal_Radio__c, buildertek__Multi_Select_CheckBox__c, buildertek__Multi_Select_Horizontal_CheckBox__c, buildertek__Multi_Select_Drop_Down__c, buildertek__Simple_Text__c, buildertek__Long_Text__c, buildertek__Date__c, buildertek__Drop_Down_Value__c,buildertek__Photo_Ids__c,buildertek__Additional_Cost__c,buildertek__ParentId__c,buildertek__Parent_Level__c,buildertek__Level__c,buildertek__Image_Id__c,buildertek__Document_Id__c FROM buildertek__Answer_Choices__r ORDER BY  CreatedDate ASC) FROM ' + BT_CONSTANTS.OBJECT_TYPE_QUESTION + ' WHERE Question_Group__c =:controlId ORDER BY Sort_Id__c, CreatedDate, Name ASC';
+		System.debug('checkQuery---->'+checkQuery);
 		List<buildertek__Question__c> checks;
 		/*if(Schema.sObjectType.buildertek__Question__c.fields.Id.isAccessible()&&
 		 Schema.sObjectType.buildertek__Question__c.fields.Name.isAccessible()&&

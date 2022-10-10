@@ -1014,7 +1014,7 @@
             productIdList: productIdList,
             takeOffLineList: takeOffLineList,
             projectId: component.get('v.projectSelectionTakeOffRec').buildertek__Project__c,
-            selectPriceBook:  component.get("v.pricebookName"),
+            selectPriceBook:  component.get('v.pricebookName'),
         });
         action.setCallback(this, function (response) {
             var state = response.getState();

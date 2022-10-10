@@ -1009,6 +1009,8 @@ public with sharing class ManagePOlinesController {
         if (String.isNotBlank(updatedRecords)){
             List<buildertek__Select_Sheet__c> items = (List<buildertek__Select_Sheet__c>)JSON.deserialize(updatedRecords, List<buildertek__Select_Sheet__c>.class);
             for (buildertek__Select_Sheet__c item : items){
+                System.debug('<--item-->'+item);
+                System.debug('<--item adjusted price -->'+item.buildertek__Upgrade_Price__c);
                 if (item.Id == null){
                     item.buildertek__Selection_Sheet_Takeoff__c = recordId;
                 }

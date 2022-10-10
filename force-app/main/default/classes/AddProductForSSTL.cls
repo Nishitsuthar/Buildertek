@@ -1900,9 +1900,9 @@ public with sharing class AddProductForSSTL{
                               SSTL.buildertek__Quantity__c = takeoffLineItem.buildertek__Quantity__c;//quantityMap.get(product.buildertek__Product_Type__c);
                               SSTL.buildertek__Service_Category__c = takeoffLineItem.buildertek__TL_SERVICE_CATEGORY__c;
                               SSTL.buildertek__BL_SERVICE_CATEGORY__c = takeoffLineItem.buildertek__TL_SERVICE_CATEGORY__c;
-                              //SSTL.buildertek__BT_Price_Book__c = PriceListt[0].Id;
+                              SSTL.buildertek__BT_Price_Book__c = PriceListt[0].Id;
                               selectionList.add(SSTL);
-                              system.debug(SSTL.buildertek__Build_Phase__c);
+                              system.debug(SSTL.buildertek__BT_Price_Book__c);
                               //}
                           }
                       }
@@ -1924,6 +1924,7 @@ public with sharing class AddProductForSSTL{
                           SSTL.buildertek__Type__c = 'Standard';
                           SSTL.buildertek__Build_Phase__c = buildPhaseMap.get(product.buildertek__Product_Type__c);
                           SSTL.buildertek__Quantity__c = quantityMap.get(product.buildertek__Product_Type__c);
+                          SSTL.buildertek__BT_Price_Book__c = PriceListt[0].Id;
                           selectionList.add(SSTL);
                           system.debug(selectionList);
                       }
@@ -1942,18 +1943,17 @@ public with sharing class AddProductForSSTL{
                           for(buildertek__Project_Takeoff_Lines__c TakeOfLines: [SELECT id, name, buildertek__Price_Book__c FROM buildertek__Project_Takeoff_Lines__c WHERE Id IN: takeOffLineList]){
                               System.debug('<TakeOfLines> '+TakeOfLines);
                               System.debug('<TakeOfLines.buildertek__Price_Book__c> '+TakeOfLines.buildertek__Price_Book__c);
-                              //if(TakeOfLines.buildertek__Price_Book__c == null || TakeOfLines.buildertek__Price_Book__c == ''){
+                              if(TakeOfLines.buildertek__Price_Book__c == NULL){
                                   System.debug(PriceListt.size()+'<>'+PriceListt[0].Id);
                                 TakeOfLines.buildertek__Price_Book__c = PriceListt[0].Id;
                                 
                                 TakeofLinesToUpdate.add(TakeOfLines);   
-                              //}
+                              }
                           }
                           if(TakeofLinesToUpdate.size() > 0){
                                 update TakeofLinesToUpdate;
                           }
-                      }
-                      else{
+                      }else{
                           List<buildertek__Project_Takeoff_Lines__c> TakeofLinesToUpdate = new List<buildertek__Project_Takeoff_Lines__c>();
                           //System.debug('<takeOffLineList>'+takeOffLineList);
                           for(buildertek__Project_Takeoff_Lines__c TakeOfLines: [SELECT id, name, buildertek__Price_Book__c FROM buildertek__Project_Takeoff_Lines__c WHERE Id IN: takeOffLineList]){
@@ -1972,8 +1972,24 @@ public with sharing class AddProductForSSTL{
                       }
                       
                      
-                      
-                      insert selectionList;
+                        Database.SaveResult[] saveResultList = Database.insert(selectionList, false);
+
+                        // Iterate through saveResultList based on isSuccess capture the failed records
+                        for (Database.SaveResult sr : saveResultList) {
+                            if (sr.isSuccess()) {
+                                // Operation was successful, so get the ID of the record that was processed
+                                System.debug('Successfully inserted account. Account ID: ' + sr.getId());
+                            }
+                            else {
+                                // Operation failed, so get all errors                
+                                for(Database.Error err : sr.getErrors()) {
+                                    System.debug('The following error has occurred.');                    
+                                    System.debug(err.getStatusCode() + ': ' + err.getMessage());
+                                    System.debug('Account fields that affected this error: ' + err.getFields());
+                                }
+                            }
+                        }
+                    //   insert selectionList;
                       
                       // update BOM Line with pricebook values
                       list<Id> proID= new list<Id>();
@@ -1993,7 +2009,7 @@ public with sharing class AddProductForSSTL{
                               PriceList = [select Id, Name
                                            from pricebook2
                                            Where Id =: selectPriceBook AND buildertek__BT_Visible__c = true];
-                              
+                              System.debug('PriceList-->'+PriceList);
                               if(parentBOMrecord != null){
                                   //  String code = (String) parentBOMrecord.get('CurrencyIsoCode');
                                   // string parentBOMCurrency =  parentBOMrecord.CurrencyIsoCode;
@@ -2004,10 +2020,13 @@ public with sharing class AddProductForSSTL{
                                   if(pricebookentrylist1.size() > 0){
                                       for(PricebookEntry pricebookRec : pricebookentrylist1){
                                           for(buildertek__Select_Sheet__c sheetRec1 : selectionList){
+                                            System.debug('<--pricebookRec.Product2Id-->'+pricebookRec.Product2Id);
+                                            System.debug('<--sheetRec1.buildertek__Product__c-->'+sheetRec1.buildertek__Product__c);
                                               if(pricebookRec.Product2Id == sheetRec1.buildertek__Product__c){
-                                                  if(PriceList.size() >0 ){
-                                                      sheetRec1.buildertek__BT_Price_Book__c = PriceList[0].Id;
-                                                  }
+                                                //   if(PriceList.size() >0 ){
+                                                //       sheetRec1.buildertek__BT_Price_Book__c = PriceList[0].Id;
+                                                //   }
+                                                  System.debug('<--sheetRec1.buildertek__BT_Price_Book__c-->'+sheetRec1.buildertek__BT_Price_Book__c);
                                                   sheetRec1.put('CurrencyIsoCode',(String) parentBOMrecord.get('CurrencyIsoCode'));
                                                   //  (String) sheetRec1.set('CurrencyIsoCode') = (String) parentBOMrecord.get('CurrencyIsoCode');
                                                   sheetRec1.buildertek__BL_MARKUP__c = pricebookRec.buildertek__Markup__c;
@@ -2023,20 +2042,25 @@ public with sharing class AddProductForSSTL{
                                       }  
                                       if(selectionList1.size() > 0){
                                           update selectionList1;
-                                          System.debug(selectionList1);
+                                          for(buildertek__Select_Sheet__c bs : selectionList1){
+                                                System.debug(bs.Id);
+                                                System.debug(bs.buildertek__BT_Price_Book__c);
+                                                System.debug(bs.Name);
+                                          }
                                       }
                                   }else {
                                       parentBOMCurrency =  'USD';
                                       pricebookentrylistQry = 'select id,Name,CurrencyIsoCode,buildertek__Unit_Cost__c,buildertek__Markup__c,buildertek__Discount__c,UnitPrice, Product2Id,Pricebook2Id from PricebookEntry   where Product2Id IN: proID and Pricebook2Id IN: PriceList AND CurrencyIsoCode=: parentBOMCurrency limit 1';    
                                       pricebookentrylist1 =  Database.query(pricebookentrylistQry);
+                                      system.debug(pricebookentrylist1);
                                       if(pricebookentrylist1.size() > 0){
                                           selectionList1 = new list<buildertek__Select_Sheet__c>();
                                           for(PricebookEntry pricebookRec : pricebookentrylist1){
                                               for(buildertek__Select_Sheet__c sheetRec1 : selectionList){
                                                   if(pricebookRec.Product2Id == sheetRec1.buildertek__Product__c){
-                                                      if(PriceList.size() >0 ){
-                                                          sheetRec1.buildertek__BT_Price_Book__c = PriceList[0].Id;
-                                                      }
+                                                    //   if(PriceList.size() >0 ){
+                                                    //       sheetRec1.buildertek__BT_Price_Book__c = PriceList[0].Id;
+                                                    //   }
                                                       sheetRec1.put('CurrencyIsoCode',(String) parentBOMrecord.get('CurrencyIsoCode')); 
                                                       // sheetRec1.CurrencyIsoCode =  parentBOMCurrency;
                                                       sheetRec1.buildertek__BL_MARKUP__c = pricebookRec.buildertek__Markup__c;
@@ -2049,16 +2073,6 @@ public with sharing class AddProductForSSTL{
                                                       selectionList1.add(sheetRec1);
                                                   }
                                               }
-                                              
-                                              
-                                              
-                                              
-                                              
-                                              
-                                              
-                                              
-                                              
-                                              
                                           }  
                                           if(selectionList1.size() > 0){
                                               update selectionList1;
@@ -2106,6 +2120,7 @@ public with sharing class AddProductForSSTL{
           } catch (Exception e){
               System.debug('Error Message::' + e.getMessage());
               System.debug('Error Line::' + e.getLineNumber());
+              System.debug('Error Cause::'+e.getCause());
               throw new AuraHandledException(e.getMessage());
           }
                                                          }

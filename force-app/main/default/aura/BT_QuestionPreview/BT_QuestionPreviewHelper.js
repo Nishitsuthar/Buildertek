@@ -19,6 +19,7 @@
         controlId: questionGroupId
       });
       action.setCallback(this, function (response) {
+        console.log('response => ',{response});
         state = response.getState();
         if (state === "SUCCESS") {
           console.log("Response Value::", response.getReturnValue());
@@ -362,25 +363,26 @@
   },
 
   returnImages: function (component, recordId) {
-    // console.log('Aa gaye aap returnImage method me==> ');
-    // console.log(typeof (recordId));
+   // console.log('Aa gaye aap returnImage method me==> ');
+    console.log(typeof (recordId));
 
-    // console.log('optionID check here ==> ', { recordId });
+    console.log('optionID check here ==> ', { recordId });
 
-    // var action = component.get("c.getProductFiles");
-    // action.setParams({
-    //   optiondId: recordId
-    // });
-    // action.setCallback(this, function (response) {
-    //   var state = response.getState();
-    //   console.log('Status =>', { state });
-    //   var result = response.getReturnValue();
-    //   console.log('Result =>', { result });
-    //   if (result[0] != 'Error') {
-    //     component.set("v.optionDocList", result);
-    //   }
-    // });
-    // $A.enqueueAction(action);
+    var action = component.get("c.getProductFiles");
+    action.setParams({
+      optiondId: recordId
+    });
+    action.setCallback(this, function (response) {
+      var state = response.getState();
+      console.log('Status =>', { state });
+      var result = response.getReturnValue();
+      console.log('Result =>', { result });
+      component.set("v.optionDocList", result);
+      if (result[0] != 'Error') {
+        
+      }
+    });
+    $A.enqueueAction(action);
   },
 
   getImgVisibility: function (component, event, helper) {
@@ -395,21 +397,21 @@
     });
     $A.enqueueAction(action);
 
-    //   var recordId = component.get("v.recordId");
-    //       console.log('recordId => ' + recordId);
-    //       var action = component.get("c.getProductFiles");
-    //       action.setParams({
-    //           recordId: recordId
-    //       });
-    //       action.setCallback(this, function (response) {
-    //           var state = response.getState();
-    //           console.log('Status =>', {state});
-    //           var result = response.getReturnValue();
-    //           console.log('Result =>', {result});
-    //           if (result[0] != 'Error') {
-    //               component.set("v.contentDocsList", result);
-    //           }
-    //       });
-    //       $A.enqueueAction(action);
+      // var recordId = component.get("v.recordId");
+      //     console.log('recordId => ' + recordId);
+      //     var action = component.get("c.getProductFiles");
+      //     action.setParams({
+      //         recordId: recordId
+      //     });
+      //     action.setCallback(this, function (response) {
+      //         var state = response.getState();
+      //         console.log('Status =>', {state});
+      //         var result = response.getReturnValue();
+      //         console.log('Result =>', {result});
+      //         if (result[0] != 'Error') {
+      //             component.set("v.contentDocsList", result);
+      //         }
+      //     });
+      //     $A.enqueueAction(action);
   },
 });
