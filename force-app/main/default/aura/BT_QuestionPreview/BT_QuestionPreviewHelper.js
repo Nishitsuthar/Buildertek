@@ -377,9 +377,14 @@
       console.log('Status =>', { state });
       var result = response.getReturnValue();
       console.log('Result =>', { result });
+<<<<<<< HEAD
       component.set("v.optionDocList", result);
       if (result[0] != 'Error') {
         
+=======
+      if (result[0] != 'Error') {
+        component.set("v.optionDocList", result);
+>>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
       }
     });
     $A.enqueueAction(action);

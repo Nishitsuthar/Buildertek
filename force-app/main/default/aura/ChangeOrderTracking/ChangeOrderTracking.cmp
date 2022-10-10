@@ -77,7 +77,6 @@
                 <aura:iteration items="{!v.sovLineList}" var="sov" indexVar="recIndex">
                     <tr >
                         
-                        
                         <td>
                             {!recIndex+1}
                         </td>
