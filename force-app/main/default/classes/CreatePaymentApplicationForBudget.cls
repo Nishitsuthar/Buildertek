@@ -318,10 +318,12 @@ continutionSheet.Name =*/
         Map<String,List<buildertek__SOV_Continuation_Sheet_Lines__c>> sheetLineGrpMap = new  Map<String,List<buildertek__SOV_Continuation_Sheet_Lines__c>>();
         
         for(buildertek__SOV_Continuation_Sheet_Lines__c sheetLine : insertedSheetLinesList){
+
+            System.debug('sheetLine===>'+sheetLine);
             
             if(sheetLine.buildertek__Grouping__c != null){
                 if(sheetLineGrpMap.get(sheetLine.buildertek__Grouping__c)!=null){
-                    system.debug(sheetLine);
+                    // system.debug(sheetLine);
                     list<buildertek__SOV_Continuation_Sheet_Lines__c> sheetLineList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
                     if(sheetLine.buildertek__Grouping__c != null){
                         sheetLineList= sheetLineGrpMap.get(sheetLine.buildertek__Grouping__c);
@@ -335,7 +337,7 @@ continutionSheet.Name =*/
                         sheetLineGrpMap.put('No Grouping',sheetLineList);                    
                     }                                       
                 }else{
-                    system.debug(sheetLine);
+                    // system.debug(sheetLine);
                     list<buildertek__SOV_Continuation_Sheet_Lines__c> sheetLineList = new list<buildertek__SOV_Continuation_Sheet_Lines__c>();
                     sheetLineList.add(sheetLine);
                     if(sheetLine.buildertek__Grouping__c != null){
@@ -346,7 +348,7 @@ continutionSheet.Name =*/
                 }
             }else{
                 if(sheetLineGrpMap.get('No Grouping')!=null){
-                    system.debug(sheetLine);
+                    // system.debug(sheetLine);
                     list<buildertek__SOV_Continuation_Sheet_Lines__c> sheetLineList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
                     if(sheetLine.buildertek__Grouping__c != null){
                         sheetLineList= sheetLineGrpMap.get(sheetLine.buildertek__Grouping__c);
@@ -360,7 +362,7 @@ continutionSheet.Name =*/
                         sheetLineGrpMap.put('No Grouping',sheetLineList);                    
                     }                                        
                 }else{
-                    system.debug(sheetLine);
+                    // system.debug(sheetLine);
                     list<buildertek__SOV_Continuation_Sheet_Lines__c> sheetLineList = new list<buildertek__SOV_Continuation_Sheet_Lines__c>();
                     sheetLineList.add(sheetLine);
                     if(sheetLine.buildertek__Grouping__c != null){

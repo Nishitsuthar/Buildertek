@@ -150,7 +150,7 @@ paymentRec.buildertek__Amount_Certified__c = paymentRec.buildertek__Current_Paym
                         sovLineRec.buildertek__Work_Completed_from_Previous_Application__c = sovLineRec.buildertek__Vendor_Work_Completed_from_Previous_Appl__c;
                         sovLineRec.buildertek__Work_Completed__c = sovLineRec.buildertek__Vendor_Work_Completed_This_Period__c;
                         sovLineRec.buildertek__Material_Presently_Stored__c = sovLineRec.buildertek__Vendor_Material_Presently_Stored__c;
-                        
+                        System.debug('sovLineRec ==> '+sovLineRec);
                         IntparentSOVList.add(sovLineRec);
                     }
                 }
@@ -173,7 +173,7 @@ paymentRec.buildertek__Amount_Certified__c = paymentRec.buildertek__Current_Paym
                         if(sovLineRec.buildertek__Material_Presently_Stored__c != null && sovLineRec.buildertek__Material_Presently_Stored__c != 0){
                             sovLineRec.buildertek__Vendor_Material_Presently_Stored__c = sovLineRec.buildertek__Material_Presently_Stored__c;
                         }
-                        
+                        System.debug('sovLineRec ==> '+sovLineRec);
                         IntparentSOVList.add(sovLineRec);
                     }
                 }

@@ -1855,7 +1855,7 @@ public with sharing class QuoteDAO{
         @AuraEnabled
     public static List<Product2> getProducts(){
         DataTableWrapper listDtw;
-        List<Product2> pp =  [select Id,Name,ProductCode,Description,Family,(select UnitPrice from PricebookEntries where IsActive = True) from Product2 where IsActive = True and Id IN (select Product2Id from PricebookEntry where isActive = true)];
+        List<Product2> pp =  [select Id,Name,ProductCode,Description,toLabel(Family),(select UnitPrice from PricebookEntries where IsActive = True) from Product2 where IsActive = True and Id IN (select Product2Id from PricebookEntry where isActive = true)];
        
        /*    List<String> labels = new     List<String>();
         labels.add('Product Name');

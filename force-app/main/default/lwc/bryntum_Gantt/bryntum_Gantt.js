@@ -13,10 +13,7 @@ import GanttToolbarMixin from "./lib/GanttToolbar";
 import GanttToolbarMixinDup from "./lib/GanttToolbarDup";
 import data from "./data/launch-saas";
 import getScheduleItemRecords from "@salesforce/apex/BT_NewGanttChartCls.getScheduleItemRecords";
-<<<<<<< HEAD
 import getPhaseDates from "@salesforce/apex/BT_NewGanttChartCls.getPhaseDates";
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
 import insertUpdateTask from "@salesforce/apex/BT_NewGanttChartCls.insertUpdateTask";
 import insertUpdateTaskList from "@salesforce/apex/BT_NewGanttChartCls.insertUpdateTaskList";
 import deleteTasks from "@salesforce/apex/BT_NewGanttChartCls.deleteTasks";
@@ -44,13 +41,10 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   @api taskRecordId;
   @api objApiName = "buildertek__Project_Task__c";
   @track scheduleItemsData;
-<<<<<<< HEAD
 
   //VARIABLE ADDED TO GET PHASE DATES - 09/10
   @api phaseDates = [];
   
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
   @api scheduleItemsDataList;
   @api storeRes;
   @api scheduleItemIdsList = [];
@@ -700,7 +694,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             taskList[index2 + 1].buildertek__Phase__c
         ) {
           taskList[index1].buildertek__Phase__c = null;
-<<<<<<< HEAD
         }
         taskList.splice(index2 + 1, 0, taskList[index1]);
         taskList.splice(index1, 1);
@@ -721,28 +714,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         ) {
           taskList[index1].buildertek__Phase__c = null;
         }
-=======
-        }
-        taskList.splice(index2 + 1, 0, taskList[index1]);
-        taskList.splice(index1, 1);
-      } else if (index1 > index2) {
-        if (
-          taskList[index2].buildertek__Phase__c !=
-            taskList[index1].buildertek__Phase__c &&
-          taskList[index2].buildertek__Phase__c ==
-            taskList[index2 + 1].buildertek__Phase__c
-        ) {
-          taskList[index1].buildertek__Phase__c =
-            taskList[index2].buildertek__Phase__c;
-        } else if (
-          taskList[index2].buildertek__Phase__c !=
-            taskList[index1].buildertek__Phase__c &&
-          taskList[index2].buildertek__Phase__c !=
-            taskList[index2 + 1].buildertek__Phase__c
-        ) {
-          taskList[index1].buildertek__Phase__c = null;
-        }
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
         // Higher index to lower index; we remove the higher index, then add it to the lower index.
         temp = taskList.splice(index1, 1)[0];
         taskList.splice(index2, 0, temp);
@@ -755,7 +726,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       if (taskList[i].buildertek__Phase__c) {
         if (!recordsMap.has(taskList[i].buildertek__Phase__c)) {
           recordsMap.set(taskList[i].buildertek__Phase__c, []);
-<<<<<<< HEAD
         }
         recordsMap
           .get(taskList[i].buildertek__Phase__c)
@@ -764,16 +734,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         if (!recordsMap.has("null")) {
           recordsMap.set("null", []);
         }
-=======
-        }
-        recordsMap
-          .get(taskList[i].buildertek__Phase__c)
-          .push(JSON.parse(JSON.stringify(taskList[i])));
-      } else {
-        if (!recordsMap.has("null")) {
-          recordsMap.set("null", []);
-        }
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
         recordsMap.get("null").push(JSON.parse(JSON.stringify(taskList[i])));
       }
     }
@@ -907,6 +867,10 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   }
 
   refreshGantt() {
+    // this.phaseFunction();
+
+    console.log('refreshGantt');
+
     var that = this;
     getScheduleItemRecords({
       objApi: "buildertek__Project_Task__c",
@@ -1035,10 +999,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       scheduleid: this.recordId,
     })
       .then((response) => {
-<<<<<<< HEAD
         console.log('get schedule item records.');
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
         console.log({response});
         this.formatCustomResponse(response);
       })
@@ -1155,9 +1116,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     });
     this.dispatchEvent(event);
   }
-<<<<<<< HEAD
 
-  connectedCallback() {
+  phaseFunction(){
     //CODE ADDED TO GET PHASE DATES - 09-10
     getPhaseDates({
       scheduleId : this.recordId
@@ -1179,17 +1139,16 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     });
   }
 
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
+  connectedCallback() {
+    this.phaseFunction();
+  }
+
   renderedCallback() {
     if (this.bryntumInitialized) {
       return;
     }
     this.bryntumInitialized = true;
-<<<<<<< HEAD
 
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
     Promise.all([
       loadScript(this, GANTTModule), //GanttDup ,SchedulerPro GANTTModule,GANTT + "/gantt.lwc.module.js"
       //loadStyle(this,  GANTT + "/gantt.stockholm.css")
@@ -1213,11 +1172,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   }
 
   populateIcons(record) {
-<<<<<<< HEAD
     // console.log('popluate record-->',record);
-=======
-    console.log('popluate record-->',record);
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
     if (record.row) {
       if (record.row._allCells.length) {
         if (
@@ -1418,10 +1373,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     this.storeRes = response.filesandattacmentList;
     this.projectNameShow = true;
     this.userProfileName = response.profileName;
-<<<<<<< HEAD
 
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
     var scheduleItemsList = [];
     var scheduleItemsListClone = [];
     let scheduleItemsMap = new Map();
@@ -1484,13 +1436,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           .push(JSON.parse(JSON.stringify(scheduleItemsListClone[i])));
       }
     }
-<<<<<<< HEAD
     console.log({recordsMap});
     var result = Array.from(recordsMap.entries());
     console.log({result});
-=======
-    var result = Array.from(recordsMap.entries());
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
     var groupData = [];
     for (var i in result) {
       var newObj = {};
@@ -1499,10 +1447,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       groupData.push(newObj);
     }
     this.scheduleItemsData = groupData;
-<<<<<<< HEAD
     console.log({groupData});
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
     if (this.template.querySelector(".container").children.length) {
       this.template.querySelector(".container").innerHTML = "";
       this.template.querySelector(".container1").innerHTML = "";
@@ -1514,6 +1459,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
   createGantt() {
     try {
+      console.log('createGantt');
       var GanttToolbar;
       var loc = window.location.href;
       var domName = loc.split(".lightning.force.com")[0].split("https://")[1];
@@ -1537,7 +1483,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       var resourceRowData = [];
       var assignmentRowData = [];
       var rows = [];
-<<<<<<< HEAD
 
       var phaseDateList = this.phaseDates;
       console.log({phaseDateList});
@@ -1565,14 +1510,11 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       }
       this.scheduleItemsDataList = scheduleDataList;
 
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
       var formatedSchData = formatData(
         this.scheduleData,
         this.scheduleItemsData,
         this.scheduleItemsDataList
       );
-<<<<<<< HEAD
       console.log({formatedSchData});
 
       // var refVar = formatedSchData;
@@ -1597,8 +1539,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       // }
       // console.log({refVar});
       // formatedSchData = refVar;
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
 
       tasks["rows"] = formatedSchData["rows"];
       resources["rows"] = formatedSchData["resourceRowData"];
@@ -1754,13 +1694,10 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                 record.rowElement.draggable = true;
               }
               var endDate;
-<<<<<<< HEAD
 
               const map1 = new Map();
               var count = 0;
 
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
               var months = [
                 "Jan",
                 "Feb",
@@ -1776,10 +1713,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                 "Dec",
               ];
               if (record.value) {
-<<<<<<< HEAD
                 
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
                 // console.log('Record of endDate =>',{record});
                 // console.log('duration>>>', record.record._data.duration);
                 // console.log('type>>>', record.record._data.type);
@@ -1841,22 +1775,16 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   record.record._data.type != "Task" &&
                   record.record._data.name != "Milestone Complete"
                 ) {
-<<<<<<< HEAD
                   console.log('In phase');
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
+                  console.log({record});
                     // console.log('In elseif(1) conditon for enddate');
                     // console.log('rc val>>>',record.value);
                   endDate = new Date(record.value);
                   endDate.setDate(endDate.getDate() - 1);
-<<<<<<< HEAD
                   endDate = new Date(endDate);   
                   
                   map1.set(count,endDate);
                   console.log({map1});
-=======
-                  endDate = new Date(endDate);
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
                   return (
                     months[endDate.getMonth()] +
                     " " +
@@ -1881,8 +1809,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     endDate.getFullYear()
                   );
                 } else {
-<<<<<<< HEAD
                   // console.log('start Date',record.record.startDate);
+                  console.log('MileStone EndDate');
+                  console.log({record});
                   // console.log('-->'+record.record._data.name);
 
                   //COMMENTED
@@ -1895,12 +1824,40 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   // console.log('Milestone End Date *** ===>' + months[endDate.getMonth()] +" " +Number(endDate.getDate()) +", " +endDate.getFullYear());
                   // endDate = map1.get(count);
 
-                  endDate = new Date(record.record.startDate);
-                  endDate.setDate(endDate.getDate() + record.record._data.durationMile);
-=======
-                    // console.log('In else conditon for enddate');
-                  endDate = new Date(record.value);
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
+
+
+
+                  // if(record.record._data.duration == 0){
+                  //   endDate = new Date(record.record.startDate);
+                  //   endDate.setDate(endDate.getDate() + record.record._data.durationMile);
+                  // }else{
+                    console.log('--'+record.record._parent._data.endDate);
+                    // endDate = new Date(record.record._parent._data.endDate);
+                    if(record.record._parent._data.endDate != undefined) console.log('-|-'+record.record._parent._data.endDate.toString().substring(8,10));
+                    // console.log({endDate});
+
+                    // if(endDate != undefined && record.record._parent._data.endDate != undefined && record.record._parent._data.endDate.toString().substring(8,10) == endDate.getDate().toString()){
+                    //   endDate.setDate(endDate.getDate() - 1);
+                    // }else if(endDate != undefined && record.record._parent._data.endDate != undefined && record.record._parent._data.endDate.toString().substring(8,10) != endDate.getDate().toString()){
+                    //   endDate.setDate(endDate.getDate() + 1);
+                    // }
+                    // console.log({endDate});
+
+                    var endDate1 = new Date(record.record.startDate);
+                    endDate1.setDate(endDate1.getDate() + record.record._data.durationMile);
+                    console.log({endDate1});
+
+                    endDate = new Date(record.record._parent._data.endDate);
+                    console.log('1-'+endDate);
+                    endDate.setDate(endDate.getDate() - 1);
+                    console.log('2-'+endDate);
+                    endDate = new Date(endDate); 
+                    console.log('3-'+endDate);
+                      
+
+                    // endDate.setDate(endDate.getDate() + record.record._parent._data.duration);
+                  // }
+
 
                   return (
                     months[endDate.getMonth()] +
@@ -1919,13 +1876,10 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             editor: true,
             renderer: (record) => {
               this.populateIcons(record);
-<<<<<<< HEAD
-              if(record.record._data.name == 'Milestone Complete'){
-                console.log({record});
-                console.log(record.value._magnitude);
-              }
-=======
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
+              // if(record.record._data.name == 'Milestone Complete'){
+              //   console.log({record});
+              //   console.log(record.value._magnitude);
+              // }
               if (record.record._data.name == "Milestone Complete") {
                 var phasePercent = record.record.taskStore.storage.getBy(
                   "_internalId",
@@ -2247,21 +2201,12 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     endDate: {
                       label: "End",
                       weight: "100",
-<<<<<<< HEAD
                     },
                     bbar: {
                       items: {
                         deleteButton: false,
                       },
                     },
-=======
-                    },
-                    bbar: {
-                      items: {
-                        deleteButton: false,
-                      },
-                    },
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
                   },
                   // divider     : false
                 },
@@ -2538,7 +2483,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               setTimeout(() => {
                 if (!ele.classList.contains("pastDueDatesText")) {
                   //  ele.classList.add('pastDueDatesText')
-<<<<<<< HEAD
                 }
               }, 150);
             }
@@ -2692,161 +2636,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     ].percentDone = taskRecord.percentDone;
                   }
                 }
-=======
-                }
-              }, 150);
-            }
-          };
-          if (taskRecord._data.endDate) {
-            recEdate = new Date(taskRecord._data.endDate);
-            var start = taskRecord.startDate
-              ? new Date(taskRecord.startDate.getTime())
-              : new Date(taskRecord._data.startDate.getTime());
-            var duration = taskRecord.duration;
-            var eDate = new Date(start);
-            // console.log('Start date ==> ',{start});
-            // console.log({duration});
-            // console.log({eDate});
-            for (var i = 0; i < duration; i++) {
-              if (i == 0) {
-                eDate = new Date(start.setDate(start.getDate() + i));
-              } else {
-                eDate = new Date(eDate.setDate(eDate.getDate() + 1));
-              }
-              //eDate = eDate.setDate(eDate.getDate() + 1)
-              if (new Date(eDate).getDay() == 0) {
-                eDate = new Date(eDate.setDate(eDate.getDate() + 1));
-              }
-              if (new Date(eDate).getDay() == 6) {
-                eDate = new Date(eDate.setDate(eDate.getDate() + 2));
-              }
-              eDate = new Date(eDate);
-            }
-
-            if (
-              eDate.getTime() < dat.getTime() &&
-              taskRecord.percentDone < 100
-            ) {
-              renderData.wrapperCls.add("pastdateTextColor");
-              renderData.taskRecord.cls.add("pastDueDatesText");
-              if (
-                !renderData.row.elements.locked.classList.contains(
-                  "pastDueDatesText"
-                )
-              ) {
-                renderData.row.elements.locked.classList.add(
-                  "pastDueDatesText"
-                );
-                renderData.row.elements.locked.addEventListener(
-                  "mouseover",
-                  eveLitener
-                );
-                renderData.row.elements.locked.addEventListener(
-                  "mouseleave",
-                  eveLitener
-                );
-                renderData.row.elements.normal.addEventListener(
-                  "mouseover",
-                  eveLitener
-                );
-                renderData.row.elements.normal.addEventListener(
-                  "mouseleave",
-                  eveLitener
-                );
-                renderData.row.cls.add("pastDueDatesText");
-              }
-              if (renderData.taskRecord.cls.contains("notpastDueDatesText")) {
-                renderData.taskRecord.cls.remove("notpastDueDatesText");
-              }
-
-              renderData.style += "background:red;";
-            } else {
-              if (renderData.taskRecord.cls.contains("pastDueDatesText")) {
-                renderData.row.elements.locked.removeEventListener(
-                  "mouseover",
-                  eveLitener
-                );
-                renderData.row.elements.locked.removeEventListener(
-                  "mouseleave",
-                  eveLitener
-                );
-                renderData.row.elements.normal.removeEventListener(
-                  "mouseover",
-                  eveLitener
-                );
-                renderData.row.elements.normal.removeEventListener(
-                  "mouseleave",
-                  eveLitener
-                );
-                renderData.row.cls.remove("pastDueDatesText");
-                renderData.taskRecord.cls.add("notpastDueDatesText");
-                renderData.taskRecord.cls.remove("pastDueDatesText");
-                delete renderData.taskRecord.cls["pastDueDatesText"];
-                renderData.row.elements.locked.classList.remove(
-                  "pastDueDatesText"
-                );
-              }
-            }
-          } else {
-            recEdate.setDate(recEdate.getDate() - 1);
-            if (
-              taskRecord.endDate &&
-              recEdate.getTime() < Date.now() &&
-              taskRecord.percentDone < 100
-            ) {
-              if (renderData.taskRecord.cls.contains("notpastDueDatesText")) {
-                renderData.taskRecord.cls.remove("notpastDueDatesText");
-              }
-              renderData.wrapperCls.add("pastdateTextColor");
-              renderData.style += "background:red;";
-            } else {
-              if (renderData.taskRecord.cls.contains("pastDueDatesText")) {
-                renderData.row.elements.locked.removeEventListener(
-                  "mouseover",
-                  eveLitener
-                );
-                renderData.row.elements.locked.removeEventListener(
-                  "mouseleave",
-                  eveLitener
-                );
-                renderData.row.elements.normal.removeEventListener(
-                  "mouseover",
-                  eveLitener
-                );
-                renderData.row.elements.normal.removeEventListener(
-                  "mouseover",
-                  eveLitener
-                );
-                renderData.row.cls.remove("pastDueDatesText");
-                renderData.taskRecord.cls.remove("pastDueDatesText");
-                renderData.taskRecord.cls.add("notpastDueDatesText");
-                delete renderData.taskRecord.cls["pastDueDatesText"];
-                renderData.row.elements.locked.classList.remove(
-                  "pastDueDatesText"
-                );
-              }
-            }
-          }
-
-          // for milestone percentdone update
-          if (taskRecord._data.type == "Phase") {
-            if (taskRecord._data.children) {
-              if (taskRecord._data.children.length) {
-                var phaseTask = taskRecord;
-                if (
-                  phaseTask.children[phaseTask.children.length - 1].name ==
-                  "Milestone Complete"
-                ) {
-                  if (
-                    phaseTask.children[phaseTask.children.length - 1]
-                      .percentDone != taskRecord.percentDone
-                  ) {
-                    phaseTask.children[
-                      phaseTask.children.length - 1
-                    ].percentDone = taskRecord.percentDone;
-                  }
-                }
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
               }
             }
           }

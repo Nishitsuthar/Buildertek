@@ -127,9 +127,12 @@ public class ChangeOrderTrackingController {
         }
          
                
-        
+        System.debug('ConSheetLineList ==> '+ConSheetLineList);
         
         update ConSheetLineList;
+
+        System.debug('ConSheetLineList 2 ==> '+ConSheetLineList);
+
         
         return 'success';
     }

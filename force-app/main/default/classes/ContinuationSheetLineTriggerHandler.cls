@@ -216,7 +216,7 @@ public class ContinuationSheetLineTriggerHandler {
                     ContinuationSheetLineTriggerHandler.blnSkipconSheetLineUpdateTrigger = false;
                     update newPaymentApp;
                     
-                    
+                    System.debug('newPaymentApp ===> '+newPaymentApp);
                     system.debug('newPaymentApp[078]---->'+newPaymentApp[0].buildertek__Original_Contract_Sum__c);
                     system.debug('newPaymentApp[1]98---->'+newPaymentApp[0].buildertek__Net_Change_by_Change_Orders__c);
                     

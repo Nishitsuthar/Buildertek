@@ -51,6 +51,7 @@
         component.set("v.Spinner", false);
         component.set("v.showMessage", false);
         var result = response.getReturnValue();
+        console.log({result});
 
         var navEvt = $A.get("e.force:navigateToSObject");
         navEvt.setParams({

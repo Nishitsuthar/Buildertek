@@ -96,7 +96,7 @@
                     var result = response.getReturnValue();
                     console.log('Result =>', {result});
                     if (state === "SUCCESS") {
-                        if (result[0] === 'Success') {
+                        if (result === 'Success') {
                             component.set("v.Spinner", false);
                             $A.get("e.force:closeQuickAction").fire();
                             var toastEvent = $A.get("e.force:showToast");
@@ -117,7 +117,7 @@
                             var toastEvent = $A.get("e.force:showToast");
                             toastEvent.setParams({
                                 "type": 'error',
-                                "message": result
+                                "message": 'Something Went Wrong'
                             });
                             toastEvent.fire();
                         }

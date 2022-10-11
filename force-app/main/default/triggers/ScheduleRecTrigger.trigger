@@ -1,8 +1,8 @@
 trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after update, before delete, before update) {
     ScheduleTriggerHandler handler = new ScheduleTriggerHandler(Trigger.isExecuting, Trigger.size);
     UpdateProjecttOnScheduleUpdateHandler projectUpdateHandler = new UpdateProjecttOnScheduleUpdateHandler();
-    if (Trigger.isInsert && Trigger.isAfter && !handler.blnSkipTaskTrigger && !ScheduleRecTriggerHandler.afterInsertCall){
-        ScheduleRecTriggerHandler.afterInsertCall = true;
+    if (Trigger.isInsert && Trigger.isAfter && !handler.blnSkipTaskTrigger){
+        
         SET<Id> projectIdSet = new SET<Id>();
         List<buildertek__Schedule__c> scheduleToUpdate = new List<buildertek__Schedule__c>();
         //Set<Id> scheduleIds = new Set<Id>();
@@ -123,10 +123,9 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
             }
         }
         
+ 
    
-    if (Trigger.isUpdate && Trigger.isAfter && !handler.blnSkipTaskTrigger && !ScheduleRecTriggerHandler.afterUpdateCall){
-        ScheduleRecTriggerHandler.afterUpdateCall = true;
-        
+    if (Trigger.isUpdate && Trigger.isAfter && !handler.blnSkipTaskTrigger){
         SET<Id> projectIdSet = new SET<Id>();
         SET<Id> scheduleIds = new SET<Id>();
         Set<Id> scheduleShare = new Set<Id>();

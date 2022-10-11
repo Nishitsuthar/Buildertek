@@ -110,7 +110,6 @@ public with sharing class ImportMasterSchedules{
                             schItem.buildertek__Project_Manager__c = projectManagerId;
 
                         }
-<<<<<<< HEAD
                         /*    if(schRecords.size() > 0){
                          System.debug('Check Two');
                          if(schRecords[0].buildertek__Project_Manager__c != null){
@@ -147,34 +146,6 @@ public with sharing class ImportMasterSchedules{
                             schItem.buildertek__Start__c = today;
                         }
                         //else{
-=======
-                    }  */
-                    // schItem.buildertek__Dependency__c = scheduleitem.buildertek__Dependency__c;
-                    schItem.buildertek__Finish__c = scheduleitem.buildertek__Finish__c;
-                    schItem.buildertek__Resource__c = scheduleitem.buildertek__Resource__c;
-                    schItem.buildertek__Lag__c = scheduleitem.buildertek__Lag__c;
-                    schItem.buildertek__Milestone__c = scheduleitem.buildertek__Milestone__c;
-                    schItem.buildertek__Notes__c = scheduleitem.buildertek__Notes__c;
-                    schItem.buildertek__Order__c = scheduleitem.buildertek__Order__c;
-                    schItem.buildertek__Original_Start_Date__c = Date.today();
-                    schItem.buildertek__Original_End_Date__c = Date.today().adddays(Integer.valueOf(scheduleitem.buildertek__Duration__c));
-                    schItem.buildertek__Phase__c = scheduleitem.buildertek__Phase__c;
-                    schItem.buildertek__Type__c = scheduleitem.buildertek__Type__c;
-                    schItem.buildertek__Project__c = scheduleitem.buildertek__Project__c;
-                    schItem.buildertek__Purchase_Order__c = scheduleitem.buildertek__Purchase_Order__c;
-                    schItem.buildertek__Reason_for_Date_Change__c = scheduleitem.buildertek__Reason_for_Date_Change__c;
-                    schItem.buildertek__Reason_for_Date_Change_PL__c = scheduleitem.buildertek__Reason_for_Date_Change_PL__c;
-                    schItem.buildertek__Required_Completion_Date__c = scheduleitem.buildertek__Required_Completion_Date__c;
-                    schItem.buildertek__Schedule__c = recordId;
-                    schItem.buildertek__Order__c = count;
-                    schItem.buildertek__Reference_for_Import__c = scheduleitem.Id;
-                    if(initialDate !=null){
-                        schItem.buildertek__Start__c = initialDate;
-                    }else{//fromNewSchedule != null && fromNewSchedule && 
-                        Date today = system.today();
-                         schItem.buildertek__Start__c = today;
-                    }//else{
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
                         //schItem.buildertek__Start__c = scheduleitem.buildertek__Start__c;
                         //}
 
@@ -188,7 +159,6 @@ public with sharing class ImportMasterSchedules{
                         count++;
                     }
                 }
-<<<<<<< HEAD
 
                 system.debug('projectTaskMap.values()' + projectTaskMap.values());
 
@@ -209,29 +179,6 @@ public with sharing class ImportMasterSchedules{
                             System.debug(err.getStatusCode() + ': ' + err.getMessage());
                             System.debug('Account fields that affected this error: ' + err.getFields());
                         }
-=======
-            }
-            
-            system.debug('projectTaskMap.values()'+projectTaskMap.values());
-            
-            // for(buildertek__Project_Task__c item:projectTaskMap.values() ){
-            //     system.debug('item ===> '+item);
-            // }
-            insert projectTaskMap.values();            
-            
-            futureContoller.updateScheduleRec(recordId);
-            
-            System.debug('Check Project Manager 1');
-
-            //system.debug([Select Id, Name, buildertek__Phase__c, buildertek__Start__c, buildertek__Schedule__c, buildertek__Milestone__c FROM Project_Task__c  WHERE buildertek__Schedule__c = :recordId]);
-          for (buildertek__Project_Task__c scheduleitem : projectTaskMap.values()){
-                buildertek__Project_Task__c schItem = new buildertek__Project_Task__c();
-                system.debug('scheduleitem'+scheduleitem.buildertek__Phase__c);
-                schItem.Id = scheduleitem.Id;
-                if(scheduleitem.buildertek__Dependency__c != null && projectTaskMap.get(scheduleitem.buildertek__Dependency__c) != null){
-                    if (String.isNotBlank(scheduleitem.buildertek__Dependency__c) && String.isNotBlank(projectTaskMap.get(scheduleitem.buildertek__Dependency__c).Id)){
-                        schItem.buildertek__Dependency__c = projectTaskMap.get(scheduleitem.buildertek__Dependency__c).Id;
->>>>>>> 71788203f2caec53c3b46e9c418a36c780aaab30
                     }
                 }
                 msg.Status = 'Success';
