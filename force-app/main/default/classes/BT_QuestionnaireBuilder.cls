@@ -33,7 +33,7 @@ public with sharing class BT_QuestionnaireBuilder{
 	@AuraEnabled
 	public static String retriveContentVersionId(String documentId){
 		if (String.isNotBlank(documentId)){
-			System.debug('Content Document Id::'+documentId);
+			System.debug('Content Document Id::' + documentId);
 			ContentDocument contentDoc = [SELECT Id, Title, ParentId, LatestPublishedVersionId
 			                              FROM ContentDocument
 			                              WHERE Id = :documentId
@@ -46,7 +46,7 @@ public with sharing class BT_QuestionnaireBuilder{
 	@AuraEnabled
 	public static Boolean checkIfCustomerCommunity(){
 		String user = Userinfo.getUserType();
-		if (String.isNotBlank(user) && user == 'PowerCustomerSuccess'){
+		if (String.isNotBlank(user)  && user == 'PowerCustomerSuccess'){
 			return true;
 		} else{
 			return false;
@@ -73,7 +73,7 @@ public with sharing class BT_QuestionnaireBuilder{
 				if (citationDetail.citationByParentId.containsKey(citation.Parent__c)){
 					citationDetail.citationByParentId.get(citation.Parent__c).add(citation);
 				} else{
-					citationDetail.citationByParentId.put(citation.Parent__c, new List<Section__c>{citation});
+					citationDetail.citationByParentId.put(citation.Parent__c, new List<Section__c>{ citation });
 				}
 			} else{
 				citationDetail.citations.add(citation);
@@ -156,7 +156,7 @@ public with sharing class BT_QuestionnaireBuilder{
 						questionGroupMap.put(questionRec.buildertek__Question_Group__c, 0.0);
 					}
 					if (questionRec.buildertek__Cost__c != null){
-						questionGroupMap.put(questionRec.buildertek__Question_Group__c, questionGroupMap.get(questionRec.buildertek__Question_Group__c)+questionRec.buildertek__Cost__c);
+						questionGroupMap.put(questionRec.buildertek__Question_Group__c, questionGroupMap.get(questionRec.buildertek__Question_Group__c) + questionRec.buildertek__Cost__c);
 					}
 				}
 			}
@@ -206,7 +206,7 @@ public with sharing class BT_QuestionnaireBuilder{
 						questionGroupMap.put(questionRec.buildertek__Question_Group__c, 0.0);
 					}
 					if (questionRec.buildertek__Cost__c != null){
-						questionGroupMap.put(questionRec.buildertek__Question_Group__c, questionGroupMap.get(questionRec.buildertek__Question_Group__c)+questionRec.buildertek__Cost__c);
+						questionGroupMap.put(questionRec.buildertek__Question_Group__c, questionGroupMap.get(questionRec.buildertek__Question_Group__c) + questionRec.buildertek__Cost__c);
 					}
 				}
 			}
@@ -248,13 +248,13 @@ public with sharing class BT_QuestionnaireBuilder{
 		controlDetail.controls = new List<Question_Group__c>();
 		controlDetail.controlHeaderFields = new List<String>();
 
-		Set<Id> productSet = new Set<Id>();
+		Set<Id> r = new Set<Id>();
 		for (Question_Group__c control : Database.query(String.escapeSingleQuotes(strRSQuery))){
 			if (control.Parent__c != null){
 				if (controlDetail.controlByParentId.containsKey(control.Parent__c)){
 					controlDetail.controlByParentId.get(control.Parent__c).add(control);
 				} else{
-					controlDetail.controlByParentId.put(control.Parent__c, new List<Question_Group__c>{control});
+					controlDetail.controlByParentId.put(control.Parent__c, new List<Question_Group__c>{ control });
 				}
 			} else{
 				controlDetail.controls.add(control);
@@ -378,9 +378,9 @@ public with sharing class BT_QuestionnaireBuilder{
 
 		//SOQL query on checks based on check ids which are in set of check id.
 		String checkQuery = 'SELECT buildertek__Product__r.Name, buildertek__Section__r.buildertek__Visible_to_Customer__c,buildertek__Section__r.buildertek__Create_Change_Order_on_Overage__c,buildertek__Question_Group__r.buildertek__of_Options_Required__c,buildertek__Question_Group__r.buildertek__Allowance_Available__c,buildertek__Question_Group__r.buildertek__Allowance_Remaining__c,buildertek__Question_Group__r.buildertek__Is_Saved_Items__c,' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question__c');
-		System.debug('Retrive checkQuery---->'+checkQuery);
+		System.debug('Retrive checkQuery---->' + checkQuery);
 		checkQuery += ' ,(SELECT Id,Name,buildertek__Question__c,buildertek__Selection_Type__c,buildertek__Choice_Value__c,buildertek__Text_Value__c,buildertek__Choice_Text__c,buildertek__Single_Select_Drop_Down__c, buildertek__Single_Select_Radio__c, buildertek__Single_Select_Horizontal_Radio__c, buildertek__Multi_Select_CheckBox__c, buildertek__Multi_Select_Horizontal_CheckBox__c, buildertek__Multi_Select_Drop_Down__c, buildertek__Simple_Text__c, buildertek__Long_Text__c, buildertek__Date__c, buildertek__Drop_Down_Value__c,buildertek__Photo_Ids__c,buildertek__Additional_Cost__c,buildertek__ParentId__c,buildertek__Parent_Level__c,buildertek__Level__c,buildertek__Image_Id__c,buildertek__Document_Id__c FROM buildertek__Answer_Choices__r ORDER BY  CreatedDate ASC) FROM ' + BT_CONSTANTS.OBJECT_TYPE_QUESTION + ' WHERE Question_Group__c =:controlId ORDER BY Sort_Id__c, CreatedDate, Name ASC';
-		System.debug('checkQuery---->'+checkQuery);
+		System.debug('checkQuery---->' + checkQuery);
 		List<buildertek__Question__c> checks;
 		/*if(Schema.sObjectType.buildertek__Question__c.fields.Id.isAccessible()&&
 		 Schema.sObjectType.buildertek__Question__c.fields.Name.isAccessible()&&
@@ -429,25 +429,25 @@ public with sharing class BT_QuestionnaireBuilder{
 		if (productSet.size() > 0){
 			contentDocumentLinkRecs = [SELECT Id, ContentDocumentId, LinkedEntityId, ContentDocument.fileType, ContentDocument.title
 			                           FROM ContentDocumentLink
-			                           Where LinkedEntityId IN :productSet];
+			                           Where LinkedEntityId IN:productSet];
 		}
-		System.debug('******'+contentDocumentLinkRecs);
+		System.debug('******' + contentDocumentLinkRecs);
 		Map<Id, List<ContentDocumentLink>> productToDocumentMap = new Map<Id, List<ContentDocumentLink>>();
 		List<String> fileType = new List<String>();
 		fileType.add('JPG');
 		fileType.add('PNG');
 		fileType.add('JPEG');
 		for (ContentDocumentLink conLink : contentDocumentLinkRecs){
-			System.debug('conLink => '+conLink);
+			System.debug('conLink => ' + conLink);
 			System.debug(fileType.contains(conLink.ContentDocument.fileType));
 			// if (!fileType.contains(conLink.ContentDocument.fileType)){
-				System.debug(productToDocumentMap.containsKey(conLink.LinkedEntityId));
-				if (!productToDocumentMap.containsKey(conLink.LinkedEntityId)){
-					productToDocumentMap.put(conLink.LinkedEntityId, new List<ContentDocumentLink>());
-				}
-				productToDocumentMap.get(conLink.LinkedEntityId).add(conLink);
+			System.debug(productToDocumentMap.containsKey(conLink.LinkedEntityId));
+			if (!productToDocumentMap.containsKey(conLink.LinkedEntityId)){
+				productToDocumentMap.put(conLink.LinkedEntityId, new List<ContentDocumentLink>());
+			}
+			productToDocumentMap.get(conLink.LinkedEntityId).add(conLink);
 			// }
-			System.debug('productToDocumentMap => '+productToDocumentMap);
+			System.debug('productToDocumentMap => ' + productToDocumentMap);
 		}
 		List<String> imageIds = new List<String>();
 		for (Question__c check : checks){
@@ -458,7 +458,7 @@ public with sharing class BT_QuestionnaireBuilder{
 
 		Map<Id, ContentVersion> contentVersionMap = new Map<Id, ContentVersion>([SELECT Id, ContentDocumentId
 		                                                                         FROM ContentVersion
-		                                                                         WHERE ID In :imageIds]);
+		                                                                         WHERE ID In:imageIds]);
 		List<Question__c> questionUpdate = new List<Question__c>();
 		for (Question__c check : checks){
 			if (check.buildertek__Image_Id__c != null){
@@ -469,16 +469,16 @@ public with sharing class BT_QuestionnaireBuilder{
 			questionDetails question = new questionDetails();
 			question.check = check;
 
-			for(String key: productToDocumentMap.keySet()){
-				System.debug('key => '+key);
+			for (String key : productToDocumentMap.keySet()){
+				System.debug('key => ' + key);
 				//Loop through list of accounts for each key
-				System.debug('Value => ' +productToDocumentMap.get(key)); 
+				System.debug('Value => ' + productToDocumentMap.get(key));
 			}
 
 
 			if (productToDocumentMap.containsKey(check.buildertek__Product__c)){
 				question.contentDocumentLink = productToDocumentMap.get(check.buildertek__Product__c);
-				System.debug('question.contentDocumentLink => '+question.contentDocumentLink);
+				System.debug('question.contentDocumentLink => ' + question.contentDocumentLink);
 			}
 
 			question.answerChoices = new List<answerChoice>();
@@ -505,37 +505,44 @@ public with sharing class BT_QuestionnaireBuilder{
 				}
 			}
 
-			List<String> returnList = new List<String>();          
-			List<buildertek__Question__c> option = [SELECT Id, Name, buildertek__Product__c FROM buildertek__Question__c WHERE Id =: question.check.Id];
-	
-			List<ContentDocumentLink> contentLinkList = [SELECT Id, ContentDocumentId, LinkedEntityId FROM ContentDocumentLink WHERE LinkedEntityId =: option[0].buildertek__Product__c];
-				System.debug('contentLinkList => '+contentLinkList);
-	
-					if (contentLinkList.size() > 0) {
-						for (ContentDocumentLink link : contentLinkList) {
-							returnList.add(link.ContentDocumentId);
-						}
+			List<String> returnList = new List<String>();
+			List<buildertek__Question__c> option = [SELECT Id, Name, buildertek__Product__c
+			                                        FROM buildertek__Question__c
+			                                        WHERE Id = :question.check.Id];
+
+			System.debug('check doc id here ==> ' + option[0].buildertek__Product__c);
+			if (option[0].buildertek__Product__c != null){
+				List<ContentDocumentLink> contentLinkList = [SELECT Id, ContentDocumentId, LinkedEntityId
+				                                             FROM ContentDocumentLink
+				                                             WHERE LinkedEntityId = :option[0].buildertek__Product__c];
+				System.debug('contentLinkList => ' + contentLinkList);
+				if (contentLinkList.size() > 0){
+					for (ContentDocumentLink link : contentLinkList){
+						returnList.add(link.ContentDocumentId);
 					}
-				// 		System.debug('There Are No Files');
-				// 		returnList.add('Error');
-				// 		returnList.add('There Are No Files');
-				// 		return returnList;
-				// 	}
-				// } else{
-				// 	System.debug('There Are No Product');
-				// 	returnList.add('Error');
-				// 	returnList.add('There Are No Product');
-				// 	return returnList;
-				
-	
+				}
+			}
+
+			//         System.debug('There Are No Files');
+			//         returnList.add('Error');
+			//         returnList.add('There Are No Files');
+			//         return returnList;
+			//     }
+			// } else{
+			//     System.debug('There Are No Product');
+			//     returnList.add('Error');
+			//     returnList.add('There Are No Product');
+			//     return returnList;
+
+
 			// } catch (Exception e) {
-			// 	System.debug('Error => '+e.getMessage());
-			// 	returnList.add('Error');
-			// 	returnList.add(e.getMessage());
-			// 	return returnList;
+			//     System.debug('Error => '+e.getMessage());
+			//     returnList.add('Error');
+			//     returnList.add(e.getMessage());
+			//     return returnList;
 			// }
 
-			System.debug('*** question *** '+question);
+			System.debug('*** question *** ' + question);
 			// questions.add(returnList);
 			questions.add(question);
 			question.otherDetailsfields = otherfields;
@@ -549,7 +556,7 @@ public with sharing class BT_QuestionnaireBuilder{
 		                                                               FROM Answer_Choices__r
 		                                                               ORDER BY Sort_Id__c, Name)
 		                                             FROM Choice_Template__c
-		                                             WHERE Name != 'System Internal Default Master' AND Id In :setChoiceTemplateIds]){
+		                                             WHERE Name != 'System Internal Default Master' AND Id In:setChoiceTemplateIds]){
 
 			String strAnswerChoices = '';
 			for (Answer_Choice__c objAnswerChoice : objChoiceTemplate.Answer_Choices__r){
@@ -609,8 +616,8 @@ public with sharing class BT_QuestionnaireBuilder{
 	@AuraEnabled
 	public static List<String> getProductColor(){
 		List<String> pickListValuesList = new List<String>();
-	//	Schema.DescribeFieldResult fieldResult = Product2.buildertek__Color__c.getDescribe();
-	    Schema.DescribeFieldResult fieldResult = Product2.buildertek__BT_COLOR__c.getDescribe();
+		//    Schema.DescribeFieldResult fieldResult = Product2.buildertek__Color__c.getDescribe();
+		Schema.DescribeFieldResult fieldResult = Product2.buildertek__BT_COLOR__c.getDescribe();
 		List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
 		for (Schema.PicklistEntry pickListVal : ple){
 			pickListValuesList.add(pickListVal.getLabel());
@@ -666,7 +673,7 @@ public with sharing class BT_QuestionnaireBuilder{
 			DMLManager.upsertAsUser(answerChoices);
 			DMLManager.deleteAsUser([SELECT Id
 			                         FROM Answer_Choice__c
-			                         WHERE Question__c = :check.Id AND Id NOT IN :answerChoices]);
+			                         WHERE Question__c = :check.Id AND Id NOT IN:answerChoices]);
 
 
 		}
@@ -732,7 +739,7 @@ public with sharing class BT_QuestionnaireBuilder{
 			answerChoicesMap3.putAll(answerChoicesMap4);
 			DMLManager.deleteAsUser([SELECT Id
 			                         FROM Answer_Choice__c
-			                         WHERE Question__c = :check.Id AND Id NOT IN :answerChoicesMap3.values()]);
+			                         WHERE Question__c = :check.Id AND Id NOT IN:answerChoicesMap3.values()]);
 
 		}
 		return 'success';
@@ -815,7 +822,7 @@ public with sharing class BT_QuestionnaireBuilder{
 
 			listChildCitation = New List<Section__c>([SELECT Id, Parent__c
 			                                          FROM Section__c
-			                                          WHERE Parent__c != null AND Parent__c IN :setChildCitationId]);
+			                                          WHERE Parent__c != null AND Parent__c IN:setChildCitationId]);
 		}
 
 		if (listDeleteChildCitation.size() > 0){
@@ -881,7 +888,7 @@ public with sharing class BT_QuestionnaireBuilder{
 
 			filesList = [Select Id, Name
 			             from file__c
-			             where Id IN :fileIds];
+			             where Id IN:fileIds];
 		}
 		return filesList;
 	}
@@ -895,6 +902,7 @@ public with sharing class BT_QuestionnaireBuilder{
 
 		@AuraEnabled
 		public List<String> sectionHeaderFields{ get; set; }
+
 	}
 
 	public class controlDetails{
@@ -906,6 +914,7 @@ public with sharing class BT_QuestionnaireBuilder{
 
 		@AuraEnabled
 		public List<String> controlHeaderFields{ get; set; }
+
 	}
 
 	public class controlGroupDetails{
@@ -923,6 +932,7 @@ public with sharing class BT_QuestionnaireBuilder{
 			controlAdvanceSettingFields = new List<String>();
 			namespacePrefix = '';
 		}
+
 	}
 
 	public class testQuestionDetails{
@@ -940,6 +950,7 @@ public with sharing class BT_QuestionnaireBuilder{
 			questionAdvanceSettingFields = new List<String>();
 			namespacePrefix = '';
 		}
+
 	}
 
 	public class questionDetails{
@@ -968,6 +979,7 @@ public with sharing class BT_QuestionnaireBuilder{
 			multiSelectChoiceValues = new List<String>();
 			contentDocumentLink = new List<ContentDocumentLink>();
 		}
+
 	}
 
 	/* all this classes are used for selection preview */
@@ -990,7 +1002,7 @@ public with sharing class BT_QuestionnaireBuilder{
 		testResult.selectionCatagorys = new List<selectionCatagory>();
 
 		String query = 'Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Section__c');
-		query = query + ', (Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question_Group__c')+' From Question_Groups__r ORDER BY Sort_Id__c, CreatedDate, Name ASC)';
+		query = query + ', (Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question_Group__c') + ' From Question_Groups__r ORDER BY Sort_Id__c, CreatedDate, Name ASC)';
 		if (!String.isBlank(sectionId)){
 			query = query + ' From buildertek__Section__c where Selection__c =:selectionSheetid AND Id =: sectionId ORDER BY Sort_Id__c, CreatedDate, Name ASC LIMIT 1';
 		} else{
@@ -1042,13 +1054,13 @@ public with sharing class BT_QuestionnaireBuilder{
 		}
 
 		Map<Id, List<Question__c>> questionByControl = new Map<Id, List<Question__c>>();
-		for (Question__c q : database.query('Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question__c')+',(SELECT Id,Name,Question__c,Drop_Down_Value__c,Choice_Value__c,buildertek__Text_Value__c,Choice_Text__c FROM Answer_Choices__r ORDER BY Sort_Id__c, CreatedDate, Name ASC), (Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question_Result__c')+' From Questions__r) from Question__c where Question_Group__c IN:controlIds ORDER BY Sort_Id__c, CreatedDate, Name ASC')){
+		for (Question__c q : database.query('Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question__c') + ',(SELECT Id,Name,Question__c,Drop_Down_Value__c,Choice_Value__c,buildertek__Text_Value__c,Choice_Text__c FROM Answer_Choices__r ORDER BY Sort_Id__c, CreatedDate, Name ASC), (Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question_Result__c') + ' From Questions__r) from Question__c where Question_Group__c IN:controlIds ORDER BY Sort_Id__c, CreatedDate, Name ASC')){
 
 			if (q.Question_Group__c != null){
 				if (questionByControl.containsKey(q.Question_Group__c)){
 					questionByControl.get(q.Question_Group__c).add(q);
 				} else{
-					questionByControl.put(q.Question_Group__c, new List<Question__c>{q});
+					questionByControl.put(q.Question_Group__c, new List<Question__c>{ q });
 				}
 			}
 
@@ -1162,7 +1174,7 @@ public with sharing class BT_QuestionnaireBuilder{
 	 }*/
 	@AuraEnabled
 	public static String getTreeQueryParamters(String selectionSheetId){
-		return JSON.serialize(new Map<string, List<BT_TreeRemotingModel.QueryParameter>>{'buildertek__Section__c' => new List<BT_TreeRemotingModel.QueryParameter>{new BT_TreeRemotingModel.QueryParameter('buildertek__Selection__c', selectionSheetId)}});
+		return JSON.serialize(new Map<string, List<BT_TreeRemotingModel.QueryParameter>>{ 'buildertek__Section__c' => new List<BT_TreeRemotingModel.QueryParameter>{ new BT_TreeRemotingModel.QueryParameter('buildertek__Selection__c', selectionSheetId) } });
 	}
 
 	@AuraEnabled
@@ -1244,13 +1256,13 @@ public with sharing class BT_QuestionnaireBuilder{
 
 	public static selectionType getQuestionGroupResultDetsils(String questionGroupId){
 		Map<Id, List<Question__c>> questionByControl = new Map<Id, List<Question__c>>();
-		for (Question__c q : database.query('Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question__c')+',(SELECT Id,Name,Question__c,Choice_Text__c FROM Answer_Choices__r ORDER BY Sort_Id__c, CreatedDate, Name ASC), (Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question_Result__c')+' From Questions__r) from Question__c where Question_Group__c =:questionGroupId ORDER BY Sort_Id__c, CreatedDate, Name ASC')){
+		for (Question__c q : database.query('Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question__c') + ',(SELECT Id,Name,Question__c,Choice_Text__c FROM Answer_Choices__r ORDER BY Sort_Id__c, CreatedDate, Name ASC), (Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question_Result__c') + ' From Questions__r) from Question__c where Question_Group__c =:questionGroupId ORDER BY Sort_Id__c, CreatedDate, Name ASC')){
 
 			if (q.Question_Group__c != null){
 				if (questionByControl.containsKey(q.Question_Group__c)){
 					questionByControl.get(q.Question_Group__c).add(q);
 				} else{
-					questionByControl.put(q.Question_Group__c, new List<Question__c>{q});
+					questionByControl.put(q.Question_Group__c, new List<Question__c>{ q });
 				}
 			}
 
@@ -1267,7 +1279,7 @@ public with sharing class BT_QuestionnaireBuilder{
 
 
 		selectionType st = new selectionType();
-		for (Question_Group__c qg : Database.query('Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question_Group__c')+' From buildertek__Question_Group__c where Id =:questionGroupId')){
+		for (Question_Group__c qg : Database.query('Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question_Group__c') + ' From buildertek__Question_Group__c where Id =:questionGroupId')){
 			st.selectionType = qg;
 			st.selectionOptions = new List<selectionOption>();
 			if (questionByControl.containsKey(qg.Id)){
@@ -1303,41 +1315,45 @@ public with sharing class BT_QuestionnaireBuilder{
 
 	// method for showing images in slider
 	@AuraEnabled
-    public static List<string> getProductFiles(String optiondId) {
-        List<String> returnList = new List<String>();          
-        try {  
-            List<buildertek__Question__c> option = [SELECT Id, Name, buildertek__Product__c FROM buildertek__Question__c WHERE Id =: optiondId];
-            System.debug('option => '+option);
+	public static List<string> getProductFiles(String optiondId){
+		List<String> returnList = new List<String>();
+		try{
+			List<buildertek__Question__c> option = [SELECT Id, Name, buildertek__Product__c
+			                                        FROM buildertek__Question__c
+			                                        WHERE Id = :optiondId];
+			System.debug('option => ' + option);
 
-            if (option.size() > 0) {
-                List<ContentDocumentLink> contentLinkList = [SELECT Id, ContentDocumentId, LinkedEntityId FROM ContentDocumentLink WHERE LinkedEntityId =: option[0].buildertek__Product__c];
-                System.debug('contentLinkList => '+contentLinkList);
+			if (option.size() > 0){
+				List<ContentDocumentLink> contentLinkList = [SELECT Id, ContentDocumentId, LinkedEntityId
+				                                             FROM ContentDocumentLink
+				                                             WHERE LinkedEntityId = :option[0].buildertek__Product__c];
+				System.debug('contentLinkList => ' + contentLinkList);
 
-                if (contentLinkList.size() > 0) {
-                    for (ContentDocumentLink link : contentLinkList) {
-                        returnList.add(link.ContentDocumentId);
-                    }
-                    return returnList; 
-                } else{
-                    System.debug('There Are No Files');
-                    returnList.add('Error');
-                    returnList.add('There Are No Files');
-                    return returnList;
-                }
-            } else{
-                System.debug('There Are No Product');
-                returnList.add('Error');
-                returnList.add('There Are No Product');
-                return returnList;
-            }
+				if (contentLinkList.size() > 0){
+					for (ContentDocumentLink link : contentLinkList){
+						returnList.add(link.ContentDocumentId);
+					}
+					return returnList;
+				} else{
+					System.debug('There Are No Files');
+					returnList.add('Error');
+					returnList.add('There Are No Files');
+					return returnList;
+				}
+			} else{
+				System.debug('There Are No Product');
+				returnList.add('Error');
+				returnList.add('There Are No Product');
+				return returnList;
+			}
 
-        } catch (Exception e) {
-            System.debug('Error => '+e.getMessage());
-            returnList.add('Error');
-            returnList.add(e.getMessage());
-            return returnList;
-        }
-    }
+		} catch (Exception e){
+			System.debug('Error => ' + e.getMessage());
+			returnList.add('Error');
+			returnList.add(e.getMessage());
+			return returnList;
+		}
+	}
 
 	@AuraEnabled
 	public static Boolean getChangeOrderIdExist(String projectId, String optionName){
@@ -1378,6 +1394,7 @@ public with sharing class BT_QuestionnaireBuilder{
 
 		@AuraEnabled
 		public List<fieldset> sectionOptionHeaderFields{ get; set; }
+
 	}
 
 	public class selectionCatagory{
@@ -1386,6 +1403,7 @@ public with sharing class BT_QuestionnaireBuilder{
 
 		@AuraEnabled
 		public List<selectionType> selectionTypes{ get; set; }
+
 	}
 
 	public class selectionType{
@@ -1394,6 +1412,7 @@ public with sharing class BT_QuestionnaireBuilder{
 
 		@AuraEnabled
 		public List<selectionOption> selectionOptions{ get; set; }
+
 	}
 
 	public class selectionOption{
@@ -1422,6 +1441,7 @@ public with sharing class BT_QuestionnaireBuilder{
 			multiSelectChoiceValues = new List<String>();
 			errorMessage = '';
 		}
+
 	}
 
 	public class answerChoice{
@@ -1449,4 +1469,5 @@ public with sharing class BT_QuestionnaireBuilder{
 		public String imageId;
 
 	}
+
 }

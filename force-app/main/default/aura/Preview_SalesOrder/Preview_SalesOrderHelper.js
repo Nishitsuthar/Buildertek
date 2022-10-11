@@ -1,5 +1,3 @@
 ({
-    helperMethod : function() {
-
-    }
-})
+  Helper: function (component, event, helper) {},
+});

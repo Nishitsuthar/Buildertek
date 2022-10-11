@@ -18,9 +18,9 @@ public with sharing class ProjectTaskTriggerHandler{
         BatchSize = size;
     }
 
-    @future
+    //@future
     public static void OnBeforeInsert(String jsonlist){
-        List<Project_Task__c> newProjectTasks = (List<Project_Task__c>) JSON.deserialize(jsonlist, List<Project_Task__c>.class);
+        List<Project_Task__c> newProjectTasks = (List<Project_Task__c>)JSON.deserialize(jsonlist, List<Project_Task__c>.class);
         Set<id> accountIds = new Set<id>();
         for (Project_Task__c newProjectTask : newProjectTasks){
             accountIds.add(newProjectTask.buildertek__Contractor__c);
@@ -174,11 +174,11 @@ public with sharing class ProjectTaskTriggerHandler{
         }
     }
 
-    @future
-    public static void OnAfterInsert(String jsonList,String jsonList1){
-        List<Project_Task__c> ProjectTasks = (List<Project_Task__c>) JSON.deserialize(jsonList, List<Project_Task__c>.class);
-        Map<ID, Project_Task__c> ProjectTaskMap = (Map<ID, Project_Task__c>) JSON.deserialize(jsonList1, Map<ID, Project_Task__c>.class);
-//    public void OnAfterInsert(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
+    //@future
+    public static void OnAfterInsert(String jsonList, String jsonList1){
+        List<Project_Task__c> ProjectTasks = (List<Project_Task__c>)JSON.deserialize(jsonList, List<Project_Task__c>.class);
+        Map<ID, Project_Task__c> ProjectTaskMap = (Map<ID, Project_Task__c>)JSON.deserialize(jsonList1, Map<ID, Project_Task__c>.class);
+        //    public void OnAfterInsert(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
         Map<String, Decimal> purchaseOrderMap = new Map<String, Decimal>();
         Map<String, Decimal> budgetLineMap = new Map<String, Decimal>();
 
@@ -574,7 +574,7 @@ public with sharing class ProjectTaskTriggerHandler{
         // Database.executeBatch(taskBatch, 1000);
     }
 
-    //@future
+    ////@future
     public static void processRecords(Set<Id> scheduleIds, Id schId, Set<Id> TaskIds, Boolean isFromImportTask, String isAfterInsert){
         system.debug(isFromImportTask);
 
@@ -939,10 +939,10 @@ public with sharing class ProjectTaskTriggerHandler{
         ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
     }
 
-    @future
-    public static void insertUpdateMilestones(String jsonList,String jsonList1){
-        List<Project_Task__c> ProjectTasks = (List<Project_Task__c>) JSON.deserialize(jsonList, List<Project_Task__c>.class);
-        Map<ID, Project_Task__c> ProjectTaskMap = (Map<ID, Project_Task__c>) JSON.deserialize(jsonList1, Map<ID, Project_Task__c>.class);
+    //@future
+    public static void insertUpdateMilestones(String jsonList, String jsonList1){
+        List<Project_Task__c> ProjectTasks = (List<Project_Task__c>)JSON.deserialize(jsonList, List<Project_Task__c>.class);
+        Map<ID, Project_Task__c> ProjectTaskMap = (Map<ID, Project_Task__c>)JSON.deserialize(jsonList1, Map<ID, Project_Task__c>.class);
         Set<Id> scheduleIds = new Set<Id>();
         Map<string, Project_Task__c> insertUpdateMilestoneMap = new Map<string, Project_Task__c>();
         Map<string, Project_Task__c> milestoneMap = new Map<string, Project_Task__c>();
@@ -1041,10 +1041,10 @@ public with sharing class ProjectTaskTriggerHandler{
         }
     }
 
-    @future
+    //@future
     public static void updateChildDatesWithPredecessor(String jsonList, String jsonList1){
-        List<Project_Task__c> ProjectTasks = (List<Project_Task__c>) JSON.deserialize(jsonList, List<Project_Task__c>.class);
-        Map<ID, Project_Task__c> ProjectTaskMap = (Map<ID, Project_Task__c>) JSON.deserialize(jsonList1, Map<ID, Project_Task__c>.class);
+        List<Project_Task__c> ProjectTasks = (List<Project_Task__c>)JSON.deserialize(jsonList, List<Project_Task__c>.class);
+        Map<ID, Project_Task__c> ProjectTaskMap = (Map<ID, Project_Task__c>)JSON.deserialize(jsonList1, Map<ID, Project_Task__c>.class);
         Set<Id> scheduleIds = new Set<Id>();
         Boolean dependencyPathExist = false;
         for (buildertek__Project_Task__c schItem : ProjectTasks){
@@ -1394,22 +1394,22 @@ public with sharing class ProjectTaskTriggerHandler{
         }
     }
 
-    @future
-    public static void OnAfterInsertItemCount(String Jsonlist, String Jsonlist1){
-        List<buildertek__Project_Task__c> newScheduleItems = (List<buildertek__Project_Task__c>) JSON.deserialize(Jsonlist, List<buildertek__Project_Task__c>.class);
-        List<buildertek__Project_Task__c> oldScheduleItems = (List<buildertek__Project_Task__c>) JSON.deserialize(Jsonlist1, List<buildertek__Project_Task__c>.class);
+    //@future
+    public static void OnAfterInsertItemCount(String Jsonlist, String Jsonlist1, Boolean isInsert, Boolean isUndelete, Boolean isDelete){
+        List<buildertek__Project_Task__c> newScheduleItems = (List<buildertek__Project_Task__c>)JSON.deserialize(Jsonlist, List<buildertek__Project_Task__c>.class);
+        List<buildertek__Project_Task__c> oldScheduleItems = (List<buildertek__Project_Task__c>)JSON.deserialize(Jsonlist1, List<buildertek__Project_Task__c>.class);
         Set<Id> setAccountIds = new Set<Id>();
 
         //Whenever your working with After Undelete operation you can access data through
         //Trigger.new or Trigger.newMap but not with Trigger.old or Trigger.oldmap variables
 
-        if (Trigger.isInsert || Trigger.isUndelete){
+        if (isInsert || isUndelete){
             for (buildertek__Project_Task__c con : newScheduleItems){
                 setAccountIds.add(con.buildertek__Schedule__c);
             }
         }
 
-        if (Trigger.isDelete){
+        if (isDelete){
             //if you use Trigger.new below in place of Trigger.old you will end up with
             //System.NullPointerException:Attempt to de-reference a null object
 
@@ -1434,7 +1434,7 @@ public with sharing class ProjectTaskTriggerHandler{
         }
     }
 
-    // @future(CallOut = true)
+    // //@future(CallOut = true)
     // private static void FutureMethodCallOut_ForInsertingMilestone(Set<Id> scheduleIdSet){
     //     //Add Milestone.
     //     Map<Id, List<Project_Task__c>> projectTaskMaps = new Map<Id, List<Project_Task__c>>();
@@ -1477,7 +1477,7 @@ public with sharing class ProjectTaskTriggerHandler{
     //     }
     //     //Add milestone Ended.
     // }
-    @future(CallOut = true)
+    //@future(CallOut = true)
     private static void FutureMethodCallOut_forStripeAPIToUpdate(list<id> taskIds, list<id> scheduleIds){
         List<buildertek__Schedule__c> ScheduleList;
         ScheduleList = [SELECT Id, Name, buildertek__Complete__c, buildertek__Community__c, buildertek__Complete1__c, buildertek__Contractor__c, buildertek__Customer_Visible__c, buildertek__Days_Completed__c, buildertek__Description__c, buildertek__Duration__c, buildertek__End_Date__c, buildertek__IsMatch__c, buildertek__Notify_Vendor_on_Schedule_Change__c, buildertek__Primary_Schedule__c, buildertek__Project__c, buildertek__Release_To_Vendor__c, buildertek__Start_Date__c, buildertek__Task_Count__c, buildertek__Total_Duration__c, buildertek__Type__c, buildertek__Vendor_Match__c, buildertek__Vendor_Visible__c
