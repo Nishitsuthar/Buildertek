@@ -42,15 +42,6 @@
                         ];
                         for (var index = 0; index < questions.length; index++) {
                             var question = questions[index];
-                            var recordId = question.check.Id;
-                            this.returnImages(component, recordId);
-                            // ---------------------------
-                            // var obj = {key1: "value1", key2: "value2"};
-                            // console.log(this.returnImages(component, recordId));
-                            // Object.assign(question, { key3: "value3" });
-                            // console.log(question);
-                            // console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
-                            // ------------------------
 
                             if (
                                 question.check != undefined &&
@@ -360,32 +351,6 @@
         }
     },
 
-    returnImages: function(component, recordId) {
-        // console.log('Aa gaye aap returnImage method me==> ');
-        console.log(typeof(recordId));
-
-        console.log('optionID check here ==> ', { recordId });
-
-        var action = component.get("c.getProductFiles");
-        action.setParams({
-            optiondId: recordId
-
-        });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            console.log('Status =>', { state });
-            var result = response.getReturnValue();
-            console.log('Result =>', { result });
-            if (result[0] != 'Error') {
-                component.set("v.optionDocList", result);
-            }
-            console.log(component.get("v.optionDocList") + '***************************************************************');
-
-        });
-        $A.enqueueAction(action);
-
-    },
-
     getImgVisibility: function(component, event, helper) {
         var action = component.get("c.getImageVisibility");
         action.setParams({
@@ -398,22 +363,5 @@
         });
         // console.log(component.get("v.imageVisibility") + ')))))))))))))))))))))))))))))))))))))))'));
         $A.enqueueAction(action);
-
-        // var recordId = component.get("v.recordId");
-        //     console.log('recordId => ' + recordId);
-        //     var action = component.get("c.getProductFiles");
-        //     action.setParams({
-        //         recordId: recordId
-        //     });
-        //     action.setCallback(this, function (response) {
-        //         var state = response.getState();
-        //         console.log('Status =>', {state});
-        //         var result = response.getReturnValue();
-        //         console.log('Result =>', {result});
-        //         if (result[0] != 'Error') {
-        //             component.set("v.contentDocsList", result);
-        //         }
-        //     });
-        //     $A.enqueueAction(action);
     },
 });

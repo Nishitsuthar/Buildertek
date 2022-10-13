@@ -12,7 +12,6 @@
             console.log('Result =>', { result });
 
             if (result == 'Error') {
-
                 tst.setParams({
                     title: 'Error',
                     message: 'Something Went Wrong',
@@ -20,11 +19,7 @@
                     duration: 5000
                 });
                 tst.fire();
-
-
-
             } else {
-
                 var tst = $A.get("e.force:showToast");
                 tst.setParams({
                     title: 'Complete',
@@ -34,13 +29,11 @@
                 });
                 tst.fire();
                 var navEvent = $A.get("e.force:navigateToSObject");
-
                 navEvent.setParams({
                     "recordId": result,
                 });
 
                 navEvent.fire();
-
             }
             component.set("v.Spinner", false);
             $A.get("e.force:closeQuickAction").fire();

@@ -610,17 +610,11 @@
                         </aura:if> -->
                         <aura:if isTrue="{!!v.imageVisibility}">
                             <td>
+                                
                                 <lightning:carousel disableAutoRefresh="false" disableAutoScroll="true">
-                                    <aura:iteration items="{!v.optionDocList}" var="item">
-                                        <div style="margin: 1rem 0.1rem 0.1rem 0.1rem;">
-                                            {!item}
-                                            <lightning:carouselImage src="{!'https://btservice360-dev-ed.lightning.force.com/sfc/servlet.shepherd/document/download/'+item}" description="" alternativeText="First card accessible description." href="">
-                                            </lightning:carouselImage>
-                                            <lightning:carouselImage src="https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-600w-1725825019.jpg" description="" alternativeText="Second card accessible description." href="">
-                                            </lightning:carouselImage>
-                                           <!-- <lightning:carouselImage src="https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-600w-1725825019.jpg" description="" alternativeText="Third card accessible description." href="">
-                                            </lightning:carouselImage> -->
-                                        </div>
+                                    <aura:iteration items="{!question.contentDocumentLink}" var="contentDocs">
+                                        <lightning:carouselImage src="{!'https://btservice360-dev-ed.lightning.force.com/sfc/servlet.shepherd/document/download/'+contentDocs.ContentDocumentId}">
+                                        </lightning:carouselImage>
                                     </aura:iteration>
                                 </lightning:carousel>
 

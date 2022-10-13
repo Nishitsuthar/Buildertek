@@ -128,24 +128,25 @@ system.debug(useridmap);
         Database.SaveResult[] lsr = Database.insert(rfishList,false);
     }  
     public static void openRFICount(List<RFI__c> rfiRec){ 
-        //SELECT Id, Name, buildertek__Status__c, buildertek__RFQ__c FROM buildertek__RFI__c
-        Set<Id> rfiId=new Set<Id>();
-        Set<Id> parentId=new Set<Id>();
-            Set<Id> vendorAccountId=new Set<Id>();
-            User getUser=[SELECT Id, Name, AccountId FROM User where id=:userInfo.getUserId()];
-        for(buildertek__RFI__c rfi:rfiRec){
-            if(rfi.buildertek__RFQ__c!=null && rfi.buildertek__Vendor_Account__c!=null){
-                rfiId.add(rfi.Id);
-                parentId.add(rfi.buildertek__RFQ__c);
-                vendorAccountId.add(rfi.buildertek__Vendor_Account__c);            
-            }
+    //SELECT Id, Name, buildertek__Status__c, buildertek__RFQ__c FROM buildertek__RFI__c
+    Set<Id> rfiId=new Set<Id>();
+    Set<Id> parentId=new Set<Id>();
+        Set<Id> vendorAccountId=new Set<Id>();
+        User getUser=[SELECT Id, Name, AccountId FROM User where id=:userInfo.getUserId()];
+    for(buildertek__RFI__c rfi:rfiRec){
+        if(rfi.buildertek__RFQ__c!=null && rfi.buildertek__Vendor_Account__c!=null){
+            rfiId.add(rfi.Id);
+    parentId.add(rfi.buildertek__RFQ__c);
+vendorAccountId.add(rfi.buildertek__Vendor_Account__c);            
         }
-        System.debug('RFQ----------- '+parentId);
-        System.debug('vendorAccountId----------- '+vendorAccountId);
-        List<buildertek__RFI__c> rfiList=[SELECT Id, Name, buildertek__Status__c, buildertek__RFQ__c,
-                                        buildertek__Vendor_Account__c FROM buildertek__RFI__c
-                                        where buildertek__RFQ__c in : parentId 
-                                        and buildertek__Vendor_Account__c =: getUser.AccountId and buildertek__Status__c !='Closed'];
+    
+    }
+    System.debug('RFQ----------- '+parentId);
+    System.debug('vendorAccountId----------- '+vendorAccountId);
+    List<buildertek__RFI__c> rfiList=[SELECT Id, Name, buildertek__Status__c, buildertek__RFQ__c,
+                                      buildertek__Vendor_Account__c FROM buildertek__RFI__c
+                                      where buildertek__RFQ__c in : parentId 
+                                      and buildertek__Vendor_Account__c =: getUser.AccountId and buildertek__Status__c !='Closed'];
         System.debug('Size of RFI -----------'+rfiList.size());
         List<buildertek__RFQ_To_Vendor__c> rfqtovendor=[SELECT Id, Name, buildertek__RFQ__c,
                                                   buildertek__Vendor__c, buildertek__Open_RFI__c 
@@ -159,7 +160,8 @@ system.debug(useridmap);
         rtv.buildertek__Open_RFI__c=rfiList.size();
         }
         update rfqtovendor;
-        } 
+        }
+        
 
     }
 

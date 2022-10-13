@@ -961,7 +961,7 @@ public with sharing class BT_QuestionnaireBuilder{
 		public String errorMessage{ get; set; }
 
 		@AuraEnabled
-		List<ContentDocumentLink> contentDocumentLink{ get; set; }
+		public List<ContentDocumentLink> contentDocumentLink{ get; set; }
 
 		@AuraEnabled
 		public List<answerChoice> answerChoices{ get; set; }
@@ -1311,48 +1311,6 @@ public with sharing class BT_QuestionnaireBuilder{
 		}
 
 		return st;
-	}
-
-	// method for showing images in slider
-	@AuraEnabled
-	public static List<string> getProductFiles(String optiondId){
-		List<String> returnList = new List<String>();
-		try{
-			List<buildertek__Question__c> option = [SELECT Id, Name, buildertek__Product__c
-			                                        FROM buildertek__Question__c
-			                                        WHERE Id = :optiondId];
-			System.debug('option => ' + option);
-
-			if (option.size() > 0){
-				List<ContentDocumentLink> contentLinkList = [SELECT Id, ContentDocumentId, LinkedEntityId
-				                                             FROM ContentDocumentLink
-				                                             WHERE LinkedEntityId = :option[0].buildertek__Product__c];
-				System.debug('contentLinkList => ' + contentLinkList);
-
-				if (contentLinkList.size() > 0){
-					for (ContentDocumentLink link : contentLinkList){
-						returnList.add(link.ContentDocumentId);
-					}
-					return returnList;
-				} else{
-					System.debug('There Are No Files');
-					returnList.add('Error');
-					returnList.add('There Are No Files');
-					return returnList;
-				}
-			} else{
-				System.debug('There Are No Product');
-				returnList.add('Error');
-				returnList.add('There Are No Product');
-				return returnList;
-			}
-
-		} catch (Exception e){
-			System.debug('Error => ' + e.getMessage());
-			returnList.add('Error');
-			returnList.add(e.getMessage());
-			return returnList;
-		}
 	}
 
 	@AuraEnabled

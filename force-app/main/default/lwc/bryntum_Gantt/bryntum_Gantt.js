@@ -14,7 +14,7 @@ import GanttToolbarMixinDup from "./lib/GanttToolbarDup";
 import data from "./data/launch-saas";
 import getScheduleItemRecords from "@salesforce/apex/BT_NewGanttChartCls.getScheduleItemRecords";
 import getPhaseDates from "@salesforce/apex/BT_NewGanttChartCls.getPhaseDates";
-import insertUpdateTask from "@salesforce/apex/BT_NewGanttChartCls.insertUpdateTask";
+// import insertUpdateTask from "@salesforce/apex/BT_NewGanttChartCls.insertUpdateTask";
 import insertUpdateTaskList from "@salesforce/apex/BT_NewGanttChartCls.insertUpdateTaskList";
 import deleteTasks from "@salesforce/apex/BT_NewGanttChartCls.deleteTasks";
 import getTask from "@salesforce/apex/BT_NewGanttChartCls.getTask";
@@ -22,14 +22,18 @@ import getEndDate from "@salesforce/apex/BT_NewGanttChartCls.getEndDate";
 import getAllContacts from "@salesforce/apex/BT_NewGanttChartCls.getAllContacts";
 import pickListValueDynamically from "@salesforce/apex/BT_NewGanttChartCls.pickListValueDynamically";
 import addNotesCommentToRecord from "@salesforce/apex/BT_NewGanttChartCls.addNotesCommentToRecord";
-import getNotesofRecord from "@salesforce/apex/BT_NewGanttChartCls.getNotesofRecord";
+// import getNotesofRecord from "@salesforce/apex/BT_NewGanttChartCls.getNotesofRecord";
 import getAllNotes from "@salesforce/apex/BT_NewGanttChartCls.getAllNotes";
-import getattachmentLength from "@salesforce/apex/BT_NewGanttChartCls.getattachmentLength";
+// import getattachmentLength from "@salesforce/apex/BT_NewGanttChartCls.getattachmentLength";
 import saveResourceForRecord from "@salesforce/apex/BT_NewGanttChartCls.saveResourceForRecord";
 import updateHideGanttOnSch from "@salesforce/apex/BT_NewGanttChartCls.updateHideGanttOnSch";
 import changeOriginalDates from "@salesforce/apex/BT_NewGanttChartCls.changeOriginalDates";
 
 import { formatData, saveeditRecordMethod } from "./bryntum_GanttHelper";
+
+import getRecordType from "@salesforce/apex/BT_NewGanttChartCls.getRecordType";
+import { getPicklistValues, getObjectInfo } from 'lightning/uiObjectInfoApi';
+
 export default class Gantt_component extends NavigationMixin(LightningElement) {
   @api showpopup = false;
   @api fileTaskId = "";
@@ -155,6 +159,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   @track contracFieldApiName;
   @track contractorname;
   @track showOriginalDateModal = false;
+  
+  @wire(getRecordType) objRecordType;
 
   @wire(pickListValueDynamically, {
     customObjInfo: { sobjectType: "buildertek__Project_Task__c" },
@@ -167,6 +173,12 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     selectPicklistApi: "buildertek__Type__c",
   })
   selectTargetTypeValues;
+
+  @wire(
+    getPicklistValues, 
+    { recordTypeId: '$objRecordType.data', fieldApiName: 'buildertek__Project_Task__c.buildertek__Phase__c' }
+  )
+  picklistValues;
 
   selectOptionChanveValue(event) {
     this.picklistVal = event.target.value;

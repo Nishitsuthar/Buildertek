@@ -188,7 +188,7 @@
                 { label: 'Product Description', fieldName: 'Description', type: 'text' },
                 { label: 'Product Code', fieldName: 'ProductCode', type: 'text' },
                 { label: 'List Price', fieldName: 'UnitPrice', type: 'currency', typeAttributes: { currencyCode: { fieldName: 'CurrencyIsoCode' } }, cellAttributes: { alignment: 'left' } },
-                { label: 'Product Family', fieldName: 'Family', type: 'text' }
+                { label: 'Product Family', fieldName: 'familyLabel', type: 'text' }
 
             ]);
 
@@ -260,6 +260,9 @@
                                             "pbookId": x
                                         });
                                         action21.setCallback(this, function (response) {
+                                            console.log('Status ===> '+response.getState());
+                                            var error = response.getError();
+                                            console.log('Error ===> ', {error});
                                             if (response.getState() == "SUCCESS") {
                                                 var rows = response.getReturnValue();
                                                 console.log("Rows : ", rows);

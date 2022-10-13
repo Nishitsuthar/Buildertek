@@ -1,0 +1,51 @@
+public with sharing class createCO_selectionType {
+    public createCO_selectionType() {
+
+    }
+
+    @AuraEnabled
+    public static String changeOptionList(buildertek__Change_Order__c cOrder, String selectionTypeId){
+    
+        Integer sizeOfList;
+        String project = '';
+        if (selectionTypeId != null){
+            List<buildertek__Question__c> optionList = new List<buildertek__Question__c>();
+            List<buildertek__Question__c> optionList2 = new List<buildertek__Question__c>();
+            List<buildertek__Change_Order_Item__c> changeOrderItemList = new List<buildertek__Change_Order_Item__c>();
+            
+            optionList = [SELECT id, Name, buildertek__Change_Order__c, buildertek__Quantity__c, buildertek__Upgrade_Costs__c, buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c FROM buildertek__Question__c WHERE buildertek__Question_Group__c =:selectionTypeId and buildertek__Upgrade__c = false and buildertek__Change_Order__c = null];
+            
+            buildertek__Change_Order__c changeOrder = new buildertek__Change_Order__c();
+            changeOrder.Name = cOrder.Name;
+            changeOrder.buildertek__Details__c = cOrder.buildertek__Details__c;
+            changeOrder.buildertek__Due_Date__c = cOrder.buildertek__Due_Date__c;
+            changeOrder.buildertek__Status__c = 'Pending';
+            changeOrder.buildertek__Type__c = 'Customer';
+            changeOrder.buildertek__Date_Created__c = System.today();
+            changeOrder.buildertek__Project__c = optionList[0].buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c;
+            insert changeOrder;
+
+            sizeOfList = optionList.size();
+            if (sizeOfList > 0) {
+                for (buildertek__Question__c option : optionList) {
+                    buildertek__Change_Order_Item__c changeOrderItem = new buildertek__Change_Order_Item__c();
+                    changeOrderItem.Name = option.Name;
+                    changeOrderItem.buildertek__Quantity__c = option.buildertek__Quantity__c;
+                    changeOrderItem.buildertek__Unit_Price__c = option.buildertek__Upgrade_Costs__c;
+                    changeOrderItem.buildertek__Change_Order__c = changeOrder.Id;
+                    changeOrderItemList.add(changeOrderItem);
+                }
+                insert changeOrderItemList;
+
+                for (buildertek__Question__c option2 : optionList) {
+                    option2.buildertek__Change_Order__c = changeOrder.Id;
+                }
+                update optionList;
+            }
+            return changeOrder.Id;
+        }
+        else{
+            return 'Error';
+        }
+    }
+}

@@ -58,7 +58,7 @@ public with sharing class ImportMasterSchedules{
 
             //    List<buildertek__Schedule__c> schRecords =  [SELECT Id,buildertek__Project_Manager__c From buildertek__Schedule__c WHERE Id=:recordId];
             //   System.debug('Schedule Record -------------> '+schRecords);
-            scheduleitems = [select id, buildertek__Completion__c, buildertek__Contractor__c, buildertek__Dependency__r.buildertek__Schedule__c, buildertek__Contractor_Resource__c, buildertek__Project_Manager__c, buildertek__Duration__c, buildertek__Finish__c, buildertek__Resource__c, buildertek__Lag__c, buildertek__Milestone__c, buildertek__Notes__c, buildertek__Order__c, buildertek__Original_End_Date__c, buildertek__Original_Start_Date__c, buildertek__Phase__c, buildertek__Type__c, buildertek__Dependency__c, buildertek__Project__c, buildertek__Purchase_Order__c, buildertek__Reason_for_Date_Change__c, buildertek__Reason_for_Date_Change_PL__c, buildertek__Required_Completion_Date__c, buildertek__Schedule__c, buildertek__Start__c, Name
+            scheduleitems = [select id, buildertek__Completion__c, buildertek__Contractor__c, buildertek__Dependency__r.Name, buildertek__Dependency__r.buildertek__Schedule__c, buildertek__Contractor_Resource__c, buildertek__Project_Manager__c, buildertek__Duration__c, buildertek__Finish__c, buildertek__Resource__c, buildertek__Lag__c, buildertek__Milestone__c, buildertek__Notes__c, buildertek__Order__c, buildertek__Original_End_Date__c, buildertek__Original_Start_Date__c, buildertek__Phase__c, buildertek__Type__c, buildertek__Dependency__c, buildertek__Project__c, buildertek__Purchase_Order__c, buildertek__Reason_for_Date_Change__c, buildertek__Reason_for_Date_Change_PL__c, buildertek__Required_Completion_Date__c, buildertek__Schedule__c, buildertek__Start__c, Name
                              from buildertek__Project_Task__c
                              where buildertek__Schedule__c IN:scheduleRecIds
                              order by CreatedDate, buildertek__Order__c
@@ -94,6 +94,7 @@ public with sharing class ImportMasterSchedules{
                 system.debug(existedScheduleitems[lastIndex]);
             }
             if (scheduleitems.size() > 0){
+                Map<String,String> newmap = new Map<String,String>();
                 for (buildertek__Project_Task__c scheduleitem : scheduleitems){
                     if (!scheduleitem.buildertek__Milestone__c){
                         buildertek__Project_Task__c schItem = new buildertek__Project_Task__c();
@@ -117,9 +118,9 @@ public with sharing class ImportMasterSchedules{
                          schItem.buildertek__Project_Manager__c = schRecords[0].buildertek__Project_Manager__c;
                          }
                          }  */
-                        if (scheduleitem.buildertek__Dependency__r.buildertek__Schedule__c == recordId && scheduleitem.buildertek__Dependency__r.buildertek__Schedule__c != null){
-                            schItem.buildertek__Dependency__c = scheduleitem.buildertek__Dependency__c;
-                        }
+                        // if (scheduleitem.buildertek__Dependency__r.buildertek__Schedule__c == recordId && scheduleitem.buildertek__Dependency__r.buildertek__Schedule__c != null){
+                        // }
+                        // schItem.buildertek__Dependency__c = scheduleitem.buildertek__Dependency__c;
                         schItem.buildertek__Finish__c = scheduleitem.buildertek__Finish__c;
                         schItem.buildertek__Resource__c = scheduleitem.buildertek__Resource__c;
                         schItem.buildertek__Lag__c = scheduleitem.buildertek__Lag__c;
@@ -155,77 +156,91 @@ public with sharing class ImportMasterSchedules{
                         system.debug(schItemClone.buildertek__Phase__c);
                         projectTaskMap.put(scheduleitem.Id, schItemClone);
                         listOfPhase.add(schItem.buildertek__Phase__c);
-                        system.debug(schItem);
+                        system.debug('schItem-->'+schItem);
+                        if(scheduleitem.buildertek__Dependency__r.Name != NULL){
+                            if(!newmap.containsKey(schItem.Name)){
+                                newmap.put(schItem.Name,scheduleitem.buildertek__Dependency__r.Name);
+                            }
+                        }
                         count++;
                     }
                 }
 
-                system.debug('projectTaskMap.values()' + projectTaskMap.values());
-
-                for (buildertek__Project_Task__c item : projectTaskMap.values()){
-                    system.debug(item.Name + ' ' + item.buildertek__Phase__c);
-                }
+                System.debug('newmap-->'+newmap.get('Plot Plan'));
                 // insert projectTaskMap.values();
                 // adding database.insert here
-                Database.SaveResult[] saveResultList = Database.insert(projectTaskMap.values(), false);
-                for (Database.SaveResult sr : saveResultList){
-                    if (sr.isSuccess()){
-                        // Operation was successful, so get the ID of the record that was processed
-                        System.debug('Successfully inserted account. Account ID: ' + sr.getId());
-                    } else{
-                        // Operation failed, so get all errors
-                        for (Database.Error err : sr.getErrors()){
-                            System.debug('The following error has occurred.');
-                            System.debug(err.getStatusCode() + ': ' + err.getMessage());
-                            System.debug('Account fields that affected this error: ' + err.getFields());
-                        }
-                    }
-                }
+                // ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+                Database.SaveResult[] saveResultList = Database.insert (projectTaskMap.values(), false);
+                // ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+                // Set<Id> schIds = new Set<Id>();
+                // for (Database.SaveResult sr : saveResultList){
+                //     if (sr.isSuccess()){
+                //         // Operation was successful, so get the ID of the record that was processed
+                //         System.debug('Successfully inserted schedule Lines ID: ' + sr.getId());
+                //         schIds.add(sr.getId());
+                //     } 
+                // }
                 msg.Status = 'Success';
                 msg.Message = 'schedule Lines Imported Successfully';
                 system.debug('Success---');
+
+                Map<String,Id> predmap = new Map<String,Id>();
+                for(buildertek__Project_Task__c pt : projectTaskMap.values()){
+                    predmap.put(pt.Name,pt.Id);
+                }
+                for(buildertek__Project_Task__c sci : projectTaskMap.values()){
+                    System.debug('sci.name'+sci.Name);
+                    if(newmap.containsKey(sci.Name)){
+                        System.debug('newmap.get(sci.Name)-->'+newmap.get(sci.Name));
+                        sci.buildertek__Dependency__c = predmap.get(newmap.get(sci.Name));
+                    }
+                }
+                
+                ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+                Database.SaveResult[] saveResultListt = Database.update (projectTaskMap.values(), false);
+                ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
 
                 futureContoller.updateScheduleRec(recordId);
 
                 System.debug('Check Project Manager 1');
 
                 //system.debug([Select Id, Name, buildertek__Phase__c, buildertek__Start__c, buildertek__Schedule__c, buildertek__Milestone__c FROM Project_Task__c  WHERE buildertek__Schedule__c = :recordId]);
-                for (buildertek__Project_Task__c scheduleitem : projectTaskMap.values()){
-                    buildertek__Project_Task__c schItem = new buildertek__Project_Task__c();
-                    system.debug('scheduleitem' + scheduleitem.buildertek__Phase__c);
-                    schItem.Id = scheduleitem.Id;
-                    if (scheduleitem.buildertek__Dependency__c != null && projectTaskMap.get(scheduleitem.buildertek__Dependency__c) != null){
-                        if (String.isNotBlank(scheduleitem.buildertek__Dependency__c) && String.isNotBlank(projectTaskMap.get(scheduleitem.buildertek__Dependency__c).Id)){
-                            schItem.buildertek__Dependency__c = projectTaskMap.get(scheduleitem.buildertek__Dependency__c).Id;
-                        }
-                    }
+                // for (buildertek__Project_Task__c scheduleitem : projectTaskMap.values()){
+                //     buildertek__Project_Task__c schItem = new buildertek__Project_Task__c();
+                //     system.debug('scheduleitem' + scheduleitem.buildertek__Phase__c);
+                //     schItem.Id = scheduleitem.Id;
+                //     if (scheduleitem.buildertek__Dependency__c != null && projectTaskMap.get(scheduleitem.buildertek__Dependency__c) != null){
+                //         if (String.isNotBlank(scheduleitem.buildertek__Dependency__c) && String.isNotBlank(projectTaskMap.get(scheduleitem.buildertek__Dependency__c).Id)){
+                //             schItem.buildertek__Dependency__c = projectTaskMap.get(scheduleitem.buildertek__Dependency__c).Id;
+                //         }
+                //     }
 
-                    projectTask.add(schItem);
-                }
-                System.debug('Check Project Manager 2');
-                ProjectTaskTriggerHandler.isFromImport = true;
-
-                if (projectTask.size() > 0){
-                    // update projectTask;
-                    // adding database.update here
-                    Database.SaveResult[] saveResultList3 = Database.update (projectTask, false);
-                    for (Database.SaveResult sr : saveResultList3){
-                        if (sr.isSuccess()){
-                            // Operation was successful, so get the ID of the record that was processed
-                            System.debug('Successfully inserted account. Account ID: ' + sr.getId());
-                        } else{
-                            // Operation failed, so get all errors
-                            for (Database.Error err : sr.getErrors()){
-                                System.debug('The following error has occurred.');
-                                System.debug(err.getStatusCode() + ': ' + err.getMessage());
-                                System.debug('Account fields that affected this error: ' + err.getFields());
-                            }
-                        }
-                    }
-                    msg.Status = 'Success';
-                    msg.Message = 'schedule Lines Imported Successfully';
-                    system.debug('Success---');
-                }
+                //     projectTask.add(schItem);
+                // }
+                // System.debug('Check Project Manager 2');
+                // ProjectTaskTriggerHandler.isFromImport = true;
+                // System.debug('<--projectTask.size()-->'+projectTask.size());
+                // if (projectTask.size() > 0){
+                //     // update projectTask;
+                //     // adding database.update here
+                //     Database.SaveResult[] saveResultList3 = Database.update (projectTask, false);
+                //     for (Database.SaveResult sr : saveResultList3){
+                //         if (sr.isSuccess()){
+                //             // Operation was successful, so get the ID of the record that was processed
+                //             System.debug('Successfully inserted account. Account ID: ' + sr.getId());
+                //         } else{
+                //             // Operation failed, so get all errors
+                //             for (Database.Error err : sr.getErrors()){
+                //                 System.debug('The following error has occurred.');
+                //                 System.debug(err.getStatusCode() + ': ' + err.getMessage());
+                //                 System.debug('Account fields that affected this error: ' + err.getFields());
+                //             }
+                //         }
+                //     }
+                //     msg.Status = 'Success';
+                //     msg.Message = 'schedule Lines Imported Successfully';
+                //     system.debug('Success---');
+                // }
                 System.debug('Check Project Manager 3');
                 /*updateScheduleItemTaskBacthApex updatedependency = new updateScheduleItemTaskBacthApex(projectTaskMap.keyset(),recordId,projectTaskMap);
                  database.executeBatch(updatedependency, 200);*/

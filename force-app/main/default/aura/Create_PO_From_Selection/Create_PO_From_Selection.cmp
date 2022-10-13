@@ -43,7 +43,7 @@
         }
     </aura:html>
     <div class="slds-modal__content">
-        <div class="slds slds-scope">
+        <div class="slds">
             <header class="slds-modal__header">
                 <div class="" id="header" style="font-size:20px;">
                     Create Purchase Order

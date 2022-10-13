@@ -1,15 +1,12 @@
 ({
     doInit : function(component, event, helper) {
-        var recordId = component.get("v.recordId");
-        console.log('recordId => '+recordId);
-        var action = component.get("c.getDetails");
-        action.setParams({
-	        recordId : recordId
-	    });
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            var result = response.getReturnValue();
+        var evt = $A.get("e.force:navigateToComponent");
+        evt.setParams({
+            componentDef : "c:OptionUpgradePage",
+            componentAttributes: {
+                recordId: component.get("v.recordId")
+            }
         });
-        $A.enqueueAction(action);   
+        evt.fire();  
     }
 })

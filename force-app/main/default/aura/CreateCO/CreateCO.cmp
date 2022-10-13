@@ -1,8 +1,8 @@
 <aura:component controller="createCO" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
     <!-- <aura:attribute name="purchanseOrder" type="buildertek__Vendor__c"/> -->
-
+    
     <aura:attribute name="recordId" type="String" />
     <aura:attribute name="optionId" type="String" />
     <aura:attribute name="purchaseOrder" type="String" />
@@ -11,18 +11,46 @@
     'Name':'',
     'buildertek__Details__c':'',
     'buildertek__Due_Date__c':''}" />
-
-
-    <lightning:recordEditForm objectApiName="buildertek__Purchase_Order__c">
+    <aura:html tag="style">
+        .slds-modal__content {
+            overflow: hidden !important;
+        }
+        .slds-modal__close{
+            display:block !important;    
+        }
+        .slds-docked-form-footer{
+            bottom: auto;
+        }
+        .slds-p-around--medium{
+            padding: 0;
+        }
+        .forceChatterBasePublisher :not(.PHONE) .cuf-content{
+            padding: 0;
+        }
+    </aura:html>
+    <div class="slds-modal__content">
+        <div class="slds slds-scope">
+            <header class="slds-modal__header">
+                <div class="" id="header" style="font-size:20px;">
+                    Create Change Order
+                </div>
+            </header>             
+        </div>
+    </div>
+ <div class="slds-m-around_medium">
+    <!-- <lightning:recordEditForm objectApiName="buildertek__Purchase_Order__c" >
         <lightning:inputField fieldName="buildertek__Vendor__c" value='{!v.purchaseOrder}' />
 
-    </lightning:recordEditForm>
+    </lightning:recordEditForm> -->
 
     <lightning:recordEditForm objectApiName="buildertek__Change_Order__c">
         <lightning:inputField fieldName="Name" value="{!v.changeOrder.Name}" />
         <lightning:inputField fieldName="buildertek__Details__c" value="{!v.changeOrder.buildertek__Details__c}" />
         <lightning:inputField fieldName="buildertek__Due_Date__c" value="{!v.changeOrder.buildertek__Due_Date__c}" />
-
+        <!-- <lightning:inputField fieldName="buildertek__Status__c" value="{!v.changeOrder.buildertek__Status__c}" />
+        <lightning:inputField fieldName="buildertek__Type__c" value="{!v.changeOrder.buildertek__Type__c}" />
+        <lightning:inputField fieldName="buildertek__Date_Created__c" value="{!v.changeOrder.buildertek__Date_Created__c}" /> -->
+        
 
     </lightning:recordEditForm>
 
@@ -31,8 +59,9 @@
     <lightning:input type="date" label="Due Date" name="Due date" value="{!v.changeOrder.buildertek__Due_Date__c}" />
     <br/>
     <br/> -->
-    <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" />
-    <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRecord}" />
-
-
+ </div>
+    <footer role="contentinfo" class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;">
+    <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
+    <lightning:button variant="brand" label="Create" title="Save" onclick="{!c.createRecord}" class="myBtn2"/>
+</footer>
 </aura:component>

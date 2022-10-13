@@ -904,6 +904,17 @@ public class BT_NewGanttChartCls {
             return data;
         }
     }
+
+    @AuraEnabled(cacheable=true)
+    public static String getRecordType(){
+        List<SelectOption> recordTypes = new List<SelectOption>();
+        for(RecordTypeInfo info: buildertek__Project_Task__c.SObjectType.getDescribe().getRecordTypeInfos()) {
+            if(info.isAvailable()) {
+                recordTypes.add(new SelectOption(info.getRecordTypeId(), info.getName()));
+            }
+        }
+        return recordTypes[0].getValue();
+    }
     
 
     // wrapper class 

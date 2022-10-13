@@ -121,7 +121,7 @@
                                 }
                             }
                         }
-                        console.log('Root Nodes::'+JSON.stringify(rootNodes));
+                        // console.log('Root Nodes::'+JSON.stringify(rootNodes));
                         component.set('v.rootNodes', rootNodes);
                     }
                 });
