@@ -5,6 +5,7 @@ trigger QuestionTrigger on buildertek__Question__c (before insert, after insert,
 	
 		if(Trigger.isInsert && Trigger.isBefore){
 			handler.OnBeforeInsert(Trigger.new);
+            handler.insertOption(Trigger.new);
 		} 
 		 
 		else if(Trigger.isInsert && Trigger.isAfter){

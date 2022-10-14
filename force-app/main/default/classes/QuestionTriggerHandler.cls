@@ -29,6 +29,20 @@ public with sharing class QuestionTriggerHandler {
             }
         }
     }
+    public void insertOption(buildertek__Question__c[] opt){
+        List<buildertek__Question__c> product=new List<buildertek__Question__c>();
+        Set<Id> ProductIds=new Set<Id>();
+        for(buildertek__Question__c bq:opt){
+            ProductIds.add(bq.buildertek__Product__c);
+        }
+        Product2 prodc=[SELECT id,Name,buildertek__Manufacturer__c from Product2 where id IN :ProductIds];
+        for(buildertek__Question__c b:opt){
+            if(b.buildertek__Product__c!=null){
+                b.Name=prodc.Name;
+                b.buildertek__Manufacturer__c=prodc.buildertek__Manufacturer__c;
+            }
+        } 
+    }
      
     public void OnBeforeUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap){
         for(Question__c q : updatedQuestions){
@@ -78,8 +92,6 @@ public with sharing class QuestionTriggerHandler {
     }
      
     public void OnAfterUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap, Map<Id, Question__c> oldQuestionsMap){
-
-        
 
     }
     

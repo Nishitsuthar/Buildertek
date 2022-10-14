@@ -126,6 +126,7 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
  
    
     if (Trigger.isUpdate && Trigger.isAfter && !handler.blnSkipTaskTrigger){
+        // ScheduleTriggerHandler.afterUpdateHandler(JSON.serialize(trigger.new),JSON.serialize(trigger.oldMap),Trigger.isExecuting, Trigger.size);
         try{
             SET<Id> projectIdSet = new SET<Id>();
             SET<Id> scheduleIds = new SET<Id>();
@@ -248,18 +249,25 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
                                                            WHERE Id In :scheduleIds]){
             //for (buildertek__Schedule__c scheduleRec : schedulesList){
                 for (buildertek__Project_Task__c projectTaskRec : scheduleRec.buildertek__Schedule_Tasks__r){
+                    Boolean flag = false;
                     buildertek__Project_Task__c taskRec = new buildertek__Project_Task__c();
                     taskRec.Id = projectTaskRec.Id;
                     if (projectTaskRec.buildertek__Use_External_Resource_from_Schedule__c){
                         taskRec.buildertek__Contractor_Resource__c = scheduleRec.buildertek__External_Resource__c;
+                        flag = true;
                     }
                     if (projectTaskRec.buildertek__Use_Internal_Resource_from_Schedule__c){
                         taskRec.buildertek__Resource__c = scheduleRec.buildertek__Internal_Resource_1__c;
+                        flag = true;
                     }
                     if (projectTaskRec.buildertek__Use_Project_Manager_from_Schedule__c){
                         taskRec.buildertek__Project_Manager__c = scheduleRec.buildertek__Project_Manager__c;
+                        flag = true;
                     }
-                    projectTasks.add(taskRec);
+
+                    if(flag){
+                        projectTasks.add(taskRec);
+                    }
                 }
             }
             System.debug('Last 1');

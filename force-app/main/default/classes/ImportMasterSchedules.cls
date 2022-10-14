@@ -66,7 +66,7 @@ public with sharing class ImportMasterSchedules{
 
             if (initialDate == null){
                 initialDate = [SELECT Id, buildertek__Initial_Start_Date__c
-                               From buildertek__Schedule__c
+                               FROM buildertek__Schedule__c
                                WHERE Id = :recordId].buildertek__Initial_Start_Date__c;
             }
 
@@ -166,7 +166,6 @@ public with sharing class ImportMasterSchedules{
                     }
                 }
 
-                System.debug('newmap-->'+newmap.get('Plot Plan'));
                 // insert projectTaskMap.values();
                 // adding database.insert here
                 // ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
@@ -188,18 +187,39 @@ public with sharing class ImportMasterSchedules{
                 for(buildertek__Project_Task__c pt : projectTaskMap.values()){
                     predmap.put(pt.Name,pt.Id);
                 }
+                List<buildertek__Project_Task__c> dependList = new List<buildertek__Project_Task__c>();
                 for(buildertek__Project_Task__c sci : projectTaskMap.values()){
                     System.debug('sci.name'+sci.Name);
                     if(newmap.containsKey(sci.Name)){
                         System.debug('newmap.get(sci.Name)-->'+newmap.get(sci.Name));
                         sci.buildertek__Dependency__c = predmap.get(newmap.get(sci.Name));
+                        dependList.add(sci);
+                        if(sci.buildertek__Start__c > sci.buildertek__Finish__c){
+                            System.debug('sci.name'+sci.Name);
+                            System.debug('sci.name'+sci.Id);
+                            System.debug('sci.buildertek__Start__c-->'+sci.buildertek__Start__c);
+                            System.debug('sci.buildertek__Finish__c-->'+sci.buildertek__Finish__c);
+                        }
                     }
                 }
                 
                 ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-                Database.SaveResult[] saveResultListt = Database.update (projectTaskMap.values(), false);
+                // ScheduleTriggerHandler handler = new ScheduleTriggerHandler(true, dependList.size());
+                // handler.blnSkipTaskTrigger = true;
+                Database.SaveResult[] saveResultListt = Database.update (dependList, false);
+                // handler.blnSkipTaskTrigger = false;
                 ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-
+                for (Database.SaveResult sr : saveResultListt){
+                    if (sr.isSuccess()){
+                        System.debug('Successfully inserted account. Account ID: ' + sr.getId());
+                    } else{
+                        for (Database.Error err : sr.getErrors()){
+                            System.debug('The following error has occurred.');
+                            System.debug(err.getStatusCode() + ': ' + err.getMessage());
+                            System.debug('Account fields that affected this error: ' + err.getFields());
+                        }
+                    }
+                }
                 futureContoller.updateScheduleRec(recordId);
 
                 System.debug('Check Project Manager 1');
@@ -306,19 +326,19 @@ public with sharing class ImportMasterSchedules{
                 // insert projectTasks;
                 //  adding database.insert here
                 Database.SaveResult[] saveResultList2 = Database.insert (projectTasks, false);
-                for (Database.SaveResult sr : saveResultList2){
-                    if (sr.isSuccess()){
-                        // Operation was successful, so get the ID of the record that was processed
-                        System.debug('Successfully inserted account. Account ID: ' + sr.getId());
-                    } else{
-                        // Operation failed, so get all errors
-                        for (Database.Error err : sr.getErrors()){
-                            System.debug('The following error has occurred.');
-                            System.debug(err.getStatusCode() + ': ' + err.getMessage());
-                            System.debug('Account fields that affected this error: ' + err.getFields());
-                        }
-                    }
-                }
+                // for (Database.SaveResult sr : saveResultList2){
+                //     if (sr.isSuccess()){
+                //         // Operation was successful, so get the ID of the record that was processed
+                //         System.debug('Successfully inserted account. Account ID: ' + sr.getId());
+                //     } else{
+                //         // Operation failed, so get all errors
+                //         for (Database.Error err : sr.getErrors()){
+                //             System.debug('The following error has occurred.');
+                //             System.debug(err.getStatusCode() + ': ' + err.getMessage());
+                //             System.debug('Account fields that affected this error: ' + err.getFields());
+                //         }
+                //     }
+                // }
 
                 futureContoller.updateScheduleRec(recordId);
                 /*   List<buildertek__Project_Task__c> scheduleLinesListToUpdate = new  List<buildertek__Project_Task__c>();

@@ -1,16 +1,22 @@
 <aura:component controller="createCO" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
-<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-
-    <!-- <aura:attribute name="purchanseOrder" type="buildertek__Vendor__c"/> -->
     
+    <aura:attribute name="Spinner" type="Boolean" default="false"/>
     <aura:attribute name="recordId" type="String" />
-    <aura:attribute name="optionId" type="String" />
-    <aura:attribute name="purchaseOrder" type="String" />
 
     <aura:attribute name="changeOrder" type="Change_Order__c" default="{'sobjectType':'Change_Order__c',
-    'Name':'',
-    'buildertek__Details__c':'',
-    'buildertek__Due_Date__c':''}" />
+        'Name':'',
+        'buildertek__Details__c':'',
+        'buildertek__Due_Date__c':''}" />
+
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if> 
     <aura:html tag="style">
         .slds-modal__content {
             overflow: hidden !important;
@@ -37,31 +43,17 @@
             </header>             
         </div>
     </div>
- <div class="slds-m-around_medium">
-    <!-- <lightning:recordEditForm objectApiName="buildertek__Purchase_Order__c" >
-        <lightning:inputField fieldName="buildertek__Vendor__c" value='{!v.purchaseOrder}' />
+    <div class="slds-m-around_medium">
 
-    </lightning:recordEditForm> -->
+        <lightning:recordEditForm objectApiName="buildertek__Change_Order__c">
+            <lightning:inputField fieldName="Name" value="{!v.changeOrder.Name}" />
+            <lightning:inputField fieldName="buildertek__Details__c" value="{!v.changeOrder.buildertek__Details__c}" />
+            <lightning:inputField fieldName="buildertek__Due_Date__c" value="{!v.changeOrder.buildertek__Due_Date__c}" />
+        </lightning:recordEditForm>
 
-    <lightning:recordEditForm objectApiName="buildertek__Change_Order__c">
-        <lightning:inputField fieldName="Name" value="{!v.changeOrder.Name}" />
-        <lightning:inputField fieldName="buildertek__Details__c" value="{!v.changeOrder.buildertek__Details__c}" />
-        <lightning:inputField fieldName="buildertek__Due_Date__c" value="{!v.changeOrder.buildertek__Due_Date__c}" />
-        <!-- <lightning:inputField fieldName="buildertek__Status__c" value="{!v.changeOrder.buildertek__Status__c}" />
-        <lightning:inputField fieldName="buildertek__Type__c" value="{!v.changeOrder.buildertek__Type__c}" />
-        <lightning:inputField fieldName="buildertek__Date_Created__c" value="{!v.changeOrder.buildertek__Date_Created__c}" /> -->
-        
-
-    </lightning:recordEditForm>
-
-    <!-- <lightning:input type="text" label="Name" name="Name" value="{!v.changeOrder.Name}" />
-    <lightning:input type="text" label="Notes" name="Details" value="{!v.changeOrder.buildertek__Details__c}" />
-    <lightning:input type="date" label="Due Date" name="Due date" value="{!v.changeOrder.buildertek__Due_Date__c}" />
-    <br/>
-    <br/> -->
- </div>
+    </div>
     <footer role="contentinfo" class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;">
-    <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
-    <lightning:button variant="brand" label="Create" title="Save" onclick="{!c.createRecord}" class="myBtn2"/>
-</footer>
+        <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
+        <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRecord}" class="myBtn2"/>
+    </footer>
 </aura:component>

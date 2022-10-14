@@ -370,18 +370,17 @@
                                             5. HOLDBACK:
                                             <br/>
                                             <div style="margin-left:20px">a. {!retainageValue} % of Completed Work</div>
-                                            <br/>
                                             <div style="margin-left:30px">(Column D + E on Sheet 2)</div>
                                         </div>
                                     </td>
                                     <td width="100%" align="right">
                                         <div class="a" style="font-size:10.5px">
-                                            <u>
+                                            <!-- <u>
                                                 <apex:outputText value="{!CurrencyCode} {0, number, ###,###,###,##0.00}">
                                                     <apex:param value="{!cd.workcompletedTotal10}" />
                                                 </apex:outputText>
-                                            </u>
-                                            <!--u> <apex:outputField value="{!paymentApp.Total_Retainage__c}" /></u-->
+                                            </u> -->
+                                            <u> <apex:outputField value="{!paymentApp.Total_Retainage__c}" /></u>
                                         </div>
                                     </td>
                                 </tr>
