@@ -16,7 +16,18 @@ private class ImportMasterSchedulesTest {
         sd.Type__c = 'Master';
         sd.Project__c = proj.Id;
         insert sd; 
+
+        schedule__c sd1 = new schedule__c();
+        sd1.Description__c = 'new record1';
+        sd1.Type__c = 'new Record';
+        sd1.Project__c = proj.Id;
+        sd1.buildertek__Project_Manager__c = c.Id;
+        sd1.buildertek__Initial_Start_Date__c = System.today();
+        insert sd1; 
         
+        Date iniStartDate = sd1.buildertek__Initial_Start_Date__c;
+        String recordId = sd1.Id;
+        String projectManagerId = sd1.buildertek__Project_Manager__c;
         list<string> schIds = new list<string>();
         list<buildertek__Project_Task__c> schItemlist = new list<buildertek__Project_Task__c>();
         buildertek__Project_Task__c schItem =new  buildertek__Project_Task__c();
@@ -29,13 +40,13 @@ private class ImportMasterSchedulesTest {
         insert schItemlist; 
         schIds.add(sd.Id); 
         
-        
-        ApexPages.StandardController sc = new ApexPages.StandardController(sd);
-        //ImportMasterSchedules impsch = new ImportMasterSchedules(sc);
-        //ImportMasterSchedules.MasterScheduleClass impmaster = new ImportMasterSchedules.MasterScheduleClass();
-        //ImportMasterSchedules.getMasterSchedule(sd.Id);
-        //ImportMasterSchedules.importMasterScheduleLines(schIds, sd.Id, system.today());
-        System.assertEquals('Test','Test');
+        ImportMasterSchedules.importMasterScheduleLines(schIds, recordId, iniStartDate, projectManagerId);
+        // ApexPages.StandardController sc = new ApexPages.StandardController(sd);
+        // ImportMasterSchedules impsch = new ImportMasterSchedules(sc);
+        // // impsch.MasterScheduleClass impmaster = new ImportMasterSchedules.MasterScheduleClass();
+        // impsch.getMasterSchedule(sd.Id);
+        // impsch.importMasterScheduleLines(schIds, sd.Id, system.today());
+        // System.assertEquals('Test','Test');
         
         
         

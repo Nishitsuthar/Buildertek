@@ -94,7 +94,7 @@ public with sharing class ImportMasterSchedules{
                 system.debug(existedScheduleitems[lastIndex]);
             }
             if (scheduleitems.size() > 0){
-                Map<String,String> newmap = new Map<String,String>();
+                Map<String, String> newmap = new Map<String, String>();
                 for (buildertek__Project_Task__c scheduleitem : scheduleitems){
                     if (!scheduleitem.buildertek__Milestone__c){
                         buildertek__Project_Task__c schItem = new buildertek__Project_Task__c();
@@ -156,70 +156,195 @@ public with sharing class ImportMasterSchedules{
                         system.debug(schItemClone.buildertek__Phase__c);
                         projectTaskMap.put(scheduleitem.Id, schItemClone);
                         listOfPhase.add(schItem.buildertek__Phase__c);
-                        system.debug('schItem-->'+schItem);
-                        if(scheduleitem.buildertek__Dependency__r.Name != NULL){
-                            if(!newmap.containsKey(schItem.Name)){
-                                newmap.put(schItem.Name,scheduleitem.buildertek__Dependency__r.Name);
+                        system.debug('schItem-->' + schItem);
+                        if (scheduleitem.buildertek__Dependency__r.Name != NULL){
+                            if (!newmap.containsKey(schItem.Name)){
+                                newmap.put(schItem.Name, scheduleitem.buildertek__Dependency__r.Name);
                             }
                         }
                         count++;
                     }
                 }
 
+                System.debug('projectTaskMap values ==> ' + projectTaskMap.values());
                 // insert projectTaskMap.values();
                 // adding database.insert here
-                // ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
                 Database.SaveResult[] saveResultList = Database.insert (projectTaskMap.values(), false);
-                // ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
                 // Set<Id> schIds = new Set<Id>();
                 // for (Database.SaveResult sr : saveResultList){
                 //     if (sr.isSuccess()){
                 //         // Operation was successful, so get the ID of the record that was processed
                 //         System.debug('Successfully inserted schedule Lines ID: ' + sr.getId());
                 //         schIds.add(sr.getId());
-                //     } 
+                //     }
                 // }
                 msg.Status = 'Success';
                 msg.Message = 'schedule Lines Imported Successfully';
                 system.debug('Success---');
 
-                Map<String,Id> predmap = new Map<String,Id>();
-                for(buildertek__Project_Task__c pt : projectTaskMap.values()){
-                    predmap.put(pt.Name,pt.Id);
+                Map<String, Id> predmap = new Map<String, Id>();
+                Map<String, Date> preddatemap = new Map<String, Date>();
+                for (buildertek__Project_Task__c pt : projectTaskMap.values()){
+                    predmap.put(pt.Name, pt.Id);
+                    preddatemap.put(pt.Name, pt.buildertek__Finish__c);
                 }
                 List<buildertek__Project_Task__c> dependList = new List<buildertek__Project_Task__c>();
-                for(buildertek__Project_Task__c sci : projectTaskMap.values()){
-                    System.debug('sci.name'+sci.Name);
-                    if(newmap.containsKey(sci.Name)){
-                        System.debug('newmap.get(sci.Name)-->'+newmap.get(sci.Name));
+                for (buildertek__Project_Task__c sci : projectTaskMap.values()){
+                    if (newmap.containsKey(sci.Name)){
                         sci.buildertek__Dependency__c = predmap.get(newmap.get(sci.Name));
+                        if (sci.buildertek__Start__c > sci.buildertek__Finish__c){
+                            System.debug('sci.name' + sci.Name);
+                            System.debug('sci.name' + sci.Id);
+                            System.debug('sci.buildertek__Start__c-->' + sci.buildertek__Start__c);
+                            System.debug('sci.buildertek__Finish__c-->' + sci.buildertek__Finish__c);
+                            System.debug('newmap.get(sci.Name)-->' + newmap.get(sci.Name));
+                            if (sci.buildertek__Duration__c != null){
+                                System.debug('preddatemap.get(newmap.get(sci.Name))-->' + preddatemap.get(newmap.get(sci.Name)));
+                                sci.buildertek__Start__c = sci.buildertek__Start__c.addDays(1);
+                                sci.buildertek__Finish__c = sci.buildertek__Start__c.addDays(Integer.valueOf(sci.buildertek__Duration__c));
+                            }
+                            System.debug('sci.buildertek__Start__c-->' + sci.buildertek__Start__c);
+                            System.debug('sci.buildertek__Finish__c-->' + sci.buildertek__Finish__c);
+                        }
                         dependList.add(sci);
-                        if(sci.buildertek__Start__c > sci.buildertek__Finish__c){
-                            System.debug('sci.name'+sci.Name);
-                            System.debug('sci.name'+sci.Id);
-                            System.debug('sci.buildertek__Start__c-->'+sci.buildertek__Start__c);
-                            System.debug('sci.buildertek__Finish__c-->'+sci.buildertek__Finish__c);
-                        }
                     }
                 }
-                
                 ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-                // ScheduleTriggerHandler handler = new ScheduleTriggerHandler(true, dependList.size());
-                // handler.blnSkipTaskTrigger = true;
                 Database.SaveResult[] saveResultListt = Database.update (dependList, false);
-                // handler.blnSkipTaskTrigger = false;
                 ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-                for (Database.SaveResult sr : saveResultListt){
-                    if (sr.isSuccess()){
-                        System.debug('Successfully inserted account. Account ID: ' + sr.getId());
-                    } else{
-                        for (Database.Error err : sr.getErrors()){
-                            System.debug('The following error has occurred.');
-                            System.debug(err.getStatusCode() + ': ' + err.getMessage());
-                            System.debug('Account fields that affected this error: ' + err.getFields());
+
+                //adding trigger logic after update here below
+                // logic started
+                
+                // for (Project_Task__c task : dependList){
+                //     if (task.Id != null && task.buildertek__finish__c != null){
+                //         task.buildertek__Start__c = getStartDate(task.buildertek__finish__c.addDays(1));
+                //         Date taskEndDate;
+                //         if (Integer.valueOf(task.buildertek__Duration__c) > 0){
+                //             system.debug('1-->');
+                //             taskEndDate = task.buildertek__Start__c.addDays(Integer.valueOf(task.buildertek__Duration__c) - 1);
+                //         } else{
+                //             system.debug('2-->');
+                //             taskEndDate = task.buildertek__Start__c; //.addDays(1)
+                //         }
+                //         // system.debug('taskEndDate -->' + taskEndDate);
+                //         task.buildertek__Finish__c = taskEndDate;
+                //         System.debug('start date ==> ' + task.buildertek__Start__c);
+                //         System.debug('end date ==> ' + task.buildertek__Finish__c);
+                //     }
+                // }
+
+                // update dependList;
+                // System.debug('after update ==> ' + dependList);
+                // logic ended here
+
+                // added second logic here for start date
+                //logic starts from here below
+                Date startDate;
+                Date endDate;
+                DateTime currDate;
+                Integer numberDaysDue;
+                Map<Id, buildertek__Project_Task__c> mapAllTask = new Map<Id, buildertek__Project_Task__c>();
+                List<buildertek__Project_Task__c> projectTaskToUpdate = new List<buildertek__Project_Task__c>();
+                Map<Id, List<Project_Task__c>> projectTaskMaps = new Map<Id, List<Project_Task__c>>();
+                List<buildertek__Project_Task__c> projectTasks = new List<buildertek__Project_Task__c>();
+
+                for (Project_Task__c projectTask1 : dependList){
+                    if (projectTask1.Id != null && projectTask1.buildertek__finish__c != null){
+                        projectTask1.buildertek__Start__c = getStartDate(projectTask1.buildertek__finish__c.addDays(1));
+                        Date taskEndDate;
+                        if (Integer.valueOf(projectTask1.buildertek__Duration__c) > 0){
+                            system.debug('1-->');
+                            taskEndDate = projectTask1.buildertek__Start__c.addDays(Integer.valueOf(projectTask1.buildertek__Duration__c) - 1);
+                        } else{
+                            system.debug('2-->');
+                            taskEndDate = projectTask1.buildertek__Start__c; //.addDays(1)
+                        }
+                        // system.debug('taskEndDate -->' + taskEndDate);
+                        projectTask1.buildertek__Finish__c = taskEndDate;
+                        System.debug('start date ==> ' + projectTask1.buildertek__Start__c);
+                        System.debug('end date ==> ' + projectTask1.buildertek__Finish__c);
+                    }
+
+                    mapAllTask.put(projectTask1.Id, projectTask1);
+                    if (!projectTaskMaps.containsKey(projectTask1.buildertek__Schedule__c)){
+                        projectTaskMaps.put(projectTask1.buildertek__Schedule__c, new List<Project_Task__c>());
+                    }
+                    projectTaskMaps.get(projectTask1.buildertek__Schedule__c).add(projectTask1);
+                }
+
+                for (Id taskId : mapAllTask.keySet()){
+                    buildertek__Project_Task__c projectTask2 = mapAllTask.get(taskId);
+                    //system.debug(projectTask.buildertek__Milestone__c);
+                    Id Dependency = projectTask2.buildertek__Dependency__c;
+                    // if (previuosTasks.Size() > 0 && !previousTaskmap.containsKey(projectTask.Id) && !projectTask.buildertek__Milestone__c && isFromImport){
+                    //     Integer lastIdx = previuosTasks.Size() - 1;
+                    //     if (lastIdx >= 0){
+                    //         projectTask.buildertek__Start__c = previuosTasks[lastIdx].buildertek__finish__c.addDays(1);
+                    //         projectTask.buildertek__Original_Start_Date__c = ProjectTaskTriggerHandler.getStartDate(projectTask.buildertek__Start__c);
+                    //         if (projectTask.buildertek__Duration__c != null && projectTask.buildertek__Duration__c > 0){
+                    //             projectTask.buildertek__Original_End_Date__c = projectTask.buildertek__Start__c.addDays(Integer.valueOf(projectTask.buildertek__Duration__c) - 1);
+                    //             projectTask.buildertek__Original_End_Date__c = ProjectTaskTriggerHandler.getEndDate(projectTask.buildertek__Start__c, projectTask.buildertek__Original_End_Date__c);
+                    //         }
+                    //     }
+                    // }
+                    if (projectTask2.buildertek__Dependency__c != null){
+                        buildertek__Project_Task__c parentTask = mapAllTask.get(projectTask2.buildertek__Dependency__c);
+                        // system.debug(parentTask);
+                        if (parentTask != null){
+                            Integer lag = projectTask2.buildertek__Lag__c != null ? Integer.valueOf(projectTask2.buildertek__Lag__c) : 0;
+                            if (parentTask.buildertek__finish__c != null){
+                                startDate = parentTask.buildertek__finish__c.addDays(1);
+                                if (mapAllTask.get(taskId).buildertek__Duration__c != null){
+                                    endDate = getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+                                } else{
+                                    // calculate duration from (mapAllTask.get(taskId)buildertek__finish__c).daysbetween.mapAllTask.get(taskId).buildertek__Start__c if needed
+                                    Date d1 = mapAllTask.get(taskId).buildertek__finish__c;
+                                    Date d2 = mapAllTask.get(taskId).buildertek__Start__c;
+                                    Integer daysDiff = d2.daysbetween(d1);
+                                    endDate = getStartDate(parentTask.buildertek__finish__c).addDays(daysDiff + 1);
+                                    mapAllTask.get(taskId).buildertek__Duration__c = daysDiff + 1;
+                                }
+                            } else{
+                                Integer Duration = Integer.valueOf(parentTask.buildertek__Duration__c);
+                                startDate = parentTask.buildertek__Start__c.addDays(Duration);
+                                if (mapAllTask.get(taskId).buildertek__Duration__c == null){
+                                    mapAllTask.get(taskId).buildertek__Duration__c = 1;
+                                }
+                                endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__Start__c.addDays(Duration)).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+                            }
+                            numberDaysDue = startDate.daysBetween(endDate);
+                            System.debug('3rd method before changing start Date ==> ' + projectTask2.buildertek__Start__c + ' Id ' + projectTask2.Id);
+                            projectTask2.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(startDate);//startDate;
+                            System.debug('3rd method after changing start Date ==> ' + projectTask2.buildertek__Start__c + ' Id ' + projectTask2.Id);
+
+                            if (numberDaysDue <= 0){
+                                projectTask2.buildertek__finish__c = projectTask2.buildertek__Start__c;
+                                projectTask2.buildertek__Duration__c = 1;
+                            } else{
+                                projectTask2.buildertek__finish__c = ProjectTaskTriggerHandler.getEndDate(startDate, endDate);
+                            }
+                            projectTaskToUpdate.add(projectTask2);
                         }
                     }
                 }
+                update projectTaskToUpdate;
+                //logic ends here
+
+
+                // handler.blnSkipTaskTrigger = false;
+                // handler.updateChildDatesWithPredecessor(dependList,updatepredmap);
+                // for (Database.SaveResult sr : saveResultListt){
+                //     if (sr.isSuccess()){
+                //         System.debug('Successfully inserted account. Account ID: ' + sr.getId());
+                //     } else{
+                //         for (Database.Error err : sr.getErrors()){
+                //             System.debug('The following error has occurred.');
+                //             System.debug(err.getStatusCode() + ': ' + err.getMessage());
+                //             System.debug('Account fields that affected this error: ' + err.getFields());
+                //         }
+                //     }
+                // }
                 futureContoller.updateScheduleRec(recordId);
 
                 System.debug('Check Project Manager 1');
@@ -271,7 +396,7 @@ public with sharing class ImportMasterSchedules{
 
                 Map<String, buildertek__Project_Task__c> milestoneList = new Map<String, buildertek__Project_Task__c>();
                 Map<String, buildertek__Project_Task__c> projectTaskList = new Map<String, buildertek__Project_Task__c>();
-                List<buildertek__Project_Task__c> projectTasks = new List<buildertek__Project_Task__c>();
+                List<buildertek__Project_Task__c> projectTasksLs = new List<buildertek__Project_Task__c>();
 
                 //If milestone not created for that Phase, Creates here.
                 List<Project_Task__c> task = [Select Id, Name, buildertek__Phase__c, buildertek__Start__c, buildertek__Schedule__c, buildertek__Milestone__c
@@ -281,14 +406,11 @@ public with sharing class ImportMasterSchedules{
 
                 for (Project_Task__c tasks : task){
                     if (!tasks.buildertek__Milestone__c){
-                        system.debug(tasks.buildertek__Start__c);
                         projectTaskList.put(tasks.buildertek__Phase__c, tasks);
                     } else{
-                        System.debug('Check Project Manager 4');
                         milestoneList.put(tasks.buildertek__Phase__c, tasks);
                     }
                 }
-                system.debug('projectTaskList.values()' + projectTaskList.values());
                 // for (Project_Task__c tasks : projectTaskList.values()){
                 //     system.debug('task' + tasks.buildertek__Start__c);
                 // }
@@ -316,29 +438,16 @@ public with sharing class ImportMasterSchedules{
                              }  */
                             System.debug('Check Project Manager');
                             project.buildertek__Milestone__c = true;
-                            projectTasks.add(project);
+                            projectTasksLs.add(project);
                         }
 
                     }
                 }
-                System.debug('Project Task::' + projectTasks);
+                System.debug('Project Task::' + projectTasksLs);
 
                 // insert projectTasks;
                 //  adding database.insert here
-                Database.SaveResult[] saveResultList2 = Database.insert (projectTasks, false);
-                // for (Database.SaveResult sr : saveResultList2){
-                //     if (sr.isSuccess()){
-                //         // Operation was successful, so get the ID of the record that was processed
-                //         System.debug('Successfully inserted account. Account ID: ' + sr.getId());
-                //     } else{
-                //         // Operation failed, so get all errors
-                //         for (Database.Error err : sr.getErrors()){
-                //             System.debug('The following error has occurred.');
-                //             System.debug(err.getStatusCode() + ': ' + err.getMessage());
-                //             System.debug('Account fields that affected this error: ' + err.getFields());
-                //         }
-                //     }
-                // }
+                Database.SaveResult[] saveResultList2 = Database.insert (projectTasksLs, false);
 
                 futureContoller.updateScheduleRec(recordId);
                 /*   List<buildertek__Project_Task__c> scheduleLinesListToUpdate = new  List<buildertek__Project_Task__c>();
@@ -387,6 +496,17 @@ public with sharing class ImportMasterSchedules{
         @AuraEnabled
         public string Message{ get; set; }
 
+    }
+
+    public static Date getStartDate(Date startDate){
+        DateTime currDate = DateTime.newInstance(startDate.year(), startDate.month(), startDate.day());
+        String todayDay = currDate.format('EEEE');
+        if (todayDay == 'Saturday'){
+            startDate = startDate.addDays(2);
+        } else if (todayDay == 'Sunday'){
+            startDate = startDate.addDays(1);
+        }
+        return startDate;
     }
 
 }

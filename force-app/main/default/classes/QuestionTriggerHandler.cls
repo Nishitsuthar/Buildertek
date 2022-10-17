@@ -30,18 +30,36 @@ public with sharing class QuestionTriggerHandler {
         }
     }
     public void insertOption(buildertek__Question__c[] opt){
-        List<buildertek__Question__c> product=new List<buildertek__Question__c>();
         Set<Id> ProductIds=new Set<Id>();
+        //Map<String,String> mp=new Map<String,String>();
         for(buildertek__Question__c bq:opt){
-            ProductIds.add(bq.buildertek__Product__c);
-        }
-        Product2 prodc=[SELECT id,Name,buildertek__Manufacturer__c from Product2 where id IN :ProductIds];
-        for(buildertek__Question__c b:opt){
-            if(b.buildertek__Product__c!=null){
-                b.Name=prodc.Name;
-                b.buildertek__Manufacturer__c=prodc.buildertek__Manufacturer__c;
+            if (bq.buildertek__Product__c != null) {
+                ProductIds.add(bq.buildertek__Product__c);
             }
-        } 
+        }
+       
+       // 
+        if(!ProductIds.isEmpty()){
+        	System.debug('ProductIds--->'+ProductIds);
+            Map<String,String> mp=new Map<String,String>();
+            List<Product2> lt=[SELECT id,Name,buildertek__Manufacturer__c from Product2 where id IN :ProductIds];
+          //	Product2 prodc=[SELECT id,Name,buildertek__Manufacturer__c from Product2 where id IN :ProductIds];      
+          for(Product2 pd:lt){
+            mp.put(pd.Id,pd.Name);
+            mp.put(pd.buildertek__Manufacturer__c,pd.buildertek__Manufacturer__c);
+          }  
+            for(buildertek__Question__c b:opt){
+                if(b.buildertek__Product__c!=null){
+                    b.Name=mp.get(b.buildertek__Product__c);
+                    System.debug('NAme------------->'+b.Name);
+                    b.buildertek__Manufacturer__c=mp.get(b.buildertek__Manufacturer__c);
+                  //  mp.put(b.id,b.buildertek__Product__c);
+                   // b.Name=prodc.Name;
+                   // b.buildertek__Manufacturer__c=prodc.buildertek__Manufacturer__c;
+                }
+        }
+    }
+        
     }
      
     public void OnBeforeUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap){
@@ -100,7 +118,6 @@ public with sharing class QuestionTriggerHandler {
     }
     
     public void OnAfterDelete(Question__c[] oldQuestions){
-        
         Set<Id> selectionIds = new Set<Id>();
         for(Question__c q:oldQuestions){
             selectionIds.add(q.Section__c);

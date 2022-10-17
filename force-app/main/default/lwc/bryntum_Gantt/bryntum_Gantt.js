@@ -1143,6 +1143,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             value: data[key]
         });
       }
+      console.log('==options==');
       console.log({options});
       this.phaseDates = options;
       console.log('this.phaseDates-->'+this.phaseDates);
@@ -1527,6 +1528,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         this.scheduleItemsData,
         this.scheduleItemsDataList
       );
+      console.log('=== formatedSchData ===');
       console.log({formatedSchData});
 
       // var refVar = formatedSchData;
@@ -1559,7 +1561,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       resourceRowData = formatedSchData["resourceRowData"];
       assignmentRowData = formatedSchData["assignmentRowData"];
 
-      //   console.log("tasks  ==> ", { tasks });
+        console.log("tasks  ==> ", { tasks });
 
       const project = new bryntum.gantt.ProjectModel({
         //enableProgressNotifications : true,
@@ -1602,6 +1604,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               {
                 cls: "b-fa b-fa-plus",
                 onClick: ({ record }) => {
+                  console.log('record ===>'+record);
                   if (record._data.id.indexOf("_generate") == -1) {
                     this.recordTaskParent = record;
                     this.addNewTask(record);

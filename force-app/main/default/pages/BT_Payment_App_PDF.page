@@ -369,13 +369,13 @@ Balfour Beatty Construction3100 McKinnon StreetDallas, Texas 75201
                                             </apex:outputText>
                                         </u> -->
                                             <u>
-                                                <apex:outputField value="{!paymentApp.buildertek__Retainage_of_Completed_Work_F__c}" />
+                                                <apex:outputField value="{!paymentApp.Retainage_of_Completed_Work_F__c}" />
                                             </u>
                                         </div>
                                         <br/>
                                         <div class="a" style="font-size:10.5px">
                                             <u>
-                                                <apex:outputField value="{!paymentApp.buildertek__Retainage_of_Stored_Material_F__c}" />
+                                                <apex:outputField value="{!paymentApp.Retainage_of_Stored_Material_F__c}" />
                                             </u>
                                         </div>
                                         <div class="a" style="font-size:10.5px;padding-top:10px">
@@ -385,7 +385,7 @@ Balfour Beatty Construction3100 McKinnon StreetDallas, Texas 75201
                                                 </apex:outputText>
                                             </u> -->
                                             <u>
-                                                <apex:outputField value="{!paymentApp.buildertek__Total_Retainage__c}" />
+                                                <apex:outputField value="{!paymentApp.Total_Retainage__c}" />
                                             </u>
                                         </div>
                                     </td>

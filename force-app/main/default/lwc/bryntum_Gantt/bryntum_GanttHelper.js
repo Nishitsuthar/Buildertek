@@ -525,6 +525,10 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
     formattedData['resourceRowData'] = resourceRowData;
     formattedData['assignmentRowData'] = assignmentRowData
     formattedData['taskDependencyData'] = taskDependencyData;
+    console.log('rows ==> '+rows);
+    console.log('resourceRowData ==> '+resourceRowData);
+    console.log('assignmentRowData ==> '+assignmentRowData);
+    console.log('taskDependencyData ==> '+taskDependencyData);
     return formattedData;
 }
 

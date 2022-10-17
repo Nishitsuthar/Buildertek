@@ -1,4 +1,3 @@
-
 @isTest
 public class createCO_selectionType_Test {
 
