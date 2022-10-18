@@ -20,6 +20,9 @@
     </aura:if>
 
     <aura:html tag="style">
+        .container{
+            height: auto !important;
+        }
         .slds-modal__content {
             overflow: hidden !important;
         }

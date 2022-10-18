@@ -26,21 +26,23 @@
     <div style = "position : sticky; top:5.6rem; background : white; z-index : 1">
 
         <lightning:layout multipleRows="true" class="searchbarList">
+
+            <lightning:layoutItem padding="around-small" size="3"> 
+                <lightning:input autocomplete="off" type="search" placeholder="Search Product Family" variant="label-hidden" value="{!v.searchFamilyFilter}"  />
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem padding="around-small" size="3">
+                <lightning:input autocomplete="off" type="search" placeholder="Search Product Type" variant="label-hidden" value="{!v.searchTypeFilter}" />
+            </lightning:layoutItem>
+
             <lightning:layoutItem padding="around-small" size="3">
                 <lightning:input autocomplete="off" type="search" placeholder="Search Product Name" variant="label-hidden" value="{!v.searchNameFilter}" />
             </lightning:layoutItem>
 
             <lightning:layoutItem padding="around-small" size="3">
-                <lightning:input autocomplete="off" type="search" placeholder="Search Product Type" variant="label-hidden" value="{!v.searchTypeFilter}" />
-            </lightning:layoutItem>
-            
-            <lightning:layoutItem padding="around-small" size="3">
                 <lightning:input autocomplete="off" type="search" placeholder="Search Manufacturer" variant="label-hidden" value="{!v.searchManufacturerFilter}" />
             </lightning:layoutItem>
 
-            <lightning:layoutItem padding="around-small" size="3"> 
-                <lightning:input autocomplete="off" type="search" placeholder="Search Product Family" variant="label-hidden" value="{!v.searchFamilyFilter}"  />
-            </lightning:layoutItem>
         </lightning:layout>
 
         <aura:if isTrue="{!v.isModalOpen}">
@@ -52,59 +54,40 @@
                     </header>
                     <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
 
-                        <!-- <aura:if isTrue="{!v.firstModal}"> -->
-                            <aura:if isTrue="{!v.nullPricebook}">
-                                There Are No PriceBook In This Product
-                                <aura:set attribute="else">
-    
-                                    <table class="slds-table slds-table_bordered slds-table_fixed-layout " role="grid">
-                                        <thead>
-                                            <tr class="slds-text-title_caps">
-                                                <!-- <th style="width: 30px;"> </th> -->
-                                                <th> Pricebook Name </th>
-                                                <th> Unit Price </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class = "slds-scrollable">
-                                            <aura:iteration items="{!v.pricebookList}" var="pricebook">
-                    
+                        <aura:if isTrue="{!v.nullPricebook}">
+                            There Are No PriceBook In This Product
+                            <aura:set attribute="else">
+
+                                <table class="slds-table slds-table_bordered slds-table_fixed-layout " role="grid">
+                                    <thead>
+                                        <tr class="slds-text-title_caps">
+                                            <th> Pricebook Name </th>
+                                            <th> Unit Price </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class = "slds-scrollable">
+                                        <aura:iteration items="{!v.pricebookList}" var="pricebook">
+                
                                             <tr>
-                                                <!-- <td>
-                                                    <ui:inputRadio name="pricebook" change="{!c.selectPriceBook}" text="{!pricebook.Id}" />
-                                                </td> -->
                                                 <td> 
-                                                 
                                                     {!pricebook.Name}
                                                 </td>
                                                 <td> 
                                                     {!pricebook.UnitPrice}
                                                 </td>
                                             </tr>
-                    
-                                            </aura:iteration>
-                                        </tbody>
-                                    </table>
-    
-                                </aura:set>
-                            </aura:if>
+                
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
 
-                            <!-- <aura:set attribute="else" >
-                                Second Modal
                             </aura:set>
-                        </aura:if> -->
+                        </aura:if>
                        
                     </div>
                     <footer class="slds-modal__footer">
                         <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModel}"/>
                         <lightning:button variant="brand" label="Upgrade" onclick="{!c.onUpgrade}"/>
-                        
-                        <!-- <aura:if isTrue="{!v.firstModal}" >
-                            <lightning:button variant="brand" label="Next" onclick="{!c.onNext}"/>
-                            <aura:set attribute="else" >
-                                <lightning:button variant="brand" label="Save" onclick="{!c.onSave}"/>
-                            </aura:set>
-                        </aura:if> -->
-                        
                     </footer>
                 </div>
             </section>
@@ -118,11 +101,12 @@
                 <table class="slds-table slds-table_bordered slds-table_fixed-layout " role="grid">
                     <thead>
                         <tr class="slds-text-title_caps">
-                            <th> Product Name </th>
-                            <th> Product Type </th>
-                            <th> Manufacturer </th>
+                            <th> Product Image </th>
                             <th> Product Family </th>
                             <th> Category </th>
+                            <th> Product Type </th>
+                            <th> Product Name </th>
+                            <th> Manufacturer </th>
                             <th> </th>
                         </tr>
                     </thead>
@@ -130,21 +114,22 @@
                         <aura:iteration items="{!v.productList}" var="Product" indexVar="index">
 
                         <tr>
-                            <td> 
-                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ Product.Id + '/view'}" target="_blank" label="{!Product.Name}" />
-                            </td>
-                            <td> 
-                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ Product.buildertek__Product_Type__c + '/view'}" target="_blank" label="{!Product.buildertek__Product_Type__r.Name}" />
-                            </td>
-                            <td>  
-                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ Product.buildertek__Manufacturer__c + '/view'}" target="_blank" label="{!Product.buildertek__Manufacturer__r.Name}" />
-                            </td>
+                            <td>  </td>
                             <td> {!Product.Family} </td>
                             <td> 
                                 <ui:outputURL value="{!'/one/one.app?#/sObject/'+ Product.buildertek__Category__c + '/view'}" target="_blank" label="{!Product.buildertek__Category__r.Name}" />
                             </td>
                             <td> 
-                                <lightning:button variant="brand" label="Update Record" onclick="{!c.handleClick}" value="{!index}" />    
+                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ Product.buildertek__Product_Type__c + '/view'}" target="_blank" label="{!Product.buildertek__Product_Type__r.Name}" />
+                            </td>
+                            <td> 
+                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ Product.Id + '/view'}" target="_blank" label="{!Product.Name}" />
+                            </td>
+                            <td>  
+                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ Product.buildertek__Manufacturer__c + '/view'}" target="_blank" label="{!Product.buildertek__Manufacturer__r.Name}" />
+                            </td>
+                            <td> 
+                                <lightning:button variant="brand" label="Update" onclick="{!c.handleClick}" value="{!index}" />    
                             </td>
                         </tr>
 

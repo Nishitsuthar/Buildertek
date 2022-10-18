@@ -18,6 +18,7 @@ public with sharing class QuestionTriggerHandler {
     }
     
     public void OnBeforeInsert(Question__c[] newQuestions){
+        Set<Id> OptionIds=new Set<Id>();
         for(Question__c q : newQuestions){
             if (q.buildertek__Product__c != null) {
                 Product2 prod = [SELECT Id, Name, (SELECT UnitPrice FROM PricebookEntries WHERE IsActive = True) FROM Product2 WHERE Id =: q.buildertek__Product__c];
@@ -26,40 +27,29 @@ public with sharing class QuestionTriggerHandler {
                         q.buildertek__Cost__c = prod.PricebookEntries[0].UnitPrice;
                     }
                 }
+                OptionIds.add(q.buildertek__Product__c);
             }
         }
-    }
-    public void insertOption(buildertek__Question__c[] opt){
-        Set<Id> ProductIds=new Set<Id>();
-        //Map<String,String> mp=new Map<String,String>();
-        for(buildertek__Question__c bq:opt){
-            if (bq.buildertek__Product__c != null) {
-                ProductIds.add(bq.buildertek__Product__c);
-            }
-        }
-       
-       // 
-        if(!ProductIds.isEmpty()){
-        	System.debug('ProductIds--->'+ProductIds);
-            Map<String,String> mp=new Map<String,String>();
-            List<Product2> lt=[SELECT id,Name,buildertek__Manufacturer__c from Product2 where id IN :ProductIds];
-          //	Product2 prodc=[SELECT id,Name,buildertek__Manufacturer__c from Product2 where id IN :ProductIds];      
-          for(Product2 pd:lt){
-            mp.put(pd.Id,pd.Name);
-            mp.put(pd.buildertek__Manufacturer__c,pd.buildertek__Manufacturer__c);
-          }  
-            for(buildertek__Question__c b:opt){
-                if(b.buildertek__Product__c!=null){
-                    b.Name=mp.get(b.buildertek__Product__c);
-                    System.debug('NAme------------->'+b.Name);
-                    b.buildertek__Manufacturer__c=mp.get(b.buildertek__Manufacturer__c);
-                  //  mp.put(b.id,b.buildertek__Product__c);
-                   // b.Name=prodc.Name;
-                   // b.buildertek__Manufacturer__c=prodc.buildertek__Manufacturer__c;
-                }
-        }
-    }
         
+        // For Ticket BUIL-2789
+        if(!OptionIds.isEmpty()){
+        	System.debug('OptionIds--->'+OptionIds);
+            Map<Id,Product2> ProductMap = new Map<Id,Product2>();
+            List<Product2> ProductList = [SELECT id,Name,buildertek__Manufacturer__c FROM Product2 WHERE Id IN :OptionIds];    
+            for(Product2 product : ProductList){
+                ProductMap.put(product.Id, product);
+                System.debug('Id--->'+product.Id);
+                System.debug('Before Name--->'+product.Name);
+            }  
+            for(buildertek__Question__c option : newQuestions){
+                if(option.buildertek__Product__c != null){
+                    option.Name = ProductMap.get(option.buildertek__Product__c).Name;
+                    option.buildertek__Manufacturer__c = ProductMap.get(option.buildertek__Product__c).buildertek__Manufacturer__c;
+                    System.debug('After Name------->'+option.Name);
+                    System.debug('Manufacturer--->'+option.buildertek__Manufacturer__c);
+                }
+            }
+        }
     }
      
     public void OnBeforeUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap){

@@ -1,20 +1,20 @@
-<aura:component controller="createCO_selectionType"
-    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader"
-    access="global">
-    <aura:attribute name="Spinner" type="Boolean" default="false"/>
+<aura:component
+	implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader"
+	access="global" controller="createCO_selectionType">
+	<!-- attributes -->
+	<aura:attribute name="myData" type="Object" />
+	<aura:attribute name="myColumns" type="List" />
+	
+	<aura:attribute name="changeOrder" type="Change_Order__c" default="{'sobjectType':'Change_Order__c',
+                                                                        'Name':'',
+                                                                        'buildertek__Due_Date__c':''}" />
+	<aura:attribute name="selectedRowList" type="object" default="" />
+	<aura:attribute name="Spinner" type="Boolean" default="false"/>
 
-    <!-- <aura:attribute name="purchanseOrder" type="buildertek__Vendor__c"/> -->
+	<!-- handlers-->
+	<aura:handler name="init" value="{! this }" action="{! c.init }" />
 
-    <aura:attribute name="recordId" type="String" />
-    <aura:attribute name="selectionTypeId" type="String" />
-    <aura:attribute name="purchaseOrder" type="String" />
-
-    <aura:attribute name="changeOrder" type="Change_Order__c" default="{'sobjectType':'Change_Order__c',
-    'Name':'',
-    'buildertek__Details__c':'',
-    'buildertek__Due_Date__c':''}" />
-
-    <aura:if isTrue="{!v.Spinner}">
+	<aura:if isTrue="{!v.Spinner}">
         <div aura:id="spinnerId" class="slds-spinner_container">
             <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
                 <span class="slds-assistive-text">Loading</span>
@@ -22,60 +22,53 @@
                 <div class="slds-spinner__dot-b"></div>
             </div>
         </div>
-    </aura:if>  
-    <aura:html tag="style">
-        .slds-modal__content {
-        overflow: hidden !important;
-        }
-        .slds-modal__close{
-        display:block !important;
-        }
-        .slds-docked-form-footer{
-        bottom: auto;
-        }
-        .slds-p-around--medium{
-        padding: 0;
-        }
-        .forceChatterBasePublisher :not(.PHONE) .cuf-content{
-        padding: 0;
-        }
-    </aura:html>
-    <div class="slds-modal__content">
-        <div class="slds">
-            <header class="slds-modal__header">
-                <div class="" id="header" style="font-size:20px;">
-                    Create Change Order
+    </aura:if> 
+
+	<ltng:require styles="{!$Resource.ModalPreviewCSS}" />
+	<aura:html tag="style">
+		.container{ height: auto !important; } .slds-modal__content { overflow:
+		hidden !important; } .slds-modal__close{ display:block !important; }
+		.slds-docked-form-footer{ bottom: auto; } .slds-p-around--medium{ padding:
+		0; } .forceChatterBasePublisher :not(.PHONE) .cuf-content{ padding: 0; }
+		.modalBodyDiv{ text-align: center; font-weight: 600; line-height: 10rem;
+		font-size: 18px; }
+	</aura:html>
+	<!-- the container element determine the height of the datatable -->
+
+	<div class="slds-modal__content" style="min-height: 50px">
+		<div class="slds">
+			<header class="slds-modal__header">
+				<div class="" id="header" style="font-size: 20px">
+					Create Change Order
+				</div>
+			</header>
+			<div style="max-height: 75vh;overflow:auto;">
+				<!-- Default/basic -->
+				<div style="padding: 10px 10px 0px;">
+                    <lightning:recordEditForm objectApiName="buildertek__Change_Order__c">
+                        <lightning:inputField fieldName="Name" value="{!v.changeOrder.Name}" required = "true"/>
+                        <lightning:inputField fieldName="buildertek__Due_Date__c" value="{!v.changeOrder.buildertek__Due_Date__c}" />
+                    </lightning:recordEditForm>
                 </div>
-            </header>
-        </div>
-    </div>
-    <div class="slds-var-m-around_medium">
-        <!-- <lightning:recordEditForm objectApiName="buildertek__Purchase_Order__c" >
-        <lightning:inputField fieldName="buildertek__Vendor__c" value='{!v.purchaseOrder}' />
 
-        </lightning:recordEditForm> -->
-
-        <lightning:recordEditForm objectApiName="buildertek__Change_Order__c">
-            <lightning:inputField fieldName="Name" value="{!v.changeOrder.Name}" />
-            <lightning:inputField fieldName="buildertek__Details__c" value="{!v.changeOrder.buildertek__Details__c}" />
-            <lightning:inputField fieldName="buildertek__Due_Date__c"
-                value="{!v.changeOrder.buildertek__Due_Date__c}" />
-            <!-- <lightning:inputField fieldName="buildertek__Status__c" value="{!v.changeOrder.buildertek__Status__c}" />
-        <lightning:inputField fieldName="buildertek__Type__c" value="{!v.changeOrder.buildertek__Type__c}" />
-        <lightning:inputField fieldName="buildertek__Date_Created__c" value="{!v.changeOrder.buildertek__Date_Created__c}" /> -->
-
-
-        </lightning:recordEditForm>
-
-        <!-- <lightning:input type="text" label="Name" name="Name" value="{!v.changeOrder.Name}" />
-    <lightning:input type="text" label="Notes" name="Details" value="{!v.changeOrder.buildertek__Details__c}" />
-    <lightning:input type="date" label="Due Date" name="Due date" value="{!v.changeOrder.buildertek__Due_Date__c}" />
-    <br/>
-    <br/> -->
-    </div>
-    <footer role="contentinfo" class="slds-docked-form-footer fixedFooter"
-        style="display:block;text-align:right;padding-right:5px;">
-        <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn" />
-        <lightning:button variant="brand" label="Create" title="Save" onclick="{!c.createRecord}" class="myBtn2" />
-    </footer>
+				<div style="padding: 0 0.7rem">
+					<lightning:datatable columns="{! v.myColumns }" data="{! v.myData }" keyField="id" selectedRows="{!v.selectedRows}" onrowselection="{!c.updateSelectedText}"
+						 />
+					<aura:if isTrue="{!empty(v.myData)}">
+						<div class="modalBodyDiv">No Data Found</div>
+					</aura:if>
+				</div>
+			</div>
+			<footer role="contentinfo" class="slds-docked-form-footer fixedFooter"
+				style="display: block; text-align: right; padding-right: 5px">
+				<button class="slds-button slds-button--neutral" onclick="{!c.closeModal}">
+					Cancel
+				</button>
+				<button class="slds-button slds-button--brand" onclick="{!c.createRecord}"
+					style="margin: 0 0.5rem">
+					Create
+				</button>
+			</footer>
+		</div>
+	</div>
 </aura:component>
