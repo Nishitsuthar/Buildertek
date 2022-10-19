@@ -210,7 +210,7 @@ public class BT_NewGanttChartCls {
         dataTableDtls.profileName = profileName;
         //BT_FormatGanttData formatsch = new BT_FormatGanttData();
         //dataTableDtls.ganttJSON = BT_FormatGanttData.formatScheduleData(dataTableDtls.lstOfSObjs,dataTableDtls.scheduleObj);
-        
+        System.debug('dataTable :: '+dataTableDtls);
         return dataTableDtls;
     } 
 
@@ -326,6 +326,8 @@ public class BT_NewGanttChartCls {
                     system.debug(insertMilestoneForUpdatedTaskWithPhase);
                 }
             }
+            System.debug('start date for updated Project Task ==> '+updatedprojecttask.buildertek__Start__c);
+            System.debug('end date for updated Project Task ==> '+updatedprojecttask.buildertek__Finish__c);
             update updatedprojecttask;
             return updatedprojecttask;
         }else{
@@ -359,7 +361,9 @@ public class BT_NewGanttChartCls {
                 }
             }
             
-            system.debug(updatedprojecttask);
+            system.debug('start date in else condition ==> '+updatedprojecttask.buildertek__Start__c);
+            system.debug('end date in else condition ==> '+updatedprojecttask.buildertek__Finish__c);
+            system.debug('lag in else condition ==> '+updatedprojecttask.buildertek__Lag__c);
             newTask.Name = updatedprojecttask.Name;
             newTask.buildertek__Dependency__c = updatedprojecttask.buildertek__Dependency__c;
             newTask.buildertek__Start__c = updatedprojecttask.buildertek__Start__c;

@@ -554,6 +554,7 @@ function saveeditRecordMethod(event,thisVal){
     }
     //that.isLoaded = false
     if(thisVal.newTaskRecordCreate.Name){
+        debugger
         var added;
         //thisVal.isLoaded = true
         thisVal.showEditPopup = false;
