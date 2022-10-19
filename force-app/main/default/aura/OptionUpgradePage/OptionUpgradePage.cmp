@@ -4,26 +4,43 @@
     <lightning:workspaceAPI aura:id="workspace"/>
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute name="recordId" type="String" />
-    <aura:attribute name="productList" type="Object" />
-    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
-    <aura:attribute name="nullPricebook" type="boolean" default="false"/>
-    <aura:attribute name="pricebookList" type="Object" />
-    <aura:attribute name="selectedPricebook" type="String" />
-    <aura:attribute name="firstModal" type="boolean" default="true" />
+    <aura:attribute name="optionWrapper" type="Object" />
+    <aura:attribute name="productWrapper" type="Object" />
+    <aura:attribute name="optionValue" type="Object" />
+    <aura:attribute name="productValue" type="Object" />
+    <aura:attribute name="isModalOpen" type="Boolean" default="false"/>
+    <aura:attribute name="nullPricebook" type="Boolean" default="false"/>
+    <aura:attribute name="nullProduct" type="Boolean" default="false" />
+    <aura:attribute name="Spinner" type="Boolean" default="false"/>
+    <aura:attribute name="totalPage" type="Integer" />
+    <aura:attribute name="pageNumber" type="Integer" default="1" />
+    <aura:attribute name="disableBtn" type="Boolean" default="false" />
 
-    <aura:attribute name="searchNameFilter" type="String" default="" />
-    <aura:handler name="change" value="{!v.searchNameFilter}" action="{!c.doSearch}" />
+    <aura:attribute name="searchFamilyFilter" type="String" default="" />
+    <aura:handler name="change" value="{!v.searchFamilyFilter}" action="{!c.doSearch}" />
 
     <aura:attribute name="searchTypeFilter" type="String" default="" />
     <aura:handler name="change" value="{!v.searchTypeFilter}" action="{!c.doSearch}" />
+
+    <aura:attribute name="searchNameFilter" type="String" default="" />
+    <aura:handler name="change" value="{!v.searchNameFilter}" action="{!c.doSearch}" />
     
     <aura:attribute name="searchManufacturerFilter" type="String" default="" />
     <aura:handler name="change" value="{!v.searchManufacturerFilter}" action="{!c.doSearch}" />
     
-    <aura:attribute name="searchFamilyFilter" type="String" default="" />
-    <aura:handler name="change" value="{!v.searchFamilyFilter}" action="{!c.doSearch}" />
+    
 
-    <div style = "position : sticky; top:5.6rem; background : white; z-index : 1">
+    <div class="mainDiv">
+
+        <aura:if isTrue="{!v.Spinner}">
+            <div aura:id="spinnerId" class="slds-spinner_container">
+                <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </aura:if>
 
         <lightning:layout multipleRows="true" class="searchbarList">
 
@@ -58,28 +75,65 @@
                             There Are No PriceBook In This Product
                             <aura:set attribute="else">
 
-                                <table class="slds-table slds-table_bordered slds-table_fixed-layout " role="grid">
-                                    <thead>
-                                        <tr class="slds-text-title_caps">
-                                            <th> Pricebook Name </th>
-                                            <th> Unit Price </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class = "slds-scrollable">
-                                        <aura:iteration items="{!v.pricebookList}" var="pricebook">
-                
+                                <div>
+                                    <div class="optionTitle">
+                                        Original Option
+                                    </div>
+                                    <table class="slds-table slds-table_bordered slds-table_fixed-layout " role="grid">
+                                        <thead>
+                                            <tr class="slds-text-title_caps">
+                                                <th> Product Name </th>
+                                                <th> Manufacturer </th>
+                                                <th> Sales Price </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class = "slds-scrollable">
                                             <tr>
                                                 <td> 
-                                                    {!pricebook.Name}
+                                                    <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.optionValue.buildertek__Product__c + '/view'}" target="_blank" label="{!v.optionValue.buildertek__Product__r.Name}" />
                                                 </td>
-                                                <td> 
-                                                    {!pricebook.UnitPrice}
+                                                <td>  
+                                                    <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.optionValue.buildertek__Manufacturer__c + '/view'}" target="_blank" label="{!v.optionValue.buildertek__Manufacturer__r.Name}" />
+                                                </td>
+                                                <td>
+                                                    {!v.optionValue.buildertek__Cost__c}
                                                 </td>
                                             </tr>
-                
-                                        </aura:iteration>
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                    
+                                <div>
+                                    <div class="optionTitle" style="padding-top: 30px;">
+                                        New Option
+                                    </div>
+                                    <table class="slds-table slds-table_bordered slds-table_fixed-layout " role="grid">
+                                        <thead>
+                                            <tr class="slds-text-title_caps">
+                                                <th> Product Name </th>
+                                                <th> Manufacturer </th>
+                                                <th> Sales Price </th>
+                                                <th> Upgrade Cost </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class = "slds-scrollable">
+                                            <tr>
+                                                <td> 
+                                                    <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.productValue.Id + '/view'}" target="_blank" label="{!v.productValue.Name}" />
+                                                </td>
+                                                <td>  
+                                                    <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.productValue.buildertek__Manufacturer__c + '/view'}" target="_blank" label="{!v.productValue.buildertek__Manufacturer__r.Name}" />
+                                                </td>
+                                                <td>
+                                                    {!v.optionValue.buildertek__Cost__c}
+                                                </td>
+                                                <td>
+                                                    {!v.optionValue.buildertek__Upgrade_Costs__c}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
 
                             </aura:set>
                         </aura:if>
@@ -111,22 +165,29 @@
                         </tr>
                     </thead>
                     <tbody class = "slds-scrollable">
-                        <aura:iteration items="{!v.productList}" var="Product" indexVar="index">
+                        <aura:iteration items="{!v.productWrapper}" var="ProductWrap" indexVar="index">
 
                         <tr>
-                            <td>  </td>
-                            <td> {!Product.Family} </td>
+                            <td class="prodImg"> 
+                                <lightning:carousel disableAutoRefresh="false" disableAutoScroll="true">
+                                    <aura:iteration items="{!ProductWrap.contentDocsList}" var="contentDocs">
+                                        <lightning:carouselImage src="{!'https://btservice360-dev-ed.lightning.force.com/sfc/servlet.shepherd/document/download/'+contentDocs.ContentDocumentId}">
+                                        </lightning:carouselImage>
+                                    </aura:iteration>
+                                </lightning:carousel>    
+                            </td>
+                            <td> {!ProductWrap.product.Family} </td>
                             <td> 
-                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ Product.buildertek__Category__c + '/view'}" target="_blank" label="{!Product.buildertek__Category__r.Name}" />
+                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ ProductWrap.product.buildertek__Category__c + '/view'}" target="_blank" label="{!ProductWrap.product.buildertek__Category__r.Name}" />
                             </td>
                             <td> 
-                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ Product.buildertek__Product_Type__c + '/view'}" target="_blank" label="{!Product.buildertek__Product_Type__r.Name}" />
+                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ ProductWrap.product.buildertek__Product_Type__c + '/view'}" target="_blank" label="{!ProductWrap.product.buildertek__Product_Type__r.Name}" />
                             </td>
                             <td> 
-                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ Product.Id + '/view'}" target="_blank" label="{!Product.Name}" />
+                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ ProductWrap.product.Id + '/view'}" target="_blank" label="{!ProductWrap.product.Name}" />
                             </td>
                             <td>  
-                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ Product.buildertek__Manufacturer__c + '/view'}" target="_blank" label="{!Product.buildertek__Manufacturer__r.Name}" />
+                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ ProductWrap.product.buildertek__Manufacturer__c + '/view'}" target="_blank" label="{!ProductWrap.product.buildertek__Manufacturer__r.Name}" />
                             </td>
                             <td> 
                                 <lightning:button variant="brand" label="Update" onclick="{!c.handleClick}" value="{!index}" />    
@@ -134,11 +195,28 @@
                         </tr>
 
                         </aura:iteration>
+
                     </tbody>
                 </table>
 
+                <aura:if isTrue="{!v.nullProduct}">
+                    <div class="blankProd">
+                        There Are No Product On Releated Selection Category
+                    </div>
+                </aura:if>
+
             </div>
         </div>
+
+        <aura:if isTrue="{!!v.nullProduct}">
+            <div class="btnDiv">
+                
+                <!-- <lightning:button variant="brand" label="Previous" onclick="{!c.onPrevious}" disabled="{!v.pageNumber == 1}" /> -->
+                <lightning:button variant="brand" label="Previous" onclick="{!c.onPrevious}" disabled="{!or(v.pageNumber == 1, v.disableBtn)}" />
+                <!-- <lightning:button variant="brand" label="Next" onclick="{!c.onNext}" disabled="{!v.totalPage == v.pageNumber}" /> -->
+                <lightning:button variant="brand" label="Next" onclick="{!c.onNext}" disabled="{!or(v.totalPage == v.pageNumber, v.disableBtn)}" />
+            </div>
+        </aura:if>
 
     </div>
 

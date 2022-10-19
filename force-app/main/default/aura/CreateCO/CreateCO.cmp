@@ -27,6 +27,11 @@
         .slds-modal__close{
             display:block !important;    
         }
+        .slds-modal__container{
+            max-width: 40rem !important;
+            width:50% !important;
+          
+          }
         .slds-docked-form-footer{
             bottom: auto;
         }

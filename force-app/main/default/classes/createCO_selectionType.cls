@@ -52,6 +52,7 @@ public with sharing class createCO_selectionType {
         coData.buildertek__Project__c = selectedRowList[0].buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c;
         coData.buildertek__Status__c = 'Pending';
         coData.buildertek__Type__c = 'Customer';
+        System.debug('coData project :: '+coData.buildertek__project__c);
         insert coData;
 
         Map<Id, buildertek__Change_Order_Item__c> coItemMap = new Map<Id, buildertek__Change_Order_Item__c>();

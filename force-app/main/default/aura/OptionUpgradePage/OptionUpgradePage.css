@@ -1,2 +1,35 @@
-.THIS {
+.THIS.mainDiv{
+    position: sticky; 
+    top: 5.6rem; 
+    background: white; 
+    z-index: 1;
+}
+
+.THIS.mainDiv td{
+    overflow: hidden;
+}
+
+.THIS .prodImg .slds-carousel__content {
+    height: auto;
+    padding: initial;
+}
+
+.THIS .blankProd{
+    text-align: center;
+    padding: 3rem;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.THIS .optionTitle{
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.THIS .btnDiv{
+    padding: 10px;
+    display: flex;
+    justify-content: center;
 }
