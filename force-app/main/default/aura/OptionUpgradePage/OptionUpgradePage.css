@@ -9,9 +9,21 @@
     overflow: hidden;
 }
 
+.THIS .mainTableBody td{
+    height: 7rem;
+}
+
 .THIS .prodImg .slds-carousel__content {
     height: auto;
     padding: initial;
+}
+
+.THIS .prodImg .slds-carousel__stage{
+    width: 7rem;
+}
+
+.THIS .prodImg .slds-text-link_reset{
+    width: 7rem;
 }
 
 .THIS .blankProd{
@@ -32,4 +44,10 @@
     padding: 10px;
     display: flex;
     justify-content: center;
+}
+
+.THIS .noImageDiv{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
 }

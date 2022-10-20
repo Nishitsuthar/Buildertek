@@ -6,6 +6,7 @@
     <aura:attribute name="currencycode" type="String" />
     <aura:attribute name="multicurrency" type="Boolean" />
     <aura:attribute name="productfamily" type="string" />
+    <aura:attribute name="Description" type="string" />
     <aura:attribute name="UOMvalues" type="string" />
     <aura:attribute name="quoteGroupName" type="string" />
     <aura:attribute name="quoteGroupNameDescription" type="string" />
@@ -351,6 +352,8 @@
                                         <lightning:input value="{!v.newQuote.buildertek__Markup__c}" label="Markup"
                                             aura:id="markUpId" type="number" step="0.01" />
                                     </div>
+                                    
+                                    
                                 </div>
                                 <div class="slds-grid slds-gutters">
                                     <div class="slds-col slds-size_6-of-12">
@@ -363,6 +366,11 @@
                                                     {!option.productfamilyvalues}</option>
                                             </aura:iteration>
                                         </ui:inputSelect>
+                                    </div>
+                                    <div class="slds-col slds-size_6-of-12">
+                                        <lightning:input type="text" label="Description"
+                                            value="{!v.newQuote.buildertek__Description__c}"
+                                            required="true" />
                                     </div>
                                     <div class="slds-col slds-size_6-of-12">
                                         <label class="slds-form-element__label">Grouping</label>
@@ -378,6 +386,7 @@
                                             selectedRecord="{!v.selectedLookUpRecord}" aura:id="productId"
                                             parentId="{! v.pricebookName }" prodctfamly="{!v.productfamily}" />
                                     </div>
+                                    
                                     <div class="slds-col slds-size_6-of-12">
                                         <label class="slds-form-element__label">UOM</label>
                                         <br />
@@ -556,9 +565,9 @@
                                         <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
                                             <div class="slds-truncate" title="Product">Product</div>
                                         </th>
-                                        <!-- <th style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
+                                         <th style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
                                             <div class="slds-truncate" title="Description">Description</div>
-                                        </th> -->
+                                        </th>
                                         <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;  ">
                                             <div class="slds-truncate" title="Grouping">Grouping</div>
                                         </th>
@@ -614,10 +623,14 @@
                                             <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID" />
                                         </td> -->
                                         <td>
+                                            <ui:inputText value="{!v.newQuote.buildertek__Description__c}" />
+                                        </td>
+                                        <td>
                                             <c:BT_LookUp aura:id="groupId" _field="buildertek__Grouping__c"
                                                 _sobject="buildertek__Quote_Item__c"
                                                 _value="{!v.newQuote.buildertek__Grouping__c}" _label="" _filter="" />
                                         </td>
+                                        
                                         <!-- <td>
                                             <ui:inputSelect value="{! v.newQuote.buildertek__UOM__c }" class="select-class">
                                                 <aura:iteration var="option" items="{! v.options }">
@@ -1379,9 +1392,9 @@
                                                 <th style="width: 100px; padding-left: 12px">
                                                     List Price
                                                 </th>
-                                                <!--    <th style = "width: 100px; padding-left: 10px">
-                                                    Sales Price
-                                                </th> -->
+                                                <th style = "width: 100px; padding-left: 10px">
+                                                    Description
+                                                </th>
                                                 <th style="width: 200px; padding-left: 10px">
                                                     Grouping
                                                 </th>
@@ -1454,7 +1467,6 @@
                                                         </lightning:select>
                                                     </td>
                                                     <td>
-
                                                         <lightning:input name="input4" label=""
                                                             value="{!item.buildertek__Quantity__c}" />
                                                     </td>

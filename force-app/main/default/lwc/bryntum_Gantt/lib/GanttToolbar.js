@@ -437,11 +437,11 @@ export default base => class GanttToolbar extends base {
                     updateData['Name'] = rowData[i]['name']
                     updateData['buildertek__Order__c'] = i+1;
                     //var startdate = new Date(rowData[i]['startDate'])
-                    console.log('test',new Date(rowData[i]['endDate']).toLocaleDateString())
+                    // console.log('test',new Date(rowData[i]['endDate']).toLocaleDateString())
                     var enddate = new Date(rowData[i]['endDate']).toLocaleDateString().split('/')
                     //var enddate = new Date(rowData[i]['endDate']).toJSON();
                     var enddate = new Date(rowData[i]['endDate'])
-                    console.log('test', rowData[i]['startDate'])
+                    // console.log('test', rowData[i]['startDate'])
                     updateData['buildertek__Start__c'] = rowData[i]['startDate'].split('T')[0]
                     //updateData['buildertek__Finish__c'] = enddate[2] + '-'+ enddate[1] + '-'+enddate[0]
                     //updateData['buildertek__Finish__c'] = enddate.split('T')[0]
@@ -463,7 +463,7 @@ export default base => class GanttToolbar extends base {
                     }
                     //updateData['buildertek__Indent_Task__c'] = rowData[i]['iconCls'].includes('indentTrue')
                     if(rowData[i]['parentId']){
-                        console.log(rowData[i]['parentId'])
+                        // console.log(rowData[i]['parentId'])
                         if(rowData[i]['parentId'].split('_')[1]){
                             updateData['buildertek__Phase__c'] = rowData[i]['parentId'].split('_')[1]
                         }
@@ -471,7 +471,7 @@ export default base => class GanttToolbar extends base {
                     
                     if(rowData[i]['id']){
                         var taskbyid = this.gantt.taskStore.getById(rowData[i]['id'])._data
-                        console.log(taskbyid)
+                        // console.log(taskbyid)
                         if(!taskbyid.predecessor){
                             updateData['buildertek__Dependency__c'] = null;
                         }
@@ -492,7 +492,7 @@ export default base => class GanttToolbar extends base {
                         }
                     }
                     updateDataClone = Object.assign({},updateData);
-                    console.log(updateDataClone);
+                    // console.log(updateDataClone);
                     for(var j=0;j<resourceData.length;j++){
                         if(resourceData[j]['event'] == rowData[i]['id']){
                             if(resourceData[j]['id'].indexOf('ContractorResource') >= 0){
@@ -516,6 +516,8 @@ export default base => class GanttToolbar extends base {
                     updateDataList.push(updateData)
                 }
                 
+                console.log('=============================================================================');
+                console.log('updateDataList ==> ',{updateDataList});
                         
                 if(this.gantt.callGanttComponent){
                     if(this.gantt.callGanttComponent.scheduleData){

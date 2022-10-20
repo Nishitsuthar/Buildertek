@@ -1501,6 +1501,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       console.log({phaseDateList});
       var scheduleDataList = this.scheduleItemsDataList;
       // console.log({scheduleDataList});
+      console.log('------------------------------------------------------------------');
+      console.log('scheduleDataList ==> ', {scheduleDataList});
 
       for (var key in scheduleDataList) {
         if (scheduleDataList[key].buildertek__Milestone__c == true) {
@@ -1790,8 +1792,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   record.record._data.type != "Task" &&
                   record.record._data.name != "Milestone Complete"
                 ) {
-                  console.log('In phase');
-                  console.log({record});
+                //   console.log('In phase');
+                //   console.log({record});
                     // console.log('In elseif(1) conditon for enddate');
                     // console.log('rc val>>>',record.value);
                   endDate = new Date(record.value);
@@ -1799,7 +1801,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   endDate = new Date(endDate);   
                   
                   map1.set(count,endDate);
-                  console.log({map1});
+                //   console.log({map1});
                   return (
                     months[endDate.getMonth()] +
                     " " +
@@ -1825,8 +1827,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   );
                 } else {
                   // console.log('start Date',record.record.startDate);
-                  console.log('MileStone EndDate');
-                  console.log({record});
+                //   console.log('MileStone EndDate');
+                //   console.log({record});
                   // console.log('-->'+record.record._data.name);
 
                   //COMMENTED
@@ -1846,7 +1848,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   //   endDate = new Date(record.record.startDate);
                   //   endDate.setDate(endDate.getDate() + record.record._data.durationMile);
                   // }else{
-                    console.log('--'+record.record._parent._data.endDate);
+                    // console.log('--'+record.record._parent._data.endDate);
                     // endDate = new Date(record.record._parent._data.endDate);
                     if(record.record._parent._data.endDate != undefined) console.log('-|-'+record.record._parent._data.endDate.toString().substring(8,10));
                     // console.log({endDate});
@@ -1860,14 +1862,14 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
                     var endDate1 = new Date(record.record.startDate);
                     endDate1.setDate(endDate1.getDate() + record.record._data.durationMile);
-                    console.log({endDate1});
+                    // console.log({endDate1});
 
                     endDate = new Date(record.record._parent._data.endDate);
-                    console.log('1-'+endDate);
+                    // console.log('1-'+endDate);
                     endDate.setDate(endDate.getDate() - 1);
-                    console.log('2-'+endDate);
+                    // console.log('2-'+endDate);
                     endDate = new Date(endDate); 
-                    console.log('3-'+endDate);
+                    // console.log('3-'+endDate);
                       
 
                     // endDate.setDate(endDate.getDate() + record.record._parent._data.duration);

@@ -184,11 +184,12 @@
 
 
             component.set('v.columns1', [
-                { label: 'Product Family', fieldName: 'Family', type: 'text' },
                 { label: 'Product Name', fieldName: 'Name', type: 'text', sortable: true },
                 { label: 'Product Description', fieldName: 'Description', type: 'text' },
                 { label: 'Product Code', fieldName: 'ProductCode', type: 'text' },
-                { label: 'List Price', fieldName: 'UnitPrice', type: 'currency', typeAttributes: { currencyCode: { fieldName: 'CurrencyIsoCode' } }, cellAttributes: { alignment: 'left' } }
+                { label: 'List Price', fieldName: 'UnitPrice', type: 'currency', typeAttributes: { currencyCode: { fieldName: 'CurrencyIsoCode' } }, cellAttributes: { alignment: 'left' } },
+                { label: 'Product Family', fieldName: 'Family', type: 'text' }
+
             ]);
 
             var action4 = component.get("c.getProducts");

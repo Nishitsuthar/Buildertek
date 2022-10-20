@@ -1,4 +1,4 @@
-import { LightningElement, api} from 'lwc';
+import { LightningElement, api, track} from 'lwc';
 import gettakeoffdata from '@salesforce/apex/cloneTakeOffController.gettakeoffdata';
 
 export default class CloneTakeOff extends LightningElement {

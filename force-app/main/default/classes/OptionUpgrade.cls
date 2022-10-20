@@ -2,7 +2,7 @@ public with sharing class OptionUpgrade {
 
     @AuraEnabled
     public static optionWrapper getDetails(String recordId, Integer pageNumber, Integer pageSize, String searchNameValue, String searchTypeValue, String searchManufacturerValue, String searchFamilyValue) {
-        buildertek__Question__c option = [SELECT Id, Name, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c FROM buildertek__Question__c WHERE Id =: recordId];
+        buildertek__Question__c option = [SELECT Id, Name, buildertek__Question_Group__c, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c FROM buildertek__Question__c WHERE Id =: recordId];
         List<Product2> productList = new List<Product2>();
 
         Integer offset = (pageNumber - 1) * pageSize;
@@ -77,6 +77,7 @@ public with sharing class OptionUpgrade {
         newOption.buildertek__Upgrade__c = true;
         newOption.buildertek__Date_Option_Upgraded__c = System.Today();
         newOption.buildertek__Original_Option__c = optionValue.Id;
+        newOption.buildertek__Question_Group__c = optionValue.buildertek__Question_Group__c;
         insert newOption;
 
         optionValue.buildertek__Selected__c = false;

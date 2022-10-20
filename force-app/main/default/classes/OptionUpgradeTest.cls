@@ -3,6 +3,10 @@ public with sharing class OptionUpgradeTest {
 
     @TestSetup
     static void testData(){
+        Account acc = new Account();
+        acc.Name = 'Testing Account';
+        insert acc;
+
         buildertek__Section__c section = new buildertek__Section__c();
         section.Name = 'Selection Category Testing';
         insert section;
@@ -19,12 +23,28 @@ public with sharing class OptionUpgradeTest {
         option.buildertek__Upgrade_Costs__c = 35;
         option.buildertek__Quantity__c = 10;
         option.buildertek__Upgrade__c = true;
+        option.buildertek__Manufacturer__c = acc.Id;
         insert option;
+
+        buildertek__Product_Type__c prodType = new buildertek__Product_Type__c();
+        prodType.Name = 'Product Type Testing';
+        insert prodType;
+
+        Product2 prod = new Product2();
+        prod.Name = 'Testing Product';
+        prod.buildertek__Manufacturer__c = acc.Id;
+        prod.buildertek__Product_Type__c = prodType.Id;
+        prod.Family = 'Framing';
+        prod.buildertek__Selection_Category_Lookup__c = section.Id;
+        insert prod;
     }
 
     @isTest
     static void testMethod1(){
         buildertek__Question__c option = [SELECT Id, Name FROM buildertek__Question__c LIMIT 1];
-        OptionUpgrade.getDetails(option.Id, 1, 10, 't', 'q', 'j', 'c');
+        Product2 prod = [SELECT id, Name, buildertek__Manufacturer__c FROM Product2 LIMIT 1];
+        OptionUpgrade.getDetails(option.Id, 1, 10, 't', 'p', 't', 'f');
+        OptionUpgrade.getDetails(option.Id, 1, 10, '', '', '', '');
+        OptionUpgrade.upgradeOption(option, prod);
     }
 }
