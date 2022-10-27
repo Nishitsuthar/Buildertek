@@ -134,7 +134,9 @@ public with sharing class ProjectTaskTriggerHandler{
 					Date sDate = updatedProjectTask.buildertek__Start__c;
 					sDate = ProjectTaskTriggerHandler.getStartDate(sDate);
 					duration = calculateDuration(sDate, updatedProjectTask.buildertek__Finish__c);
+					System.debug('duration in before ==> ' + duration + ' updatedProjectTask task id ' + updatedProjectTask.id);
 				}
+				System.debug('duration in before outside condition ==> ' + duration + ' updatedProjectTask task id ' + updatedProjectTask.id);
 				updatedProjectTask.buildertek__Finish__c = finishDate;
 				updatedProjectTask.buildertek__Duration__c = duration;
 			} else{
@@ -666,6 +668,7 @@ public with sharing class ProjectTaskTriggerHandler{
 						projectTask.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(startDate);//startDate;
 						if (numberDaysDue <= 0){
 							projectTask.buildertek__finish__c = projectTask.buildertek__Start__c;
+							System.debug('duration before reseting ==> ' + projectTask.buildertek__Duration__c + ' project task id ' + projectTask.Id);
 							projectTask.buildertek__Duration__c = 1;
 						} else{
 							projectTask.buildertek__finish__c = ProjectTaskTriggerHandler.getEndDate(startDate, endDate);
@@ -813,27 +816,61 @@ public with sharing class ProjectTaskTriggerHandler{
 				if (parentTask != null){
 					Integer lag = projectTask.buildertek__Lag__c != null ? Integer.valueOf(projectTask.buildertek__Lag__c) : 0;
 					if (parentTask.buildertek__finish__c != null){
-						startDate = parentTask.buildertek__finish__c.addDays(1);
+
+						Integer totalDay;
+						if (projectTask.buildertek__Lag__c != null){
+							Integer lagDays = Integer.valueOf(projectTask.buildertek__Lag__c);
+							totalDay = lagDays + 1;
+						} else{
+							totalDay = 0;
+						}
+						System.debug('totalDay  ====>   ' + totalDay);
+
+						startDate = addDaysSkippingWeekends(parentTask.buildertek__finish__c, totalDay);
+
+						// startDate = parentTask.buildertek__finish__c.addDays(totalDay);
+						System.debug('parentTask.buildertek__finish__c ==>' + parentTask.buildertek__finish__c + 'Id ==> ' + parentTask.Id);
+						System.debug('1st Start Date  ===> ' + startDate);
 						if (mapAllTask.get(taskId).buildertek__Duration__c != null){
-							endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+							// endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+							// added new logic here for end date by Nishit (MV Clouds)
+
+							endDate = ProjectTaskTriggerHandler.getStartDate(startDate).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c) - 1);
 						} else{
 							// calculate duration from (mapAllTask.get(taskId)buildertek__finish__c).daysbetween.mapAllTask.get(taskId).buildertek__Start__c if needed
 							Date d1 = mapAllTask.get(taskId).buildertek__finish__c;
 							Date d2 = mapAllTask.get(taskId).buildertek__Start__c;
 							Integer daysDiff = d2.daysbetween(d1);
-							endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(daysDiff + 1);
+							System.debug('days Diff ==> ' + daysDiff);
+							// endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(daysDiff + 1);
+
+							// added new logic by Nishit (MV Clouds)
+							endDate = ProjectTaskTriggerHandler.getStartDate(startDate).addDays(daysDiff);
+
 							mapAllTask.get(taskId).buildertek__Duration__c = daysDiff + 1;
+							System.debug('duration seted ==> ' + mapAllTask.get(taskId).buildertek__Duration__c);
 
 							// endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 						}
 						// endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 					} else{
 						Integer Duration = Integer.valueOf(parentTask.buildertek__Duration__c);
-						startDate = parentTask.buildertek__Start__c.addDays(Duration);
+						Integer totalDay;
+						if (projectTask.buildertek__Lag__c != null){
+							Integer lagDays = Integer.valueOf(projectTask.buildertek__Lag__c);
+							totalDay = Duration + lagDays;
+						} else{
+							totalDay = Duration;
+						}
+						System.debug('totalDay  ====>   ' + totalDay);
+						startDate = addDaysSkippingWeekends(parentTask.buildertek__Start__c, totalDay);
+						// startDate = parentTask.buildertek__Start__c.addDays(totalDay);
 						if (mapAllTask.get(taskId).buildertek__Duration__c == null){
 							mapAllTask.get(taskId).buildertek__Duration__c = 1;
 						}
-						endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__Start__c.addDays(Duration)).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+						// endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__Start__c.addDays(Duration)).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+						// logic added by Nishit (MV Clouds)
+						endDate = ProjectTaskTriggerHandler.getStartDate(startDate.addDays(Duration)).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 					}
 
 					//startDate =  parentTask.buildertek__finish__c.addDays(1);
@@ -842,7 +879,13 @@ public with sharing class ProjectTaskTriggerHandler{
 					//endDate = parentTask.buildertek__finish__c.addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 					numberDaysDue = startDate.daysBetween(endDate);
 					System.debug('3rd method before changing start Date ==> ' + projectTask.buildertek__Start__c + ' Id ' + projectTask.Id);
+					// projectTask.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(startDate);//startDate;
+
+
+					System.debug(' 2nd startDate=====> ' + startDate);
 					projectTask.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(startDate);//startDate;
+
+
 					System.debug('3rd method after changing start Date ==> ' + projectTask.buildertek__Start__c + ' Id ' + projectTask.Id);
 
 					if (numberDaysDue <= 0){
@@ -914,6 +957,7 @@ public with sharing class ProjectTaskTriggerHandler{
 		for (buildertek__Project_Task__c schItem : ProjectTasks){
 
 			scheduleIds.add(schItem.buildertek__Schedule__c);
+			System.debug('insertUpdate milestones duration ==> ' + schItem.buildertek__Duration__c + ' id ' + schItem.Id);
 
 		}
 
@@ -923,6 +967,7 @@ public with sharing class ProjectTaskTriggerHandler{
 		                                                                           Order by buildertek__Order__c
 		                                                                           NULLS LAST, CreatedDate ASC]);
 		for (Project_Task__c task : newProjectTaskMap.values()){
+			System.debug('updated in  milestones duration ==> ' + task.buildertek__Duration__c + ' id ' + task.Id);
 			if (task.buildertek__Phase__c != null){
 				if (taskPhaseMap.get(task.buildertek__Schedule__c + task.buildertek__Phase__c) != null){
 					list<Project_Task__c> onproTaskList = taskPhaseMap.get(task.buildertek__Schedule__c + task.buildertek__Phase__c);
@@ -1359,6 +1404,24 @@ public with sharing class ProjectTaskTriggerHandler{
 		} catch (Exception e){
 			throw new AuraHandledException(e.getMessage());
 		}
+	}
+
+	// Skip weekend and calculate date
+	public static Date addDaysSkippingWeekends(Date sDate, Integer days){
+		Date result = sDate;
+		Integer addedDays = 0;
+		while (addedDays < days){
+			result = result.addDays(1);
+			// if (!(result.getDayOfWeek() == DayOfWeek.SATURDAY || result.getDayOfWeek() == DayOfWeek.SUNDAY)) {
+			//     ++addedDays;
+			// }
+			DateTime currentDate = DateTime.newInstance(result.year(), result.month(), result.day());
+			String todayDay = currentDate.format('EEEE');
+			if (todayDay != 'Saturday' && todayDay != 'Sunday'){
+				++addedDays;
+			}
+		}
+		return result;
 	}
 
 	public void OnBeforeInsert1(Project_Task__c[] newProjectTasks){

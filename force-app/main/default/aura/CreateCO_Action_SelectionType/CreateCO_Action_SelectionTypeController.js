@@ -16,7 +16,13 @@
       {
         label: "Sales Price",
         fieldName: "buildertek__Cost__c",
-        type: "number",
+        type: "currency",
+        cellAttributes: { alignment: "left" },
+      },
+      {
+        label: "Upgrade Cost",
+        fieldName: "buildertek__Upgrade_Costs__c",
+        type: "currency",
         cellAttributes: { alignment: "left" },
       },
     ]);
@@ -67,8 +73,8 @@
 	} else{
 		helper.showToast("Error", "Error", "Change Order Name is required", "5000");
 	}
-	
-}, 
+
+},
   closeModal: function (component, event, helper) {
     $A.get("e.force:closeQuickAction").fire();
   },

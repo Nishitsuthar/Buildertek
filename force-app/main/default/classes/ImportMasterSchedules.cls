@@ -122,6 +122,7 @@ public with sharing class ImportMasterSchedules{
                         // }
                         // schItem.buildertek__Dependency__c = scheduleitem.buildertek__Dependency__c;
                         schItem.buildertek__Finish__c = scheduleitem.buildertek__Finish__c;
+                        System.debug('finish date in import master before insertion ==> ' + schItem.buildertek__Finish__c + ' and master item id ' + scheduleitem.id);
                         schItem.buildertek__Resource__c = scheduleitem.buildertek__Resource__c;
                         schItem.buildertek__Lag__c = scheduleitem.buildertek__Lag__c;
                         schItem.buildertek__Milestone__c = scheduleitem.buildertek__Milestone__c;
@@ -141,10 +142,12 @@ public with sharing class ImportMasterSchedules{
                         schItem.buildertek__Reference_for_Import__c = scheduleitem.Id;
                         if (initialDate != null){
                             schItem.buildertek__Start__c = initialDate;
+                            System.debug('start date in import master before insertion ==> ' + schItem.buildertek__Start__c);
                         } else{
                             //fromNewSchedule != null && fromNewSchedule &&
                             Date today = system.today();
                             schItem.buildertek__Start__c = today;
+                            System.debug('start date in else condition import master before insertion ==> ' + schItem.buildertek__Start__c);
                         }
                         //else{
                         //schItem.buildertek__Start__c = scheduleitem.buildertek__Start__c;
@@ -215,7 +218,7 @@ public with sharing class ImportMasterSchedules{
 
                 //adding trigger logic after update here below
                 // logic started
-                
+
                 // for (Project_Task__c task : dependList){
                 //     if (task.Id != null && task.buildertek__finish__c != null){
                 //         task.buildertek__Start__c = getStartDate(task.buildertek__finish__c.addDays(1));

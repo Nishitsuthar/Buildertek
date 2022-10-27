@@ -202,6 +202,7 @@
             component.set('v.newQuote.buildertek__Quantity__c', 1);
             component.set('v.newQuote.buildertek__Markup__c', '');
             component.set('v.newQuote.buildertek__Unit_Price__c', '');
+            component.set('v.newQuote.buildertek__Product__c', '');
             component.set("v.listofproductfamily", '');
             $A.get('e.force:refreshView').fire();
             window.setTimeout(
@@ -931,6 +932,7 @@ $A.enqueueAction(action);
                                             component.set('v.newQuote.buildertek__Unit_Price__c', null);
                                             component.set('v.newQuote.buildertek__Quantity__c', 1);
                                             component.set('v.newQuote.buildertek__Markup__c', '');
+                                            component.set('v.newQuote.buildertek__Product__c', '');
                                             var pribooknames = component.get("v.pricebookName");
                                             console.log("PriceBook Name : ======= : ",pribooknames)
                                             //alert(pribooknames)

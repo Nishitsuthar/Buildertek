@@ -776,6 +776,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   callinsertUpdateTaskList(taskData) {
     var that = this;
     this.isLoaded = true;
+    console.log('======================================================');
+    console.log('taskData',{taskData});
     insertUpdateTaskList({ taskJSON: JSON.stringify(taskData), isUpdate: true })
       .then(function (response) {
         const filterChangeEvent = new CustomEvent("filterchange", {
@@ -1500,8 +1502,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       var phaseDateList = this.phaseDates;
       console.log({phaseDateList});
       var scheduleDataList = this.scheduleItemsDataList;
-      // console.log({scheduleDataList});
-      console.log('------------------------------------------------------------------');
       console.log('scheduleDataList ==> ', {scheduleDataList});
 
       for (var key in scheduleDataList) {

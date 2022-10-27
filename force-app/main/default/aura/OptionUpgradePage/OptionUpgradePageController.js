@@ -57,6 +57,20 @@
     onNext: function (component, event, helper){
         component.set("v.pageNumber", component.get("v.pageNumber")+1);
         helper.initHelper(component, event, helper);
+    }, 
+
+    onImageClick: function (component, event, helper){
+        var docsId = event.getSource().get("v.id");
+        console.log('docsId => '+docsId);
+        component.set("v.ImageId", docsId);
+        component.set("v.ImageModal", true);
+    }, 
+
+    closeImage: function (component, event, helper){
+        var id = event.target.id;
+        if (id != 'imgDiv') {
+            component.set("v.ImageModal", false);
+        }
     }
 
 })

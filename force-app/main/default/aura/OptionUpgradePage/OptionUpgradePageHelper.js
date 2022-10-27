@@ -7,7 +7,7 @@
             let opendTab = response.tabId;
             workspaceAPI.setTabLabel({
                 tabId: opendTab,
-                label: "Update Option"
+                label: "Upgrade"
             });
             workspaceAPI.setTabIcon({
                 tabId: opendTab,
@@ -49,7 +49,7 @@
             } else{
                 var error = response.getError();
                 console.log('Error => ', {error});
-                helper.showToast("Error", "Error", "Something Went Wrong", "5000");
+                helper.showToast("Error", "Error", "Something Went Wrong, Please Refresh Page", "5000");
             }
         });
         $A.enqueueAction(action);   

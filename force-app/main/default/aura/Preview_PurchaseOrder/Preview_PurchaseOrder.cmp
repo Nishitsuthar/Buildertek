@@ -47,7 +47,7 @@
      .slds-modal__content {
                height: 400px !important;
            }
-         
+
     </aura:html> -->
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
     <force:recordData aura:id="forceRecordCmp" recordId="{!v.recordId}"
@@ -270,7 +270,7 @@
                             <div style="margin: 0 1rem; height: 55px;">
                                 <lightning:fileUpload name="fileUploader" multiple="true"
                                     accept="{!v.filetype}" recordId="{!v.recordId}" onuploadfinished="{!c.handleUploadFinished}" />
-                            </div>      
+                            </div>
                             <div>
                                 <aura:iteration items="{!v.uploadedFileName}" var="sr" indexVar="fileindex">
                                     <div>
@@ -303,10 +303,10 @@
                             </div>
                         </div>
                         <aura:set attribute="else">
-                            <div style="margin: 1rem 0rem 0 1rem;padding-bottom: 0.5rem">
+                            <div style="margin-left: auto;margin-right: 11px;">
                                 <button class="slds-button slds-button--neutral sldsbutton"
                                     onclick="{!c.closeModel}">Cancel</button>
-                            </div>        
+                            </div>
                         </aura:set>
                     </aura:if>
                     <!-- <div style="margin: 1.5rem 0.5rem 0 0;">

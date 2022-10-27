@@ -144,6 +144,7 @@
             component.set('v.budgetGroupId', '');
             var groupId = groups[index].Id != undefined ? groups[index].Id : '';
             var groupDescription = groups[index].buildertek__Description__c != undefined ? groups[index].buildertek__Description__c : '';
+            console.log({groupDescription});
             if (groupId != undefined && groupId != '') {
                 component.set('v.budgetGroupId', groupId);
                 component.set('v.groupDescription', groupDescription);
@@ -184,11 +185,11 @@
 
 
             component.set('v.columns1', [
+                { label: 'Product Family', fieldName: 'Family', type: 'text' },
                 { label: 'Product Name', fieldName: 'Name', type: 'text', sortable: true },
                 { label: 'Product Description', fieldName: 'Description', type: 'text' },
                 { label: 'Product Code', fieldName: 'ProductCode', type: 'text' },
                 { label: 'List Price', fieldName: 'UnitPrice', type: 'currency', typeAttributes: { currencyCode: { fieldName: 'CurrencyIsoCode' } }, cellAttributes: { alignment: 'left' } },
-                { label: 'Product Family', fieldName: 'Family', type: 'text' }
 
             ]);
 
@@ -407,6 +408,8 @@
         var group = component.find('groupId');
         group.set("v._text_value", '');
         var product = component.get('v.selectedLookUpRecord');
+        console.log({product});
+        console.log('===================================================================');
         var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
         compEvent.setParams({
             "recordByEvent": product
@@ -421,7 +424,8 @@
         component.set('v.newQuote.buildertek__Quantity__c', 1);
         component.set('v.newQuote.buildertek__Markup__c', '');
         var pribooknames = component.get("v.pricebookName");
-        console.log("PriceBook Name : ======= : ", pribooknames)
+        console.log("PriceBook Name : ======= : ", pribooknames); 
+        console.log({product} );
         //alert(pribooknames)
         var action = component.get("c.getProductfamilyRecords");
         // set param to method  
@@ -568,10 +572,13 @@
             });
     },
     saveQuoteRecord: function (component, event, helper) {
+        console.log('========================Save method fire======================');
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
         var quoteObject = component.get("v.newQuote");
+
+        console.log(' Quote Data ==> ' + JSON.stringify(quoteObject));
 
         var recordId = component.get("v.recordId");
         component.set("v.newQuote.buildertek__Quote__c", recordId);
@@ -583,6 +590,8 @@
             "quoteLineRecord": JSON.stringify(quoteObject)
         });
         action.setCallback(this, function (respo) {
+            var returnValue = respo.getReturnValue();
+            console.log('returnValue ===> ',{returnValue});
             if (component.isValid() && respo.getState() === "SUCCESS") {
                 var group = component.find('groupId');
                 group.set("v._text_value", '');
@@ -593,11 +602,13 @@
                 });
                 compEvent.fire();
                 component.set('v.newQuote.Name', '');
+                component.set('v.newQuote.buildertek__Description__c','');
                 component.set('v.newQuote.buildertek__Grouping__c', null);
                 component.set('v.newQuote.buildertek__UOM__c', '');
                 component.set('v.newQuote.buildertek__Unit_Cost__c', '');
                 component.set('v.newQuote.buildertek__Quantity__c', 1);
                 component.set('v.newQuote.buildertek__Markup__c', '');
+                component.set('v.newQuote.buildertek__Product__c', '');
                 component.set("v.listofproductfamily", '');
                 $A.get('e.force:refreshView').fire();
                 window.setTimeout(
@@ -621,6 +632,7 @@
             }
         });
         $A.enqueueAction(action);
+
     },
 
     checkQuoteStatus: function (component, event, helper) { },

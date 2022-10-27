@@ -17,9 +17,10 @@
                     { label: 'Option Name', fieldName: 'linkName', type: 'url', typeAttributes: {label: { fieldName: 'Name' }, target: '_blank'} },
                     { label: 'Manufacturer', fieldName: 'ManufacturerName', type: 'text' },
                     { label: 'Quantity', fieldName: 'buildertek__Quantity__c', type: 'text' },
-                    { label: 'Sales Price', fieldName: 'buildertek__Cost__c', type: 'currency', cellAttributes: { alignment: 'left' } }
+                    { label: 'Sales Price', fieldName: 'buildertek__Cost__c', type: 'currency', cellAttributes: { alignment: 'left' } },
+                    { label: 'Upgrade Cost', fieldName: 'buildertek__Upgrade_Costs__c', type: 'currency', cellAttributes: { alignment: 'left' } }
                 ]);
-    
+
                 result.forEach(element => {
                     element.linkName = '/'+element.Id;
                     if (element.buildertek__Manufacturer__c != null) {
@@ -35,7 +36,7 @@
             }
         });
         $A.enqueueAction(action);
-    }, 
+    },
 
     createRecord: function(component, event, helper){
         var coData = component.get('v.changeOrder');
@@ -78,8 +79,8 @@
         } else{
             helper.showToast("Error", "Error", "Please Write Change Order Name", "5000");
         }
-        
-    }, 
+
+    },
 
     showToast: function(type, title, message, time) {
         try {

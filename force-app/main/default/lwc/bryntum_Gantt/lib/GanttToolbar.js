@@ -1,5 +1,7 @@
 /* globals bryntum : true */
 import  insertUpdateTask from '@salesforce/apex/BT_NewGanttChartCls.insertUpdateTask';
+import  updateTaskRecord from '@salesforce/apex/BT_NewGanttChartCls.updateTaskRecord';
+import MailingPostalCode from '@salesforce/schema/Contact.MailingPostalCode';
 export default base => class GanttToolbar extends base {
     static get $name() {
         return 'GanttToolbar';
@@ -392,6 +394,9 @@ export default base => class GanttToolbar extends base {
     }
     onSaveClick(){
         console.log(this.gantt.data)
+        var data = this.gantt.data;
+        console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+        console.log('Data => ',{data});
         var ganttRowData = [];
         var taskData = JSON.parse(this.gantt.taskStore.json)
         var dependenciesData = JSON.parse(this.gantt.dependencyStore.json)
@@ -399,6 +404,47 @@ export default base => class GanttToolbar extends base {
         console.log('taskData-->',taskData)
         console.log('dependenciesData-->',dependenciesData)
         console.log('resourceData-->',resourceData)
+
+    //     var newtaskMap = []; 
+    //    var taskzero = taskData[0];
+    //    taskzero.children.forEach(element => {
+    //       element.children.forEach(ele => {
+    //         // console.log('Ele ==> ',{ele});
+    //         var taskId = ele.id;
+    //         // console.log('taskId  ==> '+taskId);
+    //         var startDate = ele.startDate;
+
+    //         var fr = startDate.substring(8,10);
+    //         var gh = Number(fr)-1;
+    //         var jk = gh.toString().padStart(2, '0');
+    //         // console.log(gh);
+
+    //         if(jk == "00"){
+    //           jk = "01";
+    //         }
+
+    //         var de = startDate.substring(0,8)+jk+"T"+startDate.substring(11,25);
+    //         const mmp = [taskId, de];
+    //         newtaskMap.push(mmp);
+    //       });
+    //     });
+
+        // console.log('newtaskMap => ',{newtaskMap});
+        // console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& Start');
+        // var tempN = this.gantt.taskStore.json;
+        // console.log('tempN ==>' + tempN);
+        //   updateTaskRecord({taskData: newtaskMap})
+        //    .then((result) => {
+        //     console.log("Res N -->>");
+        //       console.log({result});
+        //    })
+        //    .catch((error) => {
+        //       console.log("logn Error -->>");
+        //       console.log({error});
+        //    });
+        // console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& End');
+        
+
        
         var rowData = [];
         if(this.gantt.data){
@@ -537,6 +583,25 @@ export default base => class GanttToolbar extends base {
                         this.gantt.callGanttComponent.updateValOnUser(this.gantt.callGanttComponent.hideSchedule);
                     }
                 }
+
+                // console.log('updateDataCloneList ==> ',{updateDataCloneList});
+
+                // var taskMap =  new Map();
+                // updateDataCloneList.forEach(element => {
+                //     taskMap.set(element.buildertek__Dependency__c, element.buildertek__Start__c);
+                // });
+
+                // updateDataCloneList.forEach(element => {
+                //     if(taskMap.get(element.Id) != undefined){
+                //         element.buildertek__Finish__c = taskMap.get(element.Id) - 1;
+                //         console.log('element => '+element);
+                //     }
+                // });
+
+                // console.log('---------------------------------------');
+                // console.log('updateDataCloneList ==> ',{updateDataCloneList});
+
+
                 this.gantt.callGanttComponent.callinsertUpdateTaskList(updateDataCloneList)
                 this.gantt.callGanttComponent.scheduleItemsDataList = updateDataList;
                 
@@ -544,7 +609,7 @@ export default base => class GanttToolbar extends base {
                     this.gantt.callGanttComponent.template.querySelector('.container').innerHTML = '';
                     this.gantt.callGanttComponent.template.querySelector('.container1').innerHTML = '';
                     this.gantt.callGanttComponent.createGantt();
-                    //this.GanttVar.crudManager.taskStore.refreshData()
+                    // this.GanttVar.crudManager.taskStore.refreshData()
                 }else{
                     this.gantt.callGanttComponent.createGantt();
                 } 

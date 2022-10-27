@@ -1,15 +1,26 @@
-({    invoke : function(component, event, helper) {
-    // Get the record ID attribute
-    var record = component.get("v.recordId");
-     
-    // Get the Lightning event that opens a record in a new tab
-    var redirect = $A.get("e.force:navigateToSObject");
-     
-    // Pass the record ID to the event
-    redirect.setParams({
-       "recordId": record
-    });
-          
-    // Open the record
-    redirect.fire();
- }})
+({    
+    invoke : function(component, event, helper) {
+        var record = component.get("v.recordId");
+        
+        var redirect = $A.get("e.force:navigateToSObject");
+        
+        redirect.setParams({
+        "recordId": record
+        });
+            
+        redirect.fire();
+
+        var toastEvent = $A.get("e.force:showToast");
+            
+        toastEvent.setParams({
+            title : 'Success',
+            message: 'New Takeoff Successfully Cloned',
+            duration:' 5000',
+            key: 'info_alt',
+            type: 'success',
+            mode: 'pester'
+        });
+        
+        toastEvent.fire();
+    }
+})

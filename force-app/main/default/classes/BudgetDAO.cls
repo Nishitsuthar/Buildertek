@@ -1181,7 +1181,7 @@ Schema.sObjectType.pricebook2.fields.Name.isAccessible()){*/
         List<AggregateResult> productfamlylst = [SELECT family
                                                  FROM Product2
                                                  where (Id IN :ProdIds AND family != null)
-                                                 group by family];
+                                                 group by family ORDER BY family ASC];
         list<productfamilyClass> pfwrapperlst = new list<productfamilyClass>();
         if (productfamlylst.size() > 0){
             for (AggregateResult agg : productfamlylst){

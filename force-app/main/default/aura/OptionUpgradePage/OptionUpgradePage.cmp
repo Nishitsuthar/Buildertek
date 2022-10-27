@@ -15,6 +15,8 @@
     <aura:attribute name="totalPage" type="Integer" />
     <aura:attribute name="pageNumber" type="Integer" default="1" />
     <aura:attribute name="disableBtn" type="Boolean" default="false" />
+    <aura:attribute name="ImageModal" type="Boolean" default="false" />
+    <aura:attribute name="ImageId" type="String" />
 
     <aura:attribute name="searchFamilyFilter" type="String" default="" />
     <aura:handler name="change" value="{!v.searchFamilyFilter}" action="{!c.doSearch}" />
@@ -167,8 +169,8 @@
                                 <td class="prodImg"> 
                                     <lightning:carousel disableAutoRefresh="false" disableAutoScroll="true">
                                         <aura:iteration items="{!ProductWrap.contentDocsList}" var="contentDocs">
-                                            <lightning:carouselImage src="{!'https://btservice360-dev-ed.lightning.force.com/sfc/servlet.shepherd/document/download/'+contentDocs.ContentDocumentId}">
-                                            </lightning:carouselImage>
+                                            <lightning:carouselImage src="{!'https://btservice360-dev-ed.lightning.force.com/sfc/servlet.shepherd/document/download/'+contentDocs.ContentDocumentId}" onclick="{!c.onImageClick}" id="{!contentDocs.ContentDocumentId}">
+                                            </lightning:carouselImage> 
                                         </aura:iteration>
                                         <aura:if isTrue="{!empty(ProductWrap.contentDocsList)}">
                                             <div class="noImageDiv">
@@ -209,6 +211,18 @@
 
             </div>
         </div>
+
+        <aura:if isTrue="{!v.ImageModal}">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open" onclick="{!c.closeImage}">
+                <div class="slds-modal__container">
+                    <lightning:buttonIcon iconName="utility:close" onclick="{!c.closeImage}" alternativeText="close" variant="bare-inverse" class="slds-modal__close" size="large"/>
+                    <div style="display: flex; justify-content: center;">
+                        <img id="imgDiv" src="{!'https://btservice360-dev-ed.lightning.force.com/sfc/servlet.shepherd/document/download/'+v.ImageId}" style="width: 50vh;" />
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
 
         <aura:if isTrue="{!!v.nullProduct}">
             <div class="btnDiv">

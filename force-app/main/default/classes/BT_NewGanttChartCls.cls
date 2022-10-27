@@ -567,7 +567,12 @@ public class BT_NewGanttChartCls {
             //ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
             //update newUpdateList;
 
+
+            
             upsert updatedprojecttaskList;
+
+
+
             //update updatedprojecttaskList;
 
             //ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
@@ -919,7 +924,55 @@ public class BT_NewGanttChartCls {
         }
         return recordTypes[0].getValue();
     }
-    
+
+    // public static string updateTaskRecord(List<Map<String, String>> taskData){
+    @AuraEnabled
+    public static string updateTaskRecord(List<List<String>> taskData){
+        try {
+            System.debug('========updateTaskRecord==============');
+            system.debug(taskData);
+
+
+            Set<Id> taskIds = new Set<Id>();
+            for (List<String> taskMap : taskData) {
+                System.debug('taskMap ==> '+taskMap);
+                if (taskMap[0] != null && taskMap[1] != null) {
+                    taskIds.add(taskMap[0]);
+                }
+            }
+
+            Map<Id, buildertek__Project_Task__c> oldTaskMap = new Map<Id, buildertek__Project_Task__c>([SELECT Id, Name, buildertek__Dependency__c, buildertek__Finish__c FROM buildertek__Project_Task__c WHERE Id IN: taskIds]);
+
+
+            List<buildertek__Project_Task__c> taskList = new List<buildertek__Project_Task__c>();
+            Map<Id, buildertek__Project_Task__c> newTaskMap = new Map<Id, buildertek__Project_Task__c>();
+
+
+            for (List<String> taskMap : taskData) {
+
+                String pId = oldTaskMap.get(taskMap[0]).buildertek__Dependency__c;
+                if (pId != '' && pId != null) {
+                        buildertek__Project_Task__c task = new buildertek__Project_Task__c();
+                        task.Id = pId;
+                        
+                        task.buildertek__Finish__c = Datetime.valueOf(taskMap[1].replace('T',' ')).date();
+                        
+                        System.debug('task ==> '+task);
+                        newTaskMap.put(task.Id, task);
+                        
+                        taskList.add(task);
+                    }
+            }
+ 
+
+            // update newTaskMap.values();
+            // update taskList[0];
+            return 'Success';
+        } catch (Exception e) {
+            String data = 'Error Message => '+e.getMessage() + 'Error Line no => '+e.getLineNumber();
+            return data;
+        }
+    }
 
     // wrapper class 
     public with sharing class customValueWrapper {
