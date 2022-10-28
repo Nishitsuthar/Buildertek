@@ -2,7 +2,9 @@ public with sharing class OptionUpgrade {
 
     @AuraEnabled
     public static optionWrapper getDetails(String recordId, Integer pageNumber, Integer pageSize, String searchNameValue, String searchTypeValue, String searchManufacturerValue, String searchFamilyValue) {
-        buildertek__Question__c option = [SELECT Id, Name, buildertek__Question_Group__c, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c FROM buildertek__Question__c WHERE Id =: recordId];
+        buildertek__Question__c option = [SELECT Id, Name, buildertek__Question_Group__c, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, 
+                                            buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c, buildertek__Price_Book__c, 
+                                            buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c FROM buildertek__Question__c WHERE Id =: recordId];
         List<Product2> productList = new List<Product2>();
 
         Integer offset = (pageNumber - 1) * pageSize;
@@ -46,9 +48,18 @@ public with sharing class OptionUpgrade {
         String query = 'Select COUNT() FROM Product2 WHERE buildertek__Selection_Category_Lookup__c =: sectionId';
         Integer productCount = Database.countQuery(query);
 
+        Map<String, String> priceBookMap = new Map<String, String>();
+        list<pricebook2> PriceList = [SELECT Id, Name FROM pricebook2 ORDER BY Name ASC ];
+        for (pricebook2 p : PriceList){
+            priceBookMap.put(p.Name, p.Id);
+        }
+
         optionWrapper optionWrapperData = new optionWrapper();
         optionWrapperData.option = option;
+        optionWrapperData.projectPriceBook = option.buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c;
         optionWrapperData.productCount = productCount;
+        optionWrapperData.priceBookMap = priceBookMap;
+
 
         List<productWrapper> prodWrapperList = new List<productWrapper>();
         for (Product2 product : productList) {
@@ -91,7 +102,13 @@ public with sharing class OptionUpgrade {
         public buildertek__Question__c option {get;set;}
 
         @AuraEnabled
+        public String projectPriceBook {get;set;}
+
+        @AuraEnabled
         public Integer productCount {get;set;}
+
+        @AuraEnabled
+        public Map<String, String> priceBookMap {get;set;}
 
         @AuraEnabled
         public List<productWrapper> productWrapperList {get;set;}

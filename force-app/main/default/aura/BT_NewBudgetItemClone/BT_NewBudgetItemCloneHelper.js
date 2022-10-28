@@ -288,6 +288,8 @@
                 if (state === "SUCCESS") {
                     var result = response.getReturnValue();
                    console.log('result'+result);
+                   console.log('============================================================================');
+                   console.log('result ==> ', {result});
                    //  alert('result---------->'+JSON.stringify(result));
                     if (result.formulaFields != undefined) {
                         var formulaField = JSON.parse(result.formulaFields);
@@ -1678,22 +1680,28 @@
             }
         });
         $A.enqueueAction(actions);
-    }
+    },
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-});
+    toggleByCostHelper: function (component, event, helper){
+        var groupByCostCode = component.get("v.groupByCostCode");
+        console.log('groupByCostCode => '+groupByCostCode);
+
+        var action = component.get("c.retrieveGroupsByCost");
+        action.setParams({
+            budgetId: component.get("v.recordId"),
+            pageNumber: page,
+            recordToDisply: 60,
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var result = response.getReturnValue();
+                console.log('Result => ',{result});
+            }
+            else{
+                console.log('Error');
+            }
+        });
+        $A.enqueueAction(actions);
+    }
+})

@@ -9,6 +9,7 @@
     <aura:attribute name="TotalRecordsCopy" type="object" access="global" />
     <aura:attribute name="issearching" type="Boolean" default="false" />
     <aura:attribute name="UOMvalues" type="string" />
+    <aura:attribute name="Notevalues" type="string" />
     <aura:attribute name="searchFilter" type="String" />
     <aura:attribute name="IconName" type="String" default="custom:custom5" />
     <aura:handler name="change" value="{!v.searchFilter}" action="{!c.doSearchBudget}" />
@@ -30,6 +31,7 @@
     <aura:attribute name="recordId" type="string" />
     <aura:attribute name="groupFilter" type="string" />
     <aura:attribute name="budgetlineId" type="string" access="public" />
+    <aura:attribute name="NoteId" type="string" access="public" />
     <aura:attribute name="listOfRecords" type="list" access="public" />
 
     <aura:handler name="onSelectEvt" event="c:BT_LookupEvent" action="{!c.handleLookUpEvent}" />
@@ -222,7 +224,7 @@
     <aura:attribute name="groupBytoggle2" type="Boolean" default="false" />
     <aura:attribute name="groupByVendortoggle2" type="Boolean" default="false" />
     <aura:attribute name="Isbtvalue" type="Boolean" default="false" />
-
+    <aura:attribute name="groupByCostCode" type="Boolean" default="false" />
 
 
     <!-- Pagination End -->
@@ -268,11 +270,15 @@
                                 <!-- </aura:if>-->
                                 <aura:set attribute="else">
                                     <div style="width: fit-content;">
-
                                         <lightning:input aura:id="Cost Code1" name="Group By Cost Code1" label="Group By Category" type="toggle" checked="{!v.groupByVendortoggle1}" onclick="{!c.checkToogle1}" />
                                     </div>
                                 </aura:set>
                             </aura:if>
+
+                            <div style="width: fit-content;">
+                                <lightning:input label="Group By Cost Code" type="toggle" checked="{!v.groupByCostCode}" onchange="{!c.toggleByCost}"/>
+                            </div>
+                            
                         </div>
                         <!-- <div style="float: left;width:11%;margin-top: -3%;" class="slds-p-left_small slds-p-top_large">
                             <lightning:input
@@ -372,18 +378,21 @@
                                                 <!--  <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                                     <div class="slds-truncate" title="Sub Grouping">Sub Group</div>
                                                 </th> -->
-                                                <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                                <!-- <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                                     <div class="slds-truncate" title="UOM">UOM</div>
-                                                </th>
+                                                </th> -->
                                                 <!--  comment by laxman 08/07/2020
           <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                             <div class="slds-truncate" title="TradeType">Trade Type</div>
                                         </th> -->
-                                                <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                                <!-- <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                                     <div class="slds-truncate" title="Contractor">Vendor</div>
-                                                </th>
+                                                </th> -->
                                                 <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                                     <div class="slds-truncate" title="Contractor">Cost Code</div>
+                                                </th>
+                                                <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                                    <div class="slds-truncate" title="Contractor">Notes</div>
                                                 </th>
                                                 <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                                     <div class="slds-truncate" title="Quantity">Quantity</div>
@@ -450,7 +459,7 @@
                                                     </ui:inputSelect>
                                                     
                                                 </td> -->
-                                                <td>
+                                                <!-- <td>
                                                     <ui:inputSelect value="{! v.UOMvalues }" class="select-class pointer1">
                                                         <aura:iteration var="option" items="{! v.options }">
                                                             <option value="{! option.value }" selected="{!option.value == v.UOMvalues}">{! option.key }
@@ -458,19 +467,23 @@
                                                         </aura:iteration>
                                                     </ui:inputSelect>
 
-                                                </td>
+                                                </td> -->
                                                 <!--  <td>
                                             <c:customLookup aura:id="tradeTypeId" objectAPIName="buildertek__Trade_Type__c" IconName="custom:custom67" selectedRecord="{!v.selectedTradeType}"/>
                                         </td> -->
-                                                <td>
+                                                <!-- <td>
                                                     <c:customLookup aura:id="accountId" objectAPIName="Account" IconName="standard:account" selectedRecord="{!v.selectedContractor}" />
-                                                    <!--<force:inputField aura:id="accountId" value="{!v.newBudgetLine.buildertek__Contractor__c}" />-->
-                                                </td>
+                                                    <force:inputField aura:id="accountId" value="{!v.newBudgetLine.buildertek__Contractor__c}" />
+                                                </td> -->
+                                                
                                                 <td>
                                                     <c:BT_LookUp aura:id="costCodeId" _field="buildertek__Cost_Code__c" _sobject="buildertek__Budget_Item__c" _value="{!v.newBudgetLine.buildertek__Cost_Code__c}" _label="" _filter="" />
                                                     <!--  <c:customLookup aura:id="costcodeId" objectAPIName="buildertek__Cost_Codes__c"
                                                                     IconName="standard:account" selectedRecord="{!v.selectedCostcode}" />-->
                                                     <!--<force:inputField aura:id="accountId" value="{!v.newBudgetLine.buildertek__Contractor__c}" />-->
+                                                </td>
+                                                <td>
+                                                    <ui:inputTextArea value="{!v.newBudgetLine.buildertek__Notes__c}"/>
                                                 </td>
                                                 <td>
                                                     <!--<force:inputField value="{!v.newBudgetLine.buildertek__Quantity__c}"/>-->

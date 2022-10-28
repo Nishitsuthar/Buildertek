@@ -46,6 +46,17 @@
                 } else{
                     component.set("v.productWrapper", result.productWrapperList);
                 }
+
+                var opts = [];
+                opts.push({ key: "None", value: "" });
+                if (result.priceBookMap.size != 0){
+                    for (var key in result.priceBookMap) {
+                        opts.push({ key: key, value: result.priceBookMap[key] });
+                    }
+                }
+                component.set("v.priceBookList", opts);
+                component.set("v.selectedValue", result.projectPriceBook);
+
             } else{
                 var error = response.getError();
                 console.log('Error => ', {error});
@@ -53,6 +64,10 @@
             }
         });
         $A.enqueueAction(action);   
+    },
+
+    changePriceBookHelper: function(component, event, helper){
+        console.log('changePriceBookHelper');
     },
     
     searchHelper: function(component, event, helper){

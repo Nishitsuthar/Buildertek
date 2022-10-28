@@ -376,6 +376,7 @@ Throws [Exceptions]:
             budgetItem.buildertek__Item_Name__c = poItem.buildertek__Item_Name__c;
             budgetItem.buildertek__Description__c = poItem.buildertek__Description__c;
             budgetItem.buildertek__Cost_Code__c = poItem.buildertek__Cost_Code__c;
+            budgetItem.buildertek__Notes__c = poItem.buildertek__Notes__c;
             
             budgetItems.add(budgetItem);
             
@@ -690,6 +691,7 @@ Throws [Exceptions]:
      //   System.debug('---Budget Line Items' + budgetLineRecord);
         buildertek__Budget_Item__c budgetRec = new buildertek__Budget_Item__c();
         budgetRec = (buildertek__Budget_Item__c)System.JSON.deserialize(budgetLineRecord, buildertek__Budget_Item__c.class);
+        System.debug('budgetRec------------------>'+budgetRec);
       //  system.debug('Budget Group ------------> ' + budgetRec.buildertek__Budget_Line_Group__c);
         
         /*  if(budgetRec.buildertek__Budget_Line_Group__c == null){
@@ -743,6 +745,7 @@ budgetRec.buildertek__Budget_Line_Group__c = budGroup.Id;
         BudgetLineToInsert.buildertek__Budget__c = budgetRec.buildertek__Budget__c;
         BudgetLineToInsert.buildertek__Budget_Line_Group__c = budgetRec.buildertek__Budget_Line_Group__c;
         BudgetLineToInsert.buildertek__UOM__c = budgetRec.buildertek__UOM__c;
+        BudgetLineToInsert.buildertek__Notes__c = budgetRec.buildertek__Notes__c;
         BudgetLineToInsert.buildertek__Contractor__c = contractor;
         // BudgetLineToInsert.buildertek__Trade_Type__c = tradeType;
         BudgetLineToInsert.buildertek__Unit_Price__c = budgetRec.buildertek__Unit_Price__c;
@@ -755,6 +758,7 @@ budgetRec.buildertek__Budget_Line_Group__c = budGroup.Id;
         BudgetLineToInsert.buildertek__Discount__c = budgetRec.buildertek__Discount__c;
       //  System.debug('---Budget Line Items recordId 321--> ' + BudgetLineToInsert);
         insert BudgetLineToInsert;
+        System.debug('---------------BudgetLineToInsert------------------>>>>>'+BudgetLineToInsert);
         
        // system.debug('Created budgetLineRecord: ' + BudgetLineToInsert);
         
@@ -1181,7 +1185,7 @@ Schema.sObjectType.pricebook2.fields.Name.isAccessible()){*/
         List<AggregateResult> productfamlylst = [SELECT family
                                                  FROM Product2
                                                  where (Id IN :ProdIds AND family != null)
-                                                 group by family ORDER BY family ASC];
+                                                 group by family];
         list<productfamilyClass> pfwrapperlst = new list<productfamilyClass>();
         if (productfamlylst.size() > 0){
             for (AggregateResult agg : productfamlylst){
@@ -2208,6 +2212,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                     BudgetLineToInsert.buildertek__Group__c = budgetRec.buildertek__Group__c;
                     BudgetLineToInsert.buildertek__Sub_Grouping__c = budgetRec.buildertek__Sub_Grouping__c;
                     BudgetLineToInsert.buildertek__Discount__c = budgetRec.buildertek__Discount__c;
+                    BudgetLineToInsert.buildertek__Notes__c=budgetRec.buildertek__Notes__c;
                      System.debug('---Budget Line Items recordId 321--> ' + BudgetLineToInsert);
                      budgetItemList.add(BudgetLineToInsert);
                      

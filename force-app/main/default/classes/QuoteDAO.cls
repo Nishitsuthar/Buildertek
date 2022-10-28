@@ -140,7 +140,7 @@ public with sharing class QuoteDAO{
             }
         }
         //list<Product2> productfamlylst = [select id, Name,family from Product2 where Id IN :ProdIds AND family != null order by family];
-        List<AggregateResult> productfamlylst = [SELECT family
+        List<AggregateResult> productfamlylst = [SELECT toLabel(Family) familyLabel
                                                  FROM Product2
                                                  where (Id IN :ProdIds AND family != null)
                                                  group by family];
@@ -148,7 +148,7 @@ public with sharing class QuoteDAO{
         if (productfamlylst.size() > 0){
             for (AggregateResult agg : productfamlylst){
                 productfamilyClass pf = new productfamilyClass();
-                pf.productfamilyvalues = string.valueof(agg.get('family'));
+                pf.productfamilyvalues = string.valueof(agg.get('familyLabel'));
                 pfwrapperlst.add(pf);
             }
             system.debug('pfwrapperlst---->' + pfwrapperlst);
@@ -390,7 +390,7 @@ public with sharing class QuoteDAO{
             if (prodctfamly != null){
                 PElist = [select id, Product2Id, product2.family
                           from pricebookEntry
-                          where pricebook2Id = :parentId AND product2.family = :prodctfamly];
+                          where pricebook2Id = :parentId AND toLabel(product2.family) = :prodctfamly];
             } else{
                 PElist = [select id, Product2Id, product2.family
                           from pricebookEntry
@@ -1860,7 +1860,7 @@ public with sharing class QuoteDAO{
         @AuraEnabled
     public static List<Product2> getProducts(){
         DataTableWrapper listDtw;
-        List<Product2> pp =  [select Id,Name,ProductCode,Description,toLabel(Family),(select UnitPrice from PricebookEntries where IsActive = True) from Product2 where IsActive = True and Id IN (select Product2Id from PricebookEntry where isActive = true)];
+        List<Product2> pp =  [select Id,Name,ProductCode,Description,toLabel(Family) Family,(select UnitPrice from PricebookEntries where IsActive = True) from Product2 where IsActive = True and Id IN (select Product2Id from PricebookEntry where isActive = true)];
        
        /*    List<String> labels = new     List<String>();
         labels.add('Product Name');
@@ -1976,11 +1976,11 @@ public with sharing class QuoteDAO{
         List<PriceBookEntry> pEntries;
          if(pbookId != null && pbookId != 'None'){
              System.debug('If');
-            pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,Product2.Family, Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry WHERE Pricebook2Id=:pbookId AND IsActive = True];
+            pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,toLabel(Product2.Family), Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry WHERE Pricebook2Id=:pbookId AND IsActive = True];
         }
         else{
                System.debug('else');
-            pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,Product2.Family, Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry where IsActive = True];
+            pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,toLabel(Product2.Family), Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry where IsActive = True];
         }
 
     List<Product2> products = new List<Product2>();
@@ -2060,7 +2060,7 @@ public with sharing class QuoteDAO{
             string filterKey = searchedWord+'%';
             // getProductsFamily = [select id,family from product2 where family LIKE :filterKey];
 
-            getProductsFamily =  [SELECT Id,Name,ProductCode,Description,Family,(SELECT UnitPrice FROM PricebookEntries WHERE IsActive = True) FROM Product2 WHERE IsActive = True AND family LIKE :filterKey AND Id IN (SELECT Product2Id FROM PricebookEntry WHERE isActive = true)];
+            getProductsFamily =  [SELECT Id,Name,ProductCode,Description,toLabel(Family),(SELECT UnitPrice FROM PricebookEntries WHERE IsActive = True) FROM Product2 WHERE IsActive = True AND family LIKE :filterKey AND Id IN (SELECT Product2Id FROM PricebookEntry WHERE isActive = true)];
 
             System.debug('List of product family is here ==> '+getProductsFamily);
             return getProductsFamily;

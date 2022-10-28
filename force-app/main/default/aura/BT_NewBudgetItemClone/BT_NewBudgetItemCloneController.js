@@ -1431,6 +1431,7 @@ helper.getProductDetails(component,event,helper);
         } else {
         	tradeType = null;
         } */
+        console.log('=============================================================');
         console.log('Sub Group::', JSON.stringify(budgetLineObject));
         debugger;
         var selectedContractor = component.get("v.selectedContractor");
@@ -1453,7 +1454,6 @@ helper.getProductDetails(component,event,helper);
             "budgetLineRecord": JSON.stringify(budgetLineObject),
             recordId: recordId,
             contractor: contractor,
-
 
         });
         action.setCallback(this, function(respo) {
@@ -1478,11 +1478,13 @@ helper.getProductDetails(component,event,helper);
                 component.set('v.newBudgetLine.buildertek__Group__c', null);
                 component.set('v.newBudgetLine.buildertek__Sub_Grouping__c', null);
                 component.set('v.newBudgetLine.buildertek__UOM__c', '');
+                component.set('v.newBudgetLine.buildertek__Notes__c', '');
                 component.set('v.newBudgetLine.buildertek__Unit_Price__c', '');
                 component.set('v.newBudgetLine.buildertek__Quantity__c', '1');
                 component.set('v.newBudgetLine.buildertek__Sales_Price__c', '');
                 component.set('v.newBudgetLine.buildertek__Cost_Code__c', '');
                 component.set('v.UOMvalues', '');
+              //  component.set('v.Notevalues', '');
 
                 $A.enqueueAction(component.get("c.clearLookupValue"));
                 $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -3070,6 +3072,10 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
             });
         }
     },
+
+    toggleByCost: function(component, event, helper){
+        helper.toggleByCostHelper(component, event, helper);
+    }
 
 
 })

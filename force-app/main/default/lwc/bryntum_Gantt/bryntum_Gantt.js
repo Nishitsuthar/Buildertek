@@ -48,7 +48,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
   //VARIABLE ADDED TO GET PHASE DATES - 09/10
   @api phaseDates = [];
-  
+
   @api scheduleItemsDataList;
   @api storeRes;
   @api scheduleItemIdsList = [];
@@ -159,7 +159,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   @track contracFieldApiName;
   @track contractorname;
   @track showOriginalDateModal = false;
-  
+
   @wire(getRecordType) objRecordType;
 
   @wire(pickListValueDynamically, {
@@ -175,7 +175,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   selectTargetTypeValues;
 
   @wire(
-    getPicklistValues, 
+    getPicklistValues,
     { recordTypeId: '$objRecordType.data', fieldApiName: 'buildertek__Project_Task__c.buildertek__Phase__c' }
   )
   picklistValues;
@@ -1512,7 +1512,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               const date1 = new Date(ph.value.expr1);
               const date2 = new Date(ph.value.expr2);
               const diffTime = Math.abs(date2 - date1);
-              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
               // console.log(scheduleDataList[key].buildertek__Duration__c);
               scheduleDataList[key].buildertek__Duration__c = diffDays;
               // console.log(scheduleDataList[key].buildertek__Duration__c);
@@ -1702,6 +1702,51 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           {
             type: "startdate",
             editor: true,
+            renderer: function(record){
+              var months = [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+              ];
+              if(record.value && record.record._data.name == 'Milestone Complete'){
+                var endDate;
+                var endDate1 = new Date(record.record.startDate);
+                endDate1.setDate(endDate1.getDate() + record.record._data.durationMile);
+                if(record.record._parent._data.endDate != undefined){
+                endDate = new Date(record.record._parent._data.endDate);
+                endDate.setDate(endDate.getDate() - 1);
+                endDate = new Date(endDate);
+                //return record.value;
+
+                return (
+                  months[endDate.getMonth()] +
+                  " " +
+                  Number(endDate.getDate()) +
+                  ", " +
+                  endDate.getFullYear()
+                );
+
+                }
+              }else{
+                var sdate = new Date(record.record.startDate);
+                return (
+                    months[sdate.getMonth()] +
+                    " " +
+                    Number(sdate.getDate()) +
+                    ", " +
+                    sdate.getFullYear()
+                  );
+              }
+            },
           },
           {
             type: "enddate",
@@ -1730,7 +1775,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                 "Dec",
               ];
               if (record.value) {
-                
+
                 // console.log('Record of endDate =>',{record});
                 // console.log('duration>>>', record.record._data.duration);
                 // console.log('type>>>', record.record._data.type);
@@ -1798,8 +1843,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     // console.log('rc val>>>',record.value);
                   endDate = new Date(record.value);
                   endDate.setDate(endDate.getDate() - 1);
-                  endDate = new Date(endDate);   
-                  
+                  endDate = new Date(endDate);
+
                   map1.set(count,endDate);
                 //   console.log({map1});
                   return (
@@ -1868,9 +1913,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     // console.log('1-'+endDate);
                     endDate.setDate(endDate.getDate() - 1);
                     // console.log('2-'+endDate);
-                    endDate = new Date(endDate); 
+                    endDate = new Date(endDate);
                     // console.log('3-'+endDate);
-                      
+
 
                     // endDate.setDate(endDate.getDate() + record.record._parent._data.duration);
                   // }

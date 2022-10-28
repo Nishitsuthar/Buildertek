@@ -1,0 +1,55 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="newOptionClass">
+	
+	<aura:attribute name="Option" type="Question__c" default="{ 'sobjectType': 'Question__c'}" />
+
+		<lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Question__c">
+		<div style="background-color: white;">
+			<div class="slds-grid">
+				<div class="slds-col slds-size_1-of-2">
+					<lightning:inputField fieldName="buildertek__Price_Book__c" value="{!v.Option.buildertek__Price_Book__c}" />
+					<lightning:inputField fieldName="buildertek__Product__c" value="{!v.Option.buildertek__Product__c}" />
+					<lightning:inputField fieldName="Name" value="{!v.Option.Name}" />
+					<lightning:inputField fieldName="buildertek__Quantity__c" value="{!v.Option.buildertek__Quantity__c}" />
+					<lightning:inputField fieldName="buildertek__Cost__c" value="{!v.Option.buildertek__Cost__c}" />
+					<lightning:inputField fieldName="buildertek__Markup__c" value="{!v.Option.buildertek__Markup__c}" />
+					<lightning:inputField fieldName="buildertek__Upgrade_Costs__c" value="{!v.Option.buildertek__Upgrade_Costs__c}" />				
+				</div>		
+				
+				<div class="slds-col slds-size_1-of-2">
+					<lightning:inputField fieldName="buildertek__Question_Group__c" value="{!v.Option.buildertek__Question_Group__c}" />
+					<lightning:inputField fieldName="buildertek__Manufacturer__c" value="{!v.Option.buildertek__Manufacturer__c}" />
+					<lightning:inputField fieldName="buildertek__Selected__c" value="{!v.Option.buildertek__Selected__c}" />					
+					<lightning:inputField fieldName="buildertek__Default_Option__c" value="{!v.Option.buildertek__Default_Option__c}" />				
+				</div>
+				
+			</div>
+			<div class="slds-grid">
+				<div class="slds-col slds-size_1-of-2">
+					<!-- <h3 class="slds-section-titledivider">Upgrade Details</h3> -->
+					<lightning:inputField fieldName="buildertek__Upgrade__c" value="{!v.Option.buildertek__Upgrade__c}" />
+					
+					<lightning:inputField fieldName="buildertek__Date_Option_Upgraded__c" value="{!v.Option.buildertek__Date_Option_Upgraded__c}" />
+				</div>
+				<div class="slds-col slds-size_1-of-2">
+					<lightning:inputField fieldName="buildertek__Original_Option__c" value="{!v.Option.buildertek__Original_Option__c}" />
+				</div>
+			</div>
+			<div class="slds-grid">
+				<div class="slds-col slds-size_1-of-2">
+					<!-- <h3 class="slds-section-titledivider">Related Items</h3> -->
+					<lightning:inputField fieldName="buildertek__Purchase_Order__c" value="{!v.Option.buildertek__Purchase_Order__c}" />
+					<lightning:inputField fieldName="buildertek__Purchase_Order_Line__c" value="{!v.Option.buildertek__Purchase_Order_Line__c}" />
+					
+				</div>
+				<div class="slds-col slds-size_1-of-2">
+					<lightning:inputField fieldName="buildertek__Change_Order__c" value="{!v.Option.buildertek__Change_Order__c}" />
+					<lightning:inputField fieldName="buildertek__Change_Order_Line__c" value="{!v.Option.buildertek__Change_Order_Line__c}" />
+				</div>
+			</div>
+		</div>
+	  
+	 
+		<lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
+		<lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRecord}"/>
+</lightning:recordEditForm>
+</aura:component>

@@ -524,7 +524,7 @@ public with sharing class PurchaseOrderDAO{
 			}
 		}
 		//list<Product2> productfamlylst = [select id, Name,family from Product2 where Id IN :ProdIds AND family != null order by family];
-		List<AggregateResult> productfamlylst = [SELECT family
+		List<AggregateResult> productfamlylst = [SELECT toLabel(Family) familyLabel
 		                                         FROM Product2
 		                                         where (Id IN :ProdIds AND family != null)
 		                                         group by family];
@@ -532,7 +532,7 @@ public with sharing class PurchaseOrderDAO{
 		if (productfamlylst.size() > 0){
 			for (AggregateResult agg : productfamlylst){
 				productfamilyClass pf = new productfamilyClass();
-				pf.productfamilyvalues = string.valueof(agg.get('family'));
+				pf.productfamilyvalues = string.valueof(agg.get('familyLabel'));
 				pfwrapperlst.add(pf);
 			}
 			system.debug('pfwrapperlst---->' + pfwrapperlst);

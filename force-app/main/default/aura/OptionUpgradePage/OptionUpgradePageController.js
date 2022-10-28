@@ -10,6 +10,10 @@
         var productValue = productWrapper[idx].product;
         component.set("v.productValue", productValue);
     }, 
+
+    changePriceBook: function (component, event, helper) {
+        helper.changePriceBookHelper(component, event, helper);
+    },
     
     doSearch: function (component, event, helper) {
         helper.searchHelper(component, event, helper);
@@ -60,17 +64,38 @@
     }, 
 
     onImageClick: function (component, event, helper){
-        var docsId = event.getSource().get("v.id");
-        console.log('docsId => '+docsId);
-        component.set("v.ImageId", docsId);
+        var docsInx = event.getSource().get("v.id");
+        var indexLst = docsInx.split("-");
+        console.log('indexLst => '+indexLst);
+        var productWrapper = component.get("v.productWrapper");
+        var docsList = productWrapper[indexLst[0]].contentDocsList;
+        component.set("v.ImageList", docsList);
+        component.set("v.ImageIndex", parseInt(indexLst[1]));
         component.set("v.ImageModal", true);
     }, 
 
-    closeImage: function (component, event, helper){
-        var id = event.target.id;
-        if (id != 'imgDiv') {
-            component.set("v.ImageModal", false);
+    closeImageModal: function (component, event, helper){
+        var targer = event.target;
+        if (targer != undefined) {
+            var id = event.target.id;
+            if (id != 'imgDiv' && id != 'imgMainDiv') {
+                component.set("v.ImageModal", false);
+                component.set("v.ImageIndex", 0);
+            } 
         }
-    }
+    }, 
+
+    closeImage: function (component, event, helper){
+        component.set("v.ImageModal", false);
+        component.set("v.ImageIndex", 0);
+    }, 
+
+    previousImage: function (component, event, helper){
+        component.set("v.ImageIndex", component.get("v.ImageIndex")-1);
+    }, 
+
+    nextImage: function (component, event, helper){
+        component.set("v.ImageIndex", component.get("v.ImageIndex")+1);
+    }, 
 
 })

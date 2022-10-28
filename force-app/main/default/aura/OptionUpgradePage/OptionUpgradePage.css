@@ -51,3 +51,43 @@
     flex-direction: column;
     text-align: center;
 }
+
+.THIS .slds19{
+    width: 19%;
+}
+
+.THIS .priceDiv{
+    width: 24%;
+}
+
+.THIS .priceDiv .slds-form-element{
+    display: flex;
+}
+
+.THIS .priceDiv .slds-form-element__label{
+    line-height: 25px;
+    width: 115px;
+}
+
+.THIS .priceDiv .slds-grow{
+    width: 50%;
+}
+
+.THIS .closeIcon{
+    position: absolute;
+    right: 0;
+    top: -30px;
+}
+
+.THIS .leftBtn{
+    position: absolute;
+    top: 50%;
+    left: -50px;
+}
+
+.THIS .rightBtn{
+    position: absolute;
+    top: 50%;
+    right: -50px;
+    transform: rotate(180deg);
+}
