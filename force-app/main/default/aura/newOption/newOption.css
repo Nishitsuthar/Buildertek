@@ -4,3 +4,14 @@
     background: red; 
     z-index: 1; */
 }
+
+.THIS .headingDiv{
+    background: rgb(243, 243, 243);
+    color: #000;
+    font-size: 1rem;
+    padding: 5px 10px;
+}
+
+/* .THIS .checkboxLabel{
+    color: rgb(116, 116, 116);
+} */

@@ -619,6 +619,8 @@ export default base => class GanttToolbar extends base {
                  console.log('dfr',ganttRowData)
             }
         }
+        // eval("$A.get('e.force:refreshView').fire();");
+        window.location.reload();
         //send only task rows to apex and update/insert them
         //for newly added tasks we getting id="_generated+index" so while sending data to apex we can check to insert them
     }

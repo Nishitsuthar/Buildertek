@@ -2262,6 +2262,25 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         }
         return COItemsClassList;
     }
+
+    @AuraEnabled
+    public static List<buildertek__Budget_Item__c> retrieveGroupsByCost(string budgetId, Decimal pageNumber, Integer recordToDisply){
+        Integer pageSize = recordToDisply;
+        Integer offset = ((Integer)pageNumber - 1) * pageSize;
+
+        List<buildertek__Budget_Item__c> budgetItemList = new List<buildertek__Budget_Item__c>();
+
+        String query = 'SELECT Id, Name, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Description__c, buildertek__Quantity__c, buildertek__Unit_Price__c, buildertek__Trade_Type__c, buildertek__Invoice_total__c,'; 
+        query = query + ' buildertek__Original_Budget__c, buildertek__Total_Approvals_CO__c, buildertek__Committed_Costs__c, buildertek__Additional_Costs__c, buildertek__Projected_Costs__c, buildertek__Forecast_To_Complete__c,';
+        query = query + ' buildertek__Total_Costs__c, buildertek__Profit_Loss__c, buildertek__Labor1__c, buildertek__Cost_Code__c, buildertek__Cost_Code__r.Name, buildertek__Gross_Profit_Margin__c, buildertek__CostCodeDivision__c,';
+        query = query + ' buildertek__Gross_Profit_Percemtage__c, buildertek__Total_Sales_Price__c FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c =: budgetId ORDER BY buildertek__Cost_Code__c NULLS LAST';
+        query = query + ' LIMIT ' + pageSize;
+        query = query + ' OFFSET ' + offset;
+
+        budgetItemList = Database.query(query);
+
+        return budgetItemList;
+    }
     
     public class multipleBudgetLinesClass{
         @AuraEnabled

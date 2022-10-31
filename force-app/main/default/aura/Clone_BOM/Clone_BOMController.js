@@ -8,7 +8,8 @@
             var state = response.getState(); 
             if(state === "SUCCESS") {
                 var result = response.getReturnValue();
-                component.set("v.currentVersion",result);
+                component.set("v.currentVersion",result.buildertek__Version_Number__c);
+                component.set("v.BOMNameValue",result.buildertek__Name__c);
             }
         });
         
@@ -40,7 +41,8 @@
                var action = component.get("c.cloneAnySobjet");
                action.setParams({
                    "recordId": component.get("v.recordId"),
-                   "version": component.get("v.versionValue")
+                   "version": component.get("v.versionValue"),
+                   "BOMName": component.get("v.BOMNameValue")
                });
                action.setCallback(this, function(response) {
                    var state = response.getState(); 

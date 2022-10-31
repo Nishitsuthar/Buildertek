@@ -1,14 +1,13 @@
 public class CloneBOM {
      @AuraEnabled
-      public static string getCurrentVersion(String recordId){
-         buildertek__Project_Selection_Sheet_Takeoff__c takeoff = [select id,buildertek__Version_Number__c from buildertek__Project_Selection_Sheet_Takeoff__c where id=:recordId];
-         return takeoff.buildertek__Version_Number__c;
- 
+      public static buildertek__Project_Selection_Sheet_Takeoff__c getCurrentVersion(String recordId){
+         buildertek__Project_Selection_Sheet_Takeoff__c takeoff = [SELECT Id, buildertek__Name__c, buildertek__Project__c, buildertek__Version_Number__c FROM buildertek__Project_Selection_Sheet_Takeoff__c WHERE Id =:recordId];
+         return takeoff;
       }
 
 
     @AuraEnabled
-    public static string cloneAnySobjet(String recordId,string version){
+    public static string cloneAnySobjet(String recordId,string version, String BOMName){
          Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
         String objectAPIName = 'buildertek__Project_Selection_Sheet_Takeoff__c';
         String keyPrefix = recordId.substring(0,3);
@@ -27,6 +26,7 @@ public class CloneBOM {
        
         buildertek__Project_Selection_Sheet_Takeoff__c clondedParentRecordID= record.clone(false, false, false, false);
         clondedParentRecordID.buildertek__Version_Number__c = version;
+        clondedParentRecordID.buildertek__Name__c = BOMName;
        
         
         insert clondedParentRecordID ;

@@ -371,7 +371,10 @@
                                     <div class="slds-col slds-size_6-of-12">
                                         <lightning:input type="text" label="Description"
                                             value="{!v.newQuote.buildertek__Description__c}"
-                                            required="true" />
+                                            required="true" style="max-width: 100% !important;"/>
+                                    </div>
+                                    <div class="slds-col slds-size_6-of-12">
+                                        <ui:inputTextArea value="{!v.newQuote.buildertek__Notes__c}"/>
                                     </div>
                                     <div class="slds-col slds-size_6-of-12">
                                         <label class="slds-form-element__label">Grouping</label>
@@ -379,8 +382,12 @@
                                             childObjectName="buildertek__Quote_Item__c"
                                             recordId="{!v.newQuote.buildertek__Grouping__c}" />
                                     </div>
+                                    
+                                        
+                                    
                                 </div>
                                 <div class="slds-grid slds-gutters">
+                                   
                                     <div class="slds-col slds-size_6-of-12">
                                         <label class="slds-form-element__label">Product</label>
                                         <c:BT_LightningLookup objectAPIName="Product2" IconName="standard:product"
@@ -422,7 +429,7 @@
                                     <div class="slds-col slds-size_6-of-12">
                                         <lightning:input type="Currency" label="Unit Cost"
                                             value="{!v.newQuote.buildertek__Unit_Cost__c}" aura:id="unitCostId"
-                                            required="true" />
+                                            required="true"/>
                                     </div>
                                     <div class="slds-col slds-size_6-of-12">
                                     </div>
@@ -558,7 +565,7 @@
                                     <tr class="slds-text-title_caps">
                                         <th scope="col"
                                             style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;">
-                                            <div class="slds-truncate" title="Pricebook">Pricebook</div>
+                                            <div class="slds-truncate" title="Pricebook" >Pricebook</div>
                                         </th>
                                         <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
                                             <div class="slds-truncate" title="Product Family">Product Family</div>
@@ -572,9 +579,9 @@
                                         <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;  ">
                                             <div class="slds-truncate" title="Grouping">Grouping</div>
                                         </th>
-                                        <!-- <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
-                                            <div class="slds-truncate" title="UOM">UOM</div>
-                                        </th> -->
+                                         <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
+                                            <div class="slds-truncate" title="note">Note</div>
+                                        </th> 
                                         <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                             <div class="slds-truncate" title="Quantity">Quantity</div>
                                         </th>
@@ -642,19 +649,19 @@
                                             </ui:inputSelect>
                                         </td> -->
                                         <td>
+                                            <ui:inputTextArea value="{!v.newQuote.buildertek__Notes__c}"/>
+                                        </td>
+                                        <td style="width: 6% !important;">
                                             <ui:inputNumber value="{!v.newQuote.buildertek__Quantity__c}" />
                                         </td>
-                                        <td>
+                                        <td style="width: 6% !important;">
                                             <ui:inputCurrency value="{!v.newQuote.buildertek__Unit_Cost__c}"
-                                                aura:id="unitCostId" />
+                                                aura:id="unitCostId"/>
                                         </td>
-                                        <td style="padding-bottom:18px;">
-                                            <!--       <ui:inputNumber value="{!v.newQuote.buildertek__Markup__c}" aura:id="markUpId"
-                                                 /> -->
+                                        <td style="padding-bottom:22px; width: 6% !important;">
                                             <lightning:input type="number" name="input6" label=""
                                                 value="{!v.newQuote.buildertek__Markup__c}" formatter="percent-fixed"
                                                 aura:id="markUpId" />
-
                                         </td>
                                         <td>
                                             <lightning:buttonIcon iconName="utility:save" alternativeText="save"

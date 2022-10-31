@@ -413,6 +413,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     if (e.currentTarget.dataset.inputname == "buildertek__Dependency__c") {
       this.newTaskRecordCreate[e.currentTarget.dataset.inputname] =
         this.template.querySelectorAll("lightning-input-field")[1].value;
+        console.log('NAME___>this.newTaskRecordCreate===>',this.newTaskRecordCreate);
     } else if (e.currentTarget.dataset.inputname == "buildertek__Resource__c") {
       this.newTaskRecordCreate[e.currentTarget.dataset.inputname] =
         this.template.querySelectorAll("lightning-input-field")[2].value;
@@ -516,6 +517,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         }
       }
 
+      console.log('>>>>this.newTaskRecordCreate===>',this.newTaskRecordCreate);
       this.newTaskRecordCreate[e.currentTarget.dataset.inputname] =
         e.target.value;
     }

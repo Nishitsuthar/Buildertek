@@ -27,6 +27,8 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
     var phIndex = -1;
     for(var i=0;i<taskListForPhase.length;i++){
         if(taskListForPhase[i].buildertek__Phase__c && taskPhaseRow){
+            console.log('method 1 in helper');
+
             if(taskPhaseRow['name'] != taskListForPhase[i].buildertek__Phase__c){
                 phIndex = phIndex+1;
                 taskPhaseRow = {}
@@ -97,11 +99,13 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                 }
 
                 rowChilObj['notes'] = taskListForPhase[i].buildertek__Notes__c;
-
+                console.log('JUMBIO IN METHOD');
                 if(taskListForPhase[i].buildertek__Lag__c != undefined && taskListForPhase[i].buildertek__Lag__c != null && taskListForPhase[i].buildertek__Lag__c != 0){
-                var startDate = new Date(taskListForPhase[i].buildertek__Start__c);
-                startDate.setDate(startDate.getDate() + (taskListForPhase[i].buildertek__Lag__c));
-                rowChilObj["startDate"] = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
+                    var startDate = new Date(taskListForPhase[i].buildertek__Start__c);
+                    // commented this line because it is adding extra lags in the backend data
+                    // commented by Nishit (MV Clouds)
+                    // startDate.setDate(startDate.getDate() + (taskListForPhase[i].buildertek__Lag__c));
+                    rowChilObj["startDate"] = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
                 }
                // console.log('start,',taskListForPhase[i].buildertek__Start__c)
                 rowChilObj["duration"] = taskListForPhase[i].buildertek__Duration__c
@@ -208,6 +212,8 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                }
             //firstRowDup['children'].push(taskPhaseRow);
         }else if(taskListForPhase[i].buildertek__Phase__c && !taskPhaseRow){
+            console.log('method 2 in helper');
+
             taskPhaseRow = {};
             phIndex = phIndex+1;
             taskPhaseRow["type"] = 'Phase'
@@ -273,9 +279,11 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                 
                 rowChilObj['notes'] = taskListForPhase[i].buildertek__Notes__c;
 
+                console.log('JUMBIO IN METHOD 2');
                 if(taskListForPhase[i].buildertek__Lag__c != undefined && taskListForPhase[i].buildertek__Lag__c != null && taskListForPhase[i].buildertek__Lag__c != 0){
                 var startDate = new Date(taskListForPhase[i].buildertek__Start__c);
                 startDate.setDate(startDate.getDate() + (taskListForPhase[i].buildertek__Lag__c));
+                console.log('method 2 id and start date '+startDate+' id '+taskListForPhase[i].Id);
                 rowChilObj["startDate"] = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
                 }
                 //console.log('start,',taskListForPhase[i].buildertek__Start__c)
@@ -373,6 +381,7 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                // console.log(taskPhaseRow)
                 newPhaseFlag = false;
         }else if(!taskListForPhase[i].buildertek__Phase__c){
+            console.log('method 3 in helper');
             phIndex = phIndex+1;
             var rowChilObj = {};
             rowChilObj["type"] = 'Task'
@@ -429,7 +438,12 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
 
             if(taskListForPhase[i].buildertek__Lag__c != undefined && taskListForPhase[i].buildertek__Lag__c != null && taskListForPhase[i].buildertek__Lag__c != 0){
             var startDate = new Date(taskListForPhase[i].buildertek__Start__c);
-            startDate.setDate(startDate.getDate() + (taskListForPhase[i].buildertek__Lag__c));
+            
+            // commented this line because it is adding extra lag into child record
+            // commented this by Nishit (MV Clouds)
+            // startDate.setDate(startDate.getDate() + (taskListForPhase[i].buildertek__Lag__c));
+            startDate.setDate(startDate.getDate());
+
             rowChilObj["startDate"] = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
             }
             //console.log('start,',taskListForPhase[i].buildertek__Start__c)
@@ -545,6 +559,7 @@ function saveeditRecordMethod(event,thisVal){
     if(thisVal.scheduleData.Id){
         schId = thisVal.scheduleData.Id
     }
+    console.log('id for record ',thisVal.taskRecordId);
     if(thisVal.taskRecordId){
         thisVal.newTaskRecordCreate.Id = thisVal.taskRecordId
         isNotInsert = true
@@ -885,8 +900,11 @@ function saveeditRecordMethod(event,thisVal){
             },500);
             console.log(addedTaskFromPlusIcon);
         }
+        let temp = thisVal.newTaskRecordCreate;
+        console.log('temp var here ==> ',{temp});
         insertUpdateTask({taskFields: JSON.stringify(thisVal.newTaskRecordCreate),isUpdate: isNotInsert,scheduleId : schId}).then(response => {
-            console.log(response)
+            console.log('RESPONSE');
+            console.log({response})
             const filterChangeEvent = new CustomEvent('filterchange', {
                 detail: { 'message' :'refresh page' },
             }); 

@@ -635,6 +635,7 @@ public with sharing class QuoteDAO{
         QuoteLineToInsert.buildertek__Unit_Cost__c = QuoteRec.buildertek__Unit_Cost__c;
         QuoteLineToInsert.buildertek__Unit_Price__c = QuoteRec.buildertek__Unit_Price__c;
         QuoteLineToInsert.buildertek__Quantity__c = QuoteRec.buildertek__Quantity__c;
+        QuoteLineToInsert.buildertek__Notes__c = QuoteRec.buildertek__Notes__c;
         QuoteLineToInsert.buildertek__Cost_Code__c = QuoteRec.buildertek__Cost_Code__c;
         QuoteLineToInsert.buildertek__Markup__c = QuoteRec.buildertek__Markup__c;
         QuoteLineToInsert.buildertek__Additional_Discount__c = QuoteRec.buildertek__Additional_Discount__c;
@@ -1439,6 +1440,7 @@ public with sharing class QuoteDAO{
         qtItem.Description__c = rfqItem.Description__c;
         qtItem.Cost_Code__c = rfqItem.Cost_Code__c;
         qtItem.Item_Name__c = rfqItem.Name;
+        qtItem.buildertek__Notes__c = qtItem.buildertek__Notes__c;
         qtItem.Quantity__c = rfqItem.Quantity__c;
         qtItem.Unit_Price__c = rfqItem.Unit_Price__c;
         qtItem.Unit_Cost__c = rfqItem.Unit_Price__c;
@@ -1706,7 +1708,7 @@ public with sharing class QuoteDAO{
         
          system.debug('recordId ---------->'+recordId);
         
-        buildertek__Quote_Item__c quoteRecord = [select id, name, buildertek__Markup__c,buildertek__Unit_Price__c,buildertek__Net_Unit__c,buildertek__Additional_Discount__c, buildertek__Unit_Cost__c from buildertek__Quote_Item__c Where Id =: recordId];
+        buildertek__Quote_Item__c quoteRecord = [select id, name, buildertek__Markup__c,buildertek__Unit_Price__c,buildertek__Net_Unit__c,buildertek__Additional_Discount__c, buildertek__Unit_Cost__c, buildertek__Notes__c from buildertek__Quote_Item__c Where Id =: recordId];
         
         
         system.debug('Quote record-------->'+quoteRecord);
@@ -1720,7 +1722,7 @@ public with sharing class QuoteDAO{
     
     system.debug('markup from controller----->'+markup);
     
-   buildertek__Quote_Item__c quoterec= [select id, name, buildertek__Markup__c,buildertek__Net_Unit__c,buildertek__Additional_Discount__c, buildertek__Unit_Cost__c from buildertek__Quote_Item__c Where Id =: recordId];
+   buildertek__Quote_Item__c quoterec= [select id, name, buildertek__Markup__c,buildertek__Net_Unit__c,buildertek__Additional_Discount__c, buildertek__Unit_Cost__c, buildertek__Notes__c from buildertek__Quote_Item__c Where Id =: recordId];
     quoterec.buildertek__Markup__c = markup;
     
     update quoterec;
@@ -1938,6 +1940,7 @@ public with sharing class QuoteDAO{
             newQline.buildertek__Additional_Discount__c = qql.buildertek__Additional_Discount__c;
             newQline.buildertek__Grouping__c = qql.buildertek__Grouping__c;   
             newQline.buildertek__Quantity__c = qql.buildertek__Quantity__c;
+            newQline.buildertek__Notes__c = newQline.buildertek__Notes__c;
             newQline.buildertek__Status__c = 'Accept';
             newQline.buildertek__Quote__c = QuoteId;
             insertListofQuoteLines.add(newQline); 

@@ -606,6 +606,7 @@
                 component.set('v.newQuote.buildertek__Grouping__c', null);
                 component.set('v.newQuote.buildertek__UOM__c', '');
                 component.set('v.newQuote.buildertek__Unit_Cost__c', '');
+                component.set('v.newQuote.buildertek__Notes__c', '');
                 component.set('v.newQuote.buildertek__Quantity__c', 1);
                 component.set('v.newQuote.buildertek__Markup__c', '');
                 component.set('v.newQuote.buildertek__Product__c', '');
