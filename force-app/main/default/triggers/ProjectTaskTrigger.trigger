@@ -8,9 +8,10 @@
 trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after update, before delete, after delete, before insert, before update, After Undelete ){
 	System.debug(ProjectTaskTriggerHandler.blnSkipTaskTrigger);
 	System.debug('outside condition project task ==> ');
+    system.debug(BT_Utils.isTriggerDeactivate('Project_Task__c')+'--'+ProjectTaskTriggerHandler.blnSkipTaskTrigger);
 	if (!BT_Utils.isTriggerDeactivate('Project_Task__c') && !ProjectTaskTriggerHandler.blnSkipTaskTrigger){
 		System.debug('in trigger ==> ');
-		ProjectTaskTriggerHandler handler = new ProjectTaskTriggerHandler(Trigger.isExecuting, Trigger.size);
+		ProjectTaskTriggerHandler handler = new ProjectTaskTriggerHandler(Trigger.isExecuting, Trigger.size, Trigger.oldMap);
 		if (Trigger.isInsert){
 			if (ProjectTaskTriggerHandler.blnSkipTaskTrigger){
 				return;
@@ -58,7 +59,7 @@ trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after up
 			System.debug('In the update trigger');
 			if (Trigger.isAfter){
 				handler.updateChildDatesWithPredecessor(Trigger.new, Trigger.newMap);
-				handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
+				handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, Trigger.oldMap);
 				handler.OnAfterUpdateOriginalstartandEndDates(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
 				handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
 				System.debug('at the end of IS update trigger');

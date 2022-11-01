@@ -730,7 +730,7 @@
                                                 <tr class="groupHeader">
                                                     <td>
                                                     </td>
-                                                    <td colspan="{!v.TotalRecords.columns.length}">
+                                                    <td colspan="{!(v.TotalRecords.columns.length != '' ? 12 : v.TotalRecords.columns.length)}">
                                                         <div class="slds-grid slds-gutters">
                                                             <span style="display:none;" class="{!v.currentTab+' '+v.budgetId+' expandGrpIcon_'+parentGroupIndex}" data-grpindex="{!parentGroupIndex}" onclick="{!c.expandCollapseGroups}">
                                                                 <lightning:icon iconName="utility:add" size="xx-small"
@@ -1037,8 +1037,8 @@
                                                                                     </aura:if>
                                                                                 </aura:if>
                                                                                 <aura:if isTrue="{!value.fieldType == 'currency'}">
-                                                                                    <aura:if isTrue="{!value.originalValue != ''}">
-
+                                                                                    <!-- Table Data Set From Here -->
+                                                                                    <aura:if isTrue="{!not(empty(value.originalValue))}">
                                                                                         <lightning:formattedNumber value="{!value.originalValue}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
                                                                                         <!--</aura:if>-->
                                                                                         <!--<lightning:formattedNumber value="{!value.originalValue}" currencyDisplayAs="code" 
@@ -1086,8 +1086,12 @@
                                                                                     <lightning:formattedNumber value="{!value.originalValue}" />
                                                                                 </aura:if>
                                                                                 <aura:if isTrue="{!and(and(value.fieldType == 'string', value.fieldName !='buildertek__Item_Name__c'),value.fieldName !='buildertek__CostCodeDivision__c' )}">
-
-                                                                                    <lightning:formattedNumber value="{!value.originalValue/100}" style="percent" minimumFractionDigits="2" />
+                                                                                    <aura:if isTrue="{!not(empty(value.originalValue))}">
+                                                                                        <lightning:formattedNumber value="{!value.originalValue/100}" style="percent" minimumFractionDigits="2" />
+                                                                                        <aura:set attribute="else">
+                                                                                            <lightning:formattedNumber value="0.00" style="percent" minimumFractionDigits="2" />
+                                                                                        </aura:set>
+                                                                                    </aura:if>
                                                                                 </aura:if>
                                                                                 <aura:if isTrue="{!value.fieldName == 'buildertek__Item_Name__c'}">
                                                                                     <lightning:formattedText value="{!value.originalValue}" />
@@ -1691,180 +1695,155 @@
                                                     <aura:if isTrue="{!!v.groupBytoggle}">
                                                         <aura:if isTrue="{!v.groupBytoggle1}">
                                                             <aura:if isTrue="{!!v.groupBytoggle2}">
-                                                                <tr class="groupFooter">
-                                                                    <td>
-                                                                    </td>
-                                                                    <td>
-                                                                    </td>
-                                                                    <td>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span style="font-weight: bold;font-size: 0.78rem !important;">Total </span>
-                                                                    </td>
+                                                                <aura:if isTrue="{!!v.groupByCostCode}">
+                                                                    <tr class="groupFooter">
+                                                                        <td>
+                                                                        </td>
+                                                                        <td>
+                                                                        </td>
+                                                                        <td>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">Total </span>
+                                                                        </td>
 
 
-                                                                    <aura:iteration items="{!v.listOfRecords}" var="rec" indexVar="totalRecordsIndex">
+                                                                        <aura:iteration items="{!v.listOfRecords}" var="rec" indexVar="totalRecordsIndex">
 
-                                                                        <aura:if isTrue="{!and(group.groupName == rec.groupName)}">
-                                                                            <!--  <td></td>-->
-                                                                            <td>
-                                                                            </td>
-                                                                            <!-- <td></td> -->
-                                                                            <aura:if isTrue="{!group.totals.unitPrice}">
+                                                                            <aura:if isTrue="{!and(group.groupName == rec.groupName)}">
+                                                                                <!--  <td></td>-->
                                                                                 <td>
+                                                                                </td>
+                                                                                <!-- <td></td> -->
+                                                                                <aura:if isTrue="{!group.totals.unitPrice}">
+                                                                                    <td>
 
-                                                                                    <aura:if isTrue="{!and(and(group.totals.unitPrice != null, group.totals.unitPricekey == 'buildertek__Unit_Price__c'),group.totals.fieldType == 'currency')}">
-                                                                                        <span style="font-weight: bold;font-size: 0.78rem !important;">
-
-                                                                                            <lightning:formattedNumber
-                                                                                                value="{!group.totals.unitPrice}"
-                                                                                                style="currency"
-                                                                                                currencyCode="{!v.currencycode}"
-                                                                                                currencyDisplayAs="code" />
-
-                                                                                            <aura:set attribute="else">
+                                                                                        <aura:if isTrue="{!and(and(group.totals.unitPrice != null, group.totals.unitPricekey == 'buildertek__Unit_Price__c'),group.totals.fieldType == 'currency')}">
+                                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">
 
                                                                                                 <lightning:formattedNumber
-                                                                                                    value="0.00"
+                                                                                                    value="{!group.totals.unitPrice}"
                                                                                                     style="currency"
                                                                                                     currencyCode="{!v.currencycode}"
                                                                                                     currencyDisplayAs="code" />
 
-                                                                                            </aura:set>
-                                                                                        </span>
-                                                                                    </aura:if>
-                                                                                </td>
+                                                                                                <aura:set attribute="else">
+
+                                                                                                    <lightning:formattedNumber
+                                                                                                        value="0.00"
+                                                                                                        style="currency"
+                                                                                                        currencyCode="{!v.currencycode}"
+                                                                                                        currencyDisplayAs="code" />
+
+                                                                                                </aura:set>
+                                                                                            </span>
+                                                                                        </aura:if>
+                                                                                    </td>
+                                                                                </aura:if>
+                                                                                <!--  <td></td>-->
+                                                                                <aura:if isTrue="{!group.totals.orignalbudget}">
+                                                                                    <td>
+                                                                                        <aura:if isTrue="{!and(and(group.totals.orignalbudget != null, group.totals.orignalbudgetkey == 'buildertek__Original_Budget__c'),group.totals.fieldType == 'currency')}">
+                                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">
+
+                                                                                                <lightning:formattedNumber
+                                                                                                    value="{!group.totals.orignalbudget}"
+                                                                                                    style="currency"
+                                                                                                    currencyCode="{!v.currencycode}"
+                                                                                                    currencyDisplayAs="code" />
+
+                                                                                                <aura:set attribute="else">
+                                                                                                    <lightning:formattedNumber
+                                                                                                        value="0.00"
+                                                                                                        style="currency"
+                                                                                                        currencyCode="{!v.currencycode}"
+                                                                                                        currencyDisplayAs="code" />
+                                                                                                </aura:set>
+                                                                                            </span>
+                                                                                        </aura:if>
+                                                                                    </td>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!OR(group.totals.TotalApprovals == 0, group.totals.TotalApprovals)}">
+
+                                                                                    <td>
+                                                                                        <aura:if isTrue="{!and(and(group.totals.TotalApprovals != null, group.totals.TotalApprovalskey == 'buildertek__Total_Approvals_CO__c'),group.totals.fieldType == 'currency')}">
+                                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">
+
+                                                                                                <lightning:formattedNumber
+                                                                                                    value="{!group.totals.TotalApprovals}"
+                                                                                                    style="currency"
+                                                                                                    currencyCode="{!v.currencycode}"
+                                                                                                    currencyDisplayAs="code" />
+
+                                                                                                <aura:set attribute="else">
+
+                                                                                                    <lightning:formattedNumber
+                                                                                                        value="0.00"
+                                                                                                        style="currency"
+                                                                                                        currencyCode="{!v.currencycode}"
+                                                                                                        currencyDisplayAs="code" />
+
+                                                                                                </aura:set>
+                                                                                            </span>
+                                                                                        </aura:if>
+                                                                                    </td>
+                                                                                    <!--   <aura:set attribute="else">
+                                                                            <aura:if isTrue="{!group.totals.TotalApprovals }">
+                                                                                    <td>
+                                                                            <aura:if isTrue="{!and(and(group.totals.TotalApprovals != null, group.totals.TotalApprovalskey == 'buildertek__Total_Approvals_CO__c'),group.totals.fieldType == 'currency')}">
+                                                                                <span style="font-weight: bold;font-size: 0.78rem !important;"  >
+                                                                                    
+                                                                                    <lightning:formattedNumber
+                                                                                                            value="{!group.totals.TotalApprovals}"
+                                                                                                            style="currency"  currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
+                                                                                    
+                                                                                    <aura:set attribute="else">
+                                                                                        
+                                                                                        <lightning:formattedNumber
+                                                                                                                value="0.00"
+                                                                                                                style="currency"  currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
+                                                                                    
+                                                                                    </aura:set>
+                                                                                </span>
                                                                             </aura:if>
-                                                                            <!--  <td></td>-->
-                                                                            <aura:if isTrue="{!group.totals.orignalbudget}">
-                                                                                <td>
-                                                                                    <aura:if isTrue="{!and(and(group.totals.orignalbudget != null, group.totals.orignalbudgetkey == 'buildertek__Original_Budget__c'),group.totals.fieldType == 'currency')}">
-                                                                                        <span style="font-weight: bold;font-size: 0.78rem !important;">
-
-                                                                                            <lightning:formattedNumber
-                                                                                                value="{!group.totals.orignalbudget}"
-                                                                                                style="currency"
-                                                                                                currencyCode="{!v.currencycode}"
-                                                                                                currencyDisplayAs="code" />
-
-                                                                                            <aura:set attribute="else">
-                                                                                                <lightning:formattedNumber
-                                                                                                    value="0.00"
-                                                                                                    style="currency"
-                                                                                                    currencyCode="{!v.currencycode}"
-                                                                                                    currencyDisplayAs="code" />
-                                                                                            </aura:set>
-                                                                                        </span>
-                                                                                    </aura:if>
-                                                                                </td>
-                                                                            </aura:if>
-                                                                            <aura:if isTrue="{!OR(group.totals.TotalApprovals == 0, group.totals.TotalApprovals)}">
-
-                                                                                <td>
-                                                                                    <aura:if isTrue="{!and(and(group.totals.TotalApprovals != null, group.totals.TotalApprovalskey == 'buildertek__Total_Approvals_CO__c'),group.totals.fieldType == 'currency')}">
-                                                                                        <span style="font-weight: bold;font-size: 0.78rem !important;">
-
-                                                                                            <lightning:formattedNumber
-                                                                                                value="{!group.totals.TotalApprovals}"
-                                                                                                style="currency"
-                                                                                                currencyCode="{!v.currencycode}"
-                                                                                                currencyDisplayAs="code" />
-
-                                                                                            <aura:set attribute="else">
-
-                                                                                                <lightning:formattedNumber
-                                                                                                    value="0.00"
-                                                                                                    style="currency"
-                                                                                                    currencyCode="{!v.currencycode}"
-                                                                                                    currencyDisplayAs="code" />
-
-                                                                                            </aura:set>
-                                                                                        </span>
-                                                                                    </aura:if>
-                                                                                </td>
-                                                                                <!--   <aura:set attribute="else">
-                                                                          <aura:if isTrue="{!group.totals.TotalApprovals }">
-                                                                                <td>
-                                                                        <aura:if isTrue="{!and(and(group.totals.TotalApprovals != null, group.totals.TotalApprovalskey == 'buildertek__Total_Approvals_CO__c'),group.totals.fieldType == 'currency')}">
-                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;"  >
+                                                                        </td>
                                                                                 
-                                                                                <lightning:formattedNumber
-                                                                                                           value="{!group.totals.TotalApprovals}"
-                                                                                                           style="currency"  currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
-                                                                                
-                                                                                <aura:set attribute="else">
-                                                                                    
-                                                                                    <lightning:formattedNumber
-                                                                                                               value="0.00"
-                                                                                                               style="currency"  currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
-                                                                                   
-                                                                                </aura:set>
-                                                                            </span>
-                                                                        </aura:if>
-                                                                    </td>
-                                                                              
-                                                                   </aura:if>
-                                                                          </aura:set>-->
-                                                                            </aura:if>
-
-                                                                            <!--  <aura:if isTrue="{!group.totals.CommittedCost}">-->
-                                                                            <td>
-                                                                                <aura:if isTrue="{!and(and(group.totals.CommittedCost != null, group.totals.CommittedCostkey == 'buildertek__Committed_Costs__c'),group.totals.fieldType == 'currency')}">
-                                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">
-                                                                                        <lightning:formattedNumber
-                                                                                            value="{!group.totals.CommittedCost}"
-                                                                                            style="currency"
-                                                                                            currencyCode="{!v.currencycode}"
-                                                                                            currencyDisplayAs="code" />
-
-                                                                                        <aura:set attribute="else">
-                                                                                            <lightning:formattedNumber
-                                                                                                value="0.00"
-                                                                                                style="currency"
-                                                                                                currencyCode="{!v.currencycode}"
-                                                                                                currencyDisplayAs="code" />
-
-                                                                                        </aura:set>
-                                                                                    </span>
+                                                                    </aura:if>
+                                                                            </aura:set>-->
                                                                                 </aura:if>
-                                                                            </td>
-                                                                            <!--  </aura:if>-->
-                                                                            <!-- <aura:if isTrue="{!group.totals.AdditionalCosts}">-->
-                                                                            <td>
-                                                                                <aura:if isTrue="{!and(and(group.totals.AdditionalCosts != null, group.totals.AdditionalCostsKey == 'buildertek__Additional_Costs__c'),group.totals.fieldType == 'currency')}">
-                                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">
 
-                                                                                        <lightning:formattedNumber
-                                                                                            value="{!group.totals.AdditionalCosts}"
-                                                                                            style="currency"
-                                                                                            currencyCode="{!v.currencycode}"
-                                                                                            currencyDisplayAs="code" />
-                                                                                        <aura:set attribute="else">
-
-                                                                                            <lightning:formattedNumber
-                                                                                                value="0.00"
-                                                                                                style="currency"
-                                                                                                currencyCode="{!v.currencycode}"
-                                                                                                currencyDisplayAs="code" />
-
-                                                                                        </aura:set>
-                                                                                    </span>
-                                                                                </aura:if>
-                                                                            </td>
-                                                                            <!--</aura:if>-->
-                                                                            <aura:if isTrue="{!group.totals.InvoiceCosts}">
-                                                                                <!--<aura:if isTrue="{!and(and(group.totals.InvoiceCosts == null, group.totals.InvoiceCostsKey == 'buildertek__Invoice_total__c'),group.totals.fieldType == 'currency')}">-->
-
+                                                                                <!--  <aura:if isTrue="{!group.totals.CommittedCost}">-->
                                                                                 <td>
-                                                                                    <aura:if isTrue="{!and(and(group.totals.InvoiceCosts != null, group.totals.InvoiceCostsKey == 'buildertek__Invoice_total__c'),group.totals.fieldType == 'currency')}">
+                                                                                    <aura:if isTrue="{!and(and(group.totals.CommittedCost != null, group.totals.CommittedCostkey == 'buildertek__Committed_Costs__c'),group.totals.fieldType == 'currency')}">
+                                                                                        <span style="font-weight: bold;font-size: 0.78rem !important;">
+                                                                                            <lightning:formattedNumber
+                                                                                                value="{!group.totals.CommittedCost}"
+                                                                                                style="currency"
+                                                                                                currencyCode="{!v.currencycode}"
+                                                                                                currencyDisplayAs="code" />
+
+                                                                                            <aura:set attribute="else">
+                                                                                                <lightning:formattedNumber
+                                                                                                    value="0.00"
+                                                                                                    style="currency"
+                                                                                                    currencyCode="{!v.currencycode}"
+                                                                                                    currencyDisplayAs="code" />
+
+                                                                                            </aura:set>
+                                                                                        </span>
+                                                                                    </aura:if>
+                                                                                </td>
+                                                                                <!--  </aura:if>-->
+                                                                                <!-- <aura:if isTrue="{!group.totals.AdditionalCosts}">-->
+                                                                                <td>
+                                                                                    <aura:if isTrue="{!and(and(group.totals.AdditionalCosts != null, group.totals.AdditionalCostsKey == 'buildertek__Additional_Costs__c'),group.totals.fieldType == 'currency')}">
                                                                                         <span style="font-weight: bold;font-size: 0.78rem !important;">
 
                                                                                             <lightning:formattedNumber
-                                                                                                value="{!group.totals.InvoiceCosts}"
+                                                                                                value="{!group.totals.AdditionalCosts}"
                                                                                                 style="currency"
                                                                                                 currencyCode="{!v.currencycode}"
                                                                                                 currencyDisplayAs="code" />
-
                                                                                             <aura:set attribute="else">
 
                                                                                                 <lightning:formattedNumber
@@ -1877,65 +1856,115 @@
                                                                                         </span>
                                                                                     </aura:if>
                                                                                 </td>
-                                                                            </aura:if>
-                                                                            <aura:if isTrue="{!OR(group.totals.TotalCosts == 0 , group.totals.TotalCosts)}">
-                                                                                <!-- <aura:if isTrue="{!group.totals.TotalCosts == 0}">
-                                                                       <aura:if isTrue="{!group.totals.TotalCosts}">-->
-                                                                                {!group.totals.TotalCost}
-                                                                                <!-- <aura:if isTrue="{!group.totals.TotalCosts == 0}">-->
-                                                                                <td>
+                                                                                <!--</aura:if>-->
+                                                                                <aura:if isTrue="{!group.totals.InvoiceCosts}">
+                                                                                    <!--<aura:if isTrue="{!and(and(group.totals.InvoiceCosts == null, group.totals.InvoiceCostsKey == 'buildertek__Invoice_total__c'),group.totals.fieldType == 'currency')}">-->
 
-                                                                                    <!--  <aura:if isTrue="{!and(and(group.totals.TotalCosts != null, group.totals.TotalCostsKey == 'buildertek__Total_Costs__c'),group.totals.fieldType == 'currency')}">-->
-                                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">
-
-                                                                                        <lightning:formattedNumber
-                                                                                            value="{!group.totals.TotalCosts}"
-                                                                                            style="currency"
-                                                                                            currencyCode="{!v.currencycode}"
-                                                                                            currencyDisplayAs="code" />
-
-                                                                                        <!-- <aura:set attribute="else">
-                                                                                    
-                                                                                    <lightning:formattedNumber
-                                                                                                               value="0.00"
-                                                                                                               style="currency"  currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
-                                                                                  
-                                                                                </aura:set>-->
-                                                                                    </span>
-
-                                                                                </td>
-                                                                            </aura:if>
-                                                                            <aura:if isTrue="{!group.totals.ProfitLoss}">
-                                                                                <td>
-                                                                                    <aura:if isTrue="{!and(and(group.totals.ProfitLoss != null, group.totals.ProfitLosskey == 'buildertek__Profit_Loss__c'),group.totals.fieldType == 'currency')}">
-                                                                                        <span style="font-weight:bold;font-size: 0.78rem !important;">
-
-                                                                                            <lightning:formattedNumber
-                                                                                                value="{!group.totals.ProfitLoss}"
-                                                                                                style="currency"
-                                                                                                currencyCode="{!v.currencycode}"
-                                                                                                currencyDisplayAs="code" />
-
-                                                                                            <aura:set attribute="else">
+                                                                                    <td>
+                                                                                        <aura:if isTrue="{!and(and(group.totals.InvoiceCosts != null, group.totals.InvoiceCostsKey == 'buildertek__Invoice_total__c'),group.totals.fieldType == 'currency')}">
+                                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">
 
                                                                                                 <lightning:formattedNumber
-                                                                                                    value="0.00"
+                                                                                                    value="{!group.totals.InvoiceCosts}"
                                                                                                     style="currency"
                                                                                                     currencyCode="{!v.currencycode}"
                                                                                                     currencyDisplayAs="code" />
 
-                                                                                            </aura:set>
-                                                                                        </span>
-                                                                                    </aura:if>
-                                                                                </td>
-                                                                            </aura:if>
-                                                                            <aura:if isTrue="{!OR(group.totals.Labor1 == 0, group.totals.Labor1)}">
-                                                                                <td>
-                                                                                    <aura:if isTrue="{!and(and(group.totals.Labor1 != null, group.totals.Labor1key == 'buildertek__Labor1__c'),group.totals.fieldType == 'currency')}">
+                                                                                                <aura:set attribute="else">
+
+                                                                                                    <lightning:formattedNumber
+                                                                                                        value="0.00"
+                                                                                                        style="currency"
+                                                                                                        currencyCode="{!v.currencycode}"
+                                                                                                        currencyDisplayAs="code" />
+
+                                                                                                </aura:set>
+                                                                                            </span>
+                                                                                        </aura:if>
+                                                                                    </td>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!OR(group.totals.TotalCosts == 0 , group.totals.TotalCosts)}">
+                                                                                    <!-- <aura:if isTrue="{!group.totals.TotalCosts == 0}">
+                                                                        <aura:if isTrue="{!group.totals.TotalCosts}">-->
+                                                                                    {!group.totals.TotalCost}
+                                                                                    <!-- <aura:if isTrue="{!group.totals.TotalCosts == 0}">-->
+                                                                                    <td>
+
+                                                                                        <!--  <aura:if isTrue="{!and(and(group.totals.TotalCosts != null, group.totals.TotalCostsKey == 'buildertek__Total_Costs__c'),group.totals.fieldType == 'currency')}">-->
                                                                                         <span style="font-weight: bold;font-size: 0.78rem !important;">
 
                                                                                             <lightning:formattedNumber
-                                                                                                value="{!group.totals.Labor1}"
+                                                                                                value="{!group.totals.TotalCosts}"
+                                                                                                style="currency"
+                                                                                                currencyCode="{!v.currencycode}"
+                                                                                                currencyDisplayAs="code" />
+
+                                                                                            <!-- <aura:set attribute="else">
+                                                                                        
+                                                                                        <lightning:formattedNumber
+                                                                                                                value="0.00"
+                                                                                                                style="currency"  currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
+                                                                                    
+                                                                                    </aura:set>-->
+                                                                                        </span>
+
+                                                                                    </td>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!group.totals.ProfitLoss}">
+                                                                                    <td>
+                                                                                        <aura:if isTrue="{!and(and(group.totals.ProfitLoss != null, group.totals.ProfitLosskey == 'buildertek__Profit_Loss__c'),group.totals.fieldType == 'currency')}">
+                                                                                            <span style="font-weight:bold;font-size: 0.78rem !important;">
+
+                                                                                                <lightning:formattedNumber
+                                                                                                    value="{!group.totals.ProfitLoss}"
+                                                                                                    style="currency"
+                                                                                                    currencyCode="{!v.currencycode}"
+                                                                                                    currencyDisplayAs="code" />
+
+                                                                                                <aura:set attribute="else">
+
+                                                                                                    <lightning:formattedNumber
+                                                                                                        value="0.00"
+                                                                                                        style="currency"
+                                                                                                        currencyCode="{!v.currencycode}"
+                                                                                                        currencyDisplayAs="code" />
+
+                                                                                                </aura:set>
+                                                                                            </span>
+                                                                                        </aura:if>
+                                                                                    </td>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!OR(group.totals.Labor1 == 0, group.totals.Labor1)}">
+                                                                                    <td>
+                                                                                        <aura:if isTrue="{!and(and(group.totals.Labor1 != null, group.totals.Labor1key == 'buildertek__Labor1__c'),group.totals.fieldType == 'currency')}">
+                                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">
+
+                                                                                                <lightning:formattedNumber
+                                                                                                    value="{!group.totals.Labor1}"
+                                                                                                    style="currency"
+                                                                                                    currencyCode="{!v.currencycode}"
+                                                                                                    currencyDisplayAs="code" />
+
+                                                                                                <aura:set attribute="else">
+
+                                                                                                    <lightning:formattedNumber
+                                                                                                        value="0.00"
+                                                                                                        style="currency"
+                                                                                                        currencyCode="{!v.currencycode}"
+                                                                                                        currencyDisplayAs="code" />
+
+                                                                                                </aura:set>
+                                                                                            </span>
+                                                                                        </aura:if>
+                                                                                    </td>
+                                                                                </aura:if>
+                                                                                <!--<aura:if isTrue="{!group.totals.ProjectedCosts}">-->
+                                                                                <td>
+                                                                                    <aura:if isTrue="{!and(and(group.totals.ProjectedCosts != null, group.totals.ProjectedCostskey == 'buildertek__Projected_Costs__c'),group.totals.fieldType == 'currency')}">
+                                                                                        <span style="font-weight: bold;font-size: 0.78rem !important;">
+
+                                                                                            <lightning:formattedNumber
+                                                                                                value="{!group.totals.ProjectedCosts}"
                                                                                                 style="currency"
                                                                                                 currencyCode="{!v.currencycode}"
                                                                                                 currencyDisplayAs="code" />
@@ -1952,74 +1981,236 @@
                                                                                         </span>
                                                                                     </aura:if>
                                                                                 </td>
-                                                                            </aura:if>
-                                                                            <!--<aura:if isTrue="{!group.totals.ProjectedCosts}">-->
-                                                                            <td>
-                                                                                <aura:if isTrue="{!and(and(group.totals.ProjectedCosts != null, group.totals.ProjectedCostskey == 'buildertek__Projected_Costs__c'),group.totals.fieldType == 'currency')}">
-                                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">
-
-                                                                                        <lightning:formattedNumber
-                                                                                            value="{!group.totals.ProjectedCosts}"
-                                                                                            style="currency"
-                                                                                            currencyCode="{!v.currencycode}"
-                                                                                            currencyDisplayAs="code" />
-
-                                                                                        <aura:set attribute="else">
-
-                                                                                            <lightning:formattedNumber
-                                                                                                value="0.00"
-                                                                                                style="currency"
-                                                                                                currencyCode="{!v.currencycode}"
-                                                                                                currencyDisplayAs="code" />
-
-                                                                                        </aura:set>
-                                                                                    </span>
-                                                                                </aura:if>
-                                                                            </td>
-                                                                            <!-- </aura:if>-->
-                                                                            <!-- <aura:if isTrue="{!group.totals.Forecast}">-->
-                                                                            <!-- <td>
-                                                                        <aura:if isTrue="{!and(and(group.totals.Forecast != null, group.totals.Forecastskey == 'buildertek__Forecast_To_Complete__c'),group.totals.fieldType == 'currency')}">
-                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;"  >
-                                          
-                                                                                <lightning:formattedNumber
-                                                                                                           value="{!group.totals.Forecast}"
-                                                                                                           style="currency"  currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
-                                                                                 
-                                                                                <aura:set attribute="else">
-                                                                                   
+                                                                                <!-- </aura:if>-->
+                                                                                <!-- <aura:if isTrue="{!group.totals.Forecast}">-->
+                                                                                <!-- <td>
+                                                                            <aura:if isTrue="{!and(and(group.totals.Forecast != null, group.totals.Forecastskey == 'buildertek__Forecast_To_Complete__c'),group.totals.fieldType == 'currency')}">
+                                                                                <span style="font-weight: bold;font-size: 0.78rem !important;"  >
+                                            
                                                                                     <lightning:formattedNumber
-                                                                                                               value="0.00"
-                                                                                                               style="currency"  currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
+                                                                                                            value="{!group.totals.Forecast}"
+                                                                                                            style="currency"  currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
                                                                                     
-                                                                                </aura:set>
-                                                                            </span>
-                                                                        </aura:if>
-                                                                    </td>-->
-                                                                            <!--  </aura:if>-->
+                                                                                    <aura:set attribute="else">
+                                                                                    
+                                                                                        <lightning:formattedNumber
+                                                                                                                value="0.00"
+                                                                                                                style="currency"  currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
+                                                                                        
+                                                                                    </aura:set>
+                                                                                </span>
+                                                                            </aura:if>
+                                                                        </td>-->
+                                                                                <!--  </aura:if>-->
 
 
-                                                                            <!-- </aura:if>
-                                                                    </aura:if>-->
+                                                                                <!-- </aura:if>
+                                                                        </aura:if>-->
 
-                                                                            <td> </td>
-                                                                            <!-- <td> </td> 
-                                                             <td> </td> 
-                                                              <td> </td> 
-                                                              <td> </td> -->
-                                                                            <!--<td> </td> 
-                                                              <td> </td> -->
-                                                                        </aura:if>
-                                                                        <!--   </aura:if> -->
-                                                                    </aura:iteration>
+                                                                                <td> </td>
+                                                                                <!-- <td> </td> 
+                                                                <td> </td> 
+                                                                <td> </td> 
+                                                                <td> </td> -->
+                                                                                <!--<td> </td> 
+                                                                <td> </td> -->
+                                                                            </aura:if>
+                                                                            <!--   </aura:if> -->
+                                                                        </aura:iteration>
 
 
-                                                                </tr>
-
+                                                                    </tr>
+                                                                </aura:if>
                                                             </aura:if>
                                                         </aura:if>
                                                     </aura:if>
                                                 </aura:if>
+
+
+
+
+
+
+
+                                                <aura:if isTrue="{!v.groupByCostCode}">
+
+                                                    <tr class="groupFooter">
+                                                        <td> </td>
+                                                        <td> </td>
+                                                        <td> </td>
+                                                        <td>
+                                                            <span style="font-weight: bold;font-size: 0.78rem !important;"> Total </span>
+                                                        </td>
+
+                                                        <td> </td>
+
+                                                        <aura:if isTrue="{!group.totals.unitPrice}">
+                                                            <td>
+                                                                <aura:if isTrue="{!and(and(group.totals.unitPrice != null, group.totals.unitPricekey == 'buildertek__Unit_Price__c'),group.totals.fieldType == 'currency')}">
+                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">
+                                                                        <lightning:formattedNumber value="{!group.totals.unitPrice}"  style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+
+                                                                        <aura:set attribute="else">
+                                                                            <lightning:formattedNumber value="0.00" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                        </aura:set>
+                                                                    </span>
+                                                                </aura:if>
+                                                            </td>
+                                                        </aura:if>
+
+                                                        <aura:if isTrue="{!group.totals.orignalbudget}">
+                                                            <td>
+                                                                <aura:if isTrue="{!and(and(group.totals.orignalbudget != null, group.totals.orignalbudgetkey == 'buildertek__Original_Budget__c'),group.totals.fieldType == 'currency')}">
+                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">
+                                                                        <lightning:formattedNumber value="{!group.totals.orignalbudget}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+
+                                                                        <aura:set attribute="else">
+                                                                            <lightning:formattedNumber value="0.00" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                        </aura:set>
+                                                                    </span>
+                                                                </aura:if>
+                                                            </td>
+                                                        </aura:if>
+
+                                                        <aura:if isTrue="{!OR(group.totals.TotalApprovals == 0, group.totals.TotalApprovals)}">
+                                                            <td>
+                                                                <aura:if isTrue="{!and(and(group.totals.TotalApprovals != null, group.totals.TotalApprovalskey == 'buildertek__Total_Approvals_CO__c'),group.totals.fieldType == 'currency')}">
+                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">
+                                                                        <lightning:formattedNumber value="{!group.totals.TotalApprovals}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+
+                                                                        <aura:set attribute="else">
+                                                                            <lightning:formattedNumber value="0.00" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                        </aura:set>
+                                                                    </span>
+                                                                </aura:if>
+                                                            </td>
+                                                        </aura:if>
+
+                                                        <td>
+                                                            <aura:if isTrue="{!and(and(group.totals.CommittedCost != null, group.totals.CommittedCostkey == 'buildertek__Committed_Costs__c'),group.totals.fieldType == 'currency')}">
+                                                                <span style="font-weight: bold;font-size: 0.78rem !important;">
+                                                                    <lightning:formattedNumber value="{!group.totals.CommittedCost}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+
+                                                                    <aura:set attribute="else">
+                                                                        <lightning:formattedNumber value="0.00" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                    </aura:set>
+                                                                </span>
+                                                            </aura:if>
+                                                        </td>
+
+                                                        <td>
+                                                            <aura:if isTrue="{!and(and(group.totals.AdditionalCosts != null, group.totals.AdditionalCostsKey == 'buildertek__Additional_Costs__c'),group.totals.fieldType == 'currency')}">
+                                                                <span style="font-weight: bold;font-size: 0.78rem !important;">
+                                                                    <lightning:formattedNumber value="{!group.totals.AdditionalCosts}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+
+                                                                    <aura:set attribute="else">
+                                                                        <lightning:formattedNumber value="0.00" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                    </aura:set>
+                                                                </span>
+                                                            </aura:if>
+                                                        </td>
+                                                            
+                                                            <td>
+                                                                <aura:if isTrue="{!and(and(group.totals.InvoiceCosts != null, group.totals.InvoiceCostsKey == 'buildertek__Invoice_total__c'),group.totals.fieldType == 'currency')}">
+                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">
+                                                                        <lightning:formattedNumber value="{!group.totals.InvoiceCosts}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+
+                                                                        <aura:set attribute="else">
+                                                                            <lightning:formattedNumber value="0.00" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                        </aura:set>
+                                                                    </span>
+                                                                </aura:if>
+                                                            </td>
+
+                                                        <aura:if isTrue="{!OR(group.totals.TotalCosts == 0 , group.totals.TotalCosts)}">
+                                                            <td>
+                                                                <span style="font-weight: bold;font-size: 0.78rem !important;">
+                                                                    <lightning:formattedNumber value="{!group.totals.TotalCosts}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                </span>
+                                                            </td>
+                                                        </aura:if>
+
+                                                        <aura:if isTrue="{!group.totals.ProfitLoss}">
+                                                            <td>
+                                                                <aura:if isTrue="{!and(and(group.totals.ProfitLoss != null, group.totals.ProfitLosskey == 'buildertek__Profit_Loss__c'),group.totals.fieldType == 'currency')}">
+                                                                    <span style="font-weight:bold;font-size: 0.78rem !important;">
+
+                                                                        <lightning:formattedNumber
+                                                                            value="{!group.totals.ProfitLoss}"
+                                                                            style="currency"
+                                                                            currencyCode="{!v.currencycode}"
+                                                                            currencyDisplayAs="code" />
+
+                                                                        <aura:set attribute="else">
+
+                                                                            <lightning:formattedNumber
+                                                                                value="0.00"
+                                                                                style="currency"
+                                                                                currencyCode="{!v.currencycode}"
+                                                                                currencyDisplayAs="code" />
+
+                                                                        </aura:set>
+                                                                    </span>
+                                                                </aura:if>
+                                                            </td>
+                                                        </aura:if>
+
+                                                        <aura:if isTrue="{!OR(group.totals.Labor1 == 0, group.totals.Labor1)}">
+                                                            <td>
+                                                                <aura:if isTrue="{!and(and(group.totals.Labor1 != null, group.totals.Labor1key == 'buildertek__Labor1__c'),group.totals.fieldType == 'currency')}">
+                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">
+
+                                                                        <lightning:formattedNumber
+                                                                            value="{!group.totals.Labor1}"
+                                                                            style="currency"
+                                                                            currencyCode="{!v.currencycode}"
+                                                                            currencyDisplayAs="code" />
+
+                                                                        <aura:set attribute="else">
+
+                                                                            <lightning:formattedNumber
+                                                                                value="0.00"
+                                                                                style="currency"
+                                                                                currencyCode="{!v.currencycode}"
+                                                                                currencyDisplayAs="code" />
+
+                                                                        </aura:set>
+                                                                    </span>
+                                                                </aura:if>
+                                                            </td>
+                                                        </aura:if>
+
+                                                        <td>
+                                                            <aura:if isTrue="{!and(and(group.totals.ProjectedCosts != null, group.totals.ProjectedCostskey == 'buildertek__Projected_Costs__c'),group.totals.fieldType == 'currency')}">
+                                                                <span style="font-weight: bold;font-size: 0.78rem !important;">
+
+                                                                    <lightning:formattedNumber
+                                                                        value="{!group.totals.ProjectedCosts}"
+                                                                        style="currency"
+                                                                        currencyCode="{!v.currencycode}"
+                                                                        currencyDisplayAs="code" />
+
+                                                                    <aura:set attribute="else">
+
+                                                                        <lightning:formattedNumber
+                                                                            value="0.00"
+                                                                            style="currency"
+                                                                            currencyCode="{!v.currencycode}"
+                                                                            currencyDisplayAs="code" />
+
+                                                                    </aura:set>
+                                                                </span>
+                                                            </aura:if>
+                                                        </td>
+
+                                                        <td> </td>
+                                                    </tr>
+
+                                                </aura:if>
+
+
+
+
                                                 <aura:if isTrue="{!parentGroupIndex != v.TotalRecords.groupHierarchy.length-1}">
                                                     <br />
                                                 </aura:if>

@@ -17,7 +17,7 @@
             <br></br>
             <lightning:input aura:id="CV" label="Current Version" value="{!v.currentVersion}" name="CurrnetVersion"  disabled="true" />
             <br></br>
-            <lightning:input type="text" name="input1" label="New Version" aura:id="NV" value="{!v.versionValue}" placeholder="Enter New Version" required="true" />
+            <lightning:input type="text" name="input1" label="New Version" aura:id="NV" value="{!v.versionValue}" placeholder="Enter New Version"/>
             
         </div> 
        

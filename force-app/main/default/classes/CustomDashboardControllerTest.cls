@@ -58,8 +58,10 @@ public class CustomDashboardControllerTest {
         projectTask1.buildertek__Start__c=(Date.newInstance(dt.year(),dt.month(),dt.day())).addDays(-15);
         projectTask1.buildertek__Duration__c=10;
         insert projectTask1;
-        
+	
+        Test.startTest();        
         CustomDashboardController.getScheduleData(project1.Id);
+        Test.stopTest();
          System.assert(true);
     }
 }

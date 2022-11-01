@@ -18,7 +18,7 @@ public class BudgetDAOTest {
         po.Budget__c = budgetid;
         update po;
         Project__c proj = [Select Id from Project__c LIMIT 1];
-        BudgetDAO.createBudgetItemFromPOItem([Select Id,Purchase_Order__c,Item_Name__c,Description__c,Cost_Code__c from Purchase_Order_Item__c]);
+        BudgetDAO.createBudgetItemFromPOItem([Select Id,Purchase_Order__c,Item_Name__c,Description__c,Cost_Code__c,buildertek__Notes__c from Purchase_Order_Item__c]);
         
         Budget__c budgetRecs = new Budget__c();
         budgetRecs.Name = 'test';

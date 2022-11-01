@@ -1,4 +1,9 @@
 ({
+	doInit : function(component, event, helper){
+		var recordId = component.get("v.recordId")
+		console.log('getting recordId '+recordId);
+	},
+
 	createRecord : function(component, event, helper) {
 		component.set("v.Spinner", true);
 		var Option = component.get('v.Option');
@@ -6,9 +11,9 @@
 		console.log('Option ::', JSON.stringify(Option));
 
 		var action = component.get("c.createoption");
-		action.setParams({ 
+		action.setParams({
 			"option": Option
-		});		
+		});
 		action.setCallback(this, function(a) {
 			var state = a.getState();
 			 if (state === "SUCCESS") {
@@ -56,7 +61,7 @@
 
 
         // $A.get("e.force:closeQuickAction").fire();
-    }, 
+    },
 
 	changeProduct: function(component, event, helper){
 		var Option = component.get('v.Option');
@@ -69,9 +74,9 @@
 		if (productId != '') {
 			var action = component.get("c.getProduct");
 
-			action.setParams({ 
+			action.setParams({
 				"productId": productId
-			});		
+			});
 			action.setCallback(this, function(response) {
 				var state = response.getState();
 				console.log('Status => '+state);
@@ -89,7 +94,7 @@
 		}
 
 
-		
+
 	},
 
 	onSelectedChanged: function(component, event, helper){
@@ -97,20 +102,20 @@
 		var Option = component.get('v.Option');
 		Option.buildertek__Selected__c = checkValue;
 		component.set("v.Option", Option);
-	}, 
+	},
 
 	onOptionChanged: function(component, event, helper){
 		var checkValue = component.find('optionCheck').get("v.checked");
 		var Option = component.get('v.Option');
 		Option.buildertek__Default_Option__c = checkValue;
 		component.set("v.Option", Option);
-	}, 
+	},
 
 	onUpgradeChanged: function(component, event, helper){
 		var checkValue = component.find('upgradeCheck').get("v.checked");
 		var Option = component.get('v.Option');
 		Option.buildertek__Upgrade__c = checkValue;
 		component.set("v.Option", Option);
-	}, 
+	},
 
 })

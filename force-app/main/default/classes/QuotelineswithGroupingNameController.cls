@@ -119,7 +119,11 @@ global  without sharing class QuotelineswithGroupingNameController {
                     quoteitemquery += ' FROM ' + objectName;
                     
                     // Add on a WHERE/ORDER/LIMIT statement as needed
-                    quoteitemquery += ' WHERE buildertek__Quote__c = \''+quoteid +'\' AND buildertek__Status__c =\''+ statusval +'\''+ 'Order BY buildertek__Priority__c ASC'; // modify as needed
+                    /*
+                        (AND buildertek__Customer_Visible__c = true) condition added for showing only visible true quote Items (BUIL- 2816)
+                        Condition added by Nitin (MV Clouds) on 31 OCT
+                    */
+                    quoteitemquery += ' WHERE buildertek__Quote__c = \''+quoteid +'\' AND buildertek__Status__c =\''+ statusval +'\''+ 'AND buildertek__Customer_Visible__c = true Order BY buildertek__Priority__c ASC'; // modify as needed
                     
                     try {
                         QuoteItem = database.query(quoteitemquery);

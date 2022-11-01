@@ -12,11 +12,13 @@
                 component.set("v.groupBytoggle", true);
                 component.set("v.groupByVendortoggle2", false);
                 component.set("v.groupByVendortoggle1", false);
+                component.set("v.groupByCostCode", false);
 
             } else {
                 component.find("vendor").set("v.checked", false);
                 component.set("v.groupBytoggle", false);
                 component.set("v.groupByVendortoggle1", true);
+                component.set("v.groupByCostCode", false);
             }
         }
         var toggleVal = component.get("v.groupBytoggle");
@@ -37,6 +39,7 @@
                 component.find("vendor").set("v.checked", false);
                 component.set("v.groupBytoggle", false);
                 component.set("v.groupByVendortoggle1", true);
+                component.set("v.groupByCostCode", false);
 
                 // component.set("v.groupByVendortoggle1",true);
             } else {
@@ -47,6 +50,7 @@
                 //alert( component.set("v.groupBytoggle",true));
                 component.set("v.groupByVendortoggle2", false);
                 component.set("v.groupByVendortoggle1", false);
+                component.set("v.groupByCostCode", false);
             }
         }
         var toggleVal = component.get("v.groupBytoggle1");
@@ -65,9 +69,11 @@
                 component.find("Cost Code").set("v.checked", true);
                 component.set("v.groupBytoggle2", true);
                 component.set("v.groupByVendortoggle", false);
+                component.set("v.groupByCostCode", false);
             } else {
                 component.find("Cost Code").set("v.checked", false);
                 component.set("v.groupBytoggle2", false);
+                component.set("v.groupByCostCode", false);
             }
 
         }
@@ -242,7 +248,14 @@
         // set the current page,(using ternary operator.)  
         page = direction === "Previous" ? (page - 1) : (page + 1);
         // call the helper function
-        helper.getBudgetGroups(component, event, helper, page);
+
+        var groupByCostCode = component.get("v.groupByCostCode");
+        console.log('groupByCostCode ==> '+groupByCostCode);
+        if (groupByCostCode == true) {
+            helper.toggleByCostHelper(component, event, helper, page);
+        } else{
+            helper.getBudgetGroups(component, event, helper, page);
+        }
 
     },
 
@@ -3074,7 +3087,26 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
     },
 
     toggleByCost: function(component, event, helper){
-        helper.toggleByCostHelper(component, event, helper);
+
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        
+        component.set("v.page", 1);
+        var page = 1;
+
+        var groupByCostCode = component.get("v.groupByCostCode");
+        console.log('groupByCostCode ==> '+groupByCostCode);
+
+        if (groupByCostCode == true) {
+            component.set("v.groupBytoggle", false);
+            component.set("v.groupByVendortoggle1", false);
+            component.set("v.groupByVendortoggle2", false);
+            helper.toggleByCostHelper(component, event, helper, page);
+        } else{
+            helper.getBudgetGroups(component, event, helper, page);
+        }
+
     }
 
 

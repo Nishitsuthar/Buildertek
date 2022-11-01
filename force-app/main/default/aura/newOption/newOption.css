@@ -1,17 +1,6 @@
-.THIS.maindiv{
-    /* position: sticky; 
-    top: 5.6rem; 
-    background: red; 
-    z-index: 1; */
-}
-
 .THIS .headingDiv{
     background: rgb(243, 243, 243);
     color: #000;
     font-size: 1rem;
     padding: 5px 10px;
 }
-
-/* .THIS .checkboxLabel{
-    color: rgb(116, 116, 116);
-} */

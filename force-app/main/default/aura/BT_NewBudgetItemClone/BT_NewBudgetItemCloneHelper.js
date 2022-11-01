@@ -1682,12 +1682,8 @@
         $A.enqueueAction(actions);
     },
 
-    toggleByCostHelper: function (component, event, helper){
-        var groupByCostCode = component.get("v.groupByCostCode");
-        console.log('groupByCostCode => '+groupByCostCode);
-
-        component.set("v.page", 1);
-        var page = 1;
+    toggleByCostHelper: function (component, event, helper, page){
+        component.set("v.page", page);
 
         var action = component.get("c.retrieveGroupsByCost");
         action.setParams({
@@ -1710,7 +1706,7 @@
                 var subGroupRecordsMap = {};
 
                 var records = [];
-                
+
                 result.forEach((element, index) => {
 
                     var recordsMap = helper.formatDataByCostCode(element);
@@ -1742,7 +1738,6 @@
                                 groupHierarchyMap['groupName'] = 'No Code Cost';
                             }
                             groupHierarchyMap['subGroupRecords'] = subGroupRecords;
-                            groupHierarchyMap['totals'] = '';
         
                             groupHierarchy.push(groupHierarchyMap);
 
@@ -1759,113 +1754,73 @@
                             groupHierarchyMap['groupName'] = 'No Code Cost';
                         }
                         groupHierarchyMap['subGroupRecords'] = subGroupRecords;
-                        groupHierarchyMap['totals'] = '';
     
                         groupHierarchy.push(groupHierarchyMap);
                     }
-                    
-
                 });
 
                 TotalRecords['groupHierarchy'] = groupHierarchy;
+               
+                TotalRecords.groupHierarchy.forEach(element => {
+                    var totalObj = {};
+                    totalObj['unitPricekey'] = 'buildertek__Unit_Price__c';
+                    totalObj['unitPrice'] = 0;
+                    totalObj['orignalbudgetkey'] = 'buildertek__Original_Budget__c';
+                    totalObj['orignalbudget'] = 0;
+                    totalObj['TotalApprovalskey'] = 'buildertek__Total_Approvals_CO__c';
+                    totalObj['TotalApprovals'] = 0;
+                    totalObj['CommittedCostkey'] = 'buildertek__Committed_Costs__c';
+                    totalObj['CommittedCost'] = 0;
+                    totalObj['AdditionalCostsKey'] = 'buildertek__Additional_Costs__c';
+                    totalObj['AdditionalCosts'] = 0;
+                    totalObj['InvoiceCostsKey'] = 'buildertek__Invoice_total__c';
+                    totalObj['InvoiceCosts'] = 0;
+                    totalObj['ProjectedCostskey'] = 'buildertek__Labor1__c';
+                    totalObj['ProjectedCosts'] = 0;
+                    totalObj['Labor1key'] = 'buildertek__Projected_Costs__c';
+                    totalObj['Labor1'] = 0;
+                    totalObj['Forecastskey'] = 'buildertek__Forecast_To_Complete__c';
+                    totalObj['Forecast'] = 0;
+                    totalObj['TotalCostsKey'] = 'buildertek__Total_Costs__c';
+                    totalObj['TotalCosts'] = 0;
+                    totalObj['ProfitLosskey'] = 'buildertek__Profit_Loss__c';
+                    totalObj['ProfitLoss'] = 0;
+                    totalObj['fieldType'] = "currency";
+
+                    result.forEach((ele) => {
+                        if (element.groupId == ele.buildertek__Cost_Code__c) {
+                            totalObj = helper.setTotal(totalObj, ele);
+                        } else if(ele.buildertek__Cost_Code__c == undefined && element.groupName == 'No Code Cost'){
+                            totalObj = helper.setTotal(totalObj, ele);
+                        }
+                    });
+
+                    element['totals'] = totalObj;
+                });
 
                 console.log('TotalRecords => ',{TotalRecords});
                 
                 component.set("v.TotalRecords", TotalRecords);
 
-                
-                // var budgetItemList = [];
-                // var obj = {};
-                // obj['unitPrice'] = 0;
-                // obj['unitPricekey'] = 'buildertek__Unit_Price__c';
-                // obj['orignalbudget'] = 0;
-                // obj['orignalbudgetkey'] = 'buildertek__Original_Budget__c';
-                // obj['TotalApprovals'] = 0;
-                // obj['TotalApprovalskey'] = 'buildertek__Total_Approvals_CO__c';
-                // obj['CommittedCost'] = 0;
-                // obj['CommittedCostkey'] = 'buildertek__Committed_Costs__c';
-                // obj['AdditionalCosts'] = 0;
-                // obj['AdditionalCostsKey'] = 'buildertek__Additional_Costs__c';
-                // obj['InvoiceCosts'] = 0;
-                // obj['InvoiceCostsKey'] = 'buildertek__Invoice_total__c';
-                // obj['ProjectedCosts'] = 0;
-                // obj['ProjectedCostskey'] = 'buildertek__Labor1__c';
-                // obj['Labor1'] = 0;
-                // obj['Labor1key'] = 'buildertek__Projected_Costs__c';
-                // obj['Forecast'] = 0;
-                // obj['Forecastskey'] = 'buildertek__Forecast_To_Complete__c';
-                // obj['TotalCosts'] = 0;
-                // obj['TotalCostsKey'] = 'buildertek__Total_Costs__c';
-                // obj['ProfitLoss'] = 0;
-                // obj['ProfitLosskey'] = 'buildertek__Profit_Loss__c';
-
-                // result.forEach(element => {
-                //     if(element.buildertek__Unit_Price__c != undefined){
-                //         obj['unitPrice'] += element.buildertek__Unit_Price__c;
-                //     }
-                //     if(element.buildertek__Original_Budget__c != undefined){
-                //         obj['orignalbudget'] += element.buildertek__Original_Budget__c;
-                //     }
-                //     if(element.buildertek__Total_Approvals_CO__c != undefined){
-                //         obj['TotalApprovals'] += element.buildertek__Total_Approvals_CO__c;
-                //     }
-                //     if(element.buildertek__Committed_Costs__c != undefined){
-                //         obj['CommittedCost'] += element.buildertek__Committed_Costs__c;
-                //     }
-                //     if(element.buildertek__Additional_Costs__c != undefined){
-                //         obj['AdditionalCosts'] += element.buildertek__Additional_Costs__c;
-                //     }
-                //     if(element.buildertek__Invoice_total__c != undefined){
-                //         obj['InvoiceCosts'] += element.buildertek__Invoice_total__c;
-                //     }
-                //     if(element.buildertek__Labor1__c != undefined){
-                //         obj['Labor1'] += element.buildertek__Labor1__c;
-                //     }
-                //     if(element.buildertek__Projected_Costs__c != undefined){
-                //         obj['ProjectedCosts'] += element.buildertek__Projected_Costs__c;
-                //     }
-                //     if(element.buildertek__Forecast_To_Complete__c != undefined){
-                //         obj['Forecast'] += element.buildertek__Forecast_To_Complete__c;
-                //     }
-                //     if(element.buildertek__Total_Costs__c != undefined){
-                //         obj['TotalCosts'] += element.buildertek__Total_Costs__c;
-                //     }
-                //     if(element.buildertek__Profit_Loss__c != undefined){
-                //         obj['ProfitLoss'] += element.buildertek__Profit_Loss__c;
-                //     }
-                //     if(element.buildertek__Unit_Price__c != undefined){
-                //         obj['unitPrice'] += element.buildertek__Unit_Price__c;
-                //     }
-                //     if(element.buildertek__Unit_Price__c != undefined){
-                //         obj['unitPrice'] += element.buildertek__Unit_Price__c;
-                //     }
-                // });
-                // console.log('obj ==> ', {obj});
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
             }
             else{
                 var error = response.getError();
                 console.log('Error ==>', {error});
+
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
             }
         });
         $A.enqueueAction(action);
     }, 
 
     formatDataByCostCode: function (element){
-        // console.log('element ==>', {element});
 
         var recordsMap = {};
-
-        // var recordList = [];
-        // var recordListMap = {};
-
-        // recordListMap['fieldName'] = 'buildertek__Quantity__c';
-        // recordListMap['fieldType'] = 'number';
-        // recordListMap['originalValue'] = element.buildertek__Quantity__c;
-        // recordListMap['recordValue'] = element.buildertek__Quantity__c;
-        // recordListMap['referenceValue'] = '';
-        
-        // recordList.push(recordListMap);
-
 
         var recordList = [
             {fieldName: 'buildertek__Quantity__c', fieldType: 'number', isEditable: true, originalValue: element.buildertek__Quantity__c  , recordValue: element.buildertek__Quantity__c , referenceValue: '' },
@@ -1874,7 +1829,7 @@
             {fieldName: 'buildertek__Total_Sales_Price__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Total_Sales_Price__c  , recordValue: element.buildertek__Total_Sales_Price__c , referenceValue: '' },
             {fieldName: 'buildertek__Committed_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Committed_Costs__c  , recordValue: element.buildertek__Committed_Costs__c , referenceValue: '' },
             {fieldName: 'buildertek__Additional_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Additional_Costs__c  , recordValue: element.buildertek__Additional_Costs__c , referenceValue: '' },
-            {fieldName: 'buildertek__Invoice_total__c', fieldType: 'currency', isEditable: true, originalValue: element.buildertek__Invoice_total__c  , recordValue: element.buildertek__Invoice_total__c , referenceValue: '' },
+            {fieldName: 'buildertek__Invoice_total__c', fieldType: 'currency', isEditable: true, originalValue: '' , recordValue: element.buildertek__Invoice_total__c , referenceValue: '' },
             {fieldName: 'buildertek__Total_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Total_Costs__c  , recordValue: element.buildertek__Total_Costs__c , referenceValue: '' },
             {fieldName: 'buildertek__Profit_Loss__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Profit_Loss__c  , recordValue: element.buildertek__Profit_Loss__c , referenceValue: '' },
             {fieldName: 'buildertek__Gross_Profit_Percemtage__c', fieldType: 'string', isEditable: false, originalValue: element.buildertek__Gross_Profit_Percemtage__c  , recordValue: element.buildertek__Gross_Profit_Percemtage__c , referenceValue: '' },
@@ -1886,7 +1841,46 @@
         recordsMap['recordName'] = element.Name;
         recordsMap['recordList'] = recordList;
         
-        
         return recordsMap;
+    },
+
+    setTotal: function(totalObj, element){
+        if(element.buildertek__Unit_Price__c != undefined){
+            totalObj['unitPrice'] += element.buildertek__Unit_Price__c;
+        }
+        if(element.buildertek__Original_Budget__c != undefined){
+            totalObj['orignalbudget'] += element.buildertek__Original_Budget__c;
+        }
+        if(element.buildertek__Total_Approvals_CO__c != undefined){
+            totalObj['TotalApprovals'] += element.buildertek__Total_Approvals_CO__c;
+        }
+        if(element.buildertek__Committed_Costs__c != undefined){
+            totalObj['CommittedCost'] += element.buildertek__Committed_Costs__c;
+        }
+        if(element.buildertek__Additional_Costs__c != undefined){
+            totalObj['AdditionalCosts'] += element.buildertek__Additional_Costs__c;
+        }
+        if(element.buildertek__Invoice_total__c != undefined){
+            totalObj['InvoiceCosts'] += element.buildertek__Invoice_total__c;
+        }
+        if(element.buildertek__Labor1__c != undefined){
+            totalObj['Labor1'] += element.buildertek__Labor1__c;
+        }
+        if(element.buildertek__Projected_Costs__c != undefined){
+            totalObj['ProjectedCosts'] += element.buildertek__Projected_Costs__c;
+        }
+        if(element.buildertek__Forecast_To_Complete__c != undefined){
+            totalObj['Forecast'] += element.buildertek__Forecast_To_Complete__c;
+        }
+        if(element.buildertek__Total_Costs__c != undefined){
+            totalObj['TotalCosts'] += element.buildertek__Total_Costs__c;
+        }
+        if(element.buildertek__Profit_Loss__c != undefined){
+            totalObj['ProfitLoss'] += element.buildertek__Profit_Loss__c;
+        }
+        
+        // console.log('Total Obj --> ',{totalObj});
+
+        return totalObj;
     }
 })

@@ -9,6 +9,8 @@
 		}
 	</aura:html>
 
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
 	<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
 		<div class="slds-modal__container">
 			<header class="slds-modal__header">
@@ -27,31 +29,31 @@
 								<lightning:inputField fieldName="buildertek__Quantity__c" value="{!v.Option.buildertek__Quantity__c}" />
 								<lightning:inputField fieldName="buildertek__Cost__c" value="{!v.Option.buildertek__Cost__c}" />
 								<lightning:inputField fieldName="buildertek__Markup__c" value="{!v.Option.buildertek__Markup__c}" />
-								<lightning:inputField fieldName="buildertek__Upgrade_Costs__c" value="{!v.Option.buildertek__Upgrade_Costs__c}" />				
-							</div>		
-							
+								<lightning:inputField fieldName="buildertek__Upgrade_Costs__c" value="{!v.Option.buildertek__Upgrade_Costs__c}" />
+							</div>
+
 							<div class="slds-col slds-size_1-of-2">
 								<lightning:inputField fieldName="buildertek__Question_Group__c" value="{!v.Option.buildertek__Question_Group__c}" />
 								<lightning:inputField fieldName="buildertek__Manufacturer__c" value="{!v.Option.buildertek__Manufacturer__c}" />
 								<!-- <lightning:inputField aura:id="selectCheck" fieldName="buildertek__Selected__c" value="{!v.Option.buildertek__Selected__c}" />		 -->
 								<h1 class="checkboxLabel">Selected</h1>
-								<lightning:input type="checkbox" aura:id="selectCheck" checked="{!v.Option.buildertek__Selected__c}" onchange="{!c.onSelectedChanged}"/>			
+								<lightning:input type="checkbox" aura:id="selectCheck" checked="{!v.Option.buildertek__Selected__c}" onchange="{!c.onSelectedChanged}"/>
 								<!-- <lightning:inputField fieldName="buildertek__Default_Option__c" value="{!v.Option.buildertek__Default_Option__c}" />	 -->
 								<h1 class="checkboxLabel">Default Option</h1>
-								<lightning:input type="checkbox" aura:id="optionCheck" checked="{!v.Option.buildertek__Default_Option__c}" onchange="{!c.onOptionChanged}"/>			
+								<lightning:input type="checkbox" aura:id="optionCheck" checked="{!v.Option.buildertek__Default_Option__c}" onchange="{!c.onOptionChanged}"/>
 
 							</div>
-							
+
 						</div>
-						
+
 						<div class="headingDiv"> Upgrade Details </div>
 						<div class="slds-grid">
 							<div class="slds-col slds-size_1-of-2">
 								<!-- <h3 class="slds-section-titledivider">Upgrade Details</h3> -->
 								<!-- <lightning:inputField fieldName="buildertek__Upgrade__c" value="{!v.Option.buildertek__Upgrade__c}" /> -->
 								<h1 class="checkboxLabel">Upgrade</h1>
-								<lightning:input type="checkbox" aura:id="upgradeCheck" checked="{!v.Option.buildertek__Upgrade__c}" onchange="{!c.onUpgradeChanged}"/>			
-								
+								<lightning:input type="checkbox" aura:id="upgradeCheck" checked="{!v.Option.buildertek__Upgrade__c}" onchange="{!c.onUpgradeChanged}"/>
+
 								<lightning:inputField fieldName="buildertek__Date_Option_Upgraded__c" value="{!v.Option.buildertek__Date_Option_Upgraded__c}" />
 							</div>
 							<div class="slds-col slds-size_1-of-2">
@@ -59,23 +61,22 @@
 							</div>
 						</div>
 
-						<div class="headingDiv"> Related Items </div>
+						<!-- <div class="headingDiv"> Related Items </div>
 						<div class="slds-grid">
 							<div class="slds-col slds-size_1-of-2">
-								<!-- <h3 class="slds-section-titledivider">Related Items</h3> -->
 								<lightning:inputField fieldName="buildertek__Purchase_Order__c" value="{!v.Option.buildertek__Purchase_Order__c}" />
 								<lightning:inputField fieldName="buildertek__Purchase_Order_Line__c" value="{!v.Option.buildertek__Purchase_Order_Line__c}" />
-								
+
 							</div>
 							<div class="slds-col slds-size_1-of-2">
 								<lightning:inputField fieldName="buildertek__Change_Order__c" value="{!v.Option.buildertek__Change_Order__c}" />
 								<lightning:inputField fieldName="buildertek__Change_Order_Line__c" value="{!v.Option.buildertek__Change_Order_Line__c}" />
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</lightning:recordEditForm>
 			</div>
-			
+
 			<footer class="slds-modal__footer">
 				<!-- <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModel}"/>
 				<lightning:button variant="brand" label="Upgrade" onclick="{!c.onUpgrade}"/> -->
@@ -87,10 +88,10 @@
 	<div class="slds-backdrop slds-backdrop_open"></div>
 
 
-	
-		
-	  
-	 
+
+
+
+
 		<!-- <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
 		<lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRecord}"/> -->
 </aura:component>

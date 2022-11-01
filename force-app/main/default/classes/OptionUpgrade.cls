@@ -5,6 +5,8 @@ public with sharing class OptionUpgrade {
         buildertek__Question__c option = [SELECT Id, Name, buildertek__Question_Group__c, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, 
                                             buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c, buildertek__Price_Book__c, 
                                             buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c FROM buildertek__Question__c WHERE Id =: recordId];
+
+        String priceBook = option.buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c;
         List<Product2> productList = new List<Product2>();
 
         Integer offset = (pageNumber - 1) * pageSize;
@@ -28,6 +30,7 @@ public with sharing class OptionUpgrade {
             if (searchFamilyValue != null && searchFamilyValue != '') {
                 queryList = queryList + ' AND Family LIKE \'' + searchFamilyValue + '%\'';
             }
+
             if (searchNameValue == '' && searchTypeValue == '' && searchManufacturerValue == '' && searchFamilyValue == '') {
                 queryList = queryList + ' LIMIT ' + pageSize + ' OFFSET ' + offset;
             }
@@ -56,13 +59,14 @@ public with sharing class OptionUpgrade {
 
         optionWrapper optionWrapperData = new optionWrapper();
         optionWrapperData.option = option;
-        optionWrapperData.projectPriceBook = option.buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c;
+        optionWrapperData.projectPriceBook = priceBook;
         optionWrapperData.productCount = productCount;
         optionWrapperData.priceBookMap = priceBookMap;
 
 
         List<productWrapper> prodWrapperList = new List<productWrapper>();
         for (Product2 product : productList) {
+            System.debug('product ==> '+product);
             productWrapper prodWrapper = new productWrapper();
             prodWrapper.product = product;
             List<ContentDocumentLink> contentDocs = new List<ContentDocumentLink>();

@@ -5,7 +5,7 @@
  Developed By: Sagar
  Date:  24-May-2018
  */
-public class ProjectTaskTriggerHandler{
+public with sharing class ProjectTaskTriggerHandler_v1{
 	public static Boolean isFirstTime = true;
 	public static Boolean isTask = true;
 	//Boolean variable to allow skipping execution of trigger in certain scenarios
@@ -13,13 +13,9 @@ public class ProjectTaskTriggerHandler{
 	public static Boolean isFromImport = false;
 	private boolean m_isExecuting = false;
 	private integer BatchSize = 0;
-	public static Map<Id, buildertek__Project_Task__c> oldMapValue {get;set;}
-
-	public ProjectTaskTriggerHandler(boolean isExecuting, integer size, Map<Id, buildertek__Project_Task__c> oldMap){
+	public ProjectTaskTriggerHandler_v1(boolean isExecuting, integer size){
 		m_isExecuting = isExecuting;
 		BatchSize = size;
-		oldMapValue = new Map<Id, buildertek__Project_Task__c>();
-		// this.oldMapValue = oldMap;
 	}
 
 	public void OnBeforeInsert(Project_Task__c[] newProjectTasks){
@@ -136,7 +132,7 @@ public class ProjectTaskTriggerHandler{
 					//0 1 0 => Update Duration
 					//1 0 0 => Update Duration
 					Date sDate = updatedProjectTask.buildertek__Start__c;
-					sDate = ProjectTaskTriggerHandler.getStartDate(sDate);
+					sDate = ProjectTaskTriggerHandler_v1.getStartDate(sDate);
 					duration = calculateDuration(sDate, updatedProjectTask.buildertek__Finish__c);
 					System.debug('duration in before ==> ' + duration + ' updatedProjectTask task id ' + updatedProjectTask.id);
 				}
@@ -225,10 +221,10 @@ public class ProjectTaskTriggerHandler{
 				Project_Task__c newScheduleItem = new Project_Task__c();
 				newScheduleItem.Id = schItem.Id;
 				//newScheduleItem.buildertek__Start__c = schItem.buildertek__Start__c;
-				newScheduleItem.buildertek__Original_Start_Date__c = ProjectTaskTriggerHandler.getStartDate(schItem.buildertek__Start__c);
+				newScheduleItem.buildertek__Original_Start_Date__c = ProjectTaskTriggerHandler_v1.getStartDate(schItem.buildertek__Start__c);
 				if (schItem.buildertek__Duration__c != null && schItem.buildertek__Duration__c > 0){
 					newScheduleItem.buildertek__Original_End_Date__c = schItem.buildertek__Start__c.addDays(Integer.valueOf(schItem.buildertek__Duration__c) - 1);
-					newScheduleItem.buildertek__Original_End_Date__c = ProjectTaskTriggerHandler.getEndDate(schItem.buildertek__Start__c, newScheduleItem.buildertek__Original_End_Date__c);
+					newScheduleItem.buildertek__Original_End_Date__c = ProjectTaskTriggerHandler_v1.getEndDate(schItem.buildertek__Start__c, newScheduleItem.buildertek__Original_End_Date__c);
 				}
 				if (schItem.buildertek__Use_External_Resource_from_Schedule__c && scheduleMap.get(schItem.buildertek__Schedule__c).buildertek__External_Resource__c != null){
 					newScheduleItem.buildertek__Contractor_Resource__c = scheduleMap.get(schItem.buildertek__Schedule__c).buildertek__External_Resource__c;
@@ -250,10 +246,10 @@ public class ProjectTaskTriggerHandler{
 				}
 			}
 			if (newScheduleItemList.size() > 0){
-				Boolean flag = ProjectTaskTriggerHandler.blnSkipTaskTrigger;
-				ProjectTaskTriggerHandler.blnSkipTaskTrigger = !flag;
+				Boolean flag = ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger;
+				ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = !flag;
 				update newScheduleItemList;
-				ProjectTaskTriggerHandler.blnSkipTaskTrigger = flag;
+				ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = flag;
 			}
 		}
 
@@ -280,7 +276,7 @@ public class ProjectTaskTriggerHandler{
 			update budgetLineList;
 		}
 
-		processRecords(scheduleIds, ProjectTasks[0].buildertek__Schedule__c, ProjectTaskMap.keySet(), ProjectTaskTriggerHandler.isFromImport, 'insert');
+		processRecords(scheduleIds, ProjectTasks[0].buildertek__Schedule__c, ProjectTaskMap.keySet(), ProjectTaskTriggerHandler_v1.isFromImport, 'insert');
 	}
 
 	public void UpdateOriginalstartandEndDates(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
@@ -355,10 +351,6 @@ public class ProjectTaskTriggerHandler{
 
 	public void OnAfterUpdate(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
 		System.debug('updatedProjectTasks in the beginning of method ==> ' + updatedProjectTasks);
-
-		// this variable is used in processrecord method for get old map
-		oldMapValue = oldProjectTaskMap;
-
 		List<Project_Task__C> testSIList = new List<Project_Task__C>();
 		testSIList = [Select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c
 		              FROM buildertek__Project_Task__c
@@ -553,7 +545,7 @@ public class ProjectTaskTriggerHandler{
 		if (budgetLineList.Size() > 0){
 			update budgetLineList;
 		}
-		processRecords(scheduleIds, updatedProjectTasks[0].buildertek__Schedule__c, ProjectTaskMap.keySet(), ProjectTaskTriggerHandler.isFromImport, 'update');
+		processRecords(scheduleIds, updatedProjectTasks[0].buildertek__Schedule__c, ProjectTaskMap.keySet(), ProjectTaskTriggerHandler_v1.isFromImport, 'update');
 		List<Project_Task__c> newProjectTask = [Select Id, Name, buildertek__Schedule__c, buildertek__Order__c, buildertek__Milestone__c, buildertek__Duration__c, buildertek__Lag__c, buildertek__Start__c, buildertek__Dependency__c, buildertek__Phase__c, buildertek__Finish__c
 		                                        FROM Project_Task__c
 		                                        WHERE Schedule__c = :updatedProjectTasks[0].buildertek__Schedule__c];
@@ -653,17 +645,17 @@ public class ProjectTaskTriggerHandler{
 						Integer lag = projectTask.buildertek__Lag__c != null ? Integer.valueOf(projectTask.buildertek__Lag__c) : 0;
 						if (parentTask.buildertek__finish__c != null){
 							startDate = parentTask.buildertek__finish__c.addDays(1);//parentTask.buildertek__finish__c.addDays(1);
-							//startDate = ProjectTaskTriggerHandler.getStartDate(startDate);
+							//startDate = ProjectTaskTriggerHandler_v1.getStartDate(startDate);
 							//endDate = parentTask.buildertek__finish__c.addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 							if (Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c) > 0){
-								endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+								endDate = ProjectTaskTriggerHandler_v1.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 							} else{
-								endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(1);
+								endDate = ProjectTaskTriggerHandler_v1.getStartDate(parentTask.buildertek__finish__c).addDays(1);
 							}
-							//endDate =  ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+							//endDate =  ProjectTaskTriggerHandler_v1.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 						} else{
 							startDate = parentTask.buildertek__Start__c.addDays(Integer.valueOf(parentTask.buildertek__Duration__c));
-							//startDate = ProjectTaskTriggerHandler.getStartDate(startDate);
+							//startDate = ProjectTaskTriggerHandler_v1.getStartDate(startDate);
 							if (Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c) > 0){
 								endDate = startDate.addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 							} else{
@@ -673,16 +665,16 @@ public class ProjectTaskTriggerHandler{
 						}
 						numberDaysDue = startDate.daysBetween(endDate);
 
-						projectTask.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(startDate);//startDate;
+						projectTask.buildertek__Start__c = ProjectTaskTriggerHandler_v1.getStartDate(startDate);//startDate;
 						if (numberDaysDue <= 0){
 							projectTask.buildertek__finish__c = projectTask.buildertek__Start__c;
 							System.debug('duration before reseting ==> ' + projectTask.buildertek__Duration__c + ' project task id ' + projectTask.Id);
 							projectTask.buildertek__Duration__c = 1;
 						} else{
-							projectTask.buildertek__finish__c = ProjectTaskTriggerHandler.getEndDate(startDate, endDate);
+							projectTask.buildertek__finish__c = ProjectTaskTriggerHandler_v1.getEndDate(startDate, endDate);
 							// projectTask.buildertek__Duration__c =numberDaysDue ;
 						}
-						//projectTask.buildertek__finish__c = ProjectTaskTriggerHandler.getEndDate(startDate, endDate);
+						//projectTask.buildertek__finish__c = ProjectTaskTriggerHandler_v1.getEndDate(startDate, endDate);
 						//projectTaskToUpdate.add(projectTask);
 					}
 				} else if (previuosTasks.Size() > 0 && !previousTaskmap.containsKey(projectTask.Id) && !projectTask.buildertek__Milestone__c && isFromImportTask){
@@ -690,16 +682,16 @@ public class ProjectTaskTriggerHandler{
 					Integer lastIndex = previuosTasks.Size() - 1;
 					if (lastIndex >= 0){
 						projectTask.buildertek__Start__c = previuosTasks[lastIndex].buildertek__finish__c;//.addDays(1);
-						//if(previuosTasks.Size() > 0 && !previousTaskmap.containsKey(projectTask.Id) &&  !projectTask.buildertek__Milestone__c && ProjectTaskTriggerHandler.isFromImport){
-						projectTask.buildertek__Original_Start_Date__c = ProjectTaskTriggerHandler.getStartDate(projectTask.buildertek__Start__c);
+						//if(previuosTasks.Size() > 0 && !previousTaskmap.containsKey(projectTask.Id) &&  !projectTask.buildertek__Milestone__c && ProjectTaskTriggerHandler_v1.isFromImport){
+						projectTask.buildertek__Original_Start_Date__c = ProjectTaskTriggerHandler_v1.getStartDate(projectTask.buildertek__Start__c);
 						if (projectTask.buildertek__Duration__c != null && projectTask.buildertek__Duration__c > 0){
 							projectTask.buildertek__Original_End_Date__c = projectTask.buildertek__Start__c.addDays(Integer.valueOf(projectTask.buildertek__Duration__c) - 1);
-							projectTask.buildertek__Original_End_Date__c = ProjectTaskTriggerHandler.getEndDate(projectTask.buildertek__Start__c, projectTask.buildertek__Original_End_Date__c);
+							projectTask.buildertek__Original_End_Date__c = ProjectTaskTriggerHandler_v1.getEndDate(projectTask.buildertek__Start__c, projectTask.buildertek__Original_End_Date__c);
 						}
 						//}
 						Integer lag = projectTask.buildertek__Lag__c != null ? Integer.valueOf(projectTask.buildertek__Lag__c) : 0;
 						startDate = projectTask.buildertek__Start__c;
-						startDate = ProjectTaskTriggerHandler.getStartDate(startDate);
+						startDate = ProjectTaskTriggerHandler_v1.getStartDate(startDate);
 						if (mapAllTask.get(projectTask.Id).buildertek__Duration__c != null){
 							if (Integer.valueOf(mapAllTask.get(projectTask.Id).buildertek__Duration__c) > 0){
 								endDate = startDate.addDays(Integer.valueOf(mapAllTask.get(projectTask.Id).buildertek__Duration__c) - 1);
@@ -716,7 +708,7 @@ public class ProjectTaskTriggerHandler{
 						projectTask.buildertek__Start__c = startDate;
 						System.debug('checking start date in processRecords method ' + projectTask.buildertek__Start__c);
 
-						projectTask.buildertek__finish__c = ProjectTaskTriggerHandler.getEndDate(startDate, endDate);
+						projectTask.buildertek__finish__c = ProjectTaskTriggerHandler_v1.getEndDate(startDate, endDate);
 
 						if (!parentTaskMap1.containskey(projectTask.Id)){
 							projectTaskToUpdate.add(projectTask);
@@ -729,10 +721,10 @@ public class ProjectTaskTriggerHandler{
 			}
 
 			if (projectTaskToUpdate.size() > 0){
-				ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+				ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = true;
 				update projectTaskToUpdate;
 
-				ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+				ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = false;
 			}
 		}
 
@@ -811,10 +803,10 @@ public class ProjectTaskTriggerHandler{
 				Integer lastIdx = previuosTasks.Size() - 1;
 				if (lastIdx >= 0){
 					projectTask.buildertek__Start__c = previuosTasks[lastIdx].buildertek__finish__c.addDays(1);
-					projectTask.buildertek__Original_Start_Date__c = ProjectTaskTriggerHandler.getStartDate(projectTask.buildertek__Start__c);
+					projectTask.buildertek__Original_Start_Date__c = ProjectTaskTriggerHandler_v1.getStartDate(projectTask.buildertek__Start__c);
 					if (projectTask.buildertek__Duration__c != null && projectTask.buildertek__Duration__c > 0){
 						projectTask.buildertek__Original_End_Date__c = projectTask.buildertek__Start__c.addDays(Integer.valueOf(projectTask.buildertek__Duration__c) - 1);
-						projectTask.buildertek__Original_End_Date__c = ProjectTaskTriggerHandler.getEndDate(projectTask.buildertek__Start__c, projectTask.buildertek__Original_End_Date__c);
+						projectTask.buildertek__Original_End_Date__c = ProjectTaskTriggerHandler_v1.getEndDate(projectTask.buildertek__Start__c, projectTask.buildertek__Original_End_Date__c);
 					}
 				}
 			}
@@ -847,27 +839,27 @@ public class ProjectTaskTriggerHandler{
 						System.debug('parentTask.buildertek__finish__c ==>' + parentTask.buildertek__finish__c + 'Id ==> ' + parentTask.Id);
 						System.debug('1st Start Date  ===> ' + startDate);
 						if (mapAllTask.get(taskId).buildertek__Duration__c != null){
-							// endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+							// endDate = ProjectTaskTriggerHandler_v1.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 							// added new logic here for end date by Nishit (MV Clouds)
 
-							endDate = ProjectTaskTriggerHandler.getStartDate(startDate).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c) - 1);
+							endDate = ProjectTaskTriggerHandler_v1.getStartDate(startDate).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c) - 1);
 						} else{
 							// calculate duration from (mapAllTask.get(taskId)buildertek__finish__c).daysbetween.mapAllTask.get(taskId).buildertek__Start__c if needed
 							Date d1 = mapAllTask.get(taskId).buildertek__finish__c;
 							Date d2 = mapAllTask.get(taskId).buildertek__Start__c;
 							Integer daysDiff = d2.daysbetween(d1);
 							System.debug('days Diff ==> ' + daysDiff);
-							// endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(daysDiff + 1);
+							// endDate = ProjectTaskTriggerHandler_v1.getStartDate(parentTask.buildertek__finish__c).addDays(daysDiff + 1);
 
 							// added new logic by Nishit (MV Clouds)
-							endDate = ProjectTaskTriggerHandler.getStartDate(startDate).addDays(daysDiff);
+							endDate = ProjectTaskTriggerHandler_v1.getStartDate(startDate).addDays(daysDiff);
 
 							mapAllTask.get(taskId).buildertek__Duration__c = daysDiff + 1;
 							System.debug('duration seted ==> ' + mapAllTask.get(taskId).buildertek__Duration__c);
 
-							// endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+							// endDate = ProjectTaskTriggerHandler_v1.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 						}
-						// endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+						// endDate = ProjectTaskTriggerHandler_v1.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 					} else{
 						Integer Duration = Integer.valueOf(parentTask.buildertek__Duration__c);
 						Integer totalDay;
@@ -883,22 +875,22 @@ public class ProjectTaskTriggerHandler{
 						if (mapAllTask.get(taskId).buildertek__Duration__c == null){
 							mapAllTask.get(taskId).buildertek__Duration__c = 1;
 						}
-						// endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__Start__c.addDays(Duration)).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+						// endDate = ProjectTaskTriggerHandler_v1.getStartDate(parentTask.buildertek__Start__c.addDays(Duration)).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 						// logic added by Nishit (MV Clouds)
-						endDate = ProjectTaskTriggerHandler.getStartDate(startDate.addDays(Duration)).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+						endDate = ProjectTaskTriggerHandler_v1.getStartDate(startDate.addDays(Duration)).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 					}
 
 					//startDate =  parentTask.buildertek__finish__c.addDays(1);
-					//startDate = ProjectTaskTriggerHandler.getStartDate(startDate);
-					//endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+					//startDate = ProjectTaskTriggerHandler_v1.getStartDate(startDate);
+					//endDate = ProjectTaskTriggerHandler_v1.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 					//endDate = parentTask.buildertek__finish__c.addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 					numberDaysDue = startDate.daysBetween(endDate);
 					System.debug('3rd method before changing start Date ==> ' + projectTask.buildertek__Start__c + ' Id ' + projectTask.Id);
-					// projectTask.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(startDate);//startDate;
+					// projectTask.buildertek__Start__c = ProjectTaskTriggerHandler_v1.getStartDate(startDate);//startDate;
 
 
 					System.debug(' 2nd startDate=====> ' + startDate);
-					projectTask.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(startDate);//startDate;
+					projectTask.buildertek__Start__c = ProjectTaskTriggerHandler_v1.getStartDate(startDate);//startDate;
 
 
 					System.debug('3rd method after changing start Date ==> ' + projectTask.buildertek__Start__c + ' Id ' + projectTask.Id);
@@ -907,60 +899,47 @@ public class ProjectTaskTriggerHandler{
 						projectTask.buildertek__finish__c = projectTask.buildertek__Start__c;
 						projectTask.buildertek__Duration__c = 1;
 					} else{
-						projectTask.buildertek__finish__c = ProjectTaskTriggerHandler.getEndDate(startDate, endDate);
+						projectTask.buildertek__finish__c = ProjectTaskTriggerHandler_v1.getEndDate(startDate, endDate);
 					}
-					//projectTask.buildertek__finish__c = ProjectTaskTriggerHandler.getEndDate(startDate, endDate);
+					//projectTask.buildertek__finish__c = ProjectTaskTriggerHandler_v1.getEndDate(startDate, endDate);
 					projectTaskToUpdate.add(projectTask);
 				}
 			} else if (previuosTasks.Size() > 0 && !previousTaskmap.containsKey(projectTask.Id) && !projectTask.buildertek__Milestone__c && isFromImportTask){
-
+				
 				Integer lastIndex = previuosTasks.Size() - 1;
 				if (lastIndex >= 0){
 					projectTask.buildertek__Start__c = previuosTasks[lastIndex].buildertek__finish__c.addDays(1);
 					System.debug('start date if lastIndex > 0 ==> ' + projectTask.buildertek__Start__c);
-					projectTask.buildertek__Original_Start_Date__c = ProjectTaskTriggerHandler.getStartDate(projectTask.buildertek__Start__c);
+					projectTask.buildertek__Original_Start_Date__c = ProjectTaskTriggerHandler_v1.getStartDate(projectTask.buildertek__Start__c);
 					if (projectTask.buildertek__Duration__c != null && projectTask.buildertek__Duration__c > 0){
 						projectTask.buildertek__Original_End_Date__c = projectTask.buildertek__Start__c.addDays(Integer.valueOf(projectTask.buildertek__Duration__c) - 1);
-						projectTask.buildertek__Original_End_Date__c = ProjectTaskTriggerHandler.getEndDate(projectTask.buildertek__Start__c, projectTask.buildertek__Original_End_Date__c);
+						projectTask.buildertek__Original_End_Date__c = ProjectTaskTriggerHandler_v1.getEndDate(projectTask.buildertek__Start__c, projectTask.buildertek__Original_End_Date__c);
 					}
 					Integer lag = projectTask.buildertek__Lag__c != null ? Integer.valueOf(projectTask.buildertek__Lag__c) : 0;
 					startDate = projectTask.buildertek__Start__c;
-					startDate = ProjectTaskTriggerHandler.getStartDate(startDate);
+					startDate = ProjectTaskTriggerHandler_v1.getStartDate(startDate);
 					endDate = startDate.addDays(Integer.valueOf(mapAllTask.get(projectTask.Id).buildertek__Duration__c) - 1);
 					//endDate = startDate.addDays(Integer.valueOf(mapAllTask.get(projectTask.Id).buildertek__Duration__c)-1);
 					//endDate = projectTask.buildertek__Start__c.addDays(Integer.valueOf(mapAllTask.get(projectTask.Id).buildertek__Duration__c)-1);
 					numberDaysDue = startDate.daysBetween(endDate);
 					projectTask.buildertek__Start__c = startDate;
-					projectTask.buildertek__finish__c = ProjectTaskTriggerHandler.getEndDate(startDate, endDate);
+					projectTask.buildertek__finish__c = ProjectTaskTriggerHandler_v1.getEndDate(startDate, endDate);
 					if (!parentTaskMap.containskey(projectTask.Id)){
 						projectTaskToUpdate.add(projectTask);
 						parentTaskMap.put(projectTask.Id, projectTask.Id);
 					}
 				}
-			}else if (projectTask.buildertek__Dependency__c == null){
-
+			}else{
 				system.debug('if predessesor is null then here '+projectTask.Id);
 				// this logic is added for predessesor is equal to null
 					// added by Nishit (MV Clouds)
-
 					Integer totalDay1;
-					if (!oldMapValue.isEmpty() && oldMapValue.get(projectTask.Id) != null) {
-						if (oldMapValue.get(projectTask.Id).buildertek__Lag__c != projectTask.buildertek__Lag__c && projectTask.buildertek__Lag__c != null) {
+						if (projectTask.buildertek__Lag__c != null){
 							Integer lagDays1 = Integer.valueOf(projectTask.buildertek__Lag__c);
 							totalDay1 = lagDays1;
 						} else{
 							totalDay1 = 0;
 						}
-					}else {
-						if (isAfterInsert == 'insert'){
-							System.debug('when insert task name and ==> '+projectTask.Name+' Id '+projectTask.Id);
-							Integer lagDays1 = Integer.valueOf(projectTask.buildertek__Lag__c);
-							totalDay1 = lagDays1;
-						}else{
-							System.debug('when update task name and ==> '+projectTask.Name+' Id '+projectTask.Id);
-							totalDay1 = 0;
-						}
-					}
 					startDate = projectTask.buildertek__Start__c;
 					System.debug('start date in else '+startDate);
 					startDate = addDaysSkippingWeekends(projectTask.buildertek__Start__c, totalDay1);
@@ -968,7 +947,7 @@ public class ProjectTaskTriggerHandler{
 					endDate = startDate.addDays(Integer.valueOf(mapAllTask.get(projectTask.Id).buildertek__Duration__c) - 1);
 					System.debug('endDate in else '+endDate);
 					projectTask.buildertek__Start__c = startDate;
-					projectTask.buildertek__finish__c = ProjectTaskTriggerHandler.getEndDate(startDate, endDate);
+					projectTask.buildertek__finish__c = ProjectTaskTriggerHandler_v1.getEndDate(startDate, endDate);
 					System.debug('endDate excluding weekend in else '+projectTask.buildertek__finish__c);
 					projectTaskToUpdate.add(projectTask);
 					// logic ended here
@@ -977,19 +956,19 @@ public class ProjectTaskTriggerHandler{
 			System.debug('3rd method after else if condition updating start date ' + projectTask.buildertek__Start__c + ' id ' + projectTask.Id);
 		}
 
-		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+		ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = true;
 		if (projectTaskToUpdate.size() > 0){
 			update projectTaskToUpdate;
 		}
 		/*if(predesecorTaskList.size()> 0){
-		 ProjectTaskTriggerHandler.checkDependency(predesecorTaskList);
+		 ProjectTaskTriggerHandler_v1.checkDependency(predesecorTaskList);
 		 }*/
 
 		/* UpdateScheduleItemDatesBatch be = new UpdateScheduleItemDatesBatch(mapAllTask.keySet());
 		 database.executeBatch(be,1);*/
 		// UpdateScheduleItemdatesbatchhelper.batchjobexcute(mapAllTask.keySet());
 
-		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+		ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = false;
 	}
 
 	public void insertUpdateMilestones(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
@@ -1079,15 +1058,15 @@ public class ProjectTaskTriggerHandler{
 		}
 
 		if (insertUpdateMilestoneMap.values().size() > 0){
-			ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+			ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = true;
 			upsert insertUpdateMilestoneMap.values();
-			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+			ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = false;
 		}
 
 		if (deletemilestoneMap.values().size() > 0){
-			ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+			ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = true;
 			delete deletemilestoneMap.values();
-			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+			ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = false;
 		}
 	}
 
@@ -1169,7 +1148,7 @@ public class ProjectTaskTriggerHandler{
 									// System.debug('currentTask-->' + currentTask);
 								}
 								// System.debug('prevParent.buildertek__finish__c-->' + prevParent.buildertek__finish__c);
-								currentTask.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(prevParent.buildertek__finish__c.addDays(1));
+								currentTask.buildertek__Start__c = ProjectTaskTriggerHandler_v1.getStartDate(prevParent.buildertek__finish__c.addDays(1));
 								// System.debug('currentTask.buildertek__Start__c-->' + currentTask.buildertek__Start__c);
 								// System.debug('currentTask.buildertek__Duration__c-->' + currentTask.buildertek__Duration__c);
 								if (Integer.valueOf(currentTask.buildertek__Duration__c) > 0){
@@ -1196,7 +1175,7 @@ public class ProjectTaskTriggerHandler{
 			if (lastTask.Id != null && lastTask.buildertek__finish__c != null){
 				// System.debug('lastTask.buildertek__finish__c  ==> ' + lastTask.buildertek__finish__c);
 				System.debug('1st method fixed start date here ==> ' + taskItem.buildertek__Start__c + 'and Id ' + taskItem.Id);
-				taskItem.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(lastTask.buildertek__finish__c.addDays(1));
+				taskItem.buildertek__Start__c = ProjectTaskTriggerHandler_v1.getStartDate(lastTask.buildertek__finish__c.addDays(1));
 				System.debug('1st method after fixed start date here ==> ' + taskItem.buildertek__Start__c + 'and Id ' + taskItem.Id);
 				// System.debug('null checking :: ' + lastTask.buildertek__Duration__c);
 
@@ -1215,18 +1194,18 @@ public class ProjectTaskTriggerHandler{
 			}
 		}
 
-		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+		ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = true;
 		system.debug('ProjectTasks-->' + ProjectTasks);
 		// System.debug('newUpdateProjectTaskMap-->' + newUpdateProjectTaskMap.values());
 		if (dependencyPathExist && newUpdateProjectTaskMap.values().size() > 0){
 			update newUpdateProjectTaskMap.values();
 		}
-		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-		ProjectTaskTriggerHandler.isFromImport = false;
+		ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = false;
+		ProjectTaskTriggerHandler_v1.isFromImport = false;
 	}
 
 	public static void checkDependency(List<buildertek__Project_Task__c> scheduleItemId){
-		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+		ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = true;
 		List<buildertek__Project_Task__c> scheduleItem = [SELECT Id, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Start__c, buildertek__Dependency__r.buildertek__Finish__c, buildertek__Dependency__r.buildertek__Duration__c
 		                                                  FROM buildertek__Project_Task__c
 		                                                  WHERE buildertek__Dependency__c IN:scheduleItemId];
@@ -1263,11 +1242,11 @@ public class ProjectTaskTriggerHandler{
 
 				//Date endDate = startDate.addDays(Integer.valueOf(tsk.buildertek__Duration__c)-1);
 				scheduleItemUpdate.buildertek__Start__c = startDate;
-				scheduleItemUpdate.buildertek__Finish__c = ProjectTaskTriggerHandler.getEndDate(startDate, endDate);
+				scheduleItemUpdate.buildertek__Finish__c = ProjectTaskTriggerHandler_v1.getEndDate(startDate, endDate);
 				projectTaskToUpdateNew.add(scheduleItemUpdate);
 			}
 			if (projectTaskToUpdateNew.size() > 0){
-				ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+				ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = true;
 				update projectTaskToUpdateNew;
 
 				checkDependency(projectTaskToUpdateNew);
@@ -1323,9 +1302,9 @@ public class ProjectTaskTriggerHandler{
 				projectTask.finish__c = addBussinessDays(projectTask.Start__c, Integer.valueOf(projectTask.duration__c > 0 ? projectTask.duration__c : projectTask.duration__c));
 			}
 		}
-		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+		ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = true;
 		update mapAllTask.values();
-		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+		ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = false;
 	}
 
 	public static Date addBussinessDays(Date startDate, Integer iDays){
@@ -1617,9 +1596,9 @@ public class ProjectTaskTriggerHandler{
 			}
 		}
 		if (scheduleItemList.size() > 0){
-			ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+			ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = true;
 			insert scheduleItemList;
-			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+			ProjectTaskTriggerHandler_v1.blnSkipTaskTrigger = false;
 		}
 	}
 

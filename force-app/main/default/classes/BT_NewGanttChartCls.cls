@@ -350,6 +350,7 @@ public class BT_NewGanttChartCls{
             }
             System.debug('start date for updated Project Task ==> ' + updatedprojecttask.buildertek__Start__c);
             System.debug('end date for updated Project Task ==> ' + updatedprojecttask.buildertek__Finish__c);
+            updatedprojecttask.Name = updatedprojecttask.Name;
             update updatedprojecttask;
             return updatedprojecttask;
         } else{
