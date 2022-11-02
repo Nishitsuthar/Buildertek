@@ -31,25 +31,25 @@ public with sharing class QuestionTriggerHandler {
             }
         }
         
-        // For Ticket BUIL-2789
-        if(!OptionIds.isEmpty()){
-        	System.debug('OptionIds--->'+OptionIds);
-            Map<Id,Product2> ProductMap = new Map<Id,Product2>();
-            List<Product2> ProductList = [SELECT id,Name,buildertek__Manufacturer__c FROM Product2 WHERE Id IN :OptionIds];    
-            for(Product2 product : ProductList){
-                ProductMap.put(product.Id, product);
-                System.debug('Id--->'+product.Id);
-                System.debug('Before Name--->'+product.Name);
-            }  
-            for(buildertek__Question__c option : newQuestions){
-                if(option.buildertek__Product__c != null){
-                    option.Name = ProductMap.get(option.buildertek__Product__c).Name;
-                    option.buildertek__Manufacturer__c = ProductMap.get(option.buildertek__Product__c).buildertek__Manufacturer__c;
-                    System.debug('After Name------->'+option.Name);
-                    System.debug('Manufacturer--->'+option.buildertek__Manufacturer__c);
-                }
-            }
-        }
+        // For Ticket BUIL-2789 (Comment this code because we create custom component - newOption for auto popupate name)
+        // if(!OptionIds.isEmpty()){
+        // 	System.debug('OptionIds--->'+OptionIds);
+        //     Map<Id,Product2> ProductMap = new Map<Id,Product2>();
+        //     List<Product2> ProductList = [SELECT id,Name,buildertek__Manufacturer__c FROM Product2 WHERE Id IN :OptionIds];    
+        //     for(Product2 product : ProductList){
+        //         ProductMap.put(product.Id, product);
+        //         System.debug('Id--->'+product.Id);
+        //         System.debug('Before Name--->'+product.Name);
+        //     }  
+        //     for(buildertek__Question__c option : newQuestions){
+        //         if(option.buildertek__Product__c != null){
+        //             option.Name = ProductMap.get(option.buildertek__Product__c).Name;
+        //             option.buildertek__Manufacturer__c = ProductMap.get(option.buildertek__Product__c).buildertek__Manufacturer__c;
+        //             System.debug('After Name------->'+option.Name);
+        //             System.debug('Manufacturer--->'+option.buildertek__Manufacturer__c);
+        //         }
+        //     }
+        // }
     }
      
     public void OnBeforeUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap){

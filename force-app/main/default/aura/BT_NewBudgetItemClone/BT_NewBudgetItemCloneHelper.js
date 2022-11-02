@@ -1052,6 +1052,8 @@
                         component.set("v.pages", Math.ceil(result.total / 60));
                     }
                     //component.set("v.isLoaded", true);
+                    console.log('**************************************************************');
+                    console.log('TotalRecords ==> ',{result});
                     component.set("v.TotalRecords", result);
                     component.set("v.TotalRecordsCopy",result);
                     console.log('budget lines::',result);
@@ -1694,8 +1696,8 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                var result = response.getReturnValue();
-                console.log('Result ==> ',{result});
+                var budgetWarpper = response.getReturnValue();
+                console.log('budgetWarpper ==> ',{budgetWarpper});
 
                 var TotalRecords = {};
                 var groupHierarchy = [];
@@ -1707,9 +1709,9 @@
 
                 var records = [];
 
-                result.forEach((element, index) => {
+                budgetWarpper.budgetItemList.forEach((element, index) => {
 
-                    var recordsMap = helper.formatDataByCostCode(element);
+                    var recordsMap = helper.formatDataByCostCode(element, budgetWarpper.budgetFieldList);
 
                     if(element.buildertek__Cost_Code__c == undefined){
                         element.buildertek__Cost_Code__c == 'No Code Cost';
@@ -1725,8 +1727,8 @@
                         records.push(recordsMap);
                     }
 
-                    if (result[index+1] != undefined) {
-                        if (element.buildertek__Cost_Code__c != result[index+1].buildertek__Cost_Code__c) {
+                    if (budgetWarpper.budgetItemList[index+1] != undefined) {
+                        if (element.buildertek__Cost_Code__c != budgetWarpper.budgetItemList[index+1].buildertek__Cost_Code__c) {
                             subGroupRecordsMap['records'] = records;
                             subGroupRecords.push(subGroupRecordsMap);
 
@@ -1760,34 +1762,62 @@
                 });
 
                 TotalRecords['groupHierarchy'] = groupHierarchy;
+
+                var lengthMap = {};
+                lengthMap['length'] = 12; 
+
+                TotalRecords['columns'] = lengthMap;
                
                 TotalRecords.groupHierarchy.forEach(element => {
                     var totalObj = {};
-                    totalObj['unitPricekey'] = 'buildertek__Unit_Price__c';
-                    totalObj['unitPrice'] = 0;
-                    totalObj['orignalbudgetkey'] = 'buildertek__Original_Budget__c';
-                    totalObj['orignalbudget'] = 0;
-                    totalObj['TotalApprovalskey'] = 'buildertek__Total_Approvals_CO__c';
-                    totalObj['TotalApprovals'] = 0;
-                    totalObj['CommittedCostkey'] = 'buildertek__Committed_Costs__c';
-                    totalObj['CommittedCost'] = 0;
-                    totalObj['AdditionalCostsKey'] = 'buildertek__Additional_Costs__c';
-                    totalObj['AdditionalCosts'] = 0;
-                    totalObj['InvoiceCostsKey'] = 'buildertek__Invoice_total__c';
-                    totalObj['InvoiceCosts'] = 0;
-                    totalObj['ProjectedCostskey'] = 'buildertek__Labor1__c';
-                    totalObj['ProjectedCosts'] = 0;
-                    totalObj['Labor1key'] = 'buildertek__Projected_Costs__c';
-                    totalObj['Labor1'] = 0;
-                    totalObj['Forecastskey'] = 'buildertek__Forecast_To_Complete__c';
-                    totalObj['Forecast'] = 0;
-                    totalObj['TotalCostsKey'] = 'buildertek__Total_Costs__c';
-                    totalObj['TotalCosts'] = 0;
-                    totalObj['ProfitLosskey'] = 'buildertek__Profit_Loss__c';
-                    totalObj['ProfitLoss'] = 0;
+
+                    if (budgetWarpper.budgetFieldList.includes('buildertek__Unit_Price__c')) {
+                        totalObj['unitPricekey'] = 'buildertek__Unit_Price__c';
+                        totalObj['unitPrice'] = 0;
+                    }
+                    if (budgetWarpper.budgetFieldList.includes('buildertek__Original_Budget__c')){
+                        totalObj['orignalbudgetkey'] = 'buildertek__Original_Budget__c';
+                        totalObj['orignalbudget'] = 0;
+                    }
+                    if (budgetWarpper.budgetFieldList.includes('buildertek__Total_Approvals_CO__c')){
+                        totalObj['TotalApprovalskey'] = 'buildertek__Total_Approvals_CO__c';
+                        totalObj['TotalApprovals'] = 0;
+                    }
+                    if (budgetWarpper.budgetFieldList.includes('buildertek__Committed_Costs__c')){
+                        totalObj['CommittedCostkey'] = 'buildertek__Committed_Costs__c';
+                        totalObj['CommittedCost'] = 0;
+                    }
+                    if (budgetWarpper.budgetFieldList.includes('buildertek__Additional_Costs__c')){
+                        totalObj['AdditionalCostsKey'] = 'buildertek__Additional_Costs__c';
+                        totalObj['AdditionalCosts'] = 0;
+                    }
+                    if (budgetWarpper.budgetFieldList.includes('buildertek__Invoice_total__c')){
+                        totalObj['InvoiceCostsKey'] = 'buildertek__Invoice_total__c';
+                        totalObj['InvoiceCosts'] = 0;
+                    }
+                    if (budgetWarpper.budgetFieldList.includes('buildertek__Labor1__c')){
+                        totalObj['ProjectedCostskey'] = 'buildertek__Labor1__c';
+                        totalObj['ProjectedCosts'] = 0;
+                    }
+                    if (budgetWarpper.budgetFieldList.includes('buildertek__Projected_Costs__c')){
+                        totalObj['Labor1key'] = 'buildertek__Projected_Costs__c';
+                        totalObj['Labor1'] = 0;
+                    }
+                    if (budgetWarpper.budgetFieldList.includes('buildertek__Forecast_To_Complete__c')){
+                        totalObj['Forecastskey'] = 'buildertek__Forecast_To_Complete__c';
+                        totalObj['Forecast'] = 0;
+                    }
+                    if (budgetWarpper.budgetFieldList.includes('buildertek__Total_Costs__c')){
+                        totalObj['TotalCostsKey'] = 'buildertek__Total_Costs__c';
+                        totalObj['TotalCosts'] = 0;
+                    }
+                    if (budgetWarpper.budgetFieldList.includes('buildertek__Profit_Loss__c')){
+                        totalObj['ProfitLosskey'] = 'buildertek__Profit_Loss__c';
+                        totalObj['ProfitLoss'] = 0;
+                    }
                     totalObj['fieldType'] = "currency";
 
-                    result.forEach((ele) => {
+                    budgetWarpper.budgetItemList.forEach((ele) => {
                         if (element.groupId == ele.buildertek__Cost_Code__c) {
                             totalObj = helper.setTotal(totalObj, ele);
                         } else if(ele.buildertek__Cost_Code__c == undefined && element.groupName == 'No Code Cost'){
@@ -1818,25 +1848,69 @@
         $A.enqueueAction(action);
     }, 
 
-    formatDataByCostCode: function (element){
+    formatDataByCostCode: function (element, budgetFieldList){
 
         var recordsMap = {};
+        var recordList = [];
 
-        var recordList = [
-            {fieldName: 'buildertek__Quantity__c', fieldType: 'number', isEditable: true, originalValue: element.buildertek__Quantity__c  , recordValue: element.buildertek__Quantity__c , referenceValue: '' },
-            {fieldName: 'buildertek__Unit_Price__c', fieldType: 'currency', isEditable: true, originalValue: element.buildertek__Unit_Price__c  , recordValue: element.buildertek__Unit_Price__c , referenceValue: '' },
-            {fieldName: 'buildertek__Original_Budget__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Original_Budget__c  , recordValue: element.buildertek__Original_Budget__c , referenceValue: '' },
-            {fieldName: 'buildertek__Total_Sales_Price__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Total_Sales_Price__c  , recordValue: element.buildertek__Total_Sales_Price__c , referenceValue: '' },
-            {fieldName: 'buildertek__Committed_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Committed_Costs__c  , recordValue: element.buildertek__Committed_Costs__c , referenceValue: '' },
-            {fieldName: 'buildertek__Additional_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Additional_Costs__c  , recordValue: element.buildertek__Additional_Costs__c , referenceValue: '' },
-            {fieldName: 'buildertek__Invoice_total__c', fieldType: 'currency', isEditable: true, originalValue: '' , recordValue: element.buildertek__Invoice_total__c , referenceValue: '' },
-            {fieldName: 'buildertek__Total_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Total_Costs__c  , recordValue: element.buildertek__Total_Costs__c , referenceValue: '' },
-            {fieldName: 'buildertek__Profit_Loss__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Profit_Loss__c  , recordValue: element.buildertek__Profit_Loss__c , referenceValue: '' },
-            {fieldName: 'buildertek__Gross_Profit_Percemtage__c', fieldType: 'string', isEditable: false, originalValue: element.buildertek__Gross_Profit_Percemtage__c  , recordValue: element.buildertek__Gross_Profit_Percemtage__c , referenceValue: '' },
-            {fieldName: 'buildertek__Gross_Profit_Margin__c', fieldType: 'string', isEditable: false, originalValue: element.buildertek__Gross_Profit_Margin__c  , recordValue: element.buildertek__Gross_Profit_Margin__c , referenceValue: '' },
-            {fieldName: 'buildertek__CostCodeDivision__c', fieldType: '', isEditable: false, originalValue: element.buildertek__CostCodeDivision__c  , recordValue: element.buildertek__CostCodeDivision__c , referenceValue: '' },
-        ];
+        // var recordList = [
+        //     {fieldName: 'buildertek__Quantity__c', fieldType: 'number', isEditable: true, originalValue: element.buildertek__Quantity__c  , recordValue: element.buildertek__Quantity__c , referenceValue: '' },
+        //     {fieldName: 'buildertek__Unit_Price__c', fieldType: 'currency', isEditable: true, originalValue: element.buildertek__Unit_Price__c  , recordValue: element.buildertek__Unit_Price__c , referenceValue: '' },
+        //     {fieldName: 'buildertek__Original_Budget__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Original_Budget__c  , recordValue: element.buildertek__Original_Budget__c , referenceValue: '' },
+        //     {fieldName: 'buildertek__Total_Sales_Price__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Total_Sales_Price__c  , recordValue: element.buildertek__Total_Sales_Price__c , referenceValue: '' },
+        //     {fieldName: 'buildertek__Committed_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Committed_Costs__c  , recordValue: element.buildertek__Committed_Costs__c , referenceValue: '' },
+        //     {fieldName: 'buildertek__Additional_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Additional_Costs__c  , recordValue: element.buildertek__Additional_Costs__c , referenceValue: '' },
+        //     {fieldName: 'buildertek__Invoice_total__c', fieldType: 'currency', isEditable: true, originalValue: '' , recordValue: element.buildertek__Invoice_total__c , referenceValue: '' },
+        //     {fieldName: 'buildertek__Total_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Total_Costs__c  , recordValue: element.buildertek__Total_Costs__c , referenceValue: '' },
+        //     {fieldName: 'buildertek__Profit_Loss__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Profit_Loss__c  , recordValue: element.buildertek__Profit_Loss__c , referenceValue: '' },
+        //     {fieldName: 'buildertek__Gross_Profit_Margin__c', fieldType: 'string', isEditable: false, originalValue: element.buildertek__Gross_Profit_Margin__c  , recordValue: element.buildertek__Gross_Profit_Margin__c , referenceValue: '' },
+        //     {fieldName: 'buildertek__CostCodeDivision__c', fieldType: '', isEditable: false, originalValue: element.buildertek__CostCodeDivision__c  , recordValue: element.buildertek__CostCodeDivision__c , referenceValue: '' },
+        // ];
 
+        if (budgetFieldList.includes('buildertek__Quantity__c')) {
+            var fieldDate = {fieldName: 'buildertek__Quantity__c', fieldType: 'number', isEditable: true, originalValue: element.buildertek__Quantity__c  , recordValue: element.buildertek__Quantity__c , referenceValue: '' };
+            recordList.push(fieldDate);
+        }
+        if (budgetFieldList.includes('buildertek__Unit_Price__c')) {
+            var fieldDate = {fieldName: 'buildertek__Unit_Price__c', fieldType: 'currency', isEditable: true, originalValue: element.buildertek__Unit_Price__c  , recordValue: element.buildertek__Unit_Price__c , referenceValue: '' };
+            recordList.push(fieldDate);
+        }
+        if (budgetFieldList.includes('buildertek__Original_Budget__c')) {
+            var fieldDate = {fieldName: 'buildertek__Original_Budget__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Original_Budget__c  , recordValue: element.buildertek__Original_Budget__c , referenceValue: '' };
+            recordList.push(fieldDate);
+        }
+        if (budgetFieldList.includes('buildertek__Total_Sales_Price__c')) {
+            var fieldDate = {fieldName: 'buildertek__Total_Sales_Price__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Total_Sales_Price__c  , recordValue: element.buildertek__Total_Sales_Price__c , referenceValue: '' };
+            recordList.push(fieldDate);
+        }
+        if (budgetFieldList.includes('buildertek__Committed_Costs__c')) {
+            var fieldDate = {fieldName: 'buildertek__Committed_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Committed_Costs__c  , recordValue: element.buildertek__Committed_Costs__c , referenceValue: '' };
+            recordList.push(fieldDate);
+        }
+        if (budgetFieldList.includes('buildertek__Additional_Costs__c')) {
+            var fieldDate = {fieldName: 'buildertek__Additional_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Additional_Costs__c  , recordValue: element.buildertek__Additional_Costs__c , referenceValue: '' };
+            recordList.push(fieldDate);
+        }
+        if (budgetFieldList.includes('buildertek__Invoice_total__c')) {
+            var fieldDate = {fieldName: 'buildertek__Invoice_total__c', fieldType: 'currency', isEditable: true, originalValue: '' , recordValue: element.buildertek__Invoice_total__c , referenceValue: '' };
+            recordList.push(fieldDate);
+        }
+        if (budgetFieldList.includes('buildertek__Total_Costs__c')) {
+            var fieldDate = {fieldName: 'buildertek__Total_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Total_Costs__c  , recordValue: element.buildertek__Total_Costs__c , referenceValue: '' };
+            recordList.push(fieldDate);
+        }
+        if (budgetFieldList.includes('buildertek__Profit_Loss__c')) {
+            var fieldDate = {fieldName: 'buildertek__Profit_Loss__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Profit_Loss__c  , recordValue: element.buildertek__Profit_Loss__c , referenceValue: '' };
+            recordList.push(fieldDate);
+        }
+        if (budgetFieldList.includes('buildertek__Gross_Profit_Margin__c')) {
+            var fieldDate = {fieldName: 'buildertek__Gross_Profit_Margin__c', fieldType: 'string', isEditable: false, originalValue: element.buildertek__Gross_Profit_Margin__c  , recordValue: element.buildertek__Gross_Profit_Margin__c , referenceValue: '' };
+            recordList.push(fieldDate);
+        }
+        if (budgetFieldList.includes('buildertek__CostCodeDivision__c')) {
+            var fieldDate = {fieldName: 'buildertek__CostCodeDivision__c', fieldType: '', isEditable: false, originalValue: element.buildertek__CostCodeDivision__c  , recordValue: element.buildertek__CostCodeDivision__c , referenceValue: '' };
+            recordList.push(fieldDate);
+        }
         recordsMap['recordId'] = element.Id;
         recordsMap['recordName'] = element.Name;
         recordsMap['recordList'] = recordList;

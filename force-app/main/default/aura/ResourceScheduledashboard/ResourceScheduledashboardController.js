@@ -14,13 +14,13 @@
         // helper.gettabname(component);
 
     },
-   
+
     Standardview: function (component, event, helper) {
         component.set("v.isConflictview", "Standard");
         //var today = new Date();
         // component.set("v.isConflictview", "Standard");
         //var Datevalue = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+1);
-        // var now = new Date(); 
+        // var now = new Date();
         // component.set("v.headerDate", $A.localizationService.formatDate(now, 'dd/MMMM/yyyy'));
 
         if (component.get("v.calendarView") == 'Dayview') {
@@ -38,7 +38,7 @@
             helper.groupbyWeekViewHelper(component, beforeOfWeek);
         }
 
-        // helper.currentWeekDates(component,Datevalue); 
+        // helper.currentWeekDates(component,Datevalue);
         // helper.currentMonthsDates(component,Datevalue);
     },
     Conflictview: function (component, event, helper) {
@@ -99,7 +99,7 @@
         console.log('display')
     },
     resourcedrawTable: function (component, event, helper) {
-   
+
         //Start
         var conflictview = component.get("v.isConflictview");
         //alert('conflictview---'+conflictview);
@@ -118,9 +118,9 @@
         tbody += '<tbody>';
         console.log('EventList =======> ' + eventList.length);
         for (var i = 0; i < eventList.length; i++) {
-               
+
            // document.getElementById("colorpad").style.color = dynamiccolor;
-		   
+
             tbody += '<tr style="height: 50px;">';
             tbody += '<td style="border-right: 1px solid #ECECEC !important;width: 70%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><span class="colorpad" style="color: white;background-color: green;width: 30px;height: 30px;border-radius: 50%;font-size: 20px;text-align: center;position: absolute;margin-top: 4px;" >'+eventList[i].FirstLetterofContractresourceName +'</span>&nbsp;&nbsp;<b><a style="margin-left:31px;" target="_blank" href="/'+eventList[i].ContractresourceId+'">' + eventList[i].ContractresourceName + '</a></b><br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(' + eventList[i].Companyname + '-' + eventList[i].TradeType + ')</td>';
             tbody += '<td style="text-align: center;width: 30%;">' + eventList[i].tasks + '</td>';
@@ -134,7 +134,7 @@
                 if (eventList[i].ProjectTaskRecordsList != undefined) {
                     var EquipmentRecordsList = eventList[i].ProjectTaskRecordsList;
                     var tasks = 0;
-                   
+
                     for (var p = 0; p < EquipmentRecordsList.length; p++) {
                          console.log('aboveif----calandaedate--->'+weekDates[k].Date +'record stardate>='+ EquipmentRecordsList[p].day +'record enddate-----&& <= '+EquipmentRecordsList[p].endday);
                         console.log(typeof weekDates[k].Date);
@@ -145,7 +145,7 @@
                             tasks++;
                         }
                     }
-                }  
+                }
 
                 if (tasks == 1) {
                     if (weekDates[k].Day != 'Sun' && conflictview != 'Conflicts') {
@@ -166,6 +166,9 @@
                         datatable += '</tr>';
                         for (var t = 0; t < EquipmentRecordsList.length; t++) {
                             if (new Date(weekDates[k].Date).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf() && new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf()) {
+                                if (EquipmentRecordsList[t].projectId == undefined) {
+                                    EquipmentRecordsList[t].projectId = "";
+                                }
                                 datatable += '<tr>';
                                 datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].projectId + '</td>';
                                 datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].Model + '</td>';
@@ -230,6 +233,9 @@
                         datatable += '</tr>';
                         for (var t = 0; t < EquipmentRecordsList.length; t++) {
                             if (new Date(weekDates[k].Date).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf() && new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf()) {
+                                if (EquipmentRecordsList[t].projectId == undefined) {
+                                    EquipmentRecordsList[t].projectId = "";
+                                }
                                 datatable += '<tr>';
                                 datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].projectId + '</td>';
                                 datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].Model + '</td>';
@@ -268,6 +274,9 @@
                         datatable += '</tr>';
                         for (var t = 0; t < EquipmentRecordsList.length; t++) {
                             if (new Date(weekDates[k].Date).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf() && new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf()) {
+                                if (EquipmentRecordsList[t].projectId == undefined) {
+                                    EquipmentRecordsList[t].projectId = "";
+                                }
                                 datatable += '<tr>';
                                 datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].projectId + '</td>';
                                 datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].Model + '</td>';
@@ -306,6 +315,9 @@
                         datatable += '</tr>';
                         for (var t = 0; t < EquipmentRecordsList.length; t++) {
                             if (new Date(weekDates[k].Date).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf() && new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf()) {
+                                if (EquipmentRecordsList[t].projectId == undefined) {
+                                    EquipmentRecordsList[t].projectId = "";
+                                }
                                 datatable += '<tr>';
                                 datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].projectId + '</td>';
                                 datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].Model + '</td>';
@@ -488,9 +500,11 @@
                         datatable += '<th style="border: 1px solid #ddd;font-size: 12px;padding: 3px; width: 80px;">Completion %</th>'
                         datatable += '</tr>';
                         for (var t = 0; t < EquipmentRecordsList.length; t++) {
-                            	
-                            if (new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf() && new Date(weekDates[k].weekEndDate).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf()) {
 
+                            if (new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf() && new Date(weekDates[k].weekEndDate).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf()) {
+                                if (EquipmentRecordsList[t].projectId == undefined) {
+                                    EquipmentRecordsList[t].projectId = "";
+                                }
                                 datatable += '<tr>';
                                 datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].projectId + '</td>';
                                 datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].Model + '</td>';
@@ -529,7 +543,7 @@
                     datatable += '</li></td>';
                     /* }else{
                          datatable+='<td style="text-align: center;vertical-align: middle;padding: 3px 0px 0px 0px !important;">';
-                         datatable+='</td>'; 
+                         datatable+='</td>';
                      }*/
                 }
                 if (tasks >= 2 && eventList[i].simultaneousTasksContractorResources != undefined && tasks < eventList[i].simultaneousTasksContractorResources) {
@@ -550,6 +564,9 @@
                     datatable += '</tr>';
                     for (var t = 0; t < EquipmentRecordsList.length; t++) {
                         if (new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf() && new Date(weekDates[k].weekEndDate).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf()) {
+                            if (EquipmentRecordsList[t].projectId == undefined) {
+                                EquipmentRecordsList[t].projectId = "";
+                            }
                             datatable += '<tr>';
                             datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].projectId + '</td>';
                             datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].Model + '</td>';
@@ -588,6 +605,9 @@
                     datatable += '</tr>';
                     for (var t = 0; t < EquipmentRecordsList.length; t++) {
                         if (new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf() && new Date(weekDates[k].weekEndDate).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf()) {
+                            if (EquipmentRecordsList[t].projectId == undefined) {
+                                EquipmentRecordsList[t].projectId = "";
+                            }
                             datatable += '<tr>';
                             datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].projectId + '</td>';
                             datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].Model + '</td>';
@@ -625,6 +645,9 @@
                     datatable += '</tr>';
                     for (var t = 0; t < EquipmentRecordsList.length; t++) {
                         if (new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf() && new Date(weekDates[k].weekEndDate).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf()) {
+                            if (EquipmentRecordsList[t].projectId == undefined) {
+                                EquipmentRecordsList[t].projectId = "";
+                            }
                             datatable += '<tr>';
                             datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].projectId + '</td>';
                             datatable += '<td style="border: 1px solid #ddd;font-size: 12px;padding: 3px; class="slds-truncate">' + EquipmentRecordsList[t].Model + '</td>';
@@ -732,7 +755,7 @@
     },
 
     handleComponentEvent: function (component, event, helper) {
-        // get the selected Account record from the COMPONETN event 
+        // get the selected Account record from the COMPONETN event
 
         //var selectedAccountGetFromEvent = event.getParam("recordByEvent");
         //component.set("v.selectedContact", selectedAccountGetFromEvent.Id);
@@ -771,7 +794,7 @@
             helper.groupbyWeekViewHelper(component, beforeOfWeek);
         }
     },
-    
+
     clickedDiv : function (component, event, helper) {
         console.log(event);
         event.stopPropagation();
@@ -794,8 +817,8 @@
             $A.enqueueAction(action);
         }
     },
-    
-    
+
+
     clickedDiv1 : function (component, event, helper) {
         event.stopPropagation();
         console.log(event);
@@ -812,7 +835,7 @@
                 if(response.getState() == 'SUCCESS'){
                  //   alert(response.getState());
                     console.log(response.getReturnValue());
-                    
+
                     component.set("v.showModal1",true);
                     component.set("v.showModal",false);
                     component.set("v.tradeTypeScheduleItemList",response.getReturnValue());
@@ -821,12 +844,12 @@
             $A.enqueueAction(action);
         }
     },
-    
+
      SaveItems: function (component, event, helper) {
         component.set('v.isLoading', true);
         var listOfRecords = component.get('v.tradeTypeScheduleItemList');
         var action = component.get("c.updateRecords");
-  
+
         action.setParams({
             'resourceRecords' : listOfRecords
         });
@@ -836,9 +859,9 @@
             if (state === "SUCCESS") {
                 var list = JSON.parse(response.getReturnValue());
                 component.set('v.listOfRecords', list);
-               
+
                 component.set('v.isLoading', false);
-               
+
             } else if (state === "ERROR") {
                 component.set('v.isLoading', false);
             }
@@ -846,12 +869,12 @@
         $A.enqueueAction(action);
     },
 
-    
-    
+
+
     closeModal : function (component, event, helper) {
         component.set("v.showModal",false);
     },
-    
+
     closeModal1 : function (component, event, helper) {
         component.set("v.showModal1",false);
     }

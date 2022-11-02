@@ -6,54 +6,54 @@ public class CloneBOM {
       }
 
 
-    @AuraEnabled
-    public static string cloneAnySobjet(String recordId,string version, String BOMName){
-         Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
-        String objectAPIName = 'buildertek__Project_Selection_Sheet_Takeoff__c';
-        String keyPrefix = recordId.substring(0,3);
-        Set <String> fieldMap = schemaMap.get(objectAPIName).getDescribe().fields.getMap().keySet();
-        String soqlQuery = 'Select ' ; 
-        for (String s :fieldMap ){
-            if(schema.getGlobalDescribe().get(objectAPIName).getDescribe().fields.getMap().get(s).getDescribe().isAccessible()){
-                soqlQuery +=  + s+',';
-            }
-        }
-        soqlQuery =  soqlQuery.removeEnd(',');
-        soqlQuery += ' FROM ' +objectAPIName +' WHERE Id=: recordId' ;
-        buildertek__Project_Selection_Sheet_Takeoff__c record = Database.query(soqlQuery);
+    // @AuraEnabled
+    // public static string cloneAnySobjet(String recordId,string version, String BOMName){
+    //      Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
+    //     String objectAPIName = 'buildertek__Project_Selection_Sheet_Takeoff__c';
+    //     String keyPrefix = recordId.substring(0,3);
+    //     Set <String> fieldMap = schemaMap.get(objectAPIName).getDescribe().fields.getMap().keySet();
+    //     String soqlQuery = 'Select ' ; 
+    //     for (String s :fieldMap ){
+    //         if(schema.getGlobalDescribe().get(objectAPIName).getDescribe().fields.getMap().get(s).getDescribe().isAccessible()){
+    //             soqlQuery +=  + s+',';
+    //         }
+    //     }
+    //     soqlQuery =  soqlQuery.removeEnd(',');
+    //     soqlQuery += ' FROM ' +objectAPIName +' WHERE Id=: recordId' ;
+    //     buildertek__Project_Selection_Sheet_Takeoff__c record = Database.query(soqlQuery);
         
         
        
-        buildertek__Project_Selection_Sheet_Takeoff__c clondedParentRecordID= record.clone(false, false, false, false);
-        clondedParentRecordID.buildertek__Version_Number__c = version;
-        clondedParentRecordID.buildertek__Name__c = BOMName;
+    //     buildertek__Project_Selection_Sheet_Takeoff__c clondedParentRecordID= record.clone(false, false, false, false);
+    //     clondedParentRecordID.buildertek__Version_Number__c = version;
+    //     clondedParentRecordID.buildertek__Name__c = BOMName;
        
         
-        insert clondedParentRecordID ;
+    //     insert clondedParentRecordID ;
         
-        list<buildertek__Select_Sheet__c> selectsheetList = new list<buildertek__Select_Sheet__c>();
-        List<buildertek__Select_Sheet__c> bccList = [SELECT buildertek__Active__c,Name,
-                                                     buildertek__Allowance__c,buildertek__Selection_Sheet_Takeoff__c,buildertek__BT_Price_Book__c,buildertek__Build_Phase__c,
-                                                     buildertek__Category__c,buildertek__Description__c,buildertek__BL_DISCOUNT__c,buildertek__BL_DISCOUNT_AMOUNT__c,buildertek__Instructions__c,
-                                                     buildertek__BL_LIST_PRICE_F__c,buildertek__BL_LIST_PRICE__c,buildertek__Location__c,buildertek__Location_Picklist__c,buildertek__Locked__c,
-                                                     buildertek__Build_Reference_1__c,buildertek__Base_Location__c,buildertek__Location_Detailed_Area__c,buildertek__Location_Detail_Reference_1__c,buildertek__Install_Location__c,buildertek__Install_Location_Reference__c,
-                                                     buildertek__BL_MARKUP__c,buildertek__BL_MARKUP_AMOUNT__c,buildertek__Option__c,buildertek__Option_Details__c,buildertek__Plan__c,buildertek__Product__c,
-                                                     buildertek__Product_Type__c,buildertek__Project__c,buildertek__Purchase_Order__c,buildertek__Quantity__c,buildertek__Standard__c,buildertek__Takeoff_Line__c,
-                                                     buildertek__Trade_Type__c,buildertek__Type__c,buildertek__BL_UNIT_COST__c,buildertek__Upgrade_Price__c,buildertek__Vendor__c 
-                                                     FROM buildertek__Select_Sheet__c WHERE buildertek__Selection_Sheet_Takeoff__c =:recordId
-                                                     ];
+    //     list<buildertek__Select_Sheet__c> selectsheetList = new list<buildertek__Select_Sheet__c>();
+    //     List<buildertek__Select_Sheet__c> bccList = [SELECT buildertek__Active__c,Name,
+    //                                                  buildertek__Allowance__c,buildertek__Selection_Sheet_Takeoff__c,buildertek__BT_Price_Book__c,buildertek__Build_Phase__c,
+    //                                                  buildertek__Category__c,buildertek__Description__c,buildertek__BL_DISCOUNT__c,buildertek__BL_DISCOUNT_AMOUNT__c,buildertek__Instructions__c,
+    //                                                  buildertek__BL_LIST_PRICE_F__c,buildertek__BL_LIST_PRICE__c,buildertek__Location__c,buildertek__Location_Picklist__c,buildertek__Locked__c,
+    //                                                  buildertek__Build_Reference_1__c,buildertek__Base_Location__c,buildertek__Location_Detailed_Area__c,buildertek__Location_Detail_Reference_1__c,buildertek__Install_Location__c,buildertek__Install_Location_Reference__c,
+    //                                                  buildertek__BL_MARKUP__c,buildertek__BL_MARKUP_AMOUNT__c,buildertek__Option__c,buildertek__Option_Details__c,buildertek__Plan__c,buildertek__Product__c,
+    //                                                  buildertek__Product_Type__c,buildertek__Project__c,buildertek__Purchase_Order__c,buildertek__Quantity__c,buildertek__Standard__c,buildertek__Takeoff_Line__c,
+    //                                                  buildertek__Trade_Type__c,buildertek__Type__c,buildertek__BL_UNIT_COST__c,buildertek__Upgrade_Price__c,buildertek__Vendor__c 
+    //                                                  FROM buildertek__Select_Sheet__c WHERE buildertek__Selection_Sheet_Takeoff__c =:recordId
+    //                                                  ];
                                                      
-            for(Integer i=0; i<bccList.Size();i++){
-                buildertek__Select_Sheet__c cslCopy = bccList[i].clone(false,true);
-                cslCopy.buildertek__Selection_Sheet_Takeoff__c = clondedParentRecordID.Id;
-                 selectsheetList.add(cslCopy);
-            } 
-            if(!selectsheetList.isEmpty()){
-              insert(selectsheetList); 
-            }                                       
+    //         for(Integer i=0; i<bccList.Size();i++){
+    //             buildertek__Select_Sheet__c cslCopy = bccList[i].clone(false,true);
+    //             cslCopy.buildertek__Selection_Sheet_Takeoff__c = clondedParentRecordID.Id;
+    //              selectsheetList.add(cslCopy);
+    //         } 
+    //         if(!selectsheetList.isEmpty()){
+    //           insert(selectsheetList); 
+    //         }                                       
                                                      
-         return clondedParentRecordID.Id;
-    }
+    //      return clondedParentRecordID.Id;
+    // }
 
     @InvocableMethod
     public static void cloneBOMLine(List<List<String>> CloneIdCollectid){

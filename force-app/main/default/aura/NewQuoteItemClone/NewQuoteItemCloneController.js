@@ -2306,6 +2306,7 @@ return other.Id == current.Id
             "Quotelines": listQlines,
             "QuoteId": component.get("v.recordId")
         });
+        console.log(component.get("v.recordId") + '---*****************');
         action10.setCallback(this, function (response) {
             component.set("v.openQuoteLineBox", false);
             $A.get("e.force:refreshView").fire();

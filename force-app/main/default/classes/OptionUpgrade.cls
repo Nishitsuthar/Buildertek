@@ -1,19 +1,25 @@
 public with sharing class OptionUpgrade {
 
     @AuraEnabled
-    public static optionWrapper getDetails(String recordId, Integer pageNumber, Integer pageSize, String searchNameValue, String searchTypeValue, String searchManufacturerValue, String searchFamilyValue) {
+    public static optionWrapper getDetails(String recordId, String searchNameValue, String searchTypeValue, String searchManufacturerValue, String searchFamilyValue, String selectedPriceBook, Boolean priceBookFilter) {
+
+        System.debug('recordId ==> '+recordId);
+        System.debug('searchNameValue ==> '+searchNameValue);
+        System.debug('searchTypeValue ==> '+searchTypeValue);
+        System.debug('searchManufacturerValue ==> '+searchManufacturerValue);
+        System.debug('searchFamilyValue ==> '+searchFamilyValue);
+        System.debug('selectedPriceBook ==> '+selectedPriceBook);
+        System.debug('priceBookFilter ==> '+priceBookFilter);
+
         buildertek__Question__c option = [SELECT Id, Name, buildertek__Question_Group__c, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, 
                                             buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c, buildertek__Price_Book__c, 
                                             buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c FROM buildertek__Question__c WHERE Id =: recordId];
 
-        String priceBook = option.buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c;
         List<Product2> productList = new List<Product2>();
-
-        Integer offset = (pageNumber - 1) * pageSize;
 
         if (option.buildertek__Section__c != null) {
             String sectionId = option.buildertek__Section__c;
-            String queryList = 'SELECT Id, Name, buildertek__Selection_Category_Lookup__c, buildertek__Product_Type__r.Name, buildertek__Manufacturer__r.Name, Family, buildertek__Category__r.Name, (SELECT Id, Name, UnitPrice FROM PricebookEntries) FROM Product2 WHERE buildertek__Selection_Category_Lookup__c =: sectionId';
+            String queryList = 'SELECT Id, Name, buildertek__Selection_Category_Lookup__c, buildertek__Product_Type__r.Name, buildertek__Manufacturer__r.Name, Family, buildertek__Category__r.Name, (SELECT Id, Name, UnitPrice, Pricebook2.Id, Pricebook2.Name FROM PricebookEntries) FROM Product2 WHERE buildertek__Selection_Category_Lookup__c =: sectionId';
             
             if (searchNameValue != null && searchNameValue != '') {
                 queryList = queryList + ' AND Name LIKE \'' + searchNameValue + '%\'';
@@ -30,10 +36,6 @@ public with sharing class OptionUpgrade {
             if (searchFamilyValue != null && searchFamilyValue != '') {
                 queryList = queryList + ' AND Family LIKE \'' + searchFamilyValue + '%\'';
             }
-
-            if (searchNameValue == '' && searchTypeValue == '' && searchManufacturerValue == '' && searchFamilyValue == '') {
-                queryList = queryList + ' LIMIT ' + pageSize + ' OFFSET ' + offset;
-            }
             
             productList = Database.query(queryList);
         }
@@ -48,8 +50,8 @@ public with sharing class OptionUpgrade {
             contentLinkList = [SELECT Id, ContentDocumentId, LinkedEntityId FROM ContentDocumentLink WHERE LinkedEntityId =: productsIds];
         }
 
-        String query = 'Select COUNT() FROM Product2 WHERE buildertek__Selection_Category_Lookup__c =: sectionId';
-        Integer productCount = Database.countQuery(query);
+        // String query = 'Select COUNT() FROM Product2 WHERE buildertek__Selection_Category_Lookup__c =: sectionId';
+        // Integer productCount = Database.countQuery(query);
 
         Map<String, String> priceBookMap = new Map<String, String>();
         list<pricebook2> PriceList = [SELECT Id, Name FROM pricebook2 ORDER BY Name ASC ];
@@ -57,28 +59,52 @@ public with sharing class OptionUpgrade {
             priceBookMap.put(p.Name, p.Id);
         }
 
+        String priceBookValue;
+        if (priceBookFilter == false) {
+            priceBookValue = option.buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c;
+            if (priceBookValue == null || priceBookValue == '') {
+                priceBookValue = priceBookMap.get('Standard Price Book');
+            }
+        } else {
+            priceBookValue = selectedPriceBook;
+        }
+        
         optionWrapper optionWrapperData = new optionWrapper();
         optionWrapperData.option = option;
-        optionWrapperData.projectPriceBook = priceBook;
-        optionWrapperData.productCount = productCount;
+        optionWrapperData.projectPriceBook = priceBookValue;
+        // optionWrapperData.projectPriceBook = option.buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c;
+        // optionWrapperData.productCount = productCount;
         optionWrapperData.priceBookMap = priceBookMap;
 
 
         List<productWrapper> prodWrapperList = new List<productWrapper>();
+
+        Integer prodCount = 0;
         for (Product2 product : productList) {
-            System.debug('product ==> '+product);
-            productWrapper prodWrapper = new productWrapper();
-            prodWrapper.product = product;
-            List<ContentDocumentLink> contentDocs = new List<ContentDocumentLink>();
-            for (ContentDocumentLink content : contentLinkList) {
-                if (content.LinkedEntityId == product.Id) {
-                    contentDocs.add(content);
+
+            boolean checkPriceBook = false;
+            for (PricebookEntry priceBookEntry : product.PricebookEntries) {
+                if (priceBookValue != '' && priceBookEntry.Pricebook2Id == priceBookValue) {
+                    checkPriceBook = true;
                 }
+            } 
+            if (checkPriceBook == true || priceBookValue == '') {
+                productWrapper prodWrapper = new productWrapper();
+                prodWrapper.product = product;
+                List<ContentDocumentLink> contentDocs = new List<ContentDocumentLink>();
+                for (ContentDocumentLink content : contentLinkList) {
+                    if (content.LinkedEntityId == product.Id) {
+                        contentDocs.add(content);
+                    }
+                }
+                prodWrapper.contentDocsList = contentDocs;
+                prodWrapperList.add(prodWrapper);
+                prodCount++;
             }
-            prodWrapper.contentDocsList = contentDocs;
-            prodWrapperList.add(prodWrapper);
+
         }
         optionWrapperData.productWrapperList = prodWrapperList;
+        optionWrapperData.productCount = prodCount;
         return optionWrapperData;
     }
 

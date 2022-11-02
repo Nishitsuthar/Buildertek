@@ -2,7 +2,7 @@
     doInit: function (component, event, helper) {
         try {
             component.set("v.Spinner", true);
-            var action = component.get("c.getMasterPunchList");
+            var action = component.get("c.getMasterPL");
             action.setCallback(this, function (response) {
                 var state = response.getState();
                 if (state === "SUCCESS") {
@@ -21,9 +21,8 @@
                     }
 
                     component.set('v.PaginationList', PaginationList);
+                    console.log({ PaginationList });
                     component.set("v.Spinner", false);
-                    console.log('Start Page ----------> ' + component.get("v.startPage"));
-                    console.log('End Page ----------> ' + component.get("v.endPage"));
                 }
             });
             $A.enqueueAction(action);
@@ -144,6 +143,19 @@
             // }
         } catch (error) {
             console.log("error in Helper selectAll Method");
+            console.log({ error });
+        }
+    },
+
+    handleCheck: function (component, event, helper) {
+        try {
+            var checkboxValue = event.getSource().get("v.value");
+            console.log("checkbox value ==>" + checkboxValue);
+            var checkboxId = event.getSource().get("v.text");
+            console.log("checkbox Id ==>" + checkboxId);
+
+        } catch (error) {
+            console.log("error in Helper handleCheck Method");
             console.log({ error });
         }
     },

@@ -1,7 +1,6 @@
 ({
     initHelper: function(component, event, helper){
         // For Set Tab Name
-        component.set("v.Spinner", true);
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getEnclosingTabId().then((response) => {
             let opendTab = response.tabId;
@@ -16,15 +15,21 @@
             });
         });
 
+        var selectedPriceBook = component.get("v.selectedPriceBook");
+        var priceBookFilter = component.get("v.priceBookFilter");
+
+        console.log('selectedPriceBook ==> '+selectedPriceBook);
+        console.log('priceBookFilter ==> '+priceBookFilter);
+
         var action = component.get("c.getDetails");
         action.setParams({
             recordId : component.get("v.recordId"),
-            pageNumber : component.get("v.pageNumber"),
-            pageSize : 10,
             searchNameValue : '',
             searchTypeValue : '',
             searchManufacturerValue : '',
-            searchFamilyValue : ''
+            searchFamilyValue : '',
+            selectedPriceBook : selectedPriceBook,
+            priceBookFilter : priceBookFilter
         });
         action.setCallback(this, function (response) {
             component.set("v.Spinner", false);
@@ -44,7 +49,8 @@
                 if (result.productWrapperList.length == 0) {
                     component.set("v.nullProduct", true);
                 } else{
-                    component.set("v.productWrapper", result.productWrapperList);
+                    component.set("v.nullProduct", false);
+                    helper.paginationHelper(component, event, helper);
                 }
 
                 var opts = [];
@@ -55,7 +61,10 @@
                     }
                 }
                 component.set("v.priceBookList", opts);
-                component.set("v.selectedValue", result.projectPriceBook);
+
+                if (priceBookFilter == false) {
+                    component.set("v.selectedPriceBook", result.projectPriceBook);
+                }
 
             } else{
                 var error = response.getError();
@@ -65,10 +74,6 @@
         });
         $A.enqueueAction(action);   
     },
-
-    changePriceBookHelper: function(component, event, helper){
-        console.log('changePriceBookHelper');
-    },
     
     searchHelper: function(component, event, helper){
         var searchNameValue = component.get("v.searchNameFilter");
@@ -76,24 +81,42 @@
         var searchManufacturerValue = component.get("v.searchManufacturerFilter");
         var searchFamilyValue = component.get("v.searchFamilyFilter");
 
-        var action = component.get("c.getDetails");
+        var selectedPriceBook = component.get("v.selectedPriceBook");
+        var priceBookFilter = component.get("v.priceBookFilter");
 
-        console.log(component.get("v.recordId"));
+        var action = component.get("c.getDetails");
         action.setParams({
 	        recordId : component.get("v.recordId"),
-            pageNumber : component.get("v.pageNumber"),
-            pageSize : 10,
             searchNameValue : searchNameValue,
             searchTypeValue : searchTypeValue,
             searchManufacturerValue : searchManufacturerValue,
-            searchFamilyValue : searchFamilyValue
+            searchFamilyValue : searchFamilyValue,
+            selectedPriceBook : selectedPriceBook,
+            priceBookFilter : priceBookFilter
 	    });
         action.setCallback(this, function (response) {
+            component.set("v.Spinner", false);
             var state = response.getState();
             if (state == 'SUCCESS') {
                 var result = response.getReturnValue();
                 console.log('Result => ',{result});
-                component.set("v.productWrapper", result.productWrapperList);
+
+                component.set("v.optionWrapper", result);
+                if (result.productCount > 10) {
+                    var totalPage = Math.trunc(result.productCount/10)+1;
+                    component.set("v.totalPage", totalPage);
+                } else{
+                    component.set("v.totalPage", 1);
+                }
+
+                if (result.productWrapperList.length == 0) {
+                    component.set("v.nullProduct", true);
+                } else{
+                    component.set("v.nullProduct", false);
+                }
+
+                helper.paginationHelper(component, event, helper);
+
                 if (searchNameValue == '' && searchTypeValue == '' && searchManufacturerValue == '' && searchFamilyValue == '') {
                     component.set("v.disableBtn", false);
                 } else{
@@ -105,6 +128,22 @@
         });
         $A.enqueueAction(action); 
 
+    },
+    
+    paginationHelper: function(component, event, helper){
+        var pageNumber = component.get("v.pageNumber");
+        var optionWrapper = component.get("v.optionWrapper");
+        var offset = (pageNumber-1) * 10;
+        var productWrapper = [];
+
+        for (let i = offset; i < offset+10; i++) {
+            var element = optionWrapper.productWrapperList[i];
+            if (element != undefined) {
+                productWrapper.push(element);
+            }
+        }
+
+        component.set("v.productWrapper", productWrapper);
     },
 
     showToast: function(type, title, message, time) {

@@ -18,9 +18,10 @@
     <aura:attribute name="ImageModal" type="Boolean" default="false" />
     <aura:attribute name="ImageIndex" type="Integer" default="0" />
     <aura:attribute name="ImageList" type="List" />
+    <aura:attribute name="priceBookFilter" type="Boolean" default="false" />
 
     <aura:attribute name="priceBookList" type="List" />
-    <aura:attribute name="selectedValue" type="String" />
+    <aura:attribute name="selectedPriceBook" type="String" />
 
     <aura:attribute name="searchFamilyFilter" type="String" default="" />
     <aura:handler name="change" value="{!v.searchFamilyFilter}" action="{!c.doSearch}" />
@@ -51,9 +52,9 @@
         <lightning:layout multipleRows="true" class="searchbarList">
 
             <lightning:layoutItem padding="around-small" class="priceDiv"> 
-                <lightning:select label="Select Pricebook:" value="{!v.selectedValue}" onchange="{!c.changePriceBook}">
+                <lightning:select label="Select Pricebook:" value="{!v.selectedPriceBook}" onchange="{!c.changePriceBook}">
                     <aura:iteration items="{!v.priceBookList}" var="option">
-                        <option text="{!option.key}" value="{!option.value}" selected="{!(option.value == v.selectedValue)}"/>
+                        <option text="{!option.key}" value="{!option.value}" selected="{!(option.value == v.selectedPriceBook)}"/>
                     </aura:iteration>
                 </lightning:select>
             </lightning:layoutItem>

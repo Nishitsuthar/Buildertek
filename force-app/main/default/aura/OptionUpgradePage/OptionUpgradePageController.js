@@ -1,6 +1,10 @@
 ({
     doInit : function(component, event, helper) {
-        helper.initHelper(component, event, helper);
+        component.set("v.Spinner", true);
+        setTimeout(function(){
+            helper.initHelper(component, event, helper);
+        }, 1000);
+        // helper.initHelper(component, event, helper);
     }, 
 
     handleClick : function(component, event, helper){
@@ -12,7 +16,13 @@
     }, 
 
     changePriceBook: function (component, event, helper) {
-        helper.changePriceBookHelper(component, event, helper);
+        component.set("v.Spinner", true);
+        component.set("v.searchNameFilter", '');
+        component.set("v.searchTypeFilter", '');
+        component.set("v.searchManufacturerFilter", '');
+        component.set("v.searchFamilyFilter", '');
+        component.set("v.priceBookFilter", true);
+        helper.searchHelper(component, event, helper);
     },
     
     doSearch: function (component, event, helper) {
@@ -55,12 +65,14 @@
 
     onPrevious: function (component, event, helper){
         component.set("v.pageNumber", component.get("v.pageNumber")-1);
-        helper.initHelper(component, event, helper);
+        component.set("v.priceBookFilter", true);
+        helper.paginationHelper(component, event, helper);
     }, 
 
     onNext: function (component, event, helper){
         component.set("v.pageNumber", component.get("v.pageNumber")+1);
-        helper.initHelper(component, event, helper);
+        component.set("v.priceBookFilter", true);
+        helper.paginationHelper(component, event, helper);
     }, 
 
     onImageClick: function (component, event, helper){

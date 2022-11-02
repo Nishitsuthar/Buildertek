@@ -72,20 +72,20 @@ public class ResourceScheduledashboardController{
         list<buildertek__Schedule__c> SchedulerList = new list<buildertek__Schedule__c>();
         list<contact> conresource = new list<contact>();
         system.debug('====' + fromDate + '======' + toDate);
-        
-        
+
+
         // date myDate = date.newInstance(1990, 11, 21);
         String str = fromDate;
         List<String> res = str.split('/');
         System.debug(Date.newInstance(Integer.valueOf(res[2]),Integer.valueOf(res[0]),Integer.valueOf(res[1])));
-        
+
         String str2 = toDate;
         List<String> res2 = str2.split('/');
         System.debug(Date.newInstance(Integer.valueOf(res2[2]),Integer.valueOf(res2[0]),Integer.valueOf(res2[1])));
 
         date startDate  = Date.newInstance(Integer.valueOf(res[2]),Integer.valueOf(res[0]),Integer.valueOf(res[1]));
         date endDate = Date.newInstance(Integer.valueOf(res2[2]),Integer.valueOf(res2[0]),Integer.valueOf(res2[1]));
-        
+
         /*date startDate = date.parse(fromDate);
         date endDate = date.parse(toDate);*/
         system.debug('-------startDate' + startDate);
@@ -288,7 +288,7 @@ public class ResourceScheduledashboardController{
 
         return RecordList;
     }
-    
+
     @AuraEnabled
     public static list<buildertek__Project_Task__c> getScheduleItemsByResource(String contactId){
         List<buildertek__Project_Task__c> taskList = new List<buildertek__Project_Task__c>();
@@ -301,37 +301,37 @@ public class ResourceScheduledashboardController{
         system.debug('schudleitemList----->' + taskList.size());
         return taskList;
     }
-    
-    
+
+
     @AuraEnabled
     public static list<buildertek__Project_Task__c> getScheduleItemsByContact(String contactId){
         list<Contact> Query = [SELECT Id, Name, Account.Name, Account.buildertek__Trade_Type_Lookup__r.Name,Account.buildertek__Trade_Type_Lookup__c FROM Contact  where Id=: contactId];
-        
+
         String[] idList = new String[]{Query[0].Account.buildertek__Trade_Type_Lookup__c};
-        
+
         list<buildertek__Project_Task__c> Query2 = [select id, Name,buildertek__Project__c,buildertek__Start__c,buildertek__Contractor__c,buildertek__Expected_End_Date__c, buildertek__Trade_Type__r.Name,buildertek__Contractor_Resource__c, buildertek__Contractor_Resource__r.Name from buildertek__Project_Task__c where buildertek__Trade_Type__c IN:idList AND buildertek__Contractor_Resource__c = NULL ];
-        
+
        // list<buildertek__Project_Task__c> Query3 = [select id, Name, buildertek__Trade_Type__r.Name, buildertek__Contractor_Resource__r.Name from buildertek__Project_Task__c where buildertek__Contractor_Resource__c NOT IN: Query2];
-        
+
         system.debug('schedule Items--------------------------------------->'+Query2);
-        
+
         return Query2;
-        
+
     }
-    
-    
+
+
     @AuraEnabled
     public static list<buildertek__Project_Task__c> updateRecords(list<buildertek__Project_Task__c> listOfRecords){
-        
+
         system.debug('list of records--------------------->'+listOfRecords);
-        
+
         return null;
-       
+
       //  var listOfRecords = listOfRecords;
-       // var contractResource = [select id, Name, buildertek__Trade_Type__r.Name,buildertek__Contractor_Resource__c, buildertek__Contractor_Resource__r.Name from buildertek__Project_Task__c Where 
-        
+       // var contractResource = [select id, Name, buildertek__Trade_Type__r.Name,buildertek__Contractor_Resource__c, buildertek__Contractor_Resource__r.Name from buildertek__Project_Task__c Where
+
     }
-    
+
 
     public class Wrapper{
         @AuraEnabled

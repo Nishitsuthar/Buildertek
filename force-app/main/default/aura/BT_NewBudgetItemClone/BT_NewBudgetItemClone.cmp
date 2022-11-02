@@ -730,7 +730,7 @@
                                                 <tr class="groupHeader">
                                                     <td>
                                                     </td>
-                                                    <td colspan="{!(v.TotalRecords.columns.length != '' ? 12 : v.TotalRecords.columns.length)}">
+                                                    <td colspan="{!v.TotalRecords.columns.length}">
                                                         <div class="slds-grid slds-gutters">
                                                             <span style="display:none;" class="{!v.currentTab+' '+v.budgetId+' expandGrpIcon_'+parentGroupIndex}" data-grpindex="{!parentGroupIndex}" onclick="{!c.expandCollapseGroups}">
                                                                 <lightning:icon iconName="utility:add" size="xx-small"
@@ -1958,7 +1958,7 @@
                                                                                         </aura:if>
                                                                                     </td>
                                                                                 </aura:if>
-                                                                                <!--<aura:if isTrue="{!group.totals.ProjectedCosts}">-->
+                                                                                <aura:if isTrue="{!group.totals.ProjectedCosts}">
                                                                                 <td>
                                                                                     <aura:if isTrue="{!and(and(group.totals.ProjectedCosts != null, group.totals.ProjectedCostskey == 'buildertek__Projected_Costs__c'),group.totals.fieldType == 'currency')}">
                                                                                         <span style="font-weight: bold;font-size: 0.78rem !important;">
@@ -1981,7 +1981,7 @@
                                                                                         </span>
                                                                                     </aura:if>
                                                                                 </td>
-                                                                                <!-- </aura:if>-->
+                                                                                </aura:if>
                                                                                 <!-- <aura:if isTrue="{!group.totals.Forecast}">-->
                                                                                 <!-- <td>
                                                                             <aura:if isTrue="{!and(and(group.totals.Forecast != null, group.totals.Forecastskey == 'buildertek__Forecast_To_Complete__c'),group.totals.fieldType == 'currency')}">
@@ -2007,7 +2007,7 @@
                                                                                 <!-- </aura:if>
                                                                         </aura:if>-->
 
-                                                                                <td> </td>
+                                                                                <!-- <td> </td> -->
                                                                                 <!-- <td> </td> 
                                                                 <td> </td> 
                                                                 <td> </td> 

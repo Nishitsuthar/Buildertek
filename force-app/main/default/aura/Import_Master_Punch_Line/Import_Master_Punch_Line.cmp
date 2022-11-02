@@ -60,51 +60,26 @@
                         <th class="top-row-hdr">
                             Type
                         </th>
-                        <!-- <th style="background-color:rgba(27, 82, 151, 1.0); color:white;vertical-align: top;line-height: 2;">
-    						Quote Amount
-    					</th> -->
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- <aura:iteration items="{!v.PaginationList}" var="rec">
-    			        <tr class="slds-hint-parent">
-    			            <aura:if isTrue="{!rec.masterQuoteRecord != null}">
-    			                <td style="width:50px;">
-        			                <ui:inputCheckbox aura:id="checkContractor" value="{rec.quoteCheck}" text="{!rec.masterQuoteRecord.Id}" change="{!c.handleCheck}" />
-        			            </td> 
-        			            <td role="gridcell">
-        			                <ui:outputText value="{!rec.masterQuoteRecord.Name}" />  
-        			            </td>
-        			            <td role="gridcell">
-        			                <ui:outputText value="{!rec.masterQuoteRecord.buildertek__Project__r.Name}" />  
-        			            </td>
-        			            <td role="gridcell">
-        			                <ui:outputText value="{!rec.masterQuoteRecord.buildertek__Type__c}" />  
-        			            </td>
-        			            <td  role="gridcell">
-        			                <lightning:formattedNumber value="{!rec.masterQuoteRecord.buildertek__Quote_Amount__c}" style="currency" />
-        						</td>
-        						<aura:set attribute="else">
-        						    <td style="width:50px;">
-            			                <ui:inputCheckbox aura:id="checkContractor" value="{rec.quoteCheck}" text="{!rec.quoteRecord.Id}" change="{!c.handleCheck}" />
-            			            </td> 
-            			            <td role="gridcell">
-            			                <ui:outputText value="{!rec.quoteRecord.Name}" />  
-            			            </td>
-            			            <td role="gridcell">
-            			                <ui:outputText value="{!rec.quoteRecord.buildertek__Project__r.Name}" />  
-            			            </td>
-            			            <td role="gridcell">
-            			                <ui:outputText value="{!rec.quoteRecord.buildertek__Type__c}" />  
-            			            </td>
-            			            <td  role="gridcell">
-            						    <ui:outputText value="{!rec.quoteRecord.buildertek__Quote_Amount__c}" />	    
-            						</td>    
-        						</aura:set>
-    			            </aura:if>
-    			            
-    			        </tr>
-    			    </aura:iteration> -->
+                    <aura:iteration items="{!v.PaginationList}" var="rec">
+                        <tr class="slds-hint-parent">
+                            <td style="width:50px;">
+                                <ui:inputCheckbox aura:id="checkMasterPL+{!rec.Id}" text="{!rec.Id}"
+                                    change="{!c.handleCheck}" />
+                            </td>
+                            <td role="gridcell">
+                                <ui:outputText value="{!rec.buildertek__Description__c}" />
+                            </td>
+                            <td role="gridcell">
+                                <ui:outputText value="{!rec.buildertek__Project__r.Name}" />
+                            </td>
+                            <td role="gridcell">
+                                <ui:outputText value="{!rec.buildertek__Type__c}" />
+                            </td>
+                        </tr>
+                    </aura:iteration>
                 </tbody>
             </table>
             <br />

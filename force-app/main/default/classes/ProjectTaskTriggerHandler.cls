@@ -1006,12 +1006,17 @@ public class ProjectTaskTriggerHandler{
 			System.debug('insertUpdate milestones duration ==> ' + schItem.buildertek__Duration__c + ' id ' + schItem.Id);
 
 		}
+		// Map<Id, Project_Task__c> newProjectTaskMap = new Map<Id, Project_Task__c>([select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule__c, buildertek__Milestone__c, buildertek__Phase__c, buildertek__Type__c, isDeleted
+		//                                                                            from buildertek__Project_Task__c
+		//                                                                            where buildertek__Schedule__c IN:scheduleIds
+		//                                                                            Order by buildertek__Order__c
+		//                                                                            NULLS LAST, CreatedDate ASC]);
 
 		Map<Id, Project_Task__c> newProjectTaskMap = new Map<Id, Project_Task__c>([select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule__c, buildertek__Milestone__c, buildertek__Phase__c, buildertek__Type__c, isDeleted
 		                                                                           from buildertek__Project_Task__c
 		                                                                           where buildertek__Schedule__c IN:scheduleIds
-		                                                                           Order by buildertek__Order__c
-		                                                                           NULLS LAST, CreatedDate ASC]);
+		                                                                           Order by buildertek__Finish__c
+		                                                                           ,CreatedDate ASC]);
 		for (Project_Task__c task : newProjectTaskMap.values()){
 			System.debug('updated in  milestones duration ==> ' + task.buildertek__Duration__c + ' id ' + task.Id);
 			if (task.buildertek__Phase__c != null){
@@ -1053,8 +1058,9 @@ public class ProjectTaskTriggerHandler{
 					project.buildertek__Type__c = 'Milestone';
 					insertUpdateMilestoneMap.put(task.buildertek__Schedule__c + task.buildertek__Phase__c, project);
 				} else if (milestoneMap.get(task.buildertek__Schedule__c + task.buildertek__Phase__c) != null){
-					System.debug('map key ' + milestoneMap.keyset());
-					System.debug('map values  ' + milestoneMap.get(task.buildertek__Schedule__c + task.buildertek__Phase__c));
+					// System.debug('map key ' + milestoneMap.keyset());
+					// System.debug('map values  ' + milestoneMap.get(task.buildertek__Schedule__c + task.buildertek__Phase__c));
+					System.debug('task name and id and start date ==> '+task.Name+' id '+task.Id+' start date '+task.buildertek__Finish__c);
 					project = milestoneMap.get(task.buildertek__Schedule__c + task.buildertek__Phase__c);
 					if (task.buildertek__Finish__c != null){
 						project.buildertek__Start__c = task.buildertek__Finish__c;
