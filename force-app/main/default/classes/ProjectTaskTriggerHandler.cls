@@ -10,14 +10,17 @@ public class ProjectTaskTriggerHandler{
 	public static Boolean isTask = true;
 	//Boolean variable to allow skipping execution of trigger in certain scenarios
 	public static Boolean blnSkipTaskTrigger = false;
+	public static Boolean updateFromGanttChart = false;
 	public static Boolean isFromImport = false;
 	private boolean m_isExecuting = false;
 	private integer BatchSize = 0;
 	public static Map<Id, buildertek__Project_Task__c> oldMapValue {get;set;}
+    public static Map<Id,Date> refMapforPrevParent {get;set;}
 
 	public ProjectTaskTriggerHandler(boolean isExecuting, integer size, Map<Id, buildertek__Project_Task__c> oldMap){
 		m_isExecuting = isExecuting;
 		BatchSize = size;
+        refMapforPrevParent = new Map<Id,Date>();
 		oldMapValue = new Map<Id, buildertek__Project_Task__c>();
 		// this.oldMapValue = oldMap;
 	}
@@ -333,13 +336,13 @@ public class ProjectTaskTriggerHandler{
 
 	public void OnAfterUpdateOriginalstartandEndDates(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
 		System.debug('3rd method data in new list ==> ' + updatedProjectTasks);
-		List<Project_Task__C> testSIList = new List<Project_Task__C>();
-		testSIList = [Select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c
-		              FROM buildertek__Project_Task__c
-		              WHERE buildertek__Schedule__c = :updatedProjectTasks[0].buildertek__Schedule__c];
-		for (Project_Task__C task23 : testSIList){
-			System.debug('testSILIST Start Date ==> ' + task23.buildertek__Start__c + ' and Id ' + task23.Id);
-		}
+		// List<Project_Task__C> testSIList = new List<Project_Task__C>();
+		// testSIList = [Select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c
+		//               FROM buildertek__Project_Task__c
+		//               WHERE buildertek__Schedule__c = :updatedProjectTasks[0].buildertek__Schedule__c];
+		// for (Project_Task__C task23 : testSIList){
+		// 	System.debug('testSILIST Start Date ==> ' + task23.buildertek__Finish__c + ' and Id ' + task23.Id);
+		// }
 		Map<id, Project_Task__c> ProjectTaskIds = new Map<Id, Project_Task__c>();
 		for (Project_Task__c ItemRec : updatedProjectTasks){
 			//system.debug(ItemRec.buildertek__Start__c);
@@ -359,13 +362,13 @@ public class ProjectTaskTriggerHandler{
 		// this variable is used in processrecord method for get old map
 		oldMapValue = oldProjectTaskMap;
 
-		List<Project_Task__C> testSIList = new List<Project_Task__C>();
-		testSIList = [Select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c
-		              FROM buildertek__Project_Task__c
-		              WHERE buildertek__Schedule__c = :updatedProjectTasks[0].buildertek__Schedule__c];
-		for (Project_Task__C task23 : testSIList){
-			System.debug('2nd method testSILIST onAfterUpdate Start Date ==> ' + task23.buildertek__Start__c + ' and Id' + task23.Id);
-		}
+		// List<Project_Task__C> testSIList = new List<Project_Task__C>();
+		// testSIList = [Select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c
+		//               FROM buildertek__Project_Task__c
+		//               WHERE buildertek__Schedule__c = :updatedProjectTasks[0].buildertek__Schedule__c];
+		// for (Project_Task__C task23 : testSIList){
+		// 	System.debug('2nd method testSILIST onAfterUpdate Start Date ==> ' + task23.buildertek__Start__c + ' and Id' + task23.Id);
+		// }
 		contact con = [Select Id, Email
 		               from Contact
 		               WHERE Email != null
@@ -410,6 +413,7 @@ public class ProjectTaskTriggerHandler{
 		for (buildertek__Schedule__c sc : scheduleToCountDays){
 			sc.buildertek__Days_Completed__c = 0;
 			for (buildertek__Project_Task__c projectTask : sc.buildertek__Schedule_Tasks__r){
+				System.debug('projectTask ==> '+projectTask);
 				if (taskCompletionMap.get(sc.Id) == null){
 					taskCompletionMap.put(sc.Id, new buildertek__Schedule__c());
 				}
@@ -432,9 +436,9 @@ public class ProjectTaskTriggerHandler{
 
 		handler.blnSkipTaskTrigger = false;
 		system.debug(updatedProjectTasks);
-		Map<Id, buildertek__Schedule__c> scheduleMap1 = new Map<Id, buildertek__Schedule__c>([Select Id, buildertek__Initial_Start_Date__c, Name, buildertek__Contractor__c, buildertek__Internal_Resource_1__c, buildertek__Project_Manager__c, buildertek__Days_Completed__c
-		                                                                                      FROM buildertek__Schedule__c
-		                                                                                      WHERE Id In:scheduleIds]);
+		// Map<Id, buildertek__Schedule__c> scheduleMap1 = new Map<Id, buildertek__Schedule__c>([Select Id, buildertek__Initial_Start_Date__c, Name, buildertek__Contractor__c, buildertek__Internal_Resource_1__c, buildertek__Project_Manager__c, buildertek__Days_Completed__c
+		//                                                                                       FROM buildertek__Schedule__c
+		//                                                                                       WHERE Id In:scheduleIds]);
 		List<buildertek__Schedule__c> scheduleUpdatedList = new List<buildertek__Schedule__c>();
 		SET<Id> scheduleItemUpdateIds = new SET<Id>();
 		list<string> projectTaskId = new list<string>();
@@ -554,12 +558,12 @@ public class ProjectTaskTriggerHandler{
 			update budgetLineList;
 		}
 		processRecords(scheduleIds, updatedProjectTasks[0].buildertek__Schedule__c, ProjectTaskMap.keySet(), ProjectTaskTriggerHandler.isFromImport, 'update');
-		List<Project_Task__c> newProjectTask = [Select Id, Name, buildertek__Schedule__c, buildertek__Order__c, buildertek__Milestone__c, buildertek__Duration__c, buildertek__Lag__c, buildertek__Start__c, buildertek__Dependency__c, buildertek__Phase__c, buildertek__Finish__c
-		                                        FROM Project_Task__c
-		                                        WHERE Schedule__c = :updatedProjectTasks[0].buildertek__Schedule__c];
-		for (Project_Task__c t : newProjectTask){
-			System.debug('after processRecords buildertek__Start__c ==> ' + t.buildertek__Start__c + ' And ID ' + t.Id);
-		}
+		// List<Project_Task__c> newProjectTask = [Select Id, Name, buildertek__Schedule__c, buildertek__Order__c, buildertek__Milestone__c, buildertek__Duration__c, buildertek__Lag__c, buildertek__Start__c, buildertek__Dependency__c, buildertek__Phase__c, buildertek__Finish__c
+		//                                         FROM Project_Task__c
+		//                                         WHERE Schedule__c = :updatedProjectTasks[0].buildertek__Schedule__c];
+		// for (Project_Task__c t : newProjectTask){
+		// 	System.debug('after processRecords buildertek__Start__c ==> ' + t.buildertek__Start__c + ' And ID ' + t.Id + ' task name '+t.Name);
+		// }
 		/* updateScheduleItemTaskBacthApex taskBatch = new updateScheduleItemTaskBacthApex(scheduleIds,ProjectTaskMap,previuosTasks,previousTaskmap);
 		 Database.executeBatch(taskBatch, 1000);*/
 		// ProjectTaskBatch taskBatch = new ProjectTaskBatch(scheduleIds);
@@ -598,7 +602,7 @@ public class ProjectTaskTriggerHandler{
 		                                        Order By buildertek__Order__c
 		                                        Nulls Last, CreatedDate ASC];
 		for (Project_Task__c t : newProjectTask){
-			System.debug('newproject Task list buildertek__Start__c ==> ' + t.buildertek__Start__c);
+			System.debug('newproject Task list buildertek__Start__c ==> ' + t);
 		}
 		Map<Id, List<Project_Task__c>> projectTaskMaps = new Map<Id, List<Project_Task__c>>();
 		List<buildertek__Project_Task__c> projectTasks = new List<buildertek__Project_Task__c>();
@@ -740,11 +744,11 @@ public class ProjectTaskTriggerHandler{
 		projectTaskToUpdate = new List<buildertek__Project_Task__c>();
 		mapAllTask = new Map<Id, buildertek__Project_Task__c>();
 
-		newProjectTask = [Select Id, Name, buildertek__Schedule__c, buildertek__Milestone__c, buildertek__Duration__c, buildertek__Lag__c, buildertek__Start__c, buildertek__Dependency__c, buildertek__Phase__c, buildertek__Finish__c
-		                  FROM Project_Task__c
-		                  WHERE Schedule__c IN:scheduleIds
-		                  Order By buildertek__Order__c
-		                  NULLS LAST, CreatedDate ASC];
+		// newProjectTask = [Select Id, Name, buildertek__Schedule__c, buildertek__Milestone__c, buildertek__Duration__c, buildertek__Lag__c, buildertek__Start__c, buildertek__Dependency__c, buildertek__Phase__c, buildertek__Finish__c
+		//                   FROM Project_Task__c
+		//                   WHERE Schedule__c IN:scheduleIds
+		//                   Order By buildertek__Order__c
+		//                   NULLS LAST, CreatedDate ASC];
 
 
 		projectTaskMaps = new Map<Id, List<Project_Task__c>>();
@@ -794,10 +798,10 @@ public class ProjectTaskTriggerHandler{
 		Integer count = 0;
 		buildertek__Project_Task__c LastTask = new buildertek__Project_Task__c();
 
-		List<buildertek__Project_Task__c> predesecorTaskList = new List<buildertek__Project_Task__c>();
-		predesecorTaskList = [select Id, buildertek__Dependency__c
-		                      from buildertek__Project_Task__c
-		                      Where Id IN:TaskIds];
+		// List<buildertek__Project_Task__c> predesecorTaskList = new List<buildertek__Project_Task__c>();
+		// predesecorTaskList = [select Id, buildertek__Dependency__c
+		//                       from buildertek__Project_Task__c
+		//                       Where Id IN:TaskIds];
 		Map<string, string> parentTaskMap = new Map<string, string>();
 		Map<String, String> updatedDependentTasks = new Map<String, String>();
 
@@ -833,18 +837,26 @@ public class ProjectTaskTriggerHandler{
 						if (projectTask.buildertek__Lag__c != null){
 							Integer lagDays = Integer.valueOf(projectTask.buildertek__Lag__c);
 							totalDay = lagDays + 1;
+							System.debug('project task name '+projectTask.Name+' lag '+projectTask.buildertek__Lag__c);
 						} else{
 							totalDay = 0;
 						}
 						System.debug('totalDay  ====>   ' + totalDay);
 
+						System.debug('refMapforPrevParent '+refMapforPrevParent.get(parentTask.Id)+'parent name '+parentTask.Name);
+
+						// Date backupDate = parentTask.buildertek__Finish__c;
+                        if(refMapforPrevParent.containsKey(parentTask.Id) && isAfterInsert == 'update'){
+                            System.debug('--'+refMapforPrevParent.get(parentTask.Id));
+                            parentTask.buildertek__Finish__c = refMapforPrevParent.get(parentTask.Id);
+                        }
 						startDate = parentTask.buildertek__finish__c;
-						System.debug('start date GOG BOB ==> '+startDate+' id '+parentTask.Id);
+						System.debug('start date GOG BOB ==> '+startDate+' id '+parentTask.Id+ ' parent name '+parentTask.Name+ ' start date '+parentTask.buildertek__Start__c+' finish date '+parentTask.buildertek__Finish__c);
 						startDate = addDaysSkippingWeekends(parentTask.buildertek__finish__c, totalDay);
 						System.debug('start date after reseting BOB ==> '+startDate+' id '+parentTask.Id);
-
 						// startDate = parentTask.buildertek__finish__c.addDays(totalDay);
 						System.debug('parentTask.buildertek__finish__c ==>' + parentTask.buildertek__finish__c + 'Id ==> ' + parentTask.Id);
+						// parentTask.buildertek__Finish__c = backupDate;
 						System.debug('1st Start Date  ===> ' + startDate);
 						if (mapAllTask.get(taskId).buildertek__Duration__c != null){
 							// endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
@@ -901,14 +913,16 @@ public class ProjectTaskTriggerHandler{
 					projectTask.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(startDate);//startDate;
 
 
-					System.debug('3rd method after changing start Date ==> ' + projectTask.buildertek__Start__c + ' Id ' + projectTask.Id);
+					System.debug('3rd method after changing start Date ==> ' + projectTask.buildertek__Start__c + ' Id ' + projectTask.Id + 'End date variable '+endDate);
 
 					if (numberDaysDue <= 0){
 						projectTask.buildertek__finish__c = projectTask.buildertek__Start__c;
 						projectTask.buildertek__Duration__c = 1;
 					} else{
 						projectTask.buildertek__finish__c = ProjectTaskTriggerHandler.getEndDate(startDate, endDate);
+						System.debug(' end date in variable '+projectTask.buildertek__finish__c);
 					}
+
 					//projectTask.buildertek__finish__c = ProjectTaskTriggerHandler.getEndDate(startDate, endDate);
 					projectTaskToUpdate.add(projectTask);
 				}
@@ -937,14 +951,15 @@ public class ProjectTaskTriggerHandler{
 						parentTaskMap.put(projectTask.Id, projectTask.Id);
 					}
 				}
-			}else if (projectTask.buildertek__Dependency__c == null){
+			} else if (projectTask.buildertek__Dependency__c == null){
 
 				system.debug('if predessesor is null then here '+projectTask.Id);
 				// this logic is added for predessesor is equal to null
 					// added by Nishit (MV Clouds)
 
-					Integer totalDay1;
-					if (!oldMapValue.isEmpty() && oldMapValue.get(projectTask.Id) != null) {
+					Integer totalDay1=0;
+					// TODO client wants to remove lag logic for no predecessor
+					/*if (!oldMapValue.isEmpty() && oldMapValue.get(projectTask.Id) != null) {
 						if (oldMapValue.get(projectTask.Id).buildertek__Lag__c != projectTask.buildertek__Lag__c && projectTask.buildertek__Lag__c != null) {
 							Integer lagDays1 = Integer.valueOf(projectTask.buildertek__Lag__c);
 							totalDay1 = lagDays1;
@@ -960,7 +975,7 @@ public class ProjectTaskTriggerHandler{
 							System.debug('when update task name and ==> '+projectTask.Name+' Id '+projectTask.Id);
 							totalDay1 = 0;
 						}
-					}
+					}*/
 					startDate = projectTask.buildertek__Start__c;
 					System.debug('start date in else '+startDate);
 					startDate = addDaysSkippingWeekends(projectTask.buildertek__Start__c, totalDay1);
@@ -974,7 +989,7 @@ public class ProjectTaskTriggerHandler{
 					// logic ended here
 			}
 
-			System.debug('3rd method after else if condition updating start date ' + projectTask.buildertek__Start__c + ' id ' + projectTask.Id);
+			System.debug('3rd method after else if condition updating start date ' + projectTask.buildertek__Start__c + ' processRecord end got  ' + projectTask.Name);
 		}
 
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
@@ -1012,7 +1027,7 @@ public class ProjectTaskTriggerHandler{
 		//                                                                            Order by buildertek__Order__c
 		//                                                                            NULLS LAST, CreatedDate ASC]);
 
-		Map<Id, Project_Task__c> newProjectTaskMap = new Map<Id, Project_Task__c>([select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule__c, buildertek__Milestone__c, buildertek__Phase__c, buildertek__Type__c, isDeleted
+		Map<Id, Project_Task__c> newProjectTaskMap = new Map<Id, Project_Task__c>([select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule__c, buildertek__Milestone__c, buildertek__Phase__c, buildertek__Type__c, isDeleted,buildertek__Lag__c
 		                                                                           from buildertek__Project_Task__c
 		                                                                           where buildertek__Schedule__c IN:scheduleIds
 		                                                                           Order by buildertek__Finish__c
@@ -1098,25 +1113,25 @@ public class ProjectTaskTriggerHandler{
 	}
 
 	public void updateChildDatesWithPredecessor(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
-		List<Project_Task__c> tempList = new List<Project_Task__c>();
-		tempList = [select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule__c, buildertek__Milestone__c, buildertek__Phase__c
-		            from buildertek__Project_Task__c
-		            where buildertek__Schedule__c = :ProjectTasks[0].buildertek__Schedule__c];
+		// List<Project_Task__c> tempList = new List<Project_Task__c>();
+		// tempList = [select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule__c, buildertek__Milestone__c, buildertek__Phase__c
+		//             from buildertek__Project_Task__c
+		//             where buildertek__Schedule__c = :ProjectTasks[0].buildertek__Schedule__c];
 
-		for (Project_Task__c tt : tempList){
-			System.debug('trigger.new start ==> ' + tt.buildertek__Start__c + ' Id ==> ' + tt.Id);
-		}
-		Set<Id> scheduleIds = new Set<Id>();
+		// for (Project_Task__c tt : tempList){
+		// 	System.debug('trigger.new start ==> ' + tt.buildertek__Start__c + ' Id ==> ' + tt.Id);
+		// }
+		// Set<Id> scheduleIds = new Set<Id>();
 		Boolean dependencyPathExist = false;
-		for (buildertek__Project_Task__c schItem : ProjectTasks){
-			scheduleIds.add(schItem.buildertek__Schedule__c);
-		}
+		// for (buildertek__Project_Task__c schItem : ProjectTasks){
+		// 	scheduleIds.add(schItem.buildertek__Schedule__c);
+		// }
 		//set dependency path
 		//List<Project_Task__c> newProjectTaskList = [select Id,Name,buildertek__Dependency__c,buildertek__Dependency__r.buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule_Item_Dependency_Path__c,buildertek__Schedule__c from buildertek__Project_Task__c where buildertek__Schedule__c IN: scheduleIds];
 
-		Map<Id, Project_Task__c> newProjectTaskMap = new Map<Id, Project_Task__c>([select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule__c, buildertek__Milestone__c, buildertek__Phase__c
+		Map<Id, Project_Task__c> newProjectTaskMap = new Map<Id, Project_Task__c>([select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule__c, buildertek__Milestone__c, buildertek__Phase__c,buildertek__Lag__c,buildertek__Dependency__r.buildertek__Finish__c
 		                                                                           from buildertek__Project_Task__c
-		                                                                           where buildertek__Schedule__c IN:scheduleIds]);
+		                                                                           where buildertek__Schedule__c =: ProjectTasks[0].buildertek__Schedule__c]);
 
 		List<Project_Task__c> newProjectTaskList = newProjectTaskMap.values();
 
@@ -1201,7 +1216,27 @@ public class ProjectTaskTriggerHandler{
 			}
 			if (lastTask.Id != null && lastTask.buildertek__finish__c != null){
 				// System.debug('lastTask.buildertek__finish__c  ==> ' + lastTask.buildertek__finish__c);
-				System.debug('1st method fixed start date here ==> ' + taskItem.buildertek__Start__c + 'and Id ' + taskItem.Id);
+				//System.debug('1st method fixed start date here ==> ' + taskItem.buildertek__Start__c + 'and Id ' + taskItem.Id);
+				System.debug('updateFromGanttChart--'+updateFromGanttChart);
+                if(ProjectTaskMap.containsKey(lastTask.Id) && lastTask.buildertek__Lag__c != 0 && updateFromGanttChart){
+                	//System.debug('dev log 1-->'+ProjectTaskMap.get(lastTask.Id));
+                    Integer totalDay;
+                    if(lastTask.buildertek__Lag__c != null) totalDay = Integer.valueOf(lastTask.buildertek__Lag__c)+1;
+					System.debug('lastTask-->'+lastTask.Id+'---'+lastTask.Name+'--'+lastTask.buildertek__Finish__c+'---'+lastTask.buildertek__Start__c+'---'+lastTask.buildertek__Lag__c+'---'+lastTask.buildertek__Dependency__r.buildertek__Finish__c);
+					// System.debug('taskRef.buildertek__Finish__c '+taskRef.buildertek__Finish__c+'taskRef.Name '+taskRef.Name+'taskRef.start date'+taskRef.buildertek__Start__c+' totalDay '+totalDay);
+                    Date refFinish = addDaysSkippingWeekends(lastTask.buildertek__Dependency__r.buildertek__Finish__c,totalDay);
+					System.debug('refFinish-->'+refFinish);
+					// System.debug('after &&&&&&&&& ######### .buildertek__Finish__c '+taskRef.buildertek__Finish__c+'taskRef.Name '+taskRef.Name+'taskRef.start date'+taskRef.buildertek__Start__c+' totalDay '+totalDay);
+                    // System.debug('refFinish-->'+refFinish+'--'+taskItem.Id+'--'+taskRef.Id+'--'+lastTask.Id+'--'+lastTask.buildertek__Finish__c+'--'+lastTask.buildertek__Lag__c);
+					if(refFinish != lastTask.buildertek__Finish__c){
+						lastTask.buildertek__Finish__c = refFinish;
+                        refMapforPrevParent.put(lastTask.Id,refFinish);
+					}
+                    // if(refFinish != lastTask.buildertek__Finish__c){
+
+                    // }
+                }
+
 				taskItem.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(lastTask.buildertek__finish__c.addDays(1));
 				System.debug('1st method after fixed start date here ==> ' + taskItem.buildertek__Start__c + 'and Id ' + taskItem.Id);
 				// System.debug('null checking :: ' + lastTask.buildertek__Duration__c);
@@ -1225,6 +1260,11 @@ public class ProjectTaskTriggerHandler{
 		system.debug('ProjectTasks-->' + ProjectTasks);
 		// System.debug('newUpdateProjectTaskMap-->' + newUpdateProjectTaskMap.values());
 		if (dependencyPathExist && newUpdateProjectTaskMap.values().size() > 0){
+            for(Id s : newUpdateProjectTaskMap.keyset()){
+                if(s == 'a0i1K00000LCR85QAH'){
+
+                }
+            }
 			update newUpdateProjectTaskMap.values();
 		}
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;

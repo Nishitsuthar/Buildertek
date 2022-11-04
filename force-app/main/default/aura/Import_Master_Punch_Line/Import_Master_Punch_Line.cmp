@@ -7,6 +7,8 @@
     access="global">
     <aura:attribute name="masterPunchList" type="object" />
     <aura:attribute name="Spinner" type="Boolean" />
+    <aura:attribute name="masterPLCheckMap" type="Map[]" />
+    <aura:attribute name="allcheckVal" type="Boolean" />
 
     <!-- Attribute Declration For Pagination -->
 
@@ -49,7 +51,10 @@
                     <tr class="slds-text-title_caps">
                         <th scope="col" class="top-row-hdr top-row-sa-col">
                             <!-- <ui:inputCheckbox aura:id="checkContractors" change="{!c.selectAll}" />		 -->
-                            <ui:inputCheckbox aura:id="selectAllCheckBox" change="{!c.selectAll}" />
+                            <!-- <ui:inputCheckbox aura:id="selectAllCheckBox" value="{!allcheckVal}"
+                                change="{!c.selectAll}" /> -->
+                            <ui:inputCheckbox aura:id="selectAllCheckBox" value="{!v.allcheckVal}"
+                                change="{!c.selectAll}" />
                         </th>
                         <th class="top-row-hdr">
                             Description
@@ -66,8 +71,7 @@
                     <aura:iteration items="{!v.PaginationList}" var="rec">
                         <tr class="slds-hint-parent">
                             <td style="width:50px;">
-                                <ui:inputCheckbox aura:id="checkMasterPL+{!rec.Id}" text="{!rec.Id}"
-                                    change="{!c.handleCheck}" />
+                                <ui:inputCheckbox text="{!rec.Id}" value="{!rec.checkVal}" change="{!c.handleCheck}" />
                             </td>
                             <td role="gridcell">
                                 <ui:outputText value="{!rec.buildertek__Description__c}" />

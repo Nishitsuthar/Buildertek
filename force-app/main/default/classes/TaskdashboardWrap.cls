@@ -48,6 +48,8 @@ public class TaskdashboardWrap {
         public Date startdate {get;set;}  
         @AuraEnabled
         public Date enddate {get;set;}
+        @AuraEnabled
+        public String Type {get;set;}
     }
     
    

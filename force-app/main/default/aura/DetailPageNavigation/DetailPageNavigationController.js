@@ -11,10 +11,11 @@
         redirect.fire();
 
         var toastEvent = $A.get("e.force:showToast");
+        var objectName = component.get("v.recordObjectName");
             
         toastEvent.setParams({
             title : 'Success',
-            message: 'New Takeoff Successfully Cloned',
+            message: 'New '+objectName+' successfully cloned',
             duration:' 5000',
             key: 'info_alt',
             type: 'success',

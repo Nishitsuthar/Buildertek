@@ -1,16 +1,7 @@
 public with sharing class OptionUpgrade {
 
     @AuraEnabled
-    public static optionWrapper getDetails(String recordId, String searchNameValue, String searchTypeValue, String searchManufacturerValue, String searchFamilyValue, String selectedPriceBook, Boolean priceBookFilter) {
-
-        System.debug('recordId ==> '+recordId);
-        System.debug('searchNameValue ==> '+searchNameValue);
-        System.debug('searchTypeValue ==> '+searchTypeValue);
-        System.debug('searchManufacturerValue ==> '+searchManufacturerValue);
-        System.debug('searchFamilyValue ==> '+searchFamilyValue);
-        System.debug('selectedPriceBook ==> '+selectedPriceBook);
-        System.debug('priceBookFilter ==> '+priceBookFilter);
-
+    public static optionWrapper getProductDetails(String recordId, String searchNameValue, String searchTypeValue, String searchManufacturerValue, String searchFamilyValue, String selectedPriceBook, Boolean priceBookFilter) {
         buildertek__Question__c option = [SELECT Id, Name, buildertek__Question_Group__c, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, 
                                             buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c, buildertek__Price_Book__c, 
                                             buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c FROM buildertek__Question__c WHERE Id =: recordId];

@@ -3,7 +3,7 @@
 	<aura:attribute name="Option" type="Question__c" default="{ 'sobjectType': 'Question__c'}" />
 	<aura:attribute name="Product" type="Product2" default="{ 'sobjectType': 'Product2'}" />
     
-  <aura:attribute name = "recordId" type = "String"/>
+    <aura:attribute name="recordId" type="Id"/>
 
 	<aura:html tag="style">
 		.slds-col{

@@ -252,7 +252,7 @@
         var groupByCostCode = component.get("v.groupByCostCode");
         console.log('groupByCostCode ==> '+groupByCostCode);
         if (groupByCostCode == true) {
-            helper.toggleByCostHelper(component, event, helper, page);
+            helper.CostCodeFilterHelper(component, event, helper, page);
         } else{
             helper.getBudgetGroups(component, event, helper, page);
         }
@@ -3102,7 +3102,7 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
             component.set("v.groupBytoggle", false);
             component.set("v.groupByVendortoggle1", false);
             component.set("v.groupByVendortoggle2", false);
-            helper.toggleByCostHelper(component, event, helper, page);
+            helper.CostCodeFilterHelper(component, event, helper, page);
         } else{
             helper.getBudgetGroups(component, event, helper, page);
         }

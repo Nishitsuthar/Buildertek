@@ -1,19 +1,19 @@
 ({
-    gettabname: function (component, event, helper) {
+    gettabname: function(component, event, helper) {
         var workspaceAPI = component.find("workspaceresource");
         workspaceAPI.openTab({
             url: '/lightning/n/buildertek__Resource',
             focus: true
-        }).then(function (response) {
+        }).then(function(response) {
             workspaceAPI.setTabLabel({
                 tabId: response,
                 label: "Resource Dashboard"
             })
         })
     },
-    getResources: function (component) {
+    getResources: function(component) {
         var action = component.get("c.getAllResourcess");
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 component.set("v.contactList", response.getReturnValue());
@@ -22,8 +22,7 @@
         $A.enqueueAction(action);
     },
 
-    currentWeekDates: function (component, Datevalue) {
-debugger;
+    currentWeekDates: function(component, Datevalue) {
         console.log('currentWeekDates ========> ');
         var today = new Date(Datevalue);
         //alert('current date===='+today);
@@ -187,11 +186,11 @@ debugger;
             slectedprojectId: component.get("v.selectedproject").Id,
             slectedcontactId: component.get("v.selectedContact").Id
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             console.log('state ----------' + state + ' ' + JSON.stringify(response.getReturnValue()));
             if (component.isValid() && state === "SUCCESS") {
-                console.log('response.getReturnValue()::',response.getReturnValue());
+                console.log('response.getReturnValue()::', response.getReturnValue());
                 component.set("v.eventList", response.getReturnValue());
                 component.set("v.showSpinner", false);
                 component.drawTable('');
@@ -202,8 +201,7 @@ debugger;
         $A.enqueueAction(action);
     },
 
-    groupbyWeekViewHelper: function (component, Datevalue) {
-debugger;
+    groupbyWeekViewHelper: function(component, Datevalue) {
         var today = new Date(Datevalue);
         var week = [];
 
@@ -225,8 +223,8 @@ debugger;
         var end = 7 - firstDate.getDay();
         while (start <= numDays) {
             var weekstr = '';
-           // for (var step = start; step < end; step++) {
-           for (var step = start; step < end; step++) {
+            // for (var step = start; step < end; step++) {
+            for (var step = start; step < end; step++) {
                 var nd = new Date(today.getFullYear(), today.getMonth(), step);
                 // alert(nd);
                 var startdate;
@@ -263,14 +261,14 @@ debugger;
                     } else {
                         weekstr += '-' + end;
                     }
-                    if(weekstr){
-                        var diff = Number(weekstr.split('-')[1]) - Number(weekstr.split('-')[0]) 
-                        
-                        if(diff < 4){
-                             var nd = new Date(today.getFullYear(), today.getMonth(), end);
+                    if (weekstr) {
+                        var diff = Number(weekstr.split('-')[1]) - Number(weekstr.split('-')[0])
+
+                        if (diff < 4) {
+                            var nd = new Date(today.getFullYear(), today.getMonth(), end);
                         }
                     }
-			
+
                     weekenddate = $A.localizationService.formatDate(nd, 'MM/dd/yyyy');
                 }
 
@@ -389,7 +387,7 @@ debugger;
             slectedcontactId: component.get("v.selectedContact").Id
 
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             console.log('state ----------' + state + ' ' + response.getReturnValue());
             if (component.isValid() && state === "SUCCESS") {
@@ -407,17 +405,17 @@ debugger;
 
     },
 
-    currentMonthsDates: function (component, Datevalue) {
+    currentMonthsDates: function(component, Datevalue) {
         var today = new Date(Datevalue);
     },
 
-    getprojectTaskscontacts: function (component) {
+    getprojectTaskscontacts: function(component) {
         var action = component.get("c.getAllResourcess");
         var SelectedOptions = component.get("v.SelectedOptions");
         action.setParams({
             selected: SelectedOptions
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 component.set("v.projecttaskcontactlist", response.getReturnValue());

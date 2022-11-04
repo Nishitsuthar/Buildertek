@@ -37,12 +37,13 @@ public class TaskScheduledashboardController {
         string scheduletype = 'Master';
           
         list<contact> resources = new list<contact>();
-         string Query = 'select id,Name,buildertek__Duration__c,buildertek__Slippage__c,buildertek__Completion__c,buildertek__Schedule__c,buildertek__Dependency__c,buildertek__Contractor_Resource__c,buildertek__Contractor_Resource__r.Name,';
+         string Query = 'select id,Name,buildertek__Duration__c,buildertek__Type__c  , buildertek__Slippage__c,buildertek__Completion__c,buildertek__Schedule__c,buildertek__Dependency__c,buildertek__Contractor_Resource__c,buildertek__Contractor_Resource__r.Name,';
                 Query += 'buildertek__Schedule__r.buildertek__Project__c,buildertek__Schedule__r.buildertek__Type__c,buildertek__Schedule__r.buildertek__Project__r.Name,buildertek__Schedule__r.buildertek__Contractor__c,buildertek__Contractor__r.Name,buildertek__Schedule__r.buildertek__Contractor__r.Name,buildertek__Schedule__r.Name,buildertek__Dependency__r.Name,';
                 Query += 'buildertek__Resource__r.Name,buildertek__Resource__c,buildertek__Notes__c,buildertek__Start__c,buildertek__Finish__c,buildertek__Trade_Type__c from ';
                 Query += 'buildertek__Project_Task__c where ';
                 Query += 'buildertek__Completion__c != 100 and buildertek__Finish__c < today '; //and (buildertek__Start__c >=:startDate OR buildertek__Finish__c <=: endDate)';
                 Query += ' and buildertek__Schedule__r.buildertek__Type__c !=: scheduletype';
+
                 if(slectedprojectId != null && slectedprojectId !=''){
                     Query += ' and buildertek__Schedule__r.buildertek__Project__c=:slectedprojectId';
                 }
@@ -144,6 +145,7 @@ system.debug('schduleitems---->'+schduleitems);
                                         taskRec.startdate = pse.buildertek__Start__c;
                                         taskRec.enddate = pse.buildertek__Finish__c; 
                                         taskRec.Eid = pse.buildertek__Schedule__c; 
+                                        taskRec.Type=pse.buildertek__Type__c;
                                         //taskRec.Model = pse.buildertek__Schedule__r.Name;
                                         //taskRec.UnitId = pse.buildertek__Resource__r.Name;
                                         taskRecordList.add(taskRec); 

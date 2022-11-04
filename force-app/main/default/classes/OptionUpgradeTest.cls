@@ -37,14 +37,21 @@ public with sharing class OptionUpgradeTest {
         prod.Family = 'Framing';
         prod.buildertek__Selection_Category_Lookup__c = section.Id;
         insert prod;
+        
+       // OptionUpgrade.upgradeOption(option,prod);
+        
     }
 
     @isTest
     static void testMethod1(){
-        buildertek__Question__c option = [SELECT Id, Name FROM buildertek__Question__c LIMIT 1];
-        Product2 prod = [SELECT id, Name, buildertek__Manufacturer__c FROM Product2 LIMIT 1];
-        OptionUpgrade.getDetails(option.Id, 1, 10, 't', 'p', 't', 'f');
-        OptionUpgrade.getDetails(option.Id, 1, 10, '', '', '', '');
-        OptionUpgrade.upgradeOption(option, prod);
+        buildertek__Question__c option=new buildertek__Question__c();
+        option=[select id,Name,buildertek__Question_Group__c from buildertek__Question__c LIMIT 1];
+        
+        Product2 prod=new Product2();
+        prod=[select Id,Name,buildertek__Manufacturer__c from Product2 LIMIT 1];
+        OptionUpgrade.getProductDetails(option.Id, 'a', 'b', 'c', 'd', 'e', true);
+        OptionUpgrade.getProductDetails(option.Id, '', '', '', '', '', true);
+        OptionUpgrade.upgradeOption(option,prod);
+		
     }
 }

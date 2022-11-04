@@ -282,7 +282,9 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                 console.log('JUMBIO IN METHOD 2');
                 if(taskListForPhase[i].buildertek__Lag__c != undefined && taskListForPhase[i].buildertek__Lag__c != null && taskListForPhase[i].buildertek__Lag__c != 0){
                 var startDate = new Date(taskListForPhase[i].buildertek__Start__c);
-                startDate.setDate(startDate.getDate() + (taskListForPhase[i].buildertek__Lag__c));
+                // startDate.setDate(startDate.getDate() + (taskListForPhase[i].buildertek__Lag__c));
+                //* commneted above line for preventing lags to adding into start date
+                startDate.setDate(startDate.getDate());
                 console.log('method 2 id and start date '+startDate+' id '+taskListForPhase[i].Id);
                 rowChilObj["startDate"] = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
                 }

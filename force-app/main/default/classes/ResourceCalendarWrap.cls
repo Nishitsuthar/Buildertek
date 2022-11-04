@@ -26,6 +26,9 @@ public class ResourceCalendarWrap{
 	@AuraEnabled
 	public list<ProjectTaskRecords> ProjectTaskRecordsList{ get; set; }
 
+	@AuraEnabled
+	public list<ProjectTaskRecords> year{ get; set; }
+
 	public class SchedulerRecords{
 		@AuraEnabled
 		public String ScheduleName{ get; set; }

@@ -231,6 +231,13 @@
          var toggleVal1 = component.get("v.groupBytoggle1"); 
         var toggleVal2 = component.get("v.groupBytoggle2"); 
         var bt1 = component.get("v.Isbtvalue"); 
+
+
+        console.log('budgetIdele => ' + budgetIdele);
+        console.log('toggleVal => ' + toggleVal);
+        console.log('toggleVal1 => ' + toggleVal1);
+        console.log('toggleVal2 => ' + toggleVal2);
+        console.log('bt1 => ' + bt1);
        
         if(budgetIdele){
             
@@ -287,8 +294,7 @@
                 var state = response.getState();
                 if (state === "SUCCESS") {
                     var result = response.getReturnValue();
-                   console.log('result'+result);
-                   console.log('============================================================================');
+                   console.log('=======================================================');
                    console.log('result ==> ', {result});
                    //  alert('result---------->'+JSON.stringify(result));
                     if (result.formulaFields != undefined) {
@@ -338,6 +344,7 @@
                                         
                                     }
                                    // alert('listOfRecords',listOfRecords)
+                                   console.log('listOfRecords => ',{listOfRecords});
                                     for(var i in listOfRecords){
                                         var obj = {}
                                              obj['unitPrice'] = 0;
@@ -364,7 +371,7 @@
                                         obj['ProfitLosskey'] = '';
                                         obj['fieldType'] = '';
                                          for(var j=0;j<listOfRecords[i].subGroupRecords[0].records.length;j++){
-                                             console.log(listOfRecords[i].subGroupRecords[0].records[j])
+                                            //  console.log(listOfRecords[i].subGroupRecords[0].records[j])
                                              var recList = listOfRecords[i].subGroupRecords[0].records[j].recordList;
                                              
                                              for(var k = 0;k<recList.length;k++){
@@ -433,7 +440,7 @@
                                              listOfRecords[i]['totals'] = obj;
                                          }
                                      }
-                                    console.log(listOfRecords)
+                                    // console.log(listOfRecords)
                                     component.set("v.listOfRecords",listOfRecords);
                                     return listOfRecords;
                                    // alert(listOfRecords);
@@ -444,7 +451,7 @@
                                     let recordsMap = new Map();
                                     for (var i in data) {
                                         for(var j in data[i].recordList){
-                                        console.log('data[i].recordList[j]',data[i].recordList);
+                                        // console.log('data[i].recordList[j]',data[i].recordList);
                                         /*if(data[i].recordList[j].fieldName == 'buildertek__Contractor__c' && data[i].recordList[j].originalValue == ''){
                                             data[i].recordList[j].originalValue = 'No Vendor';
                                           
@@ -456,8 +463,8 @@
                                             //recordsMap.get('No Vendor').push(JSON.parse(JSON.stringify(data[i])));
                                         }*/
                                             if(data[i].recordList[j].fieldName == 'buildertek__Contractor__c' && data[i].recordList[j].originalValue != ''){
-                                                 console.log('data[i].recordList[j].fieldName',data[i].recordList[j].fieldName);
-                                                console.log('data[i].recordList[j].originalValue',data[i].recordList[j].originalValue);
+                                                //  console.log('data[i].recordList[j].fieldName',data[i].recordList[j].fieldName);
+                                                // console.log('data[i].recordList[j].originalValue',data[i].recordList[j].originalValue);
                                                 if (!recordsMap.has(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue)) {
                                                     recordsMap.set(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue, []);
                                                 }
@@ -478,7 +485,7 @@
                                         obj.records = result[i][1];
                                         if (obj.subGroupName != 'No Grouping') {
                                             for (var j in obj.records) {
-                                                console.log(obj.records[j].recordValue);
+                                                // console.log(obj.records[j].recordValue);
                                                 recordValue.push(obj.records[j].recordValue);
                                             }
                                             var row = recordValue.length;
@@ -486,7 +493,7 @@
                                             for (var j = 0; j < col; j++) {
                                                 sumCol = 0;
                                                 for (var k = 0; k < row; k++) {
-                                                    console.log(recordValue[k][j])
+                                                    // console.log(recordValue[k][j])
                                                     sumCol += recordValue[k][j];
                                                 }
                                                 j == 0 ?
@@ -500,7 +507,7 @@
                                         listOfRecords.push(obj);
                                     }
                                       
-                                     console.log('listOfRecords',listOfRecords);
+                                    //  console.log('listOfRecords',listOfRecords);
                                     return listOfRecords;
                                     
                                 }
@@ -567,7 +574,7 @@
                                         obj.records = result[i][1];
                                         if (obj.subGroupName != 'No Grouping') {
                                             for (var j in obj.records) {
-                                                console.log(obj.records[j].recordValue);
+                                                // console.log(obj.records[j].recordValue);
                                                 recordValue.push(obj.records[j].recordValue);
                                             }
                                             var row = recordValue.length;
@@ -575,7 +582,7 @@
                                             for (var j = 0; j < col; j++) {
                                                 sumCol = 0;
                                                 for (var k = 0; k < row; k++) {
-                                                    console.log(recordValue[k][j])
+                                                    // console.log(recordValue[k][j])
                                                     sumCol += recordValue[k][j];
                                                 }
                                                 j == 0 ?
@@ -648,7 +655,7 @@
                                         obj.records = result[i][1];
                                         if (obj.subGroupName != 'No Grouping') {
                                             for (var j in obj.records) {
-                                                console.log(obj.records[j].recordValue);
+                                                // console.log(obj.records[j].recordValue);
                                                 recordValue.push(obj.records[j].recordValue);
                                             }
                                             var row = recordValue.length;
@@ -656,7 +663,7 @@
                                             for (var j = 0; j < col; j++) {
                                                 sumCol = 0;
                                                 for (var k = 0; k < row; k++) {
-                                                    console.log(recordValue[k][j])
+                                                    // console.log(recordValue[k][j])
                                                     sumCol += recordValue[k][j];
                                                 }
                                                 j == 0 ?
@@ -729,7 +736,7 @@
                                         obj.records = result[i][1];
                                         if (obj.subGroupName != 'No Grouping') {
                                             for (var j in obj.records) {
-                                                console.log(obj.records[j].recordValue);
+                                                // console.log(obj.records[j].recordValue);
                                                 recordValue.push(obj.records[j].recordValue);
                                             }
                                             var row = recordValue.length;
@@ -737,7 +744,7 @@
                                             for (var j = 0; j < col; j++) {
                                                 sumCol = 0;
                                                 for (var k = 0; k < row; k++) {
-                                                    console.log(recordValue[k][j])
+                                                    // console.log(recordValue[k][j])
                                                     sumCol += recordValue[k][j];
                                                 }
                                                 j == 0 ?
@@ -810,7 +817,7 @@
                                         obj.records = result[i][1];
                                         if (obj.subGroupName != 'No Grouping') {
                                             for (var j in obj.records) {
-                                                console.log(obj.records[j].recordValue);
+                                                // console.log(obj.records[j].recordValue);
                                                 recordValue.push(obj.records[j].recordValue);
                                             }
                                             var row = recordValue.length;
@@ -818,7 +825,7 @@
                                             for (var j = 0; j < col; j++) {
                                                 sumCol = 0;
                                                 for (var k = 0; k < row; k++) {
-                                                    console.log(recordValue[k][j])
+                                                    // console.log(recordValue[k][j])
                                                     sumCol += recordValue[k][j];
                                                 }
                                                 j == 0 ?
@@ -900,7 +907,7 @@
                                             obj['ProfitLosskey'] = '';
                                             obj['fieldType'] = '';
                                             for(var j=0;j<listOfRecords[i].subGroupRecords[0].records.length;j++){
-                                                console.log(listOfRecords[i].subGroupRecords[0].records[j])
+                                                // console.log(listOfRecords[i].subGroupRecords[0].records[j])
                                                 var recList = listOfRecords[i].subGroupRecords[0].records[j].recordList;
                                               // alert('recList...............'+ JSON.stringify(recList));
                                                 for(var k = 0;k<recList.length;k++){
@@ -972,7 +979,7 @@
                                              listOfRecords[i]['totals'] = obj;
                                          }
                                     }
-                                    console.log(listOfRecords)
+                                    // console.log(listOfRecords)
                                     component.set("v.listOfRecords",listOfRecords);
                                     return listOfRecords;
                                 }
@@ -982,10 +989,10 @@
                                          let recordsMap = new Map();
                                          for (var i in data) {
                                              for(var j in data[i].recordList){
-                                                 console.log('data[i].recordList[j]',data[i].recordList);
+                                                //  console.log('data[i].recordList[j]',data[i].recordList);
                                             if(data[i].recordList[j].fieldName == 'buildertek__CostCodeDivision__c' && data[i].recordList[j].originalValue != ''){
-                                                console.log('data[i].recordList[j].fieldName',data[i].recordList[j].fieldName);
-                                                console.log('data[i].recordList[j].originalValue',data[i].recordList[j].originalValue);
+                                                // console.log('data[i].recordList[j].fieldName',data[i].recordList[j].fieldName);
+                                                // console.log('data[i].recordList[j].originalValue',data[i].recordList[j].originalValue);
                                                 if (!recordsMap.has(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue)) {
                                                     recordsMap.set(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue, []);
                                                 }
@@ -1005,7 +1012,7 @@
                                          obj.records = result[i][1];
                                          if (obj.subGroupName != 'No Grouping' ) {
                                              for (var j in obj.records) {
-                                                 console.log(obj.records[j].recordValue);
+                                                //  console.log(obj.records[j].recordValue);
                                                  recordValue.push(obj.records[j].recordValue);
                                              }
                                              var row = recordValue.length;
@@ -1013,7 +1020,7 @@
                                              for (var j = 0; j < col; j++) {
                                                  sumCol = 0;
                                                  for (var k = 0; k < row; k++) {
-                                                     console.log(recordValue[k][j])
+                                                    //  console.log(recordValue[k][j])
                                                      sumCol += recordValue[k][j];
                                                  }
                                                  j == 0 ?
@@ -1027,7 +1034,7 @@
                                          listOfRecords.push(obj);
                                      }
                                      
-                                     console.log('listOfRecords',listOfRecords);
+                                    //  console.log('listOfRecords',listOfRecords);
                                      return listOfRecords;
                                      
                                  }
@@ -1042,6 +1049,9 @@
                             
                         }
                     }
+                    if (toggleVal == true && toggleVal1 == true && toggleVal2 == true && bt1 == true) {
+                        console.log('For No Vendor Condition');
+                    }
                     component.set("v.columns", result.columns);
                     component.set("v.page", result.page);
                     component.set("v.total", result.total);
@@ -1052,7 +1062,7 @@
                         component.set("v.pages", Math.ceil(result.total / 60));
                     }
                     //component.set("v.isLoaded", true);
-                    console.log('**************************************************************');
+                    console.log('*******************************************************');
                     console.log('TotalRecords ==> ',{result});
                     component.set("v.TotalRecords", result);
                     component.set("v.TotalRecordsCopy",result);
@@ -1684,10 +1694,11 @@
         $A.enqueueAction(actions);
     },
 
-    toggleByCostHelper: function (component, event, helper, page){
+    // Method for Group By Cost Code Button
+    CostCodeFilterHelper: function (component, event, helper, page){
         component.set("v.page", page);
 
-        var action = component.get("c.retrieveGroupsByCost");
+        var action = component.get("c.retrieveGroups");
         action.setParams({
             budgetId: component.get("v.recordId"),
             pageNumber: page,
@@ -1695,266 +1706,187 @@
         });
         action.setCallback(this, function (response) {
             var state = response.getState();
-            if (state === "SUCCESS") {
-                var budgetWarpper = response.getReturnValue();
-                console.log('budgetWarpper ==> ',{budgetWarpper});
+            console.log('State =>  ',{state});
 
-                var TotalRecords = {};
-                var groupHierarchy = [];
+            console.log('Response =>',response.getReturnValue());
+            
+            var result = response.getReturnValue()
 
-                var costCodeList = [];
+            var TotalRecords = {};
 
-                var subGroupRecords = [];
-                var subGroupRecordsMap = {};
-
-                var records = [];
-
-                budgetWarpper.budgetItemList.forEach((element, index) => {
-
-                    var recordsMap = helper.formatDataByCostCode(element, budgetWarpper.budgetFieldList);
-
-                    if(element.buildertek__Cost_Code__c == undefined){
-                        element.buildertek__Cost_Code__c == 'No Code Cost';
-                    }
-
-                    if(!costCodeList.includes(element.buildertek__Cost_Code__c)) {
-                        costCodeList.push(element.buildertek__Cost_Code__c);
-                        records = [];
-                        subGroupRecords = [];
-                        subGroupRecordsMap = {};
-                        records.push(recordsMap);
-                    } else {
-                        records.push(recordsMap);
-                    }
-
-                    if (budgetWarpper.budgetItemList[index+1] != undefined) {
-                        if (element.buildertek__Cost_Code__c != budgetWarpper.budgetItemList[index+1].buildertek__Cost_Code__c) {
-                            subGroupRecordsMap['records'] = records;
-                            subGroupRecords.push(subGroupRecordsMap);
-
-                            var groupHierarchyMap = {};
-                            groupHierarchyMap['groupId'] = element.buildertek__Cost_Code__c;
-                            if(element.buildertek__Cost_Code__c != undefined){
-                                groupHierarchyMap['groupName'] = element.buildertek__Cost_Code__r.Name;
-                            } else{
-                                groupHierarchyMap['groupName'] = 'No Code Cost';
-                            }
-                            groupHierarchyMap['subGroupRecords'] = subGroupRecords;
-        
-                            groupHierarchy.push(groupHierarchyMap);
-
+            if (result.formulaFields != undefined) {
+                var formulaField = JSON.parse(result.formulaFields);
+                for (var i in result.columns) {
+                    for (var j in formulaField) {
+                        if (j.toLowerCase() == result.columns[i].fieldName.toLowerCase()) {
+                            result.columns[i].title = formulaField[j];
                         }
+                    }
+                }
+            }
+
+            var costCodeList = [];
+            var groupHierarchy = [];
+            var groupHierarchyMap = {};
+
+            result.tarTable.records.forEach((element, index) => {
+                if(element.buildertek__Cost_Code__c == undefined){
+                    element.buildertek__Cost_Code__c == 'No Code Cost';
+                }
+                groupHierarchyMap = {};
+                if(!costCodeList.includes(element.buildertek__Cost_Code__c)) {
+                    costCodeList.push(element.buildertek__Cost_Code__c);
+                    groupHierarchyMap['groupId'] = element.buildertek__Cost_Code__c;
+                    if(element.buildertek__Cost_Code__c != undefined){
+                        groupHierarchyMap['groupName'] = element.buildertek__Cost_Code__r.Name;
                     } else{
-                        subGroupRecordsMap['records'] = records;
-                        subGroupRecords.push(subGroupRecordsMap);
+                        groupHierarchyMap['groupName'] = 'No Code Cost';
+                    }
+                    groupHierarchy.push(groupHierarchyMap);
+                }
 
-                        var groupHierarchyMap = {};
-                        groupHierarchyMap['groupId'] = element.buildertek__Cost_Code__c;
-                        if(element.buildertek__Cost_Code__c != undefined){
-                            groupHierarchyMap['groupName'] = element.buildertek__Cost_Code__r.Name;
-                        } else{
-                            groupHierarchyMap['groupName'] = 'No Code Cost';
-                        }
-                        groupHierarchyMap['subGroupRecords'] = subGroupRecords;
-    
-                        groupHierarchy.push(groupHierarchyMap);
+            });
+
+            var records = []
+            var recordsList = [];
+            var recordsMap = {};
+            var subGroupRecordsMap = {};
+            var subGroupRecords = [];
+
+            groupHierarchy.forEach(element => {
+                records = [];
+                subGroupRecordsMap = {};
+                subGroupRecords = [];
+
+                var totalObj = {};
+
+                totalObj['unitPrice'] = 0;
+                totalObj['unitPricekey'] = '';
+                totalObj['orignalbudget'] = 0;
+                totalObj['orignalbudgetkey'] = '';
+                totalObj['TotalApprovals'] = 0;
+                totalObj['TotalApprovalskey'] = '';
+                totalObj['CommittedCost'] = 0;
+                totalObj['CommittedCostkey'] = 0;
+                totalObj['AdditionalCosts'] = 0;
+                totalObj['AdditionalCostsKey'] = '';
+                totalObj['InvoiceCosts'] = 0;
+                totalObj['InvoiceCostsKey'] = '';
+                totalObj['ProjectedCosts'] = 0;
+                totalObj['ProjectedCostskey'] = '';
+                totalObj['Labor1'] = 0;
+                totalObj['Labor1key'] = '';
+                totalObj['Forecast'] = 0;
+                totalObj['Forecastskey'] = '';
+                totalObj['TotalCosts'] = 0;
+                totalObj['TotalCostsKey'] = '';
+                totalObj['ProfitLoss'] = 0;
+                totalObj['ProfitLosskey'] = '';
+                totalObj['fieldType'] = '';
+
+
+                result.tarTable.records.forEach((ele, index) => {
+                    if (element['groupId'] == ele.buildertek__Cost_Code__c) {
+                        recordsMap = {};
+                        recordsList = (result.tarTable.ListOfEachRecord[index].recordList);
+                        recordsMap['groupId'] = element['groupId'];
+                        recordsMap['groupName'] = element['groupName'];
+                        recordsMap['recordId'] = ele.Id;
+                        recordsMap['recordName'] = ele.Name;
+                        recordsMap['recordList'] = recordsList;
+                        records.push(recordsMap);
+
+                        totalObj = helper.setTotalHelper(recordsList, result.columns, totalObj);
+                        // console.log('totalObj => ',{totalObj})
+                        
                     }
                 });
+                element['totals'] = totalObj;
+                subGroupRecordsMap['records'] = records;
+                subGroupRecords.push(subGroupRecordsMap);
+                element['subGroupRecords'] = subGroupRecords;
+            });
 
-                TotalRecords['groupHierarchy'] = groupHierarchy;
+            TotalRecords['groupHierarchy'] = groupHierarchy;
+            TotalRecords['columns'] = result.columns;
 
-                var lengthMap = {};
-                lengthMap['length'] = 12; 
+            console.log('TotalRecords ==> ',{TotalRecords});
+            component.set("v.TotalRecords", TotalRecords);
 
-                TotalRecords['columns'] = lengthMap;
-               
-                TotalRecords.groupHierarchy.forEach(element => {
-                    var totalObj = {};
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
 
-                    if (budgetWarpper.budgetFieldList.includes('buildertek__Unit_Price__c')) {
-                        totalObj['unitPricekey'] = 'buildertek__Unit_Price__c';
-                        totalObj['unitPrice'] = 0;
-                    }
-                    if (budgetWarpper.budgetFieldList.includes('buildertek__Original_Budget__c')){
-                        totalObj['orignalbudgetkey'] = 'buildertek__Original_Budget__c';
-                        totalObj['orignalbudget'] = 0;
-                    }
-                    if (budgetWarpper.budgetFieldList.includes('buildertek__Total_Approvals_CO__c')){
-                        totalObj['TotalApprovalskey'] = 'buildertek__Total_Approvals_CO__c';
-                        totalObj['TotalApprovals'] = 0;
-                    }
-                    if (budgetWarpper.budgetFieldList.includes('buildertek__Committed_Costs__c')){
-                        totalObj['CommittedCostkey'] = 'buildertek__Committed_Costs__c';
-                        totalObj['CommittedCost'] = 0;
-                    }
-                    if (budgetWarpper.budgetFieldList.includes('buildertek__Additional_Costs__c')){
-                        totalObj['AdditionalCostsKey'] = 'buildertek__Additional_Costs__c';
-                        totalObj['AdditionalCosts'] = 0;
-                    }
-                    if (budgetWarpper.budgetFieldList.includes('buildertek__Invoice_total__c')){
-                        totalObj['InvoiceCostsKey'] = 'buildertek__Invoice_total__c';
-                        totalObj['InvoiceCosts'] = 0;
-                    }
-                    if (budgetWarpper.budgetFieldList.includes('buildertek__Labor1__c')){
-                        totalObj['ProjectedCostskey'] = 'buildertek__Labor1__c';
-                        totalObj['ProjectedCosts'] = 0;
-                    }
-                    if (budgetWarpper.budgetFieldList.includes('buildertek__Projected_Costs__c')){
-                        totalObj['Labor1key'] = 'buildertek__Projected_Costs__c';
-                        totalObj['Labor1'] = 0;
-                    }
-                    if (budgetWarpper.budgetFieldList.includes('buildertek__Forecast_To_Complete__c')){
-                        totalObj['Forecastskey'] = 'buildertek__Forecast_To_Complete__c';
-                        totalObj['Forecast'] = 0;
-                    }
-                    if (budgetWarpper.budgetFieldList.includes('buildertek__Total_Costs__c')){
-                        totalObj['TotalCostsKey'] = 'buildertek__Total_Costs__c';
-                        totalObj['TotalCosts'] = 0;
-                    }
-                    if (budgetWarpper.budgetFieldList.includes('buildertek__Profit_Loss__c')){
-                        totalObj['ProfitLosskey'] = 'buildertek__Profit_Loss__c';
-                        totalObj['ProfitLoss'] = 0;
-                    }
-                    totalObj['fieldType'] = "currency";
-
-                    budgetWarpper.budgetItemList.forEach((ele) => {
-                        if (element.groupId == ele.buildertek__Cost_Code__c) {
-                            totalObj = helper.setTotal(totalObj, ele);
-                        } else if(ele.buildertek__Cost_Code__c == undefined && element.groupName == 'No Code Cost'){
-                            totalObj = helper.setTotal(totalObj, ele);
-                        }
-                    });
-
-                    element['totals'] = totalObj;
-                });
-
-                console.log('TotalRecords => ',{TotalRecords});
-                
-                component.set("v.TotalRecords", TotalRecords);
-
-                $A.get("e.c:BT_SpinnerEvent").setParams({
-                    "action": "HIDE"
-                }).fire();
-            }
-            else{
-                var error = response.getError();
-                console.log('Error ==>', {error});
-
-                $A.get("e.c:BT_SpinnerEvent").setParams({
-                    "action": "HIDE"
-                }).fire();
-            }
         });
         $A.enqueueAction(action);
+
+        
     }, 
 
-    formatDataByCostCode: function (element, budgetFieldList){
+    setTotalHelper: function(ele, columns, totalObj){
 
-        var recordsMap = {};
-        var recordList = [];
+            ele.forEach(e => {
 
-        // var recordList = [
-        //     {fieldName: 'buildertek__Quantity__c', fieldType: 'number', isEditable: true, originalValue: element.buildertek__Quantity__c  , recordValue: element.buildertek__Quantity__c , referenceValue: '' },
-        //     {fieldName: 'buildertek__Unit_Price__c', fieldType: 'currency', isEditable: true, originalValue: element.buildertek__Unit_Price__c  , recordValue: element.buildertek__Unit_Price__c , referenceValue: '' },
-        //     {fieldName: 'buildertek__Original_Budget__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Original_Budget__c  , recordValue: element.buildertek__Original_Budget__c , referenceValue: '' },
-        //     {fieldName: 'buildertek__Total_Sales_Price__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Total_Sales_Price__c  , recordValue: element.buildertek__Total_Sales_Price__c , referenceValue: '' },
-        //     {fieldName: 'buildertek__Committed_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Committed_Costs__c  , recordValue: element.buildertek__Committed_Costs__c , referenceValue: '' },
-        //     {fieldName: 'buildertek__Additional_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Additional_Costs__c  , recordValue: element.buildertek__Additional_Costs__c , referenceValue: '' },
-        //     {fieldName: 'buildertek__Invoice_total__c', fieldType: 'currency', isEditable: true, originalValue: '' , recordValue: element.buildertek__Invoice_total__c , referenceValue: '' },
-        //     {fieldName: 'buildertek__Total_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Total_Costs__c  , recordValue: element.buildertek__Total_Costs__c , referenceValue: '' },
-        //     {fieldName: 'buildertek__Profit_Loss__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Profit_Loss__c  , recordValue: element.buildertek__Profit_Loss__c , referenceValue: '' },
-        //     {fieldName: 'buildertek__Gross_Profit_Margin__c', fieldType: 'string', isEditable: false, originalValue: element.buildertek__Gross_Profit_Margin__c  , recordValue: element.buildertek__Gross_Profit_Margin__c , referenceValue: '' },
-        //     {fieldName: 'buildertek__CostCodeDivision__c', fieldType: '', isEditable: false, originalValue: element.buildertek__CostCodeDivision__c  , recordValue: element.buildertek__CostCodeDivision__c , referenceValue: '' },
-        // ];
+                if(e.fieldName == 'buildertek__Unit_Price__c'){
+                    totalObj['unitPrice'] += e.originalValue;
+                    totalObj['unitPricekey'] = "buildertek__Unit_Price__c";
+                }
+    
+                if(e.fieldName == 'buildertek__Original_Budget__c'){
+                    totalObj['orignalbudget'] += e.originalValue;
+                    totalObj['orignalbudgetkey'] = "buildertek__Original_Budget__c";
+                }
+    
+                if(e.fieldName == 'buildertek__Total_Approvals_CO__c'){
+                    totalObj['TotalApprovals'] += e.originalValue;
+                    totalObj['TotalApprovalskey'] = "buildertek__Total_Approvals_CO__c";
+                }
+    
+                if(e.fieldName == 'buildertek__Committed_Costs__c'){
+                    totalObj['CommittedCost'] += e.originalValue;
+                    totalObj['CommittedCostkey'] = "buildertek__Committed_Costs__c";
+                }
+    
+                if(e.fieldName == 'buildertek__Additional_Costs__c'){
+                    totalObj['AdditionalCosts'] += e.originalValue;
+                    totalObj['AdditionalCostsKey'] = "buildertek__Additional_Costs__c";
+                }
+                
+                if(e.fieldName == 'buildertek__Invoice_total__c'){
+                    totalObj['InvoiceCosts'] += e.originalValue;
+                    totalObj['InvoiceCostsKey'] = "buildertek__Invoice_total__c";
+                }
+    
+                if(e.fieldName == 'buildertek__Labor1__c'){
+                    totalObj['Labor1'] += e.originalValue;
+                    totalObj['Labor1key'] = "buildertek__Labor1__c";
+                }
+    
+                if(e.fieldName == 'buildertek__Projected_Costs__c'){
+                    totalObj['ProjectedCosts'] += e.originalValue;
+                    totalObj['ProjectedCostskey'] = "buildertek__Projected_Costs__c";
+                }
+    
+                if(e.fieldName == 'buildertek__Forecast_To_Complete__c'){
+                    totalObj['Forecast'] += e.originalValue;
+                    totalObj['Forecastskey'] = "buildertek__Forecast_To_Complete__c";
+                }
+    
+                if(e.fieldName == 'buildertek__Total_Costs__c'){
+                    totalObj['TotalCosts'] += e.originalValue;
+                    totalObj['TotalCostsKey'] = "buildertek__Total_Costs__c";
+                }
+    
+                if(e.fieldName == 'buildertek__Profit_Loss__c'){
+                    totalObj['ProfitLoss'] += e.originalValue;
+                    totalObj['ProfitLosskey'] = "buildertek__Profit_Loss__c";
+                }
+    
+                totalObj['fieldType'] = "currency"; 
 
-        if (budgetFieldList.includes('buildertek__Quantity__c')) {
-            var fieldDate = {fieldName: 'buildertek__Quantity__c', fieldType: 'number', isEditable: true, originalValue: element.buildertek__Quantity__c  , recordValue: element.buildertek__Quantity__c , referenceValue: '' };
-            recordList.push(fieldDate);
-        }
-        if (budgetFieldList.includes('buildertek__Unit_Price__c')) {
-            var fieldDate = {fieldName: 'buildertek__Unit_Price__c', fieldType: 'currency', isEditable: true, originalValue: element.buildertek__Unit_Price__c  , recordValue: element.buildertek__Unit_Price__c , referenceValue: '' };
-            recordList.push(fieldDate);
-        }
-        if (budgetFieldList.includes('buildertek__Original_Budget__c')) {
-            var fieldDate = {fieldName: 'buildertek__Original_Budget__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Original_Budget__c  , recordValue: element.buildertek__Original_Budget__c , referenceValue: '' };
-            recordList.push(fieldDate);
-        }
-        if (budgetFieldList.includes('buildertek__Total_Sales_Price__c')) {
-            var fieldDate = {fieldName: 'buildertek__Total_Sales_Price__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Total_Sales_Price__c  , recordValue: element.buildertek__Total_Sales_Price__c , referenceValue: '' };
-            recordList.push(fieldDate);
-        }
-        if (budgetFieldList.includes('buildertek__Committed_Costs__c')) {
-            var fieldDate = {fieldName: 'buildertek__Committed_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Committed_Costs__c  , recordValue: element.buildertek__Committed_Costs__c , referenceValue: '' };
-            recordList.push(fieldDate);
-        }
-        if (budgetFieldList.includes('buildertek__Additional_Costs__c')) {
-            var fieldDate = {fieldName: 'buildertek__Additional_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Additional_Costs__c  , recordValue: element.buildertek__Additional_Costs__c , referenceValue: '' };
-            recordList.push(fieldDate);
-        }
-        if (budgetFieldList.includes('buildertek__Invoice_total__c')) {
-            var fieldDate = {fieldName: 'buildertek__Invoice_total__c', fieldType: 'currency', isEditable: true, originalValue: '' , recordValue: element.buildertek__Invoice_total__c , referenceValue: '' };
-            recordList.push(fieldDate);
-        }
-        if (budgetFieldList.includes('buildertek__Total_Costs__c')) {
-            var fieldDate = {fieldName: 'buildertek__Total_Costs__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Total_Costs__c  , recordValue: element.buildertek__Total_Costs__c , referenceValue: '' };
-            recordList.push(fieldDate);
-        }
-        if (budgetFieldList.includes('buildertek__Profit_Loss__c')) {
-            var fieldDate = {fieldName: 'buildertek__Profit_Loss__c', fieldType: 'currency', isEditable: false, originalValue: element.buildertek__Profit_Loss__c  , recordValue: element.buildertek__Profit_Loss__c , referenceValue: '' };
-            recordList.push(fieldDate);
-        }
-        if (budgetFieldList.includes('buildertek__Gross_Profit_Margin__c')) {
-            var fieldDate = {fieldName: 'buildertek__Gross_Profit_Margin__c', fieldType: 'string', isEditable: false, originalValue: element.buildertek__Gross_Profit_Margin__c  , recordValue: element.buildertek__Gross_Profit_Margin__c , referenceValue: '' };
-            recordList.push(fieldDate);
-        }
-        if (budgetFieldList.includes('buildertek__CostCodeDivision__c')) {
-            var fieldDate = {fieldName: 'buildertek__CostCodeDivision__c', fieldType: '', isEditable: false, originalValue: element.buildertek__CostCodeDivision__c  , recordValue: element.buildertek__CostCodeDivision__c , referenceValue: '' };
-            recordList.push(fieldDate);
-        }
-        recordsMap['recordId'] = element.Id;
-        recordsMap['recordName'] = element.Name;
-        recordsMap['recordList'] = recordList;
-        
-        return recordsMap;
-    },
-
-    setTotal: function(totalObj, element){
-        if(element.buildertek__Unit_Price__c != undefined){
-            totalObj['unitPrice'] += element.buildertek__Unit_Price__c;
-        }
-        if(element.buildertek__Original_Budget__c != undefined){
-            totalObj['orignalbudget'] += element.buildertek__Original_Budget__c;
-        }
-        if(element.buildertek__Total_Approvals_CO__c != undefined){
-            totalObj['TotalApprovals'] += element.buildertek__Total_Approvals_CO__c;
-        }
-        if(element.buildertek__Committed_Costs__c != undefined){
-            totalObj['CommittedCost'] += element.buildertek__Committed_Costs__c;
-        }
-        if(element.buildertek__Additional_Costs__c != undefined){
-            totalObj['AdditionalCosts'] += element.buildertek__Additional_Costs__c;
-        }
-        if(element.buildertek__Invoice_total__c != undefined){
-            totalObj['InvoiceCosts'] += element.buildertek__Invoice_total__c;
-        }
-        if(element.buildertek__Labor1__c != undefined){
-            totalObj['Labor1'] += element.buildertek__Labor1__c;
-        }
-        if(element.buildertek__Projected_Costs__c != undefined){
-            totalObj['ProjectedCosts'] += element.buildertek__Projected_Costs__c;
-        }
-        if(element.buildertek__Forecast_To_Complete__c != undefined){
-            totalObj['Forecast'] += element.buildertek__Forecast_To_Complete__c;
-        }
-        if(element.buildertek__Total_Costs__c != undefined){
-            totalObj['TotalCosts'] += element.buildertek__Total_Costs__c;
-        }
-        if(element.buildertek__Profit_Loss__c != undefined){
-            totalObj['ProfitLoss'] += element.buildertek__Profit_Loss__c;
-        }
-        
-        // console.log('Total Obj --> ',{totalObj});
+            });
 
         return totalObj;
-    }
+
+    }, 
 })

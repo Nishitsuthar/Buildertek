@@ -18,10 +18,7 @@
         var selectedPriceBook = component.get("v.selectedPriceBook");
         var priceBookFilter = component.get("v.priceBookFilter");
 
-        console.log('selectedPriceBook ==> '+selectedPriceBook);
-        console.log('priceBookFilter ==> '+priceBookFilter);
-
-        var action = component.get("c.getDetails");
+        var action = component.get("c.getProductDetails");
         action.setParams({
             recordId : component.get("v.recordId"),
             searchNameValue : '',
@@ -84,7 +81,7 @@
         var selectedPriceBook = component.get("v.selectedPriceBook");
         var priceBookFilter = component.get("v.priceBookFilter");
 
-        var action = component.get("c.getDetails");
+        var action = component.get("c.getProductDetails");
         action.setParams({
 	        recordId : component.get("v.recordId"),
             searchNameValue : searchNameValue,

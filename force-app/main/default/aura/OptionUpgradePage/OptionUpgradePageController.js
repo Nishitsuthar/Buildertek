@@ -1,10 +1,7 @@
 ({
     doInit : function(component, event, helper) {
         component.set("v.Spinner", true);
-        setTimeout(function(){
-            helper.initHelper(component, event, helper);
-        }, 1000);
-        // helper.initHelper(component, event, helper);
+        helper.initHelper(component, event, helper);
     }, 
 
     handleClick : function(component, event, helper){

@@ -319,6 +319,7 @@ public class BT_NewGanttChartCls{
 
     @AuraEnabled
     public static buildertek__Project_Task__c insertUpdateTask(String taskFields, Boolean isUpdate, Id scheduleId){
+        ProjectTaskTriggerHandler.updateFromGanttChart = true;
 
         List<buildertek__Project_Task__c> returntaskList = new List<buildertek__Project_Task__c>();
         buildertek__Project_Task__c updatedprojecttask = (buildertek__Project_Task__c)System.JSON.deserialize(taskFields, buildertek__Project_Task__c.class);

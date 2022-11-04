@@ -1,23 +1,17 @@
 ({
 	doInit : function(component, event, helper){
-		var recordId = component.get("v.recordId")
-		console.log('getting recordId '+recordId);
-        let urlString = window.location.href;
-        
+		/*var recordId = component.get("v.recordId")
+		console.log('getting recordId '+recordId);*/
+         var pageRef = component.get("v.pageReference");
+        var state = pageRef.state; 
+        var base64Context = state.inContextOfRef;
+         if (base64Context.startsWith("1\.")) {
+            base64Context = base64Context.substring(2);
+        }
+        var addressableContext = JSON.parse(window.atob(base64Context));
+        component.set("v.recordId", addressableContext.attributes.recordId);              
+        component.set('v.Option.buildertek__Question_Group__c' , addressableContext.attributes.recordId );
 
-
-        var stuff = urlString.split('%2F');
-        console.log(stuff[stuff.length-2])
-
-        
-       /*let paramString = urlString.split('?')[1];
-        let queryString = new URLSearchParams(paramString);
-        for(let pair of queryString.entries()) {
-            console.log("Value is:" + pair[1]);
-            console.log(pair[1].indexOf("/buildertek__Question_Group__c/"));
-                    
-
-        }   */   
 	},
 
 	createRecord : function(component, event, helper) {
