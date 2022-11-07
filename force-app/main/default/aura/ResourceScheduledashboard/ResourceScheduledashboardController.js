@@ -118,6 +118,7 @@
         console.log('EventList =======> ' + eventList.length);
         for (var i = 0; i < eventList.length; i++) {
 
+            console.log(eventList[i]);
             // document.getElementById("colorpad").style.color = dynamiccolor;
 
             tbody += '<tr style="height: 50px;">';
@@ -135,12 +136,11 @@
                     var tasks = 0;
 
                     for (var p = 0; p < EquipmentRecordsList.length; p++) {
-                        console.log('aboveif----calandaedate--->' + weekDates[k].Date + 'record stardate>=' + EquipmentRecordsList[p].day + 'record enddate-----&& <= ' + EquipmentRecordsList[p].endday);
-                        console.log(typeof weekDates[k].Date);
-                        console.log(typeof EquipmentRecordsList[p].day);
-                        console.log(typeof EquipmentRecordsList[p].endday);
+                        // console.log('aboveif----calandaedate--->' + weekDates[k].Date + 'record stardate>=' + EquipmentRecordsList[p].day + 'record enddate-----&& <= ' + EquipmentRecordsList[p].endday);
+                        // console.log(typeof weekDates[k].Date);
+                        // console.log(typeof EquipmentRecordsList[p].day);
+                        // console.log(typeof EquipmentRecordsList[p].endday);
                         if (new Date(weekDates[k].Date).valueOf() >= new Date(EquipmentRecordsList[p].day).valueOf() && new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[p].endday).valueOf()) {
-                            console.log('belowif----calandaedate--->' + weekDates[k].Date + 'record stardate>=' + EquipmentRecordsList[p].day + 'record enddate-----&& <= ' + EquipmentRecordsList[p].endday);
                             tasks++;
                         }
                     }
@@ -210,8 +210,8 @@
                     }
                 }
                 if (eventList[i].simultaneousTasksContractorResources != undefined) {
-                    console.log('Tasks::', tasks);
-                    console.log('Event List::', eventList[i].simultaneousTasksContractorResources);
+                    // console.log('Tasks::', tasks);
+                    // console.log('Event List::', eventList[i].simultaneousTasksContractorResources);
                 }
                 if (tasks > 1 && eventList[i].simultaneousTasksContractorResources != undefined && tasks > eventList[i].simultaneousTasksContractorResources) {
                     if (weekDates[k].Day != 'Sun') {
@@ -401,7 +401,7 @@
             } else {
                 bodyTr += '<th style="color: #313131;font-weight: normal;text-align: center;border-bottom: none;background: #f8f8f8;"></th>';
             }
-            console.log(weekDates[k].DayMonth + '-----' + weekDates[k].Day + '--------' + weekDates[k].Dayview);
+            // console.log(weekDates[k].DayMonth + '-----' + weekDates[k].Day + '--------' + weekDates[k].Dayview);
         }
         if (mnt2 == 0) {
             headerTr += '<tr style="background: #f8f8f8;"><th colspan="18" style="height: 40px;background: #f8f8f8;"><center>' + mnt1 + ' ' + yy1 + '</center></th></tr>';
@@ -409,12 +409,12 @@
             headerTr += '<tr style="background: #f8f8f8;"><th colspan="' + colspanmnt1 + '" style="height: 40px;background: #f8f8f8;"><center>' + mnt1 + ' ' + yy1 + '</center></th><th colspan="' + colspanmnt2 + '" style="height: 40px;background: #f8f8f8;border-left: 2px solid #dbe4ee;"><center>' + mnt2 + ' ' + yy2 + '</center></th></tr>';
         }
 
-        console.log('yy1 ===> ' + yy1);
-        console.log('yy2 ===> ' + yy2);
+        // console.log('yy1 ===> ' + yy1);
+        // console.log('yy2 ===> ' + yy2);
 
-        console.log('-----' + weekDates.length);
-        console.log(mnt1 + '-----' + mnt2);
-        console.log(colspanmnt1 + '-----' + colspanmnt2);
+        // console.log('-----' + weekDates.length);
+        // console.log(mnt1 + '-----' + mnt2);
+        // console.log(colspanmnt1 + '-----' + colspanmnt2);
 
         bodyTr += '</tr>';
 
@@ -459,8 +459,8 @@
         var weekDates = component.get("v.weekDates");
 
         var eventList = component.get("v.eventList");
-        console.log('Week Dates::', JSON.stringify(weekDates));
-        console.log('Event List::', JSON.stringify(eventList));
+        // console.log('Week Dates::', JSON.stringify(weekDates));
+        // console.log('Event List::', JSON.stringify(eventList));
 
         var tbody = '';
         var datatable = '';

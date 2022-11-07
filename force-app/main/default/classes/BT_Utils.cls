@@ -1189,56 +1189,48 @@ public with sharing class BT_Utils{
 
 			// Add Code For Change Predecessor (Start)
 
+			if (childObjName == 'buildertek__Project_Task__c') {
+				Map<String, String> predecessorMap = new Map<String, String>();
 
-			// System.debug(' ------------ projectTaskMap ------------');
-			// for (String key : projectTaskMap.keySet()) {
-			// 	sobject task = projectTaskMap.get(key);
-			// 	System.debug('Sobject ==> '+task);
-			// }
-
-
-			
-			try {
-				Map<String, List<String>> newmap = new Map<String, List<String>>();
-				if (childObjName == 'buildertek__Project_Task__c') {
-					if (projectTaskMap.size() > 0) {
-						for (String key : projectTaskMap.keySet()) {
-							// sobject task = projectTaskMap.get(key);
-							buildertek__Project_Task__c task= (buildertek__Project_Task__c)projectTaskMap.get(key);
-							System.debug('Sobject ==> '+task);
-							if (task.buildertek__Dependency__r != null) {
-								if (!newmap.containsKey(key)){
-									List<String> lineNameList = new List<String>{task.Name, task.buildertek__Dependency__r.Name};
-									newmap.put(key, lineNameList);
-									// newmap.put(String.valueOf(task.Name), String.valueOf(task.buildertek__Dependency__r.Name));
-								}
-								// task.buildertek__Dependency__c = '';
+				if (projectTaskMap.size() > 0) {
+					for (String key : projectTaskMap.keySet()) {
+						buildertek__Project_Task__c task= (buildertek__Project_Task__c)projectTaskMap.get(key);
+						System.debug('Sobject ==> '+task);
+						if (task.buildertek__Dependency__r != null) {
+							if (!predecessorMap.containsKey(key)){
+								predecessorMap.put(key, task.buildertek__Dependency__c);
 							}
+							task.buildertek__Dependency__c = null;
+							// task.buildertek__Start__c = System.today();
 						}
+						projectTaskMap.put(key, task);
 					}
+					// ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+					insert projectTaskMap.values();
+					// ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
 				}
-
-				insert projectTaskMap.values();
-
-				for (String key : newmap.keySet()) {
-					System.debug('Task Name ==> '+key +'Predecessor Name ==> '+newmap.get(key));
-				}
-			} catch (Exception e) {
-				System.debug('Error Message => '+e.getMessage());
-				System.debug('Error Line no => '+e.getLineNumber());
-			}
-
 			
+				List<buildertek__Project_Task__c> updateTask = new List<buildertek__Project_Task__c>();
+				for (String key : predecessorMap.keySet()) {
+					System.debug('Task Id ==> '+key +' : Predecessor Id ==> '+predecessorMap.get(key));
 
+					buildertek__Project_Task__c task= (buildertek__Project_Task__c)projectTaskMap.get(key);
+					task.buildertek__Dependency__c = (projectTaskMap.get(predecessorMap.get(key))).Id;
 
+					System.debug('Task ==> '+task);
+					updateTask.add(task);
+				}
 
+				if (updateTask.size() > 0) {
+					update updateTask;
+				}
 
-
+			}
+			
 			// Add Code For Change Predecessor (End)
 			
-
 			
-			// Comment Code For Testing 
+			// Comment Code For Because Predecessor Logic Is Write Above
 
 			// if(childObjName == 'buildertek__Project_Task__c'){
 			// 	System.debug('Child Object Project Task');
@@ -1256,6 +1248,7 @@ public with sharing class BT_Utils{
 			// }else{
 			// 	insert clonedSobjList;
 			// }
+
 		}
 		return cloneSObjList.values();
 	}
