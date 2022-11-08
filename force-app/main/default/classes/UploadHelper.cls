@@ -1,4 +1,4 @@
-public without sharing class UploadHelper {
+public with sharing class UploadHelper {
     public string sessionId {get; set;}
     public string NewBody{get;set;}
     public UploadHelper(){      

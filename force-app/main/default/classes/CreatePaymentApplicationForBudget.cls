@@ -211,7 +211,6 @@ continutionSheet.Name =*/
         }
         return rc;
     }
-    
     @AuraEnabled
     public static ContinuationDetails getContinuationSheetLines(String recordId){
         
@@ -223,7 +222,7 @@ continutionSheet.Name =*/
             portalCode = userRec[0].get('isPortalEnabled').toString();
         }
         system.debug('postel code'+ portalCode);
-        
+        System.debug('*******************************************');
         buildertek__SOV_Continuation__c continuationSheet;
         buildertek__SOV_Payment_Application__c paymentapplication;
         Boolean isApplication;
@@ -2855,6 +2854,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
     
     @AuraEnabled
     public static buildertek__SOV_Payment_Application__c isSovSubmitted(String recordId){
+        system.debug('*****************');
         system.debug(recordId);
         buildertek__SOV_Payment_Application__c updateStatus = [select Id, Name, buildertek__Status__c,buildertek__PA_Type__c, RecordTypeId, recordtype.name from buildertek__SOV_Payment_Application__c where Id =:recordId];
         system.debug(updateStatus);

@@ -1,5 +1,10 @@
 trigger ProjectTrigger on buildertek__Project__c (after insert,after update , before delete, after delete) {
+
+    System.debug('*** ** ProjectTrigger ** ***');
+    System.debug('1st Condition ==> ' + BT_Utils.isTriggerDeactivate('Project__c'));
+    System.debug('2nd Condition ==> ' + ProjectTriggerHandler.blnSkipProjectTrigger);
      if(!BT_Utils.isTriggerDeactivate('Project__c') && !ProjectTriggerHandler.blnSkipProjectTrigger){
+        System.debug('*** ProjectTrigger Run ***');
         
         ProjectTriggerHandler handler = new ProjectTriggerHandler (Trigger.isExecuting, Trigger.size);
         list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurationslist = [Select Id,buildertek__Retreive_Aerial_Photo_of_project__c,buildertek__Google_Map_API_Key__c from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'Project Configuration' limit 1];

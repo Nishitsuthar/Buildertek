@@ -101,12 +101,14 @@
               //  alert(sortedSheetLines);
                 var Retainage = result.workFromPrevAppTotal + result.workcompletedTotal + result.materialsStoredTotal ;
                 if(result.continuationSheet){
-                    if(result.continuationSheet.buildertek__SOV_Payment_Application__r.RecordType.Name == 'PaymentApplication'){
-                        component.set("v.isARPaymentApp", true);
-                    }
-                
-                    if(result.continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Application__c >= 2){
-                      component.set("v.isARPaymentAppImportAvailable", true);
+                    if (result.continuationSheet.buildertek__SOV_Payment_Application__c != null && result.continuationSheet.buildertek__SOV_Payment_Application__c != '') {
+                        if(result.continuationSheet.buildertek__SOV_Payment_Application__r.RecordType.Name == 'PaymentApplication'){
+                            component.set("v.isARPaymentApp", true);
+                        }
+                    
+                        if(result.continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Application__c >= 2){
+                          component.set("v.isARPaymentAppImportAvailable", true);
+                        }
                     }
                     
                 }
@@ -139,20 +141,22 @@
                 
                 component.set("v.WorkCompletedTotal", result.continuationSheet.buildertek__SOV_Payment_Application__r ? result.continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Total_Completed__c : '');
                 
-                
-                if(result.continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Status__c == 'Vendor Submitted'
-                   || result.continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Status__c == 'Partially Rejected'){
-                    component.set("v.ispending", true);
-                }
-                if(result.continuationSheet.buildertek__SOV_Payment_Application__r){
-                    if(result.continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Architect__c){
-                        component.set("v.Architect", result.continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Architect__r.Name);
+                if (result.continuationSheet.buildertek__SOV_Payment_Application__c != null && result.continuationSheet.buildertek__SOV_Payment_Application__c != '') {
+                    if(result.continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Status__c == 'Vendor Submitted'
+                       || result.continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Status__c == 'Partially Rejected'){
+                        component.set("v.ispending", true);
+                    }
+                    if(result.continuationSheet.buildertek__SOV_Payment_Application__r){
+                        if(result.continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Architect__c){
+                            component.set("v.Architect", result.continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Architect__r.Name);
+                        }else{
+                            component.set("v.Architect", '');
+                        }
                     }else{
                         component.set("v.Architect", '');
                     }
-                }else{
-                    component.set("v.Architect", '');
                 }
+                
                 component.set("v.PeriodTo", result.continuationSheet.buildertek__SOV_Payment_Application__r ? result.continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Period_To__c : '');
                 component.set("v.balanceTotal", result.balanceTotal);
                 debugger;

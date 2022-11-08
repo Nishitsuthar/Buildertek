@@ -5,6 +5,8 @@
     
     <aura:attribute name="recordId" type="Id"/>
 
+	<lightning:workspaceAPI aura:id="workspace" />
+
 	<aura:html tag="style">
 		.slds-col{
 			padding: 0 10px;

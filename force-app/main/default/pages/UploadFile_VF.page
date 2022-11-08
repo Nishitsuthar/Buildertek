@@ -6,12 +6,17 @@
     <script>
     
     function uploadContentVersion(recordId ,filename, filecontent) {
+        try{
+        console.log('upload content versions');
         var contentVersion = new sforce.SObject('ContentVersion');
         contentVersion.Title = filename;
         contentVersion.PathOnClient = '/' + filename;
         contentVersion.FirstPublishLocationId = recordId;
         contentVersion.VersionData = filecontent;
-        var results = sforce.connection.create([contentVersion]);
+
+        console.log( contentVersion.FirstPublishLocationId);
+        var results = sforce.connection.create([contentVersion])
+
         for (var i = 0; i < results.length; i++) {
             if (results[i].getBoolean("success")) {
                 console.log('New ContentVersion record created:' + results[i].id);              
@@ -20,6 +25,9 @@
                 console.log('Failed:' + results[i]);
             }
         }
+    }catch(e){
+        console.log({e});
+    }
     }
     
     window.addEventListener('message', (message)=>{
@@ -31,6 +39,10 @@
         var file = message.data;
         for(var i=0;i<file.length;i++){
         //alert('i'+i);
+            console.log('Upload docs');
+            console.log(file[i].parentRec);
+            console.log(file[i].fileName);
+            console.log(file[i].fileContent);
             uploadContentVersion(file[i].parentRec, file[i].fileName , file[i].fileContent);
             if(i == (file.length-1)){
         /*  alert("Show"):
@@ -40,7 +52,7 @@
         
     });
         
-    window.parent.postMessage('loaded', "*")
+    window.parent.postMessage('loaded', "*");
     </script>
     
     <body></body>

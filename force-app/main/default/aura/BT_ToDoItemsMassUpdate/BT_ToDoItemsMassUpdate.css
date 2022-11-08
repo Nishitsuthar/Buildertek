@@ -1,2 +1,8 @@
-.THIS {
+.THIS thead tr th:first-child {
+    width: 100px;
+    display: block;
+}
+
+.THIS tbody tr td {
+    white-space: inherit !important;
 }

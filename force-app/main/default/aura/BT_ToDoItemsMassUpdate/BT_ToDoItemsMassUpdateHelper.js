@@ -56,7 +56,11 @@
 
     updateMassToDo: function (component, event, helper) {
         var listOfToDoItems = component.get('v.listOfToDoItems');
+        var listOfToDoItemsClone = component.get('v.listOfToDoItems');
         var action = component.get("c.updateToDoItems");
+        console.log('listOfToDoItems before==>');
+        console.log({ listOfToDoItemsClone });
+        console.log({ listOfToDoItems });
         for (var i in listOfToDoItems) {
             var obj = listOfToDoItems[i];
             if (obj.buildertek__Due_Date__c != undefined && obj.buildertek__Due_Date__c == '') {
@@ -68,7 +72,25 @@
             if (obj.Id == undefined) {
                 obj.buildertek__To_Do__c = component.get('v.recordId');
             }
+            if (obj.buildertek__Assigned_To__c != undefined && obj.buildertek__Assigned_To__c != '' && obj.buildertek__Assigned_To__c != null) {
+                console.log('buildertek__Assigned_To__c ==>' + JSON.parse(JSON.stringify(obj.buildertek__Assigned_To__c)));
+                // obj.buildertek__Assigned_To__c = JSON.parse(JSON.stringify(obj.buildertek__Assigned_To__c));
+                obj.buildertek__Assigned_To__c = obj.buildertek__Assigned_To__c[0];
+
+            }
+            if (obj.buildertek__Assigned_Vendor__c != undefined && obj.buildertek__Assigned_Vendor__c != '' && obj.buildertek__Assigned_Vendor__c != null) {
+                console.log('buildertek__Assigned_Vendor__c ==>' + JSON.parse(JSON.stringify(obj.buildertek__Assigned_Vendor__c)));
+                // obj.buildertek__Assigned_Vendor__c = JSON.parse(JSON.stringify(obj.buildertek__Assigned_Vendor__c));
+                obj.buildertek__Assigned_Vendor__c = obj.buildertek__Assigned_Vendor__c[0];
+            }
+            delete obj['attributes'];
+            // console.log('buildertek__Assigned_To__c ==>' + JSON.parse(JSON.stringify(obj.buildertek__Assigned_To__c)));
+            // console.log('buildertek__Assigned_Vendor__c ==>' + JSON.parse(JSON.stringify(obj.buildertek__Assigned_Vendor__c)));
+            delete obj['buildertek__Assigned_To__r'];
+            delete obj['buildertek__Assigned_Vendor__r'];
         }
+        console.log('listOfToDoItems after ==>');
+        console.log({ listOfToDoItems });
         action.setParams({
             recordId: component.get('v.recordId'),
             updatedToDoItems: JSON.stringify(listOfToDoItems),

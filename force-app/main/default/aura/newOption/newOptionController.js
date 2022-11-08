@@ -26,51 +26,53 @@
 		});
 		action.setCallback(this, function(a) {
 			var state = a.getState();
-			 if (state === "SUCCESS") {
-				 var name = a.getReturnValue();
-				 console.log(name);
-				 var toastEvent = $A.get("e.force:showToast");
+			if (state === "SUCCESS") {
+
+				var workspaceAPI = component.find("workspace");
+				workspaceAPI.getFocusedTabInfo().then(function (response) {
+					var focusedTabId = response.tabId;
+					workspaceAPI.closeTab({
+						tabId: focusedTabId
+					});
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+
+				var name = a.getReturnValue();
+				console.log(name);
+				var toastEvent = $A.get("e.force:showToast");
 				toastEvent.setParams({
 					"type": "Success",
 					"title": "Success!",
 					"message": "The record has been created successfully."
 				});
 				toastEvent.fire();
-				 var navEvent = $A.get("e.force:navigateToSObject");
-                    navEvent.setParams({
-                        "recordId": name,
-                    });
-                    navEvent.fire();
-			 }
-		  else
-		  {
-			var error= a.getError();
-			console.log('error ==> ',{error});
-			   alert("Failed");
-		  }
-		 });
-	 $A.enqueueAction(action)
+				var navEvent = $A.get("e.force:navigateToSObject");
+				navEvent.setParams({
+					"recordId": name,
+				});
+				navEvent.fire();
+			} else{
+				var error= a.getError();
+				console.log('error ==> ',{error});
+				alert("Failed");
+			}
+		});
+		$A.enqueueAction(action)
 	},
+
     closePopup: function(component, event, helper) {
-
-		$A.get('e.force:refreshView').fire();
-        var urlEvent = $A.get("e.force:navigateToURL");
-        urlEvent.setParams({
-            "url": "/lightning/o/buildertek__Question__c/list?filterName=Recent"
+        var workspaceAPI = component.find("workspace");
+        workspaceAPI.getFocusedTabInfo().then(function (response) {
+            var focusedTabId = response.tabId;
+            workspaceAPI.closeTab({
+                tabId: focusedTabId
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
         });
-        urlEvent.fire();
-
-
-        $A.get("e.force:closeQuickAction").fire();
-        window.setTimeout(
-            $A.getCallback(function () {
-                $A.get('e.force:refreshView').fire();
-            }), 1000
-        );
-
-
-
-        // $A.get("e.force:closeQuickAction").fire();
     },
 
 	changeProduct: function(component, event, helper){

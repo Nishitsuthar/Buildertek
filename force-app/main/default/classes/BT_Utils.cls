@@ -1205,9 +1205,8 @@ public with sharing class BT_Utils{
 						}
 						projectTaskMap.put(key, task);
 					}
-					// ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-					insert projectTaskMap.values();
-					// ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+					// insert projectTaskMap.values();
+					Database.SaveResult[] saveResultList = Database.insert (projectTaskMap.values(), false);
 				}
 			
 				List<buildertek__Project_Task__c> updateTask = new List<buildertek__Project_Task__c>();
@@ -1222,7 +1221,10 @@ public with sharing class BT_Utils{
 				}
 
 				if (updateTask.size() > 0) {
-					update updateTask;
+					// update updateTask;
+					ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+					Database.SaveResult[] saveResultListt = Database.update (updateTask, false);
+					ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
 				}
 
 			}

@@ -228,8 +228,8 @@ export default base => class GanttToolbar extends base {
                                     }
                                 ]
                             }
-                        },
-                        {
+                        }
+                        /*,{
                             type       : 'button',
                             color      : 'b-blue',
                             ref        : 'criticalPathsButton',
@@ -238,7 +238,7 @@ export default base => class GanttToolbar extends base {
                             tooltip    : 'Highlight critical paths',
                             toggleable : true,
                             onAction   : 'up.onCriticalPathsClick'
-                        }
+                        }*/
                     ]
                 }, 
                 {

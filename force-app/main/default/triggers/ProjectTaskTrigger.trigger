@@ -6,6 +6,7 @@
  Date: 24/05/2018
  */
 trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after update, before delete, after delete, before insert, before update, After Undelete ){
+	System.debug('*** ** ProjectTaskTrigger ** ***');
 	System.debug(ProjectTaskTriggerHandler.blnSkipTaskTrigger);
 	System.debug('outside condition project task ==> ');
     system.debug(BT_Utils.isTriggerDeactivate('Project_Task__c')+'--'+ProjectTaskTriggerHandler.blnSkipTaskTrigger);

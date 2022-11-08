@@ -1,4 +1,5 @@
 trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after update, before delete, before update) {
+    System.debug('*** ** ScheduleRecTrigger ** ***');
     ScheduleTriggerHandler handler = new ScheduleTriggerHandler(Trigger.isExecuting, Trigger.size);
     UpdateProjecttOnScheduleUpdateHandler projectUpdateHandler = new UpdateProjecttOnScheduleUpdateHandler();
     if (Trigger.isInsert && Trigger.isAfter && !handler.blnSkipTaskTrigger){
@@ -212,9 +213,9 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
                             }
                         }
                     }
-                    // ProjectTriggerHandler.blnSkipProjectTrigger = true;
+                    ProjectTriggerHandler.blnSkipProjectTrigger = true;
                     projectUpdateHandler.updateProjectList_New(projectList);
-                    // ProjectTriggerHandler.blnSkipProjectTrigger = false;
+                    ProjectTriggerHandler.blnSkipProjectTrigger = false;
                    // update projectList;
                 }
             }

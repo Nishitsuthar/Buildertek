@@ -7,6 +7,7 @@
         var page = component.get("v.page") || 1;
         var checked = event.getSource().get("v.name");
         if (checked == "Group By Vendor") {
+            component.set("v.groupBytoggle2", false);
             if (!event.getSource().get("v.checked")) {
                 component.find("vendor").set("v.checked", true);
                 component.set("v.groupBytoggle", true);
@@ -17,7 +18,8 @@
             } else {
                 component.find("vendor").set("v.checked", false);
                 component.set("v.groupBytoggle", false);
-                component.set("v.groupByVendortoggle1", true);
+                component.set("v.groupByVendortoggle1", false);
+                component.set("v.groupByVendortoggle2", false);
                 component.set("v.groupByCostCode", false);
             }
         }
@@ -70,10 +72,12 @@
                 component.set("v.groupBytoggle2", true);
                 component.set("v.groupByVendortoggle", false);
                 component.set("v.groupByCostCode", false);
+                component.set("v.groupBytoggle", false);
             } else {
                 component.find("Cost Code").set("v.checked", false);
                 component.set("v.groupBytoggle2", false);
                 component.set("v.groupByCostCode", false);
+                component.set("v.groupBytoggle", false);
             }
 
         }

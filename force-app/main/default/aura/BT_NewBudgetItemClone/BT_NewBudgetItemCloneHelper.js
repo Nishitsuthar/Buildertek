@@ -1049,9 +1049,22 @@
                             
                         }
                     }
-                    if (toggleVal == true && toggleVal1 == true && toggleVal2 == true && bt1 == true) {
-                        console.log('For No Vendor Condition');
+
+                    // console.log('&&&&&&&&&&&&&&&&&&&&&&&&');
+                    // console.log('toggleVal ==> '+toggleVal);
+                    // console.log('toggleVal1 ==> '+toggleVal1);
+                    // console.log('toggleVal2 ==> '+toggleVal2);
+                    // console.log('bt1 ==> '+bt1);
+                    // if (toggleVal == true && toggleVal1 == true && toggleVal2 == false && bt1 == true) {
+                    //     console.log('For No Vendor Condition');
+                    // }
+
+
+                    if (toggleVal == true && result.groupHierarchy == '') {
+                        console.log('result.groupHierarchy List Null');
                     }
+
+
                     component.set("v.columns", result.columns);
                     component.set("v.page", result.page);
                     component.set("v.total", result.total);

@@ -98,12 +98,25 @@ public class MassUpdateTakeToDo{
     @AuraEnabled
     public static String updateToDoItems(String recordId, String updatedToDoItems, String fieldSetName){
         try{
+
+            System.debug('updatedToDoItems ==>');
+            System.debug(updatedToDoItems);
+
+            System.debug('fieldSetName ==>');
+            System.debug(fieldSetName);
+
             if (String.isNotBlank(updatedToDoItems)){
-                List<buildertek__To_Do_Items__c> items = (List<buildertek__To_Do_Items__c>)JSON.deserialize(updatedToDoItems, List<buildertek__To_Do_Items__c>.class);
+                List<buildertek__To_Do_Items__c> items = (List<buildertek__To_Do_Items__c>)JSON.deserialize(updatedToDoItems, List<buildertek__To_Do_Items__c>.class);                
+                System.debug('items ==>');
+                System.debug(items);
+
                 upsert items;
                 return getRecords(recordId, fieldSetName);
             }
         } catch (Exception e){
+            System.debug(e);
+            System.debug('Line Number ==>'+ e.getLineNumber());
+            System.debug('Message ===>'+ e.getMessage() + ' <==>'+ e.getStackTraceString());
             throw new AuraHandledException(e.getMessage());
         }
         return null;

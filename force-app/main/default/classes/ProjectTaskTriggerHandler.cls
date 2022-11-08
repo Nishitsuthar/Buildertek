@@ -427,8 +427,6 @@ public class ProjectTaskTriggerHandler{
 				}
 				taskCompletionMap.put(scheduleRec.Id, scheduleRec);
 			}
-
-
 		}
 		ScheduleTriggerHandler handler = new ScheduleTriggerHandler(true, taskCompletionMap.values().size());
 		handler.blnSkipTaskTrigger = true;
@@ -846,10 +844,10 @@ public class ProjectTaskTriggerHandler{
 						System.debug('refMapforPrevParent '+refMapforPrevParent.get(parentTask.Id)+'parent name '+parentTask.Name);
 
 						// Date backupDate = parentTask.buildertek__Finish__c;
-                        if(refMapforPrevParent.containsKey(parentTask.Id) && isAfterInsert == 'update'){
+                        /*if(refMapforPrevParent.containsKey(parentTask.Id) && isAfterInsert == 'update'){
                             System.debug('--'+refMapforPrevParent.get(parentTask.Id));
-                            // parentTask.buildertek__Finish__c = refMapforPrevParent.get(parentTask.Id);
-                        }
+                            parentTask.buildertek__Finish__c = refMapforPrevParent.get(parentTask.Id);
+                        }*/
 						startDate = parentTask.buildertek__finish__c;
 						System.debug('start date GOG BOB ==> '+startDate+' id '+parentTask.Id+ ' parent name '+parentTask.Name+ ' start date '+parentTask.buildertek__Start__c+' finish date '+parentTask.buildertek__Finish__c);
 						startDate = addDaysSkippingWeekends(parentTask.buildertek__finish__c, totalDay);
@@ -1226,25 +1224,19 @@ public class ProjectTaskTriggerHandler{
 				//System.debug('1st method fixed start date here ==> ' + taskItem.buildertek__Start__c + 'and Id ' + taskItem.Id);
 				System.debug('updateFromGanttChart--'+updateFromGanttChart);
 				System.debug('*Task item* --'+taskItem.Name+'* parent Task item* --'+taskItem.buildertek__Dependency__r.Name+' *start date* '+taskItem.buildertek__start__c+' *finish date* '+taskItem.buildertek__finish__c+' *parent start date* '+taskItem.buildertek__Dependency__r.buildertek__Start__c+' *parent finish date* '+taskItem.buildertek__Dependency__r.buildertek__Finish__c);
-                if(newProjectTaskMap.containsKey(lastTask.Id) && updateFromGanttChart){
-                	//System.debug('dev log 1-->'+ProjectTaskMap.get(lastTask.Id));
+                /*if(newProjectTaskMap.containsKey(lastTask.Id) && updateFromGanttChart){
                     Integer totalDay;
                     if(lastTask.buildertek__Lag__c != null) totalDay = Integer.valueOf(lastTask.buildertek__Lag__c);
 					System.debug('lastTask-->'+lastTask.Id+'---'+lastTask.Name+'--'+lastTask.buildertek__Finish__c+'---'+lastTask.buildertek__Start__c+'---'+lastTask.buildertek__Lag__c+'---'+lastTask.buildertek__Dependency__r.buildertek__Finish__c);
-					// System.debug('taskRef.buildertek__Finish__c '+taskRef.buildertek__Finish__c+'taskRef.Name '+taskRef.Name+'taskRef.start date'+taskRef.buildertek__Start__c+' totalDay '+totalDay);
                     Date refFinish = addDaysSkippingWeekends(lastTask.buildertek__Finish__c,totalDay);
 					System.debug('refFinish-->'+refFinish);
-					// System.debug('after &&&&&&&&& ######### .buildertek__Finish__c '+taskRef.buildertek__Finish__c+'taskRef.Name '+taskRef.Name+'taskRef.start date'+taskRef.buildertek__Start__c+' totalDay '+totalDay);
-                    // System.debug('refFinish-->'+refFinish+'--'+taskItem.Id+'--'+taskRef.Id+'--'+lastTask.Id+'--'+lastTask.buildertek__Finish__c+'--'+lastTask.buildertek__Lag__c);
 					if(refFinish != lastTask.buildertek__Finish__c){
 						lastTask.buildertek__Finish__c = refFinish;
                         refMapforPrevParent.put(lastTask.Id,refFinish);
 					}
-                    // if(refFinish != lastTask.buildertek__Finish__c){
+                }*/
 
-                    // }
-                }
-
+				System.debug(' last task^ -- '+lastTask.Name+' F date '+lastTask.buildertek__finish__c+' S date '+lastTask.buildertek__start__c);
 				taskItem.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(lastTask.buildertek__finish__c.addDays(1));
 				System.debug('1st method after fixed start date here ==> ' + taskItem.buildertek__Start__c + 'and Id ' + taskItem.Id);
 				// System.debug('null checking :: ' + lastTask.buildertek__Duration__c);
