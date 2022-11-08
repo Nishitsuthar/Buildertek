@@ -1245,7 +1245,7 @@ public class ProjectTaskTriggerHandler{
 				if (Integer.valueOf(lastTask.buildertek__Duration__c) > 0){
 					system.debug('1-->');
 					// taskEndDate = taskItem.buildertek__Start__c.addDays(Integer.valueOf(taskItem.buildertek__Duration__c) - 1);
-					Integer duration = Integer.valueOf(taskItem.buildertek__Duration__c) - 1;
+					Integer duration = Integer.valueOf(taskItem.buildertek__Duration__c) + Integer.valueOf(taskItem.buildertek__Lag__c) - 1;
 					taskItem.buildertek__Finish__c = addDaysSkippingWeekends(taskItem.buildertek__Start__c, duration);
 				} else{
 					system.debug('2-->');
@@ -1263,6 +1263,9 @@ public class ProjectTaskTriggerHandler{
 		// System.debug('newUpdateProjectTaskMap-->' + newUpdateProjectTaskMap.values());
 		if (dependencyPathExist && newUpdateProjectTaskMap.values().size() > 0){
 			update newUpdateProjectTaskMap.values();
+		}
+		for (string key : newUpdateProjectTaskMap.keySet()) {
+			System.debug(' after $update$ '+key +' Value => '+newUpdateProjectTaskMap.get(key));
 		}
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
 		ProjectTaskTriggerHandler.isFromImport = false;
