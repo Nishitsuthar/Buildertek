@@ -1244,14 +1244,15 @@ public class ProjectTaskTriggerHandler{
 				Date taskEndDate;
 				if (Integer.valueOf(lastTask.buildertek__Duration__c) > 0){
 					system.debug('1-->');
-					taskEndDate = taskItem.buildertek__Start__c.addDays(Integer.valueOf(taskItem.buildertek__Duration__c) - 1);
+					// taskEndDate = taskItem.buildertek__Start__c.addDays(Integer.valueOf(taskItem.buildertek__Duration__c) - 1);
+					Integer duration = Integer.valueOf(taskItem.buildertek__Duration__c) - 1;
+					taskItem.buildertek__Finish__c = addDaysSkippingWeekends(taskItem.buildertek__Start__c, duration);
 				} else{
 					system.debug('2-->');
-					taskEndDate = taskItem.buildertek__Start__c; //.addDays(1)
+					taskItem.buildertek__Finish__c = taskItem.buildertek__Start__c; //.addDays(1)
 				}
-				// system.debug('taskEndDate -->' + taskEndDate);
-				taskItem.buildertek__Finish__c = taskEndDate;
-				// system.debug('taskItem.buildertek__Finish__c -->' + taskItem.buildertek__Finish__c);
+				// taskItem.buildertek__Finish__c = taskEndDate;
+				
 				newUpdateProjectTaskMap.put(taskItem.Id, taskItem);
 			}
 			System.debug('#taskName '+taskItem.Name+' startDate '+taskItem.buildertek__Start__c+' finish date '+taskItem.buildertek__finish__c);
