@@ -178,7 +178,7 @@
                             const fsize = a.item(b).size;
                             const file = Math.round((fsize / 1024));
                             console.log("okokok  : " + file);
-                            if (file >= 20000) {
+                            if (file >= 200000) {
                                 var elmnt = document.getElementById("pageTop");
                                 elmnt.scrollIntoView();
                                 // debugger;
