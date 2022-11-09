@@ -9,6 +9,8 @@ public with sharing class UploadHelper {
         
         HttpRequest req = new HttpRequest();
         req.setMethod('POST');
+        req.setHeader('Content-Type','application/x-www-form-urlencoded');
+
          req.setEndpoint(displayFileUpload[0].buildertek__Access_Token__c);
         req.setBody('grant_type=password' +
         '&client_id= '+displayFileUpload[0].buildertek__Client_Id__c+

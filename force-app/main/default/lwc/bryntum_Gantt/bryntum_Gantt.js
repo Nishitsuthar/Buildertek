@@ -159,6 +159,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   @track contracFieldApiName;
   @track contractorname;
   @track showOriginalDateModal = false;
+  @track blankPredecessor = false;
 
   @wire(getRecordType) objRecordType;
 
@@ -537,6 +538,15 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       var recThis = this;
       getTask({ taskId: recID })
         .then(function (response) {
+          try {
+            if (response.buildertek__Dependency__c == undefined) {
+              recThis.blankPredecessor = true;
+            } else{
+              recThis.blankPredecessor = false;
+            }
+          } catch (error) {
+            console.log('Error ==> ',{error});
+          }
           recThis.newTaskRecordCreate = response;
           if (recData.predecessor != response["buildertek__Dependency__c"])
             recThis.newTaskRecordCreate["buildertek__Dependency__c"] =
@@ -835,6 +845,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       this.newTaskRecordCreate["buildertek__Start__c"];
     this.newTaskRecordCreate["buildertek__Completion__c"] = 0;
     this.newTaskRecordCreate["buildertek__Lag__c"] = 0;
+    this.blankPredecessor = false;
   }
 
   addStandardNew() {

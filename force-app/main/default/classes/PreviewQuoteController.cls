@@ -76,6 +76,7 @@ public without sharing class PreviewQuoteController{
                                FROM EmailTemplate
                                WHERE Name = 'BT Proposal Images'].Id;
         email1.setTemplateId(theTemplate1);
+        System.debug(theTemplate1);
         email1.setWhatId(recordId);
         email1.setTargetObjectId(con.Id);
         email1.setSaveAsActivity(true);
@@ -97,7 +98,7 @@ public without sharing class PreviewQuoteController{
     public static List<buildertek__Proposal_Images__c> getProposalImages(String recordId){
         List<buildertek__Proposal_Images__c> proposalImagesList;
         if (Schema.sObjectType.buildertek__Proposal_Images__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__Proposal_Images__c.fields.buildertek__Image__c.isAccessible() && Schema.sObjectType.buildertek__Proposal_Images__c.fields.buildertek__Description__c.isAccessible() && Schema.sObjectType.buildertek__Proposal_Images__c.fields.buildertek__Proposal__c.isAccessible()){
-            proposalImagesList = [SELECT Id, buildertek__Image__c, buildertek__Description__c
+            proposalImagesList = [SELECT Id , buildertek__Image__c, buildertek__Description__c
                                   FROM buildertek__Proposal_Images__c
                                   WHERE buildertek__Proposal__c = :recordId];
         }
@@ -570,6 +571,13 @@ public without sharing class PreviewQuoteController{
     }
 
     private static Blob setAttachmentBody(String recordId, String templateId, String fileid){
+        System.debug(recordId);
+        System.debug(templateId);
+        System.debug(fileid);
+
+        
+
+        
         pagereference pdf;
         pdf = Page.buildertek__BT_GenerateQuotePDF;
         system.debug('*********'+pdf);

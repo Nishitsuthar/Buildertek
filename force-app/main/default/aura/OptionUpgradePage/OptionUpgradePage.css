@@ -9,6 +9,11 @@
     overflow: hidden;
 }
 
+.THIS.mainDiv .searchbarList{
+    position: absolute;
+    width: 100%;
+}
+
 .THIS .mainTableBody td{
     height: 7rem;
 }
@@ -90,4 +95,18 @@
     top: 50%;
     right: -50px;
     transform: rotate(180deg);
+}
+
+.THIS .searchResult{
+    position: relative;
+}
+
+.THIS .contentDiv{
+    padding-top: 5rem
+}
+
+.THIS .blank-lst{
+    text-align: center;
+    padding: 5px;
+    font-weight: 700;
 }

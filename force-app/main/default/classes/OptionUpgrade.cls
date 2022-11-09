@@ -41,9 +41,6 @@ public with sharing class OptionUpgrade {
             contentLinkList = [SELECT Id, ContentDocumentId, LinkedEntityId FROM ContentDocumentLink WHERE LinkedEntityId =: productsIds];
         }
 
-        // String query = 'Select COUNT() FROM Product2 WHERE buildertek__Selection_Category_Lookup__c =: sectionId';
-        // Integer productCount = Database.countQuery(query);
-
         Map<String, String> priceBookMap = new Map<String, String>();
         list<pricebook2> PriceList = [SELECT Id, Name FROM pricebook2 ORDER BY Name ASC ];
         for (pricebook2 p : PriceList){
@@ -63,8 +60,6 @@ public with sharing class OptionUpgrade {
         optionWrapper optionWrapperData = new optionWrapper();
         optionWrapperData.option = option;
         optionWrapperData.projectPriceBook = priceBookValue;
-        // optionWrapperData.projectPriceBook = option.buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c;
-        // optionWrapperData.productCount = productCount;
         optionWrapperData.priceBookMap = priceBookMap;
 
 
@@ -116,6 +111,83 @@ public with sharing class OptionUpgrade {
         update optionValue;
 
         return newOption.Id;
+    }
+
+    @AuraEnabled
+    public static List<String> getProductFamily(String searchFamilyValue){
+        List<String> productFamilyList = new List<String>();
+        Schema.DescribeFieldResult prodFamily = Product2.Family.getDescribe();
+        List<Schema.PicklistEntry> entries = prodFamily.getPicklistValues();
+
+        if(!String.isBlank(searchFamilyValue)){
+            for (Schema.PicklistEntry entry : entries) {
+                if (entry.getLabel().toLowerCase().contains(searchFamilyValue.toLowerCase())) {
+                    productFamilyList.add(entry.getLabel());
+                }
+            }
+        } else{
+            for (Schema.PicklistEntry entry : entries) {
+                productFamilyList.add(entry.getLabel());
+            }
+        }
+        return productFamilyList;
+    }
+
+    @AuraEnabled
+    public static List<String> getProductType(String searchTypeValue){
+        List<String> productTypeList = new List<String>();
+        List<buildertek__Product_Type__c> prodTypeList = [SELECT Id, Name FROM buildertek__Product_Type__c];
+
+        if(!String.isBlank(searchTypeValue)){
+            for (buildertek__Product_Type__c prodType : prodTypeList) {
+                if (prodType.Name.toLowerCase().contains(searchTypeValue.toLowerCase())) {
+                    productTypeList.add(prodType.Name);
+                }
+            }
+        } else{
+            for (buildertek__Product_Type__c prodType : prodTypeList) {
+                productTypeList.add(prodType.Name);
+            }
+        }
+        return productTypeList;
+    }
+
+    @AuraEnabled
+    public static List<String> getProductName(String searchNameValue){
+        List<String> productNameList = new List<String>();
+        List<Product2> productList = [SELECT Id, Name FROM Product2];
+
+        if(!String.isBlank(searchNameValue)){
+            for (Product2 prod : productList) {
+                if (prod.Name.toLowerCase().contains(searchNameValue.toLowerCase())) {
+                    productNameList.add(prod.Name);
+                }
+            }
+        } else{
+            for (Product2 prod : productList) {
+                productNameList.add(prod.Name);
+            }
+        }
+        return productNameList;
+    }
+
+    @AuraEnabled
+    public static List<String> getManufacturer(String searchManufacturerValue){
+        List<String> ManufacturerList = new List<String>();
+        List<Account> accountList = [SELECT Id, Name FROM Account];
+
+        if(!String.isBlank(searchManufacturerValue)){
+            for (Account acc : accountList) {
+                if (acc.Name.toLowerCase().contains(searchManufacturerValue.toLowerCase())) {
+                    ManufacturerList.add(acc.Name);
+                }
+            }
+        } else{
+            for (Account acc : accountList) {
+                ManufacturerList.add(acc.Name);
+            }
+        }
+        return ManufacturerList;
     }
 
     public class optionWrapper{

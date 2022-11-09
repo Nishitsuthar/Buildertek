@@ -1,27 +1,29 @@
 ({
-    getTemplateBody: function (component, event, helper) {
+    getTemplateBody: function(component, event, helper) {
         var recordId = component.get("v.recordId");
         var action = component.get("c.getQuoteLines");
         action.setParams({
             recordId: recordId,
             templateId: component.get("v.selectedTemplate")
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
+                console.log('get template body');
+                console.log({ result });
                 component.set("v.quoteLines", result);
             }
         });
         $A.enqueueAction(action);
     },
 
-    getContact: function (component, event, helper) {
+    getContact: function(component, event, helper) {
         var action = component.get("c.getObjectContact");
         action.setParams({
             "recordId": component.get("v.recordId")
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
@@ -36,26 +38,27 @@
         $A.enqueueAction(action);
     },
 
-    getProposalImagesList: function (component, event, helper) {
+    getProposalImagesList: function(component, event, helper) {
         var recordId = component.get("v.recordId");
         var action = component.get("c.getProposalImages");
         action.setParams({
             recordId: recordId
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
 
                 var result = response.getReturnValue();
                 // alert(JSON.stringify(result));
                 component.set("v.ProposalImages", result);
-              //  alert('*****'+component.get("v.ProposalImages"));
+                console.log(component.get("v.ProposalImages"));
+                //  alert('*****'+component.get("v.ProposalImages"));
             }
         });
         $A.enqueueAction(action);
     },
 
-    getuploadSignature: function (component, event) {
+    getuploadSignature: function(component, event) {
         component.set("v.parentId", component.get("v.recordId"));
         var recId = component.get("v.parentId");
 
@@ -70,7 +73,7 @@
             recId: recId,
             signName: signName,
         });
-        signatureaction.setCallback(this, function (e) {
+        signatureaction.setCallback(this, function(e) {
             if (e.getState() == 'SUCCESS') {
                 var result = e.getReturnValue();
                 component.set("v.Spinner", false);
@@ -93,7 +96,7 @@
 
     },
 
-    acceptandsendemailhelper: function (component, event) {
+    acceptandsendemailhelper: function(component, event) {
         //alert('hi2');
         var toIds = [];
         var ccIds = [];
@@ -101,15 +104,15 @@
         var cc = component.get("v.selectedCcContact");
         var emailIds = component.get("v.emailIds");
 
-        to.forEach(function (v) {
+        to.forEach(function(v) {
             toIds.push(v.Id)
         });
-        cc.forEach(function (v) {
+        cc.forEach(function(v) {
             ccIds.push(v.Id)
         });
 
         var signid = component.get("v.fileimageId");
-      // alert('imageId'+component.get("v.fileimageId"));
+        // alert('imageId'+component.get("v.fileimageId"));
         var action = component.get("c.acceptandsendProposal");
         action.setParams({
             htmlBody: component.get("v.quoteLines"),
@@ -121,7 +124,7 @@
             emailIds: emailIds,
             memovalue: component.get("v.memoquote")
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             var subject = 'Quote[ref:' + component.get("v.recordId") + ']';
             if (state === "SUCCESS") {
@@ -157,7 +160,7 @@
 
     },
 
-    AcceptSignature: function (component, event) {
+    AcceptSignature: function(component, event) {
         component.set("v.parentId", component.get("v.recordId"));
         var recId = component.get("v.parentId");
 
@@ -172,13 +175,13 @@
             recId: recId,
             signName: signName
         });
-        signatureaction.setCallback(this, function (e) {
+        signatureaction.setCallback(this, function(e) {
             if (e.getState() == 'SUCCESS') {
                 var result = e.getReturnValue();
 
                 component.set("v.fileimageId", result);
                 setTimeout(
-                    function () {
+                    function() {
                         component.acceptandSendMethod();
                     }, 2000);
 
@@ -199,12 +202,12 @@
         $A.enqueueAction(signatureaction);
 
     },
-    getmemovalue: function (component, event, helper) {
+    getmemovalue: function(component, event, helper) {
         var action = component.get("c.getmemoval");
         action.setParams({
             recordId: component.get("v.recordId")
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             var result = response.getReturnValue();
             if (state === "SUCCESS") {

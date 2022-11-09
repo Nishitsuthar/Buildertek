@@ -1269,7 +1269,7 @@
                                                                     <td>
                                                                     </td>
                                                                     <td>
-                                                                        <span style="font-weight: bold;font-size: 0.78rem !important;">Total</span>
+                                                                        <span style="font-weight: bold;font-size: 0.78rem !important;">Total 1</span>
                                                                     </td>
 
                                                                     <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec" indexVar="totalRecordsIndex">
@@ -1346,7 +1346,7 @@
                                                                 <td>
                                                                 </td>
                                                                 <td>
-                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">Total</span>
+                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">Total 2</span>
                                                                 </td>
 
                                                                 <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec" indexVar="totalRecordsIndex">
@@ -1410,7 +1410,7 @@
                                                     </aura:if>
                                                 </aura:if>
 
-                                                <aura:if isTrue="{!v.groupBytoggle}">
+                                                <!-- <aura:if isTrue="{!v.groupBytoggle}">
                                                     <aura:if isTrue="{!v.groupBytoggle1}">
                                                         <aura:if isTrue="{!!v.groupBytoggle2}">
                                                             <tr class="groupFooter">
@@ -1421,7 +1421,7 @@
                                                                 <td>
                                                                 </td>
                                                                 <td>
-                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">Total</span>
+                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">Total 3</span>
                                                                 </td>
                                                                 <aura:iteration items="{!v.listOfRecords}" var="rec" indexVar="totalRecordsIndex">
 
@@ -1673,14 +1673,7 @@
                                                                             </aura:if>
                                                                         </td>
                                                                         <td> </td>
-                                                                        <!-- <td> </td> 
-                                                             <td> </td> 
-                                                              <td> </td> 
-                                                             <td> </td> -->
-                                                                        <!-- <td> </td> 
-                                                              <td> </td> -->
                                                                     </aura:if>
-                                                                    <!--   </aura:if> -->
                                                                 </aura:iteration>
 
 
@@ -1689,7 +1682,7 @@
                                                         </aura:if>
 
                                                     </aura:if>
-                                                </aura:if>
+                                                </aura:if> -->
 
                                                 <aura:if isTrue="{!v.Isbtvalue}">
                                                     <aura:if isTrue="{!!v.groupBytoggle}">
@@ -1704,7 +1697,7 @@
                                                                         <td>
                                                                         </td>
                                                                         <td>
-                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">Total </span>
+                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">Total 4</span>
                                                                         </td>
 
 
@@ -2032,14 +2025,15 @@
 
 
 
-                                                <aura:if isTrue="{!v.groupByCostCode}">
+                                                <!-- <aura:if isTrue="{!v.groupByCostCode}"> -->
+                                                <aura:if isTrue="{!or(v.groupByCostCode, v.groupBytoggle)}" >
 
                                                     <tr class="groupFooter">
                                                         <td> </td>
                                                         <td> </td>
                                                         <td> </td>
                                                         <td>
-                                                            <span style="font-weight: bold;font-size: 0.78rem !important;"> Total </span>
+                                                            <span style="font-weight: bold;font-size: 0.78rem !important;"> Total 5</span>
                                                         </td>
 
                                                         <td> </td>

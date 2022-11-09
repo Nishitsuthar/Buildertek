@@ -107,4 +107,96 @@
         component.set("v.ImageIndex", component.get("v.ImageIndex")+1);
     }, 
 
+    searchProductFamily: function (component, event, helper){
+        var searchFamilyValue = component.get("v.searchFamilyFilter");
+        component.set("v.oldSearchFamilyFilter", searchFamilyValue);
+
+        var action = component.get("c.getProductFamily");
+        action.setParams({
+            searchFamilyValue: searchFamilyValue
+        });
+        action.setCallback(this, function (response) {
+            var result = response.getReturnValue();
+            component.set("v.ProductFamilyList", result);
+            component.set("v.displayFamilyList", true);
+        });
+        $A.enqueueAction(action);
+    }, 
+
+    searchProductType: function (component, event, helper){
+        var searchTypeValue = component.get("v.searchTypeFilter");
+        component.set("v.oldSearchTypeFilter", searchTypeValue);
+
+        var action = component.get("c.getProductType");
+        action.setParams({
+            searchTypeValue: searchTypeValue
+        });
+        action.setCallback(this, function (response) {
+            var result = response.getReturnValue();
+            component.set("v.ProductTypeList", result);
+            component.set("v.displayTypeList", true);
+        });
+        $A.enqueueAction(action);
+    }, 
+
+    searchProductName: function (component, event, helper){
+        var searchNameValue = component.get("v.searchNameFilter");
+        component.set("v.oldSearchNameFilter", searchNameValue);
+
+        var action = component.get("c.getProductName");
+        action.setParams({
+            searchNameValue: searchNameValue
+        });
+        action.setCallback(this, function (response) {
+            var result = response.getReturnValue();
+            component.set("v.ProductNameList", result);
+            component.set("v.displayNameList", true);
+        });
+        $A.enqueueAction(action);
+    }, 
+
+    searchManufacturer: function (component, event, helper){
+        var searchManufacturerValue = component.get("v.searchManufacturerFilter");
+        component.set("v.oldSearchManufacturerFilter", searchManufacturerValue);
+
+        var action = component.get("c.getManufacturer");
+        action.setParams({
+            searchManufacturerValue: searchManufacturerValue
+        });
+        action.setCallback(this, function (response) {
+            var result = response.getReturnValue();
+            component.set("v.ManufacturerList", result);
+            component.set("v.displayManufacturerList", true);
+        });
+        $A.enqueueAction(action);
+    }, 
+
+    clickHandler1: function (component, event, helper){
+        var record = event.currentTarget.dataset.value;
+        component.set("v.searchFamilyFilter", record);
+    },
+
+    clickHandler2: function (component, event, helper){
+        var record = event.currentTarget.dataset.value;
+        component.set("v.searchTypeFilter", record);
+    },
+
+    clickHandler3: function (component, event, helper){
+        var record = event.currentTarget.dataset.value;
+        component.set("v.searchNameFilter", record);
+    },
+
+    clickHandler4: function (component, event, helper){
+        var record = event.currentTarget.dataset.value;
+        component.set("v.searchManufacturerFilter", record);
+    },
+
+    closeSearchOption: function (component, event, helper){
+        component.set("v.displayFamilyList", false);
+        component.set("v.displayTypeList", false);
+        component.set("v.displayNameList", false);
+        component.set("v.displayManufacturerList", false);
+    },
+
+
 })

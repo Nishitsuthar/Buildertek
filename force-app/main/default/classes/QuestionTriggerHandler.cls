@@ -53,6 +53,7 @@ public with sharing class QuestionTriggerHandler {
     }
      
     public void OnBeforeUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap){
+        List<Question__c> questionList=new List<Question__c>();
         for(Question__c q : updatedQuestions){
             if (q.buildertek__Product__c != null) {
                 Product2 prod = [SELECT Id, Name, (SELECT UnitPrice FROM PricebookEntries WHERE IsActive = True) FROM Product2 WHERE Id =: q.buildertek__Product__c];
@@ -61,6 +62,20 @@ public with sharing class QuestionTriggerHandler {
                         q.buildertek__Cost__c = prod.PricebookEntries[0].UnitPrice;
                     }
                 }
+            }
+            // Product2 prd=[select Id, name, buildertek__Manufacturer__c from Product2 where Id =: q.buildertek__Product__c];
+            // if(prd.buildertek__Manufacturer__c != null)
+            // {
+            //     q.buildertek__Manufacturer__c=prd.buildertek__Manufacturer__c;
+            // }
+            // questionList.add(q);
+
+            List<Product2> prd=[select Id, name, buildertek__Manufacturer__c from Product2 where Id =: q.buildertek__Product__c];
+            if (prd.size() > 0) {
+                if(prd[0].buildertek__Manufacturer__c != null) {
+                    q.buildertek__Manufacturer__c=prd[0].buildertek__Manufacturer__c;
+                }
+                questionList.add(q);
             }
         }
     }

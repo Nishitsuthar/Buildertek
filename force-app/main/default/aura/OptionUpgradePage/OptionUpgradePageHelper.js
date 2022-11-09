@@ -73,10 +73,33 @@
     },
     
     searchHelper: function(component, event, helper){
-        var searchNameValue = component.get("v.searchNameFilter");
-        var searchTypeValue = component.get("v.searchTypeFilter");
-        var searchManufacturerValue = component.get("v.searchManufacturerFilter");
+        console.log('== searchHelper ==');
         var searchFamilyValue = component.get("v.searchFamilyFilter");
+        var searchTypeValue = component.get("v.searchTypeFilter");
+        var searchNameValue = component.get("v.searchNameFilter");
+        var searchManufacturerValue = component.get("v.searchManufacturerFilter");
+
+        var oldSearchFamilyValue = component.get("v.oldSearchFamilyFilter");
+        var oldSearchTypeValue = component.get("v.oldSearchTypeFilter");
+        var oldSearchNameValue = component.get("v.oldSearchNameFilter");
+        var oldSearchManufacturerValue = component.get("v.oldSearchManufacturerFilter");
+
+        if (oldSearchFamilyValue != '' && searchFamilyValue == '') {
+            var action = component.get("c.searchProductFamily");
+            $A.enqueueAction(action);
+        }
+        if (oldSearchTypeValue != '' && searchTypeValue == '') {
+            var action = component.get("c.searchProductType");
+            $A.enqueueAction(action);
+        }
+        if (oldSearchNameValue != '' && searchNameValue == '') {
+            var action = component.get("c.searchProductName");
+            $A.enqueueAction(action);
+        }
+        if (oldSearchManufacturerValue != '' && searchManufacturerValue == '') {
+            var action = component.get("c.searchManufacturer");
+            $A.enqueueAction(action);
+        }
 
         var selectedPriceBook = component.get("v.selectedPriceBook");
         var priceBookFilter = component.get("v.priceBookFilter");

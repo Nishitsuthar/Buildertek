@@ -233,11 +233,11 @@
         var bt1 = component.get("v.Isbtvalue"); 
 
 
-        console.log('budgetIdele => ' + budgetIdele);
-        console.log('toggleVal => ' + toggleVal);
-        console.log('toggleVal1 => ' + toggleVal1);
-        console.log('toggleVal2 => ' + toggleVal2);
-        console.log('bt1 => ' + bt1);
+        // console.log('budgetIdele => ' + budgetIdele);
+        // console.log('toggleVal => ' + toggleVal);
+        // console.log('toggleVal1 => ' + toggleVal1);
+        // console.log('toggleVal2 => ' + toggleVal2);
+        // console.log('bt1 => ' + bt1);
        
         if(budgetIdele){
             
@@ -1062,24 +1062,78 @@
 
                     if (toggleVal == true && result.groupHierarchy == '') {
                         console.log('result.groupHierarchy List Null');
+                        console.log('*** Result ***');
+                        console.log({result});
+
+                        var totalRecords = {};
+                        var groupHierarchy = [];
+                        var groupHierarchyMap = {};
+                        var subGroupRecords = [];
+                        var subGroupRecordsMap = {};
+
+                        var totalObj = {};
+
+                        totalObj['unitPrice'] = 0;
+                        totalObj['unitPricekey'] = '';
+                        totalObj['orignalbudget'] = 0;
+                        totalObj['orignalbudgetkey'] = '';
+                        totalObj['TotalApprovals'] = 0;
+                        totalObj['TotalApprovalskey'] = '';
+                        totalObj['CommittedCost'] = 0;
+                        totalObj['CommittedCostkey'] = 0;
+                        totalObj['AdditionalCosts'] = 0;
+                        totalObj['AdditionalCostsKey'] = '';
+                        totalObj['InvoiceCosts'] = 0;
+                        totalObj['InvoiceCostsKey'] = '';
+                        totalObj['ProjectedCosts'] = 0;
+                        totalObj['ProjectedCostskey'] = '';
+                        totalObj['Labor1'] = 0;
+                        totalObj['Labor1key'] = '';
+                        totalObj['Forecast'] = 0;
+                        totalObj['Forecastskey'] = '';
+                        totalObj['TotalCosts'] = 0;
+                        totalObj['TotalCostsKey'] = '';
+                        totalObj['ProfitLoss'] = 0;
+                        totalObj['ProfitLosskey'] = '';
+                        totalObj['fieldType'] = '';
+
+                        result.tarTable.ListOfEachRecord.forEach(element => {
+                            totalObj = helper.setTotalHelper(element.recordList, totalObj);
+                        });
+
+                        groupHierarchyMap['groupName'] = 'No Grouping';
+                        subGroupRecordsMap['records'] = result.tarTable.ListOfEachRecord;
+                        subGroupRecords.push(subGroupRecordsMap);
+                        groupHierarchyMap['subGroupRecords'] = subGroupRecords;
+                        groupHierarchyMap['totals'] = totalObj;
+
+                        groupHierarchy.push(groupHierarchyMap);
+                        totalRecords['groupHierarchy'] = groupHierarchy;
+                        totalRecords['columns'] = result.columns;
+
+                        console.log('TotalRecords ==> ',{totalRecords});
+                        component.set("v.TotalRecords", totalRecords);
+                        component.set("v.TotalRecordsCopy",totalRecords);
+
+                    } else{
+                        component.set("v.columns", result.columns);
+                        component.set("v.page", result.page);
+                        component.set("v.total", result.total);
+                        //alert(result.total);
+                        if (result.total == 0) {
+                            component.set("v.pages", 1);
+                        } else {
+                            component.set("v.pages", Math.ceil(result.total / 60));
+                        }
+                        //component.set("v.isLoaded", true);
+                        console.log('*******************************************************');
+                        console.log('TotalRecords ==> ',{result});
+                        component.set("v.TotalRecords", result);
+                        component.set("v.TotalRecordsCopy",result);
+                        console.log('budget lines::',result);
                     }
 
 
-                    component.set("v.columns", result.columns);
-                    component.set("v.page", result.page);
-                    component.set("v.total", result.total);
-                    //alert(result.total);
-                    if (result.total == 0) {
-                        component.set("v.pages", 1);
-                    } else {
-                        component.set("v.pages", Math.ceil(result.total / 60));
-                    }
-                    //component.set("v.isLoaded", true);
-                    console.log('*******************************************************');
-                    console.log('TotalRecords ==> ',{result});
-                    component.set("v.TotalRecords", result);
-                    component.set("v.TotalRecordsCopy",result);
-                    console.log('budget lines::',result);
                     
                     
                    
@@ -1809,7 +1863,7 @@
                         recordsMap['recordList'] = recordsList;
                         records.push(recordsMap);
 
-                        totalObj = helper.setTotalHelper(recordsList, result.columns, totalObj);
+                        totalObj = helper.setTotalHelper(recordsList, totalObj);
                         // console.log('totalObj => ',{totalObj})
                         
                     }
@@ -1836,7 +1890,7 @@
         
     }, 
 
-    setTotalHelper: function(ele, columns, totalObj){
+    setTotalHelper: function(ele, totalObj){
 
             ele.forEach(e => {
 

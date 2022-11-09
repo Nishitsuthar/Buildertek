@@ -3104,8 +3104,10 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
 
         if (groupByCostCode == true) {
             component.set("v.groupBytoggle", false);
+            component.set("v.groupByVendortoggle", false);
             component.set("v.groupByVendortoggle1", false);
             component.set("v.groupByVendortoggle2", false);
+            component.set("v.groupBytoggle2", false);
             helper.CostCodeFilterHelper(component, event, helper, page);
         } else{
             helper.getBudgetGroups(component, event, helper, page);

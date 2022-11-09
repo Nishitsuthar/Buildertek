@@ -1,12 +1,12 @@
 ({
 
-    init: function (component, event, helper) {
+    init: function(component, event, helper) {
         component.set("v.Spinner", true);
         var dbAction = component.get("c.getTemplates");
         dbAction.setParams({
             recordId: component.get("v.recordId")
         });
-        dbAction.setCallback(this, function (response) {
+        dbAction.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
                 component.set("v.templates", response.getReturnValue());
@@ -17,24 +17,26 @@
         $A.enqueueAction(dbAction);
         helper.getmemovalue(component, event, helper);
     },
-    scrolldown : function (component, event, helper) {
-        
+    scrolldown: function(component, event, helper) {
+
         document.getElementById('footer').scrollIntoView();
-        
+
     },
-    scrollup : function (component, event, helper) {
-        
+    scrollup: function(component, event, helper) {
+
         document.getElementById('header').scrollIntoView(true);
-        
+
     },
-    preiewEmailTemplate: function (component, event, helper) {
+    preiewEmailTemplate: function(component, event, helper) {
+        console.log('Preview email template');
+
         var selectedTemplate = component.get("v.selectedTemplate");
         if (selectedTemplate != undefined) {
             component.set("v.isTemplateSelected", true);
             helper.getContact(component, event, helper);
             helper.getTemplateBody(component, event, helper);
             helper.getProposalImagesList(component, event, helper);
-            setTimeout(function () {
+            setTimeout(function() {
                 var wrapper = document.getElementById("signature-pad");
                 if (wrapper != undefined) {
                     var canvas = wrapper.querySelector("canvas");
@@ -58,7 +60,7 @@
 
                     window.signaturePad = new SignaturePad(canvas);
 
-                    document.getElementById("btnClear").onclick = function (event) {
+                    document.getElementById("btnClear").onclick = function(event) {
                         event.preventDefault();
                         console.log(window.signaturePad);
                         window.signaturePad.clear();
@@ -68,23 +70,23 @@
         }
     },
 
-    closeModel: function (component, event, helper) {
+    closeModel: function(component, event, helper) {
         // location.reload(); 
         $A.get("e.force:closeQuickAction").fire();
 
     },
 
-    sendEmail: function (component, event, helper) {
+    sendEmail: function(component, event, helper) {
         component.set("v.Spinner", true);
         var toIds = [];
         var ccIds = [];
         var to = component.get("v.selectedToContact");
         var cc = component.get("v.selectedCcContact");
         var emailIds = component.get("v.emailIds");
-        to.forEach(function (v) {
+        to.forEach(function(v) {
             toIds.push(v.Id)
         });
-        cc.forEach(function (v) {
+        cc.forEach(function(v) {
             ccIds.push(v.Id)
         });
         debugger;
@@ -99,7 +101,7 @@
                 emailIds: emailIds,
                 memovalue: component.get("v.memoquote"),
             });
-            action.setCallback(this, function (response) {
+            action.setCallback(this, function(response) {
                 var state = response.getState();
                 var subject = 'Quote[ref:' + component.get("v.recordId") + ']';
                 if (state === "SUCCESS") {
@@ -146,11 +148,11 @@
         }
     },
 
-    acceptandSendMethodCall: function (component, event, helper) {
+    acceptandSendMethodCall: function(component, event, helper) {
         helper.acceptandsendemailhelper(component, event);
     },
 
-    onEmailChange: function (component, event, helper) {
+    onEmailChange: function(component, event, helper) {
         var emailId = component.find('emailForm').get('v.value');
         var emailIds = component.get('v.emailIds');
         var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
@@ -163,23 +165,23 @@
                 }
             }
         }
-        if(emailIds != null && emailIds != ''){
-          component.set('v.emailIds', emailIds);  
-        }else{
+        if (emailIds != null && emailIds != '') {
+            component.set('v.emailIds', emailIds);
+        } else {
             component.set('v.emailIds', emailId);
         }
-        
+
         //component.set('v.emailIds', emailIds);
     },
 
-    handleEmailRemove: function (component, event, helper) {
+    handleEmailRemove: function(component, event, helper) {
         var removeIndex = event.getSource().get("v.name");
         var emailIds = component.get('v.emailIds');
         emailIds.splice(removeIndex, 1);
         component.set('v.emailIds', emailIds);
     },
 
-    AcceptandsendEmail: function (component, event, helper) {
+    AcceptandsendEmail: function(component, event, helper) {
         component.set("v.Spinner", true);
         var toIds = [];
         var ccIds = [];
@@ -187,10 +189,10 @@
         var cc = component.get("v.selectedCcContact");
         var emailIds = component.get('v.emailIds');
 
-        to.forEach(function (v) {
+        to.forEach(function(v) {
             toIds.push(v.Id)
         });
-        cc.forEach(function (v) {
+        cc.forEach(function(v) {
             ccIds.push(v.Id)
         });
         if (toIds.length != 0 || emailIds.length != 0) {
@@ -219,7 +221,7 @@
 
     },
 
-    Acceptandclose: function (component, event, helper) {
+    Acceptandclose: function(component, event, helper) {
         if (!signaturePad.isEmpty()) {
             component.set("v.Spinner", true);
             helper.getuploadSignature(component, event);
