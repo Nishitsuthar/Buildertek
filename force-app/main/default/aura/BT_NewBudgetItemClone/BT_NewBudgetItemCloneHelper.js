@@ -1894,7 +1894,7 @@
 
             ele.forEach(e => {
 
-                if(e.fieldName == 'buildertek__Unit_Price__c'){
+                if(e.fieldName == 'buildertek__Unit_Price__c' && e.originalValue != ''){
                     totalObj['unitPrice'] += e.originalValue;
                     totalObj['unitPricekey'] = "buildertek__Unit_Price__c";
                 }

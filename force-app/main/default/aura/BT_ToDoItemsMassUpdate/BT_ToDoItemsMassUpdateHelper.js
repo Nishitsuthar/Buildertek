@@ -73,19 +73,19 @@
                 obj.buildertek__To_Do__c = component.get('v.recordId');
             }
             if (obj.buildertek__Assigned_To__c != undefined && obj.buildertek__Assigned_To__c != '' && obj.buildertek__Assigned_To__c != null) {
-                console.log('buildertek__Assigned_To__c ==>' + JSON.parse(JSON.stringify(obj.buildertek__Assigned_To__c)));
-                // obj.buildertek__Assigned_To__c = JSON.parse(JSON.stringify(obj.buildertek__Assigned_To__c));
-                obj.buildertek__Assigned_To__c = obj.buildertek__Assigned_To__c[0];
+                // console.log('buildertek__Assigned_To__c ==>' + JSON.parse(JSON.stringify(obj.buildertek__Assigned_To__c)));
+                if (obj.buildertek__Assigned_To__c[0] != 0) {
+                    obj.buildertek__Assigned_To__c = obj.buildertek__Assigned_To__c[0];
+                }
 
             }
             if (obj.buildertek__Assigned_Vendor__c != undefined && obj.buildertek__Assigned_Vendor__c != '' && obj.buildertek__Assigned_Vendor__c != null) {
-                console.log('buildertek__Assigned_Vendor__c ==>' + JSON.parse(JSON.stringify(obj.buildertek__Assigned_Vendor__c)));
-                // obj.buildertek__Assigned_Vendor__c = JSON.parse(JSON.stringify(obj.buildertek__Assigned_Vendor__c));
-                obj.buildertek__Assigned_Vendor__c = obj.buildertek__Assigned_Vendor__c[0];
+                // console.log('buildertek__Assigned_Vendor__c ==>' + JSON.parse(JSON.stringify(obj.buildertek__Assigned_Vendor__c)));
+                if (obj.buildertek__Assigned_Vendor__c[0] != 0) {
+                    obj.buildertek__Assigned_Vendor__c = obj.buildertek__Assigned_Vendor__c[0];
+                }
             }
             delete obj['attributes'];
-            // console.log('buildertek__Assigned_To__c ==>' + JSON.parse(JSON.stringify(obj.buildertek__Assigned_To__c)));
-            // console.log('buildertek__Assigned_Vendor__c ==>' + JSON.parse(JSON.stringify(obj.buildertek__Assigned_Vendor__c)));
             delete obj['buildertek__Assigned_To__r'];
             delete obj['buildertek__Assigned_Vendor__r'];
         }

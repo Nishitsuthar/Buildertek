@@ -26,7 +26,7 @@
                </div>
             </div>
          </aura:if>
-        <lightning:textarea name="Description" label="Description" value="{!v.description}"/>                    
+        <!-- <lightning:textarea name="Description" label="Description" value="{!v.description}"/>                     -->
         <!--<div class="slds-file-selector slds-file-selector_files">
             <div class="slds-file-selector__dropzone">
                 <input type="file" class="slds-file-selector__input slds-assistive-text" onchange="{!c.doSave}" id="fileToUpload" aria-labelledby="file-selector-primary-label file-selector-secondary-label" />

@@ -1269,7 +1269,7 @@
                                                                     <td>
                                                                     </td>
                                                                     <td>
-                                                                        <span style="font-weight: bold;font-size: 0.78rem !important;">Total 1</span>
+                                                                        <span style="font-weight: bold;font-size: 0.78rem !important;">Total </span>
                                                                     </td>
 
                                                                     <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec" indexVar="totalRecordsIndex">
@@ -1346,14 +1346,15 @@
                                                                 <td>
                                                                 </td>
                                                                 <td>
-                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">Total 2</span>
+                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">Total </span>
                                                                 </td>
 
                                                                 <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec" indexVar="totalRecordsIndex">
                                                                     <aura:if isTrue="{!and(and(group.groupName == rec.groupName, rec.fieldType != 'false'), group.groupId == rec.groupID)}">
+                                                                        <!-- ({!totalRecordsIndex}) -->
                                                                         <aura:if isTrue="{!rec.fieldType == 'CURRENCY'}">
                                                                             <td>
-
+                                                                                <!-- ({!totalRecordsIndex}) -->
                                                                                 <aura:if isTrue="{!rec.totalValue != null}">
                                                                                     <span style="font-weight: bold;font-size: 0.78rem !important;">
                                                                                         <lightning:formattedNumber
@@ -1378,6 +1379,7 @@
                                                                         </aura:if>
                                                                         <aura:if isTrue="{!rec.fieldType == 'PERCENT'}">
                                                                             <td>
+                                                                                <!-- ({!totalRecordsIndex}) -->
                                                                                 <aura:if isTrue="{!rec.totalValue != null}">
 
                                                                                     <span style="font-weight: bold;font-size: 0.78rem !important;">
@@ -1402,6 +1404,7 @@
                                                                     </aura:if>
                                                                     <aura:if isTrue="{!and(and(group.groupName == rec.groupName, rec.fieldType == 'false'), group.groupId == rec.groupID)}">
                                                                         <td style="text-align:left;">
+                                                                            <!-- ({!totalRecordsIndex}) -->
                                                                         </td>
                                                                     </aura:if>
                                                                 </aura:iteration>
@@ -1421,7 +1424,7 @@
                                                                 <td>
                                                                 </td>
                                                                 <td>
-                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">Total 3</span>
+                                                                    <span style="font-weight: bold;font-size: 0.78rem !important;">Total </span>
                                                                 </td>
                                                                 <aura:iteration items="{!v.listOfRecords}" var="rec" indexVar="totalRecordsIndex">
 
@@ -1697,7 +1700,7 @@
                                                                         <td>
                                                                         </td>
                                                                         <td>
-                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">Total 4</span>
+                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">Total </span>
                                                                         </td>
 
 
@@ -2026,14 +2029,14 @@
 
 
                                                 <!-- <aura:if isTrue="{!v.groupByCostCode}"> -->
-                                                <aura:if isTrue="{!or(v.groupByCostCode, v.groupBytoggle)}" >
+                                                <aura:if isTrue="{!or(v.groupByCostCode, v.groupBytoggle, v.groupByVendortoggle1)}" >
 
                                                     <tr class="groupFooter">
                                                         <td> </td>
                                                         <td> </td>
                                                         <td> </td>
                                                         <td>
-                                                            <span style="font-weight: bold;font-size: 0.78rem !important;"> Total 5</span>
+                                                            <span style="font-weight: bold;font-size: 0.78rem !important;"> Total </span>
                                                         </td>
 
                                                         <td> </td>

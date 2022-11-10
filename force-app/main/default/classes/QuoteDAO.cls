@@ -1862,7 +1862,7 @@ public with sharing class QuoteDAO{
         @AuraEnabled
     public static List<Product2> getProducts(){
         DataTableWrapper listDtw;
-        List<Product2> pp =  [select Id,Name,ProductCode,Description,toLabel(Family) Family,(select UnitPrice from PricebookEntries where IsActive = True) from Product2 where IsActive = True and Id IN (select Product2Id from PricebookEntry where isActive = true)];
+        List<Product2> pp =  [SELECT Id,Name,ProductCode,Description,toLabel(Family) Family,(select UnitPrice from PricebookEntries where IsActive = True) FROM Product2 WHERE IsActive = True AND Id IN (SELECT Product2Id FROM PricebookEntry WHERE isActive = true) ORDER BY Product2.Family DESC NULLS LAST];
        
        /*    List<String> labels = new     List<String>();
         labels.add('Product Name');
@@ -1979,11 +1979,11 @@ public with sharing class QuoteDAO{
         List<PriceBookEntry> pEntries;
          if(pbookId != null && pbookId != 'None'){
              System.debug('If');
-            pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,toLabel(Product2.Family), Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry WHERE Pricebook2Id=:pbookId AND IsActive = True];
+            pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,toLabel(Product2.Family), Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry WHERE Pricebook2Id=:pbookId AND IsActive = True ORDER BY Product2.Family DESC NULLS LAST];
         }
         else{
                System.debug('else');
-            pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,toLabel(Product2.Family), Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry where IsActive = True];
+            pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,toLabel(Product2.Family), Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry where IsActive = True ORDER BY Product2.Family DESC NULLS LAST];
         }
 
     List<Product2> products = new List<Product2>();
