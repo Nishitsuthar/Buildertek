@@ -9,25 +9,6 @@ public class ViewInvoiceForInvoiceAPController {
         }
         return temrec; 
     }
-    
-    /*@AuraEnabled
-    public static string getInvoiceLines(String recordId, String templateId){
-        
-         List<buildertek__BT_Payment_App_Sign_Url__c> paymentAppSignUrl = [select Name__c, buildertek__Site_Url__c from buildertek__BT_Payment_App_Sign_Url__c limit 1];
-        
-        system.debug('recId'+recordId);
-         system.debug('templateId'+templateId);
-        
-        PageReference pagePdf = new PageReference(paymentAppSignUrl[0].buildertek__Site_Url__c+'/apex/BT_Invoice');
-        if(paymentAppSignUrl[0].buildertek__Site_Url__c != null || paymentAppSignUrl[0].buildertek__Site_Url__c != 'undefined'){
-        String url = paymentAppSignUrl[0].buildertek__Site_Url__c;
-        return url ;
-                                   }
-        //pagePdf.getParameters().put('recId', recordId);
-       // pagePdf.getParameters().put('tempId', templateId);
-        
-        return null;
-    }*/
 
     @AuraEnabled
     public static string getInvoiceLines(String recordId, String templateId){

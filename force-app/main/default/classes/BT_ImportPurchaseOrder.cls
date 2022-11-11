@@ -15,7 +15,9 @@ public class BT_ImportPurchaseOrder {
         //For Vendors
         list<String> vendorNames = new List<String>();
         for(fieldWrapper wrapper: datalist){
+            System.debug('vendor outside '+wrapper.Vendor);
             if(wrapper.Vendor != null && wrapper.Vendor != ''){
+                System.debug('vendor in if '+wrapper.Vendor);
                 vendorNames.add(wrapper.Vendor);
             }
         }
@@ -38,6 +40,7 @@ public class BT_ImportPurchaseOrder {
         project1 = [select Id, Name from buildertek__Project__c where Name IN: projectNames];
         map<String, buildertek__Project__c> projectmap = new map<String,buildertek__Project__c>();
         for(buildertek__Project__c projectItem : project1){
+            System.debug(' project name '+projectItem.Name);
             projectmap.put(projectItem.Name,projectItem); 
         }
         
