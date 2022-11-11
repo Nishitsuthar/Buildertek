@@ -1015,10 +1015,11 @@ $A.enqueueAction(action);
                                 var data = component.get("v.data1");
                                 var reverse = sortDirection !== 'asc';
                                 data.sort(this.sortBy(fieldName, reverse));
+                                data.sort(this.compare);
                                 component.set("v.data1", data);
                                 console.log("sorted data : ",component.get("v.data1"));
                             },
-                            /*    sortBy: function (field, reverse, primer) {
+                                /* sortBy: function (field, reverse, primer) {
                                     var key = primer ?
                                         function(x) {return primer(x[field])} :
                                     function(x) {return x[field]};
@@ -1027,7 +1028,9 @@ $A.enqueueAction(action);
                                         return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
                                     }
                                 } */
+
                                 sortBy: function (field, reverse, primer) {
+
                                     var key = primer ?
                                         function(x) {return primer(x.hasOwnProperty(field) ? (typeof x[field] === 'string' ? x[field].toLowerCase() : x[field]) : 'aaa')} :
                                     function(x) {return x.hasOwnProperty(field) ? (typeof x[field] === 'string' ? x[field].toLowerCase() : x[field]) : 'aaa'};
@@ -1035,6 +1038,28 @@ $A.enqueueAction(action);
                                     return function (a, b) {            
                                         return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
                                     }
-                                } 
+                                },
+
+                                compare: function(a, b){
+                                    
+                                    if (a.Family === null || a.Family == '' || a.Family == undefined) {
+                                        return 1;
+                                    }
+                                    if (b.Family === null || b.Family == '' || b.Family == undefined) {
+                                        return -1;
+                                    }
+
+                                    if (a.Family === b.Family) {
+                                        return 0;
+                                    }
+                                    
+                                    if ( a.Family < b.Family ){
+                                        return -1;
+                                    }
+                                    if ( a.Family > b.Family ){
+                                        return 1;
+                                    }
+                                    return 0;
+                                }
                             
 })

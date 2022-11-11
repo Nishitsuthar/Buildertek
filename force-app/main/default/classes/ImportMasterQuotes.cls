@@ -51,6 +51,8 @@ public with sharing class ImportMasterQuotes {
             if(Schema.sObjectType.buildertek__Quote_Item__c.fields.Id.isAccessible()&&
                 Schema.sObjectType.buildertek__Quote_Item__c.fields.Name.isAccessible() &&
                 Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Cost_Code__c.isAccessible() &&
+                                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Notes__c.isAccessible() &&
+                                Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Priority__c.isAccessible() &&
                 Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Additional_Discount__c.isAccessible() &&
                 Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Description__c.isAccessible() &&
                 Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Applied_Markup__c.isAccessible() &&
@@ -63,7 +65,7 @@ public with sharing class ImportMasterQuotes {
                 Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__UOM__c.isAccessible() &&
                 Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Vendor__c.isAccessible() && 
                 Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quote__c.isAccessible()){
-                        quoteItemList= [SELECT Id, Name, buildertek__Cost_Code__c, buildertek__Additional_Discount__c,
+                        quoteItemList= [SELECT Id, Name, buildertek__Cost_Code__c, buildertek__Notes__c, buildertek__Priority__c, buildertek__Additional_Discount__c,
                                         buildertek__Description__c, buildertek__Applied_Markup__c, buildertek__Grouping__c,
                                         buildertek__Markup__c, buildertek__Product__c, buildertek__Quantity__c, buildertek__Unit_Cost__c,
                                         buildertek__Unit_Price__c, buildertek__UOM__c, buildertek__Vendor__c, buildertek__Quote__c, 
@@ -136,6 +138,8 @@ public with sharing class ImportMasterQuotes {
                     quoteItemToInsert.Name = qutItem.Name;
                     quoteItemToInsert.buildertek__Quote__c = recordId;
                     quoteItemToInsert.buildertek__Cost_Code__c = qutItem.buildertek__Cost_Code__c;
+                    quoteItemToInsert.buildertek__Notes__c = qutItem.buildertek__Notes__c;
+                    quoteItemToInsert.buildertek__Priority__c = qutItem.buildertek__Priority__c;
                     quoteItemToInsert.buildertek__Additional_Discount__c = qutItem.buildertek__Additional_Discount__c;
                     quoteItemToInsert.buildertek__Description__c = qutItem.buildertek__Description__c;
                     quoteItemToInsert.buildertek__Applied_Markup__c = qutItem.buildertek__Applied_Markup__c;
@@ -158,19 +162,21 @@ public with sharing class ImportMasterQuotes {
                 if(Schema.sObjectType.buildertek__Quote_Item__c.isCreateable()&&
                     Schema.sObjectType.buildertek__Quote_Item__c.fields.Name.isCreateable()&&
                     Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quote__c.isCreateable() &&
-        			Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Cost_Code__c.isCreateable() &&
-        			Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Additional_Discount__c.isCreateable() &&
+                    Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Cost_Code__c.isCreateable() &&
+                                        Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Notes__c.isCreateable() &&
+                                        Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Priority__c.isCreateable() &&
+                    Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Additional_Discount__c.isCreateable() &&
                     Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Description__c.isCreateable()&&
                     Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Applied_Markup__c.isCreateable() &&
-        			Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Grouping__c.isCreateable() &&
-        			Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isCreateable() &&
+                    Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Grouping__c.isCreateable() &&
+                    Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isCreateable() &&
                     Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Product__c.isCreateable()&&
                     Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quantity__c.isCreateable() &&
-        			Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Unit_Cost__c.isCreateable() &&
-        			Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__UOM__c.isCreateable() &&
-        			Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Vendor__c.isCreateable() ){
+                    Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Unit_Cost__c.isCreateable() &&
+                    Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__UOM__c.isCreateable() &&
+                    Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Vendor__c.isCreateable() ){
                     insert quoteItemToInsertList;
-        			}
+                    }
 
                     buildertek__Quote__c quote = [SELECT Id, Name, buildertek__Memo__c, buildertek__Email_Body__c, buildertek__Section_I__c, 
                                                     buildertek__Section_II__c, buildertek__Section_III__c, buildertek__Section_IV__c, buildertek__Section_V__c, 

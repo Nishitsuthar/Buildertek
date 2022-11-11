@@ -15,8 +15,6 @@ public with sharing class PreviewBillingsController{
             temrec = [Select Id, Name, folder.name
                       from Emailtemplate
                       where folder.name = 'BT Bill' and Name !=:'Invoice3'];
-            System.debug('template Name=='+temrec[0].Name);
-            System.debug('template Name=='+temrec[1].Name);
 
         }
         return temrec;

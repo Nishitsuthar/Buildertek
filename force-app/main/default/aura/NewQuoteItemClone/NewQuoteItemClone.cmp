@@ -163,7 +163,7 @@
     <aura:attribute name="StoreIdsOfDatatable" type="List" />
     <aura:attribute name="StoreIdsOfDatatable2" type="List" />
     <aura:attribute name="oldData" type="List" default="[]" />
-    <aura:attribute name="sortedBy" type="String" default="Name" />
+    <aura:attribute name="sortedBy" type="String" default="Family" />
     <aura:attribute name="sortedDirection" type="String" default="asc" />
     <aura:attribute name="isDisabled" type="Boolean" default="false" />
     <aura:attribute name="checkFunctionCall" type="Boolean" default="false" />

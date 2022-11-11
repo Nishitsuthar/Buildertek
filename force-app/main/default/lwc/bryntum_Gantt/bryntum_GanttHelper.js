@@ -75,6 +75,13 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                 rowChilObj["percentDone"] = taskListForPhase[i].buildertek__Completion__c
                 rowChilObj["startDate"] = taskListForPhase[i].buildertek__Start__c
                 rowChilObj['predecessor'] = taskListForPhase[i].buildertek__Dependency__c;
+
+                if (taskListForPhase[i].hasOwnProperty('buildertek__Dependency__c') == true) {
+                    rowChilObj['predecessorName'] = taskListForPhase[i].buildertek__Dependency__r.Name;
+                } else {
+                    rowChilObj['predecessorName'] = '';
+                }
+
                 rowChilObj['internalresource'] = taskListForPhase[i].buildertek__Resource__c;
                 
                 if(taskListForPhase[i].buildertek__Resource__c){
@@ -254,6 +261,13 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                 rowChilObj["startDate"] = taskListForPhase[i].buildertek__Start__c
                 
                 rowChilObj['predecessor'] = taskListForPhase[i].buildertek__Dependency__c;
+
+                if (taskListForPhase[i].hasOwnProperty('buildertek__Dependency__c') == true) {
+                    rowChilObj['predecessorName'] = taskListForPhase[i].buildertek__Dependency__r.Name;
+                } else {
+                    rowChilObj['predecessorName'] = '';
+                }
+
                 rowChilObj['internalresource'] = taskListForPhase[i].buildertek__Resource__c;
                 
                 if(taskListForPhase[i].buildertek__Resource__c){
@@ -414,6 +428,13 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
 
             
             rowChilObj['predecessor'] = taskListForPhase[i].buildertek__Dependency__c;
+
+            if (taskListForPhase[i].hasOwnProperty('buildertek__Dependency__c') == true) {
+                rowChilObj['predecessorName'] = taskListForPhase[i].buildertek__Dependency__r.Name;
+            } else {
+                rowChilObj['predecessorName'] = '';
+            }
+
             rowChilObj['internalresource'] = taskListForPhase[i].buildertek__Resource__c;
             
             if(taskListForPhase[i].buildertek__Resource__c){

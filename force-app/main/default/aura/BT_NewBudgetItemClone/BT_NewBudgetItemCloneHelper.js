@@ -280,6 +280,20 @@
         }
         
         
+        var actionTest = component.get("c.retrieveGroups");
+        actionTest.setParams({
+            budgetId: component.get("v.recordId"),
+            pageNumber: page,
+            recordToDisply: 60,
+        });
+        actionTest.setCallback(this, function (response) {
+            console.log('##############################');
+            var result = response.getReturnValue();
+            console.log('result ==> ', {result});
+            console.log('##############################');
+        });
+        $A.enqueueAction(actionTest);
+        
         
         
         if (component.get("v.recordId")) {

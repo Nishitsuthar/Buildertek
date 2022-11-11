@@ -125,7 +125,9 @@
                                 </div>
                             </div>
 
-                            <aura:unescapedHtml value="{!v.quoteLines}" />
+                            <p class="slds-text-longform tile__title red-txt">
+                                <aura:unescapedHtml value="{!v.quoteLines}" />
+                            </p>  
                             <br />
 
                             <article class="slds-card">

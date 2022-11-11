@@ -1713,6 +1713,21 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             },
           },
           {
+            text: "Predecessor",
+            width: 200,
+            editor: false,
+            renderer: (record) => {
+              if (record.record._data.type == "Phase") {
+                return "";
+              }
+              if (record.record._data.name == "Milestone Complete") {
+                return "";
+              } else {
+                return record.record._data.predecessorName;
+              }
+            },
+          },
+          {
             type: "startdate",
             editor: true,
             renderer: function(record){

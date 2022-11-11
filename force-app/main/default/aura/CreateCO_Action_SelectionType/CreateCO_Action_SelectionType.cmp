@@ -42,7 +42,7 @@
 					Create Change Order
 				</div>
 			</header>
-			<div style="max-height: 75vh;overflow:auto;">
+			<div style="max-height: 75vh;overflow:auto;" >
 				<!-- Default/basic -->
 				<div style="padding: 10px 10px 0px;">
                     <lightning:recordEditForm objectApiName="buildertek__Change_Order__c">
@@ -51,7 +51,7 @@
                     </lightning:recordEditForm>
                 </div>
 
-				<div style="padding: 0 0.7rem">
+				<div style="margin: 15px 5px;">
 					<lightning:datatable columns="{! v.myColumns }" data="{! v.myData }" keyField="id" selectedRows="{!v.selectedRows}" onrowselection="{!c.updateSelectedText}"
 						 />
 					<aura:if isTrue="{!empty(v.myData)}">
