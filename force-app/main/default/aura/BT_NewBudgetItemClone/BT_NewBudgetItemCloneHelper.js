@@ -1,23 +1,23 @@
 ({
-    getcurr : function (component, event, helper) {
+    getcurr: function (component, event, helper) {
         var action = component.get("c.getcurrency");
         action.setCallback(this, function (response) {
             var state = response.getState();
-             if (state === "SUCCESS") {
-                   component.set("v.currencycode",response.getReturnValue());
-			} 
-		});
-		$A.enqueueAction(action);		
+            if (state === "SUCCESS") {
+                component.set("v.currencycode", response.getReturnValue());
+            }
+        });
+        $A.enqueueAction(action);
     },
-    getmulticur : function (component, event, helper) {
+    getmulticur: function (component, event, helper) {
         var action = component.get("c.getmulticurrency");
         action.setCallback(this, function (response) {
             var state = response.getState();
-             if (state === "SUCCESS") {
-                  component.set("v.multicurrency",response.getReturnValue());
-			} 
-		});
-		$A.enqueueAction(action);		
+            if (state === "SUCCESS") {
+                component.set("v.multicurrency", response.getReturnValue());
+            }
+        });
+        $A.enqueueAction(action);
     },
     createForceRecordEditComp: function (
         component,
@@ -31,17 +31,17 @@
     ) {
         $A.createComponent(
             "c:BT_Force_Record_Edit", {
-                "aura:id": "btNewItemEdit",
-                title: title,
-                objectApi: objAPI,
-                parentId: component.get("v.recordId"),
-                parentApi: "buildertek__Budget__c",
-                newRecordName: "Budget Item",
-                saveCallBack: component.get("v.refreshGridAction"),
-                newRecordId: recordId,
-                defaultValue: obj,
-                action: action,
-            },
+            "aura:id": "btNewItemEdit",
+            title: title,
+            objectApi: objAPI,
+            parentId: component.get("v.recordId"),
+            parentApi: "buildertek__Budget__c",
+            newRecordName: "Budget Item",
+            saveCallBack: component.get("v.refreshGridAction"),
+            newRecordId: recordId,
+            defaultValue: obj,
+            action: action,
+        },
             function (grid) {
                 if (component.isValid()) {
                     var targetCmp = component.find("newItem");
@@ -52,13 +52,13 @@
             }
         );
     },
-   /* helperFun : function(component,event,secId) {
-	  var acc = component.find(secId);
-        	for(var cmp in acc) {
-        	//$A.util.toggleClass(acc[cmp], 'slds-show');  
-        	$A.util.toggleClass(acc[cmp], 'slds-hide');  
-       }
-	},*/
+    /* helperFun : function(component,event,secId) {
+       var acc = component.find(secId);
+             for(var cmp in acc) {
+             //$A.util.toggleClass(acc[cmp], 'slds-show');  
+             $A.util.toggleClass(acc[cmp], 'slds-hide');  
+        }
+     },*/
 
     getBudgetLine: function (component, event, helper) {
         var action;
@@ -69,7 +69,7 @@
         action.setCallback(this, function (response) {
             debugger;
             if (component.isValid() && response.getState() === "SUCCESS") {
-               
+
                 var result = JSON.parse(response.getReturnValue());
                 // alert( JSON.stringify(result));
                 component.set('v.budgetLineItems', result);
@@ -92,14 +92,14 @@
                     variant: "success",
                     header: "RFQ has been created!",
                     message: "RFQ created",
-                    closeCallback: function () {},
+                    closeCallback: function () { },
                 });
             } else {
                 component.find("notifLib").showNotice({
                     variant: "error",
                     header: "Error!",
                     message: response.getError()[0].message,
-                    closeCallback: function () {},
+                    closeCallback: function () { },
                 });
             }
         });
@@ -138,7 +138,7 @@
     },
 
     getProductDetails: function (component, event, helper) {
-       
+
         var productId = component.get("v.productId");
         var productName = component.get("v.productName");
         /* if(productName.length > 80){
@@ -161,7 +161,7 @@
             }
              
              if(component.get("v.isDescription") == false){*/
-                  var action = component.get("c.getProductPrice");
+        var action = component.get("c.getProductPrice");
 
         action.setParams({
             productId: productId,
@@ -201,7 +201,7 @@
             ////console.log("----log",res);
         });
         $A.enqueueAction(action);
-             
+
     },
 
     deleteRecord: function (component, event, helper) {
@@ -226,76 +226,76 @@
         $A.get("e.c:BT_SpinnerEvent").setParams({
             action: "SHOW",
         }).fire();
-        var budgetIdele =  component.get("v.budgetId");
-         var toggleVal = component.get("v.groupBytoggle"); 
-         var toggleVal1 = component.get("v.groupBytoggle1"); 
-        var toggleVal2 = component.get("v.groupBytoggle2"); 
-        var bt1 = component.get("v.Isbtvalue"); 
+        var budgetIdele = component.get("v.budgetId");
+        var toggleVal = component.get("v.groupBytoggle");
+        var toggleVal1 = component.get("v.groupBytoggle1");
+        var toggleVal2 = component.get("v.groupBytoggle2");
+        var bt1 = component.get("v.Isbtvalue");
 
 
-        // console.log('budgetIdele => ' + budgetIdele);
-        // console.log('toggleVal => ' + toggleVal);
-        // console.log('toggleVal1 => ' + toggleVal1);
-        // console.log('toggleVal2 => ' + toggleVal2);
-        // console.log('bt1 => ' + bt1);
-       
-        if(budgetIdele){
-            
-         
-            if(component.find('expandCollapeseAllBtn')){
-            
+        console.log('budgetIdele => ' + budgetIdele);
+        console.log('toggleVal => ' + toggleVal);
+        console.log('toggleVal1 => ' + toggleVal1);
+        console.log('toggleVal2 => ' + toggleVal2);
+        console.log('bt1 => ' + bt1);
 
-                if(component.find('expandCollapeseAllBtn').get('v.iconName')){
-                    var budgetIdele =  component.get("v.budgetId");
-                   // alert(budgetIdele);
+        if (budgetIdele) {
+
+
+            if (component.find('expandCollapeseAllBtn')) {
+
+
+                if (component.find('expandCollapeseAllBtn').get('v.iconName')) {
+                    var budgetIdele = component.get("v.budgetId");
+                    // alert(budgetIdele);
                     var tabId = component.get("v.currentTab")
-                    if(tabId){
-                        var spanEle = document.getElementsByClassName(tabId+' expandAllBtn_'+budgetIdele);
-                       // alert(spanEle);
-                        if(spanEle[0]){
-                           // alert("6");
-                            spanEle[0].style.display="none";
+                    if (tabId) {
+                        var spanEle = document.getElementsByClassName(tabId + ' expandAllBtn_' + budgetIdele);
+                        // alert(spanEle);
+                        if (spanEle[0]) {
+                            // alert("6");
+                            spanEle[0].style.display = "none";
                         }
-                        if(document.getElementsByClassName(tabId+' CollapeseAllBtn_'+budgetIdele)[0]){
-                           // alert("8");
-                            document.getElementsByClassName(tabId+' CollapeseAllBtn_'+budgetIdele)[0].style.display="inline-block";
-                        } 
-                    }else{
-                        var spanEle = document.getElementsByClassName(' expandAllBtn_'+budgetIdele);
-                       // alert(spanEle);
-                        if(spanEle[0]){
+                        if (document.getElementsByClassName(tabId + ' CollapeseAllBtn_' + budgetIdele)[0]) {
+                            // alert("8");
+                            document.getElementsByClassName(tabId + ' CollapeseAllBtn_' + budgetIdele)[0].style.display = "inline-block";
+                        }
+                    } else {
+                        var spanEle = document.getElementsByClassName(' expandAllBtn_' + budgetIdele);
+                        // alert(spanEle);
+                        if (spanEle[0]) {
                             //alert("7");
-                            spanEle[0].style.display="inline-block";
+                            spanEle[0].style.display = "inline-block";
                         }
-                        if(document.getElementsByClassName(' CollapeseAllBtn_'+budgetIdele)[0]){
-                            document.getElementsByClassName(' CollapeseAllBtn_'+budgetIdele)[0].style.display="none";
+                        if (document.getElementsByClassName(' CollapeseAllBtn_' + budgetIdele)[0]) {
+                            document.getElementsByClassName(' CollapeseAllBtn_' + budgetIdele)[0].style.display = "none";
                         }
                     }
-                    
-                   // console.log(spanEle[0])
+
+                    // console.log(spanEle[0])
                     component.find('expandCollapeseAllBtn').set("v.title", "Expand All");
                     component.find('expandCollapeseAllBtn').set("v.iconName", "utility:add");
                 }
             }
         }
-        
-        
-        var actionTest = component.get("c.retrieveGroups");
-        actionTest.setParams({
-            budgetId: component.get("v.recordId"),
-            pageNumber: page,
-            recordToDisply: 60,
-        });
-        actionTest.setCallback(this, function (response) {
-            console.log('##############################');
-            var result = response.getReturnValue();
-            console.log('result ==> ', {result});
-            console.log('##############################');
-        });
-        $A.enqueueAction(actionTest);
-        
-        
-        
+
+
+        // var actionTest = component.get("c.retrieveGroups");
+        // actionTest.setParams({
+        //     budgetId: component.get("v.recordId"),
+        //     pageNumber: page,
+        //     recordToDisply: 60,
+        // });
+        // actionTest.setCallback(this, function (response) {
+        //     console.log('##############################');
+        //     var result = response.getReturnValue();
+        //     console.log('result ==> ', { result });
+        //     console.log('##############################');
+        // });
+        // $A.enqueueAction(actionTest);
+
+
+
         if (component.get("v.recordId")) {
             // Retrieve all the section of related Ad
             var action = component.get("c.retrieveGroups");
@@ -308,9 +308,7 @@
                 var state = response.getState();
                 if (state === "SUCCESS") {
                     var result = response.getReturnValue();
-                   console.log('=======================================================');
-                   console.log('result ==> ', {result});
-                   //  alert('result---------->'+JSON.stringify(result));
+                    //  alert('result---------->'+JSON.stringify(result));
                     if (result.formulaFields != undefined) {
                         var formulaField = JSON.parse(result.formulaFields);
                         for (var i in result.columns) {
@@ -320,33 +318,33 @@
                                 }
                             }
                         }
-                        if(toggleVal){
-                             if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
+                        if (toggleVal) {
+                            if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
                                 var records = result.tarTable.ListOfEachRecord;
                                 result.groupHierarchy = groupRecords(records);
-                                
+
                                 function groupRecords(data) {
                                     var listOfRecords = [];
                                     let recordsMap = new Map();
                                     for (var i in data) {
-									for(var j in data[i].recordList){
-                                        if(data[i].recordList[j].fieldName == 'buildertek__Contractor__c' && data[i].recordList[j].originalValue != ''){
-                                            if (!recordsMap.has(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue)) {
-                                                recordsMap.set(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue, []);
+                                        for (var j in data[i].recordList) {
+                                            if (data[i].recordList[j].fieldName == 'buildertek__Contractor__c' && data[i].recordList[j].originalValue != '') {
+                                                if (!recordsMap.has(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue)) {
+                                                    recordsMap.set(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue, []);
+                                                }
+                                                recordsMap.get(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue).push(JSON.parse(JSON.stringify(data[i])));
+                                            } else if (data[i].recordList[j].fieldName == 'buildertek__Contractor__c' && data[i].recordList[j].originalValue == '') {
+                                                data[i].recordList[j].originalValue = 'No Vendor';
+
+                                                if (!recordsMap.has('' + '(#&%*)' + 'No Vendor')) {
+                                                    recordsMap.set('' + '(#&%*)' + 'No Vendor', []);
+                                                }
+                                                //console.log(recordsMap.has('No vendor'),recordsMap.get("No vendor"))
+                                                recordsMap.get('' + '(#&%*)' + 'No Vendor').push(JSON.parse(JSON.stringify(data[i])))
+                                                //recordsMap.get('No Vendor').push(JSON.parse(JSON.stringify(data[i])));
                                             }
-                                            recordsMap.get(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue).push(JSON.parse(JSON.stringify(data[i])));
-                                        }else if(data[i].recordList[j].fieldName == 'buildertek__Contractor__c' && data[i].recordList[j].originalValue == ''){
-                                            data[i].recordList[j].originalValue = 'No Vendor';
-                                          
-                                            if (!recordsMap.has('' + '(#&%*)' + 'No Vendor')) {
-                                                recordsMap.set('' + '(#&%*)' + 'No Vendor', []);
-                                            }
-                                            //console.log(recordsMap.has('No vendor'),recordsMap.get("No vendor"))
-                                            recordsMap.get('' + '(#&%*)' + 'No Vendor').push(JSON.parse(JSON.stringify(data[i])))
-                                            //recordsMap.get('No Vendor').push(JSON.parse(JSON.stringify(data[i])));
                                         }
                                     }
-									}
                                     var result = Array.from(recordsMap.entries());
                                     for (var i in result) {
                                         var obj = {};
@@ -355,139 +353,44 @@
                                         //ert('hi'+obj.groupName);
                                         obj.subGroupRecords = subGroupRecords(result[i][1]);
                                         listOfRecords.push(obj);
-                                        
+
                                     }
-                                   // alert('listOfRecords',listOfRecords)
-                                   console.log('listOfRecords => ',{listOfRecords});
-                                    for(var i in listOfRecords){
-                                        var obj = {}
-                                             obj['unitPrice'] = 0;
-                                             obj['unitPricekey'] = '';
-                                             obj['orignalbudget'] = 0;
-                                             obj['orignalbudgetkey'] = '';
-                                             obj['TotalApprovals'] = 0;
-                                             obj['TotalApprovalskey'] = '';
-                                             obj['CommittedCost'] = 0;
-                                        obj['CommittedCostkey'] = 0;
-                                              obj['AdditionalCosts'] = 0;
-                                        obj['AdditionalCostsKey'] = '';
-                                         obj['InvoiceCosts'] = 0;
-                                        obj['InvoiceCostsKey'] = '';
-                                        obj['ProjectedCosts'] = 0;
-                                        obj['ProjectedCostskey'] = '';
-                                        obj['Labor1'] = 0;
-                                        obj['Labor1key'] = '';
-                                        obj['Forecast'] = 0;
-                                        obj['Forecastskey'] = '';
-                                        obj['TotalCosts'] = 0;
-                                        obj['TotalCostsKey'] = '';
-                                        obj['ProfitLoss'] = 0;
-                                        obj['ProfitLosskey'] = '';
-                                        obj['fieldType'] = '';
-                                         for(var j=0;j<listOfRecords[i].subGroupRecords[0].records.length;j++){
-                                            //  console.log(listOfRecords[i].subGroupRecords[0].records[j])
-                                             var recList = listOfRecords[i].subGroupRecords[0].records[j].recordList;
-                                             
-                                             for(var k = 0;k<recList.length;k++){
-                                                 if(recList[k].fieldType == "currency"){
-                                                     if(recList[k].fieldName == "buildertek__Unit_Price__c"){
-                                                         obj['unitPrice'] += recList[k].originalValue;
-                                                         obj['unitPricekey'] = "buildertek__Unit_Price__c"
-                                                     }
-                                                     if(recList[k].fieldName == "buildertek__Original_Budget__c"){
-                                                         obj['orignalbudget'] += recList[k].originalValue;
-                                                         obj['orignalbudgetkey'] = "buildertek__Original_Budget__c"
-                                                     }
-                                                     if(recList[k].fieldName == "buildertek__Total_Approvals_CO__c"){
-                                                         obj['TotalApprovals'] += recList[k].originalValue;
-                                                         obj['TotalApprovalskey'] = 'buildertek__Total_Approvals_CO__c'
-                                                     }
-                                                     if(recList[k].fieldName == "buildertek__Committed_Costs__c"){
-                                                         obj['CommittedCost'] += recList[k].originalValue;
-                                                         obj['CommittedCostkey'] = 'buildertek__Committed_Costs__c'
-                                                     }
-                                                     if(recList[k].fieldName == "buildertek__Additional_Costs__c"){
-                                                         obj['AdditionalCosts'] += recList[k].originalValue;
-                                                         obj['AdditionalCostsKey'] = "buildertek__Additional_Costs__c"
-                                                     }
-                                                      if(recList[k].fieldName == "buildertek__Invoice_total__c"){
-                                                         obj['InvoiceCosts'] += recList[k].originalValue;
-                                                         obj['InvoiceCostsKey'] = "buildertek__Invoice_total__c"
-                                                     }
-                                                     
-                                                     if(recList[k].fieldName == "buildertek__Labor1__c"){
-                                                         obj['Labor1'] += recList[k].originalValue;
-                                                         obj['Labor1key'] = 'buildertek__Labor1__c'
-                                                     }
-                                                     if(recList[k].fieldName == "buildertek__Projected_Costs__c"){
-                                                         obj['ProjectedCosts'] += recList[k].originalValue;
-                                                         obj['ProjectedCostskey'] = 'buildertek__Projected_Costs__c'
-                                                     }
-                                                     if(recList[k].fieldName == "buildertek__Forecast_To_Complete__c"){
-                                                         obj['Forecast'] += recList[k].originalValue;
-                                                         obj['Forecastskey'] = 'buildertek__Forecast_To_Complete__c'
-                                                     }
-                                                     if(recList[k].fieldName == "buildertek__Total_Costs__c"){
-                                                         obj['TotalCosts'] +=  recList[k].originalValue;
-                                                         obj['TotalCostsKey'] = 'buildertek__Total_Costs__c'
-                                                     }
-                                                     if(recList[k].fieldName == "buildertek__Profit_Loss__c"){
-                                                         obj['ProfitLoss'] += recList[k].originalValue;
-                                                         obj['ProfitLosskey'] = 'buildertek__Profit_Loss__c'
-                                                     }
-                                                     obj['fieldType'] = recList[k].fieldType;
-                                                 }
-                                                 
-                                                /* if(recList[k].fieldType == "currency" && 
-                                                    recList[k].fieldName != "buildertek__Original_Budget__c"){
-                                                     obj['orignalbudget'] += recList[k].originalValue;
-                                                 }if(recList[k].fieldType == "currency" && recList[k].originalValue != '' && 
-                                                    recList[k].fieldName != "buildertek__Total_Approvals_CO__c"){
-                                                     obj['TotalApprovals'] += recList[k].originalValue;
-                                                 }if(recList[k].fieldType == "currency" && recList[k].originalValue != '' && 
-                                                    recList[k].fieldName != "buildertek__Committed_Costs__c"){
-                                                     alert('recList[k].originalValue'+recList[k].originalValue);
-                                                     obj['commitedcost'] += recList[k].originalValue;
-                                                 }*/
-                                             }
-                                             
-                                             listOfRecords[i]['totals'] = obj;
-                                         }
-                                     }
-                                    // console.log(listOfRecords)
-                                    component.set("v.listOfRecords",listOfRecords);
+                                    // alert('listOfRecords',listOfRecords)
+                                    console.log('listOfRecords => ', { listOfRecords });
+                                    listOfRecords = helper.countFunction(component, listOfRecords);
+
                                     return listOfRecords;
-                                   // alert(listOfRecords);
+                                    // alert(listOfRecords);
                                 }
-                                 function subGroupRecords(data) {
+                                function subGroupRecords(data) {
                                     var listOfRecords = [];
                                     var recordValue = [];
                                     let recordsMap = new Map();
                                     for (var i in data) {
-                                        for(var j in data[i].recordList){
-                                        // console.log('data[i].recordList[j]',data[i].recordList);
-                                        /*if(data[i].recordList[j].fieldName == 'buildertek__Contractor__c' && data[i].recordList[j].originalValue == ''){
-                                            data[i].recordList[j].originalValue = 'No Vendor';
-                                          
-                                            if (!recordsMap.has('' + '(#&%*)' + 'No Vendor')) {
-                                                recordsMap.set('' + '(#&%*)' + 'No Vendor', []);
-                                            }
-                                            //console.log(recordsMap.has('No vendor'),recordsMap.get("No vendor"))
-                                            recordsMap.get('' + '(#&%*)' + 'No Vendor').push(JSON.parse(JSON.stringify(data[i])))
-                                            //recordsMap.get('No Vendor').push(JSON.parse(JSON.stringify(data[i])));
-                                        }*/
-                                            if(data[i].recordList[j].fieldName == 'buildertek__Contractor__c' && data[i].recordList[j].originalValue != ''){
+                                        for (var j in data[i].recordList) {
+                                            // console.log('data[i].recordList[j]',data[i].recordList);
+                                            /*if(data[i].recordList[j].fieldName == 'buildertek__Contractor__c' && data[i].recordList[j].originalValue == ''){
+                                                data[i].recordList[j].originalValue = 'No Vendor';
+                                              
+                                                if (!recordsMap.has('' + '(#&%*)' + 'No Vendor')) {
+                                                    recordsMap.set('' + '(#&%*)' + 'No Vendor', []);
+                                                }
+                                                //console.log(recordsMap.has('No vendor'),recordsMap.get("No vendor"))
+                                                recordsMap.get('' + '(#&%*)' + 'No Vendor').push(JSON.parse(JSON.stringify(data[i])))
+                                                //recordsMap.get('No Vendor').push(JSON.parse(JSON.stringify(data[i])));
+                                            }*/
+                                            if (data[i].recordList[j].fieldName == 'buildertek__Contractor__c' && data[i].recordList[j].originalValue != '') {
                                                 //  console.log('data[i].recordList[j].fieldName',data[i].recordList[j].fieldName);
                                                 // console.log('data[i].recordList[j].originalValue',data[i].recordList[j].originalValue);
                                                 if (!recordsMap.has(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue)) {
                                                     recordsMap.set(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue, []);
                                                 }
                                                 recordsMap.get(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue).push(JSON.parse(JSON.stringify(data[i])));
-                                                
+
                                             }
                                         }
                                     }
-                                    
+
                                     var result = Array.from(recordsMap.entries());
                                     for (var i in result) {
                                         var obj = {};
@@ -512,555 +415,474 @@
                                                 }
                                                 j == 0 ?
                                                     obj.recordValue.push(sumCol) :
-                                                obj.recordValue.push(new Intl.NumberFormat('en-US', {
-                                                    style: 'currency',
-                                                    currency: 'USD'
-                                                }).format(sumCol));
+                                                    obj.recordValue.push(new Intl.NumberFormat('en-US', {
+                                                        style: 'currency',
+                                                        currency: 'USD'
+                                                    }).format(sumCol));
                                             }
                                         }
                                         listOfRecords.push(obj);
                                     }
-                                      
+
                                     //  console.log('listOfRecords',listOfRecords);
                                     return listOfRecords;
-                                    
+
                                 }
-                              
+
                             }
-                     
+
                         }
-                        else{
-                            if(bt1 == true ){
-                            if(toggleVal2){
-                            if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
-                                var records = result.tarTable.ListOfEachRecord;
-                                result.groupHierarchy = groupRecords(records);
-                              // alert(JSON.stringify(records)); 
-                                function groupRecords(data) {
-                                    var listOfRecords = [];
-                                    let recordsMap = new Map();
-                                    for (var i in data) {
-                                      // alert(!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName));
-                                        if(data[i].groupId != undefined && data[i].groupName != undefined){
-                                        if (!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName)) {
-                                            recordsMap.set(data[i].groupId + '(#&%*)' + data[i].groupName, []);
-                                        }
-                                        recordsMap.get(data[i].groupId + '(#&%*)' + data[i].groupName).push(JSON.parse(JSON.stringify(data[i])));
-                                         }else if(data[i].groupId == undefined && data[i].groupName == undefined){
-                                            data[i].groupName = 'No Grouping';
-                                         }
-                                    }
-                                    var result = Array.from(recordsMap.entries());
-                                    for (var i in result) {
-                                        var obj = {};
-                                        obj.groupId = result[i][0].split('(#&%*)')[0];
-                                        obj.groupName = result[i][0].split('(#&%*)')[1];
-                                        //alert('group id'+obj.groupId);
-                                       // alert('result'+ JSON.stringify(result[i][1]));
-                                      // alert( 'gropu name'+obj.groupName);
-                                        obj.subGroupRecords = subGroupRecords(result[i][1]);
-                                       // alert( JSON.stringify(obj.subGroupRecords));
-                                        listOfRecords.push(obj);
-                                        
-                                    }
-                                    return listOfRecords;
-                                }
-                                
-                                function subGroupRecords(data) {
-                                    var listOfRecords = [];
-                                    var recordValue = [];
-                                    let recordsMap = new Map();
-                                    for (var i in data) {
-                                        if (!recordsMap.has(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping')) {
-                                            recordsMap.set(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping', []);
-                                        }
-                                        recordsMap.get(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping').push(JSON.parse(JSON.stringify(data[i])));
-                                    }
-                                    
-                                    var result = Array.from(recordsMap.entries());
-                                    for (var i in result) {
-                                        var obj = {};
-                                        var recordValue = [];
-                                        obj.recordValue = [];
-                                        var sumCol = 0;
-                                        obj.subGroupId = result[i][0].split('(#&%*)')[0];
-                                        obj.subGroupName = result[i][0].split('(#&%*)')[1] == undefined ? 'No Grouping' : result[i][0].split('(#&%*)')[1];
-                                        obj.records = result[i][1];
-                                        if (obj.subGroupName != 'No Grouping') {
-                                            for (var j in obj.records) {
-                                                // console.log(obj.records[j].recordValue);
-                                                recordValue.push(obj.records[j].recordValue);
-                                            }
-                                            var row = recordValue.length;
-                                            var col = recordValue[0].length;
-                                            for (var j = 0; j < col; j++) {
-                                                sumCol = 0;
-                                                for (var k = 0; k < row; k++) {
-                                                    // console.log(recordValue[k][j])
-                                                    sumCol += recordValue[k][j];
-                                                }
-                                                j == 0 ?
-                                                    obj.recordValue.push(sumCol) :
-                                                obj.recordValue.push(new Intl.NumberFormat('en-US', {
-                                                    style: 'currency',
-                                                    currency: 'USD'
-                                                }).format(sumCol));
-                                            }
-                                        }
-                                        listOfRecords.push(obj);
-                                    }
-                                    return listOfRecords;
-                                }
-                            }
-                            }
-                            }
-                             if(bt1 == false ){
-                                     if(toggleVal1){
-                            if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
-                                var records = result.tarTable.ListOfEachRecord;
-                                result.groupHierarchy = groupRecords(records);
-                              // alert(JSON.stringify(records)); 
-                                function groupRecords(data) {
-                                    var listOfRecords = [];
-                                    let recordsMap = new Map();
-                                    for (var i in data) {
-                                          if(data[i].groupId != undefined && data[i].groupName != undefined){
-                                        if (!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName)) {
-                                            recordsMap.set(data[i].groupId + '(#&%*)' + data[i].groupName, []);
-                                        }
-                                        recordsMap.get(data[i].groupId + '(#&%*)' + data[i].groupName).push(JSON.parse(JSON.stringify(data[i])));
-                                               }else if(data[i].groupId == undefined && data[i].groupName == undefined){
-                                            data[i].groupName = 'No Grouping';
-                                         }
-                                    
-                                    }
-                                        
-                                    var result = Array.from(recordsMap.entries());
-                                    for (var i in result) {
-                                        var obj = {};
-                                        obj.groupId = result[i][0].split('(#&%*)')[0];
-                                        obj.groupName = result[i][0].split('(#&%*)')[1];
-                                        obj.subGroupRecords = subGroupRecords(result[i][1]);
-                                        listOfRecords.push(obj);
-                                        
-                                    }
-                                    return listOfRecords;
-                                }
-                                
-                                function subGroupRecords(data) {
-                                    var listOfRecords = [];
-                                    var recordValue = [];
-                                    let recordsMap = new Map();
-                                    for (var i in data) {
-                                        if (!recordsMap.has(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping')) {
-                                            recordsMap.set(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping', []);
-                                        }
-                                        recordsMap.get(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping').push(JSON.parse(JSON.stringify(data[i])));
-                                    }
-                                    
-                                    var result = Array.from(recordsMap.entries());
-                                    for (var i in result) {
-                                        var obj = {};
-                                        var recordValue = [];
-                                        obj.recordValue = [];
-                                        var sumCol = 0;
-                                        obj.subGroupId = result[i][0].split('(#&%*)')[0];
-                                        obj.subGroupName = result[i][0].split('(#&%*)')[1] == undefined ? 'No Grouping' : result[i][0].split('(#&%*)')[1];
-                                        obj.records = result[i][1];
-                                        if (obj.subGroupName != 'No Grouping') {
-                                            for (var j in obj.records) {
-                                                // console.log(obj.records[j].recordValue);
-                                                recordValue.push(obj.records[j].recordValue);
-                                            }
-                                            var row = recordValue.length;
-                                            var col = recordValue[0].length;
-                                            for (var j = 0; j < col; j++) {
-                                                sumCol = 0;
-                                                for (var k = 0; k < row; k++) {
-                                                    // console.log(recordValue[k][j])
-                                                    sumCol += recordValue[k][j];
-                                                }
-                                                j == 0 ?
-                                                    obj.recordValue.push(sumCol) :
-                                                obj.recordValue.push(new Intl.NumberFormat('en-US', {
-                                                    style: 'currency',
-                                                    currency: 'USD'
-                                                }).format(sumCol));
-                                            }
-                                        }
-                                        listOfRecords.push(obj);
-                                    }
-                                    return listOfRecords;
-                                }
-                            }
-                            }
-                                    
-                                }
-                              if(bt1 == true && toggleVal2 == true ){
-                            if(toggleVal1){
-                            if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
-                                var records = result.tarTable.ListOfEachRecord;
-                                result.groupHierarchy = groupRecords(records);
-                              // alert(JSON.stringify(records)); 
-                                function groupRecords(data) {
-                                    var listOfRecords = [];
-                                    let recordsMap = new Map();
-                                    for (var i in data) {
-                                         if(data[i].groupId != undefined && data[i].groupName != undefined){
-                                        if (!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName)) {
-                                            recordsMap.set(data[i].groupId + '(#&%*)' + data[i].groupName, []);
-                                        }
-                                        recordsMap.get(data[i].groupId + '(#&%*)' + data[i].groupName).push(JSON.parse(JSON.stringify(data[i])));
-                                         }else if(data[i].groupId == undefined && data[i].groupName == undefined){
-                                            data[i].groupName = 'No Grouping';
-                                         }
-                                    
-                                    }
-                                    var result = Array.from(recordsMap.entries());
-                                    for (var i in result) {
-                                        var obj = {};
-                                        obj.groupId = result[i][0].split('(#&%*)')[0];
-                                        obj.groupName = result[i][0].split('(#&%*)')[1];
-                                        obj.subGroupRecords = subGroupRecords(result[i][1]);
-                                        listOfRecords.push(obj);
-                                        
-                                    }
-                                    return listOfRecords;
-                                }
-                                
-                                function subGroupRecords(data) {
-                                    var listOfRecords = [];
-                                    var recordValue = [];
-                                    let recordsMap = new Map();
-                                    for (var i in data) {
-                                        if (!recordsMap.has(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping')) {
-                                            recordsMap.set(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping', []);
-                                        }
-                                        recordsMap.get(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping').push(JSON.parse(JSON.stringify(data[i])));
-                                    }
-                                    
-                                    var result = Array.from(recordsMap.entries());
-                                    for (var i in result) {
-                                        var obj = {};
-                                        var recordValue = [];
-                                        obj.recordValue = [];
-                                        var sumCol = 0;
-                                        obj.subGroupId = result[i][0].split('(#&%*)')[0];
-                                        obj.subGroupName = result[i][0].split('(#&%*)')[1] == undefined ? 'No Grouping' : result[i][0].split('(#&%*)')[1];
-                                        obj.records = result[i][1];
-                                        if (obj.subGroupName != 'No Grouping') {
-                                            for (var j in obj.records) {
-                                                // console.log(obj.records[j].recordValue);
-                                                recordValue.push(obj.records[j].recordValue);
-                                            }
-                                            var row = recordValue.length;
-                                            var col = recordValue[0].length;
-                                            for (var j = 0; j < col; j++) {
-                                                sumCol = 0;
-                                                for (var k = 0; k < row; k++) {
-                                                    // console.log(recordValue[k][j])
-                                                    sumCol += recordValue[k][j];
-                                                }
-                                                j == 0 ?
-                                                    obj.recordValue.push(sumCol) :
-                                                obj.recordValue.push(new Intl.NumberFormat('en-US', {
-                                                    style: 'currency',
-                                                    currency: 'USD'
-                                                }).format(sumCol));
-                                            }
-                                        }
-                                        listOfRecords.push(obj);
-                                    }
-                                    return listOfRecords;
-                                }
-                            }
-                            }
-                            }
-                             if(bt1 == false && toggleVal2 == false){
-                                    
-                                     if(toggleVal1){
-                            if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
-                                var records = result.tarTable.ListOfEachRecord;
-                                result.groupHierarchy = groupRecords(records);
-                              // alert(JSON.stringify(records)); 
-                                function groupRecords(data) {
-                                    var listOfRecords = [];
-                                    let recordsMap = new Map();
-                                    for (var i in data) {
-                                         if(data[i].groupId != undefined && data[i].groupName != undefined){
-                                        if (!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName)) {
-                                            recordsMap.set(data[i].groupId + '(#&%*)' + data[i].groupName, []);
-                                        }
-                                        recordsMap.get(data[i].groupId + '(#&%*)' + data[i].groupName).push(JSON.parse(JSON.stringify(data[i])));
-                                         }else if(data[i].groupId == undefined && data[i].groupName == undefined){
-                                            data[i].groupName = 'No Grouping';
-                                         }
-                                    
-                                    }
-                                    var result = Array.from(recordsMap.entries());
-                                    for (var i in result) {
-                                        var obj = {};
-                                        obj.groupId = result[i][0].split('(#&%*)')[0];
-                                        obj.groupName = result[i][0].split('(#&%*)')[1];
-                                        obj.subGroupRecords = subGroupRecords(result[i][1]);
-                                        listOfRecords.push(obj);
-                                        
-                                    }
-                                    return listOfRecords;
-                                }
-                                
-                                function subGroupRecords(data) {
-                                    var listOfRecords = [];
-                                    var recordValue = [];
-                                    let recordsMap = new Map();
-                                    for (var i in data) {
-                                        if (!recordsMap.has(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping')) {
-                                            recordsMap.set(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping', []);
-                                        }
-                                        recordsMap.get(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping').push(JSON.parse(JSON.stringify(data[i])));
-                                    }
-                                    
-                                    var result = Array.from(recordsMap.entries());
-                                    for (var i in result) {
-                                        var obj = {};
-                                        var recordValue = [];
-                                        obj.recordValue = [];
-                                        var sumCol = 0;
-                                        obj.subGroupId = result[i][0].split('(#&%*)')[0];
-                                        obj.subGroupName = result[i][0].split('(#&%*)')[1] == undefined ? 'No Grouping' : result[i][0].split('(#&%*)')[1];
-                                        obj.records = result[i][1];
-                                        if (obj.subGroupName != 'No Grouping') {
-                                            for (var j in obj.records) {
-                                                // console.log(obj.records[j].recordValue);
-                                                recordValue.push(obj.records[j].recordValue);
-                                            }
-                                            var row = recordValue.length;
-                                            var col = recordValue[0].length;
-                                            for (var j = 0; j < col; j++) {
-                                                sumCol = 0;
-                                                for (var k = 0; k < row; k++) {
-                                                    // console.log(recordValue[k][j])
-                                                    sumCol += recordValue[k][j];
-                                                }
-                                                j == 0 ?
-                                                    obj.recordValue.push(sumCol) :
-                                                obj.recordValue.push(new Intl.NumberFormat('en-US', {
-                                                    style: 'currency',
-                                                    currency: 'USD'
-                                                }).format(sumCol));
-                                            }
-                                        }
-                                        listOfRecords.push(obj);
-                                    }
-                                    return listOfRecords;
-                                }
-                            }
-                            }
-                             }
-                            
-                            else{
-                                 if(bt1 == true && toggleVal2 == false ){
-                                if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
-                                    var records = result.tarTable.ListOfEachRecord;
-                                    result.groupHierarchy = groupRecords(records);
-                                    function groupRecords(data) {
-                                        var listOfRecords = [];
-                                        let recordsMap = new Map();
-                                        for (var i in data) {
-                                            for(var j in data[i].recordList){
-                                                if(data[i].recordList[j].fieldName == 'buildertek__CostCodeDivision__c' && data[i].recordList[j].originalValue != ''){
-                                                     
-                                                    if (!recordsMap.has(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue)) {
-                                                        recordsMap.set(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue, []);
+                        else {
+                            if (bt1 == true) {
+                                if (toggleVal2) {
+                                    if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
+                                        var records = result.tarTable.ListOfEachRecord;
+                                        result.groupHierarchy = groupRecords(records);
+                                        // alert(JSON.stringify(records)); 
+                                        function groupRecords(data) {
+                                            var listOfRecords = [];
+                                            let recordsMap = new Map();
+                                            for (var i in data) {
+                                                // alert(!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName));
+                                                if (data[i].groupId != undefined && data[i].groupName != undefined) {
+                                                    if (!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName)) {
+                                                        recordsMap.set(data[i].groupId + '(#&%*)' + data[i].groupName, []);
                                                     }
-                                                    recordsMap.get(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue).push(JSON.parse(JSON.stringify(data[i])));
-                                                }else if(data[i].recordList[j].fieldName == 'buildertek__CostCodeDivision__c' && data[i].recordList[j].originalValue == ''){
-                                                    
-                                                    data[i].recordList[j].originalValue = 'No Cost Code';
-                                                    if (!recordsMap.has('No Cost Code' + '(#&%*)' + 'No Cost Code')) {
-                                                        recordsMap.set('No Cost Code' + '(#&%*)' + 'No Cost Code', []);
-                                                    }
-                                                    recordsMap.get('No Cost Code' + '(#&%*)' + 'No Cost Code').push(JSON.parse(JSON.stringify(data[i]))) 
+                                                    recordsMap.get(data[i].groupId + '(#&%*)' + data[i].groupName).push(JSON.parse(JSON.stringify(data[i])));
+                                                } else if (data[i].groupId == undefined && data[i].groupName == undefined) {
+                                                    data[i].groupName = 'No Grouping';
                                                 }
                                             }
+                                            var result = Array.from(recordsMap.entries());
+                                            for (var i in result) {
+                                                var obj = {};
+                                                obj.groupId = result[i][0].split('(#&%*)')[0];
+                                                obj.groupName = result[i][0].split('(#&%*)')[1];
+                                                //alert('group id'+obj.groupId);
+                                                // alert('result'+ JSON.stringify(result[i][1]));
+                                                // alert( 'gropu name'+obj.groupName);
+                                                obj.subGroupRecords = subGroupRecords(result[i][1]);
+                                                // alert( JSON.stringify(obj.subGroupRecords));
+                                                listOfRecords.push(obj);
+
+                                            }
+                                            return listOfRecords;
                                         }
-                                        var result = Array.from(recordsMap.entries());
-                                        for (var i in result) {
-                                            var obj = {};
-                                            obj.groupId = result[i][0].split('(#&%*)')[1];
-                                           // alert(obj.groupId);
-                                            obj.groupName = result[i][0].split('(#&%*)')[0];
-                                          //  alert(obj.groupName);
-                                            obj.subGroupRecords = subGroupRecords(result[i][1]);
-                                            listOfRecords.push(obj);
+
+                                        function subGroupRecords(data) {
+                                            var listOfRecords = [];
+                                            var recordValue = [];
+                                            let recordsMap = new Map();
+                                            for (var i in data) {
+                                                if (!recordsMap.has(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping')) {
+                                                    recordsMap.set(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping', []);
+                                                }
+                                                recordsMap.get(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping').push(JSON.parse(JSON.stringify(data[i])));
+                                            }
+
+                                            var result = Array.from(recordsMap.entries());
+                                            for (var i in result) {
+                                                var obj = {};
+                                                var recordValue = [];
+                                                obj.recordValue = [];
+                                                var sumCol = 0;
+                                                obj.subGroupId = result[i][0].split('(#&%*)')[0];
+                                                obj.subGroupName = result[i][0].split('(#&%*)')[1] == undefined ? 'No Grouping' : result[i][0].split('(#&%*)')[1];
+                                                obj.records = result[i][1];
+                                                if (obj.subGroupName != 'No Grouping') {
+                                                    for (var j in obj.records) {
+                                                        // console.log(obj.records[j].recordValue);
+                                                        recordValue.push(obj.records[j].recordValue);
+                                                    }
+                                                    var row = recordValue.length;
+                                                    var col = recordValue[0].length;
+                                                    for (var j = 0; j < col; j++) {
+                                                        sumCol = 0;
+                                                        for (var k = 0; k < row; k++) {
+                                                            // console.log(recordValue[k][j])
+                                                            sumCol += recordValue[k][j];
+                                                        }
+                                                        j == 0 ?
+                                                            obj.recordValue.push(sumCol) :
+                                                            obj.recordValue.push(new Intl.NumberFormat('en-US', {
+                                                                style: 'currency',
+                                                                currency: 'USD'
+                                                            }).format(sumCol));
+                                                    }
+                                                }
+                                                listOfRecords.push(obj);
+                                            }
+                                            return listOfRecords;
+                                        }
+                                    }
+                                }
+                            }
+                            if (bt1 == false) {
+                                if (toggleVal1) {
+                                    if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
+                                        var records = result.tarTable.ListOfEachRecord;
+                                        result.groupHierarchy = groupRecords(records);
+                                        // alert(JSON.stringify(records)); 
+                                        function groupRecords(data) {
+                                            var listOfRecords = [];
+                                            let recordsMap = new Map();
+                                            for (var i in data) {
+                                                if (data[i].groupId != undefined && data[i].groupName != undefined) {
+                                                    if (!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName)) {
+                                                        recordsMap.set(data[i].groupId + '(#&%*)' + data[i].groupName, []);
+                                                    }
+                                                    recordsMap.get(data[i].groupId + '(#&%*)' + data[i].groupName).push(JSON.parse(JSON.stringify(data[i])));
+                                                } else if (data[i].groupId == undefined && data[i].groupName == undefined) {
+                                                    data[i].groupName = 'No Grouping';
+                                                }
+
+                                            }
+
+                                            var result = Array.from(recordsMap.entries());
+                                            for (var i in result) {
+                                                var obj = {};
+                                                obj.groupId = result[i][0].split('(#&%*)')[0];
+                                                obj.groupName = result[i][0].split('(#&%*)')[1];
+                                                obj.subGroupRecords = subGroupRecords(result[i][1]);
+                                                listOfRecords.push(obj);
+
+                                            }
+                                            return listOfRecords;
+                                        }
+
+                                        function subGroupRecords(data) {
+                                            var listOfRecords = [];
+                                            var recordValue = [];
+                                            let recordsMap = new Map();
+                                            for (var i in data) {
+                                                if (!recordsMap.has(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping')) {
+                                                    recordsMap.set(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping', []);
+                                                }
+                                                recordsMap.get(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping').push(JSON.parse(JSON.stringify(data[i])));
+                                            }
+
+                                            var result = Array.from(recordsMap.entries());
+                                            for (var i in result) {
+                                                var obj = {};
+                                                var recordValue = [];
+                                                obj.recordValue = [];
+                                                var sumCol = 0;
+                                                obj.subGroupId = result[i][0].split('(#&%*)')[0];
+                                                obj.subGroupName = result[i][0].split('(#&%*)')[1] == undefined ? 'No Grouping' : result[i][0].split('(#&%*)')[1];
+                                                obj.records = result[i][1];
+                                                if (obj.subGroupName != 'No Grouping') {
+                                                    for (var j in obj.records) {
+                                                        // console.log(obj.records[j].recordValue);
+                                                        recordValue.push(obj.records[j].recordValue);
+                                                    }
+                                                    var row = recordValue.length;
+                                                    var col = recordValue[0].length;
+                                                    for (var j = 0; j < col; j++) {
+                                                        sumCol = 0;
+                                                        for (var k = 0; k < row; k++) {
+                                                            // console.log(recordValue[k][j])
+                                                            sumCol += recordValue[k][j];
+                                                        }
+                                                        j == 0 ?
+                                                            obj.recordValue.push(sumCol) :
+                                                            obj.recordValue.push(new Intl.NumberFormat('en-US', {
+                                                                style: 'currency',
+                                                                currency: 'USD'
+                                                            }).format(sumCol));
+                                                    }
+                                                }
+                                                listOfRecords.push(obj);
+                                            }
+                                            return listOfRecords;
+                                        }
+                                    }
+                                }
+
+                            }
+                            if (bt1 == true && toggleVal2 == true) {
+                                if (toggleVal1) {
+                                    if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
+                                        console.log('-- Set groupHierarchy --');
+                                        var records = result.tarTable.ListOfEachRecord;
+                                        result.groupHierarchy = groupRecords(records);
+                                        // alert(JSON.stringify(records)); 
+                                        function groupRecords(data) {
+
+                                            var listOfRecords = [];
+                                            let recordsMap = new Map();
+                                            for (var i in data) {
+                                                if (data[i].groupId != undefined && data[i].groupName != undefined) {
+                                                    if (!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName)) {
+                                                        recordsMap.set(data[i].groupId + '(#&%*)' + data[i].groupName, []);
+                                                    }
+                                                    recordsMap.get(data[i].groupId + '(#&%*)' + data[i].groupName).push(JSON.parse(JSON.stringify(data[i])));
+                                                } else if (data[i].groupId == undefined && (data[i].groupName == undefined || data[i].groupName == 'No Grouping')) {
+                                                    data[i].groupName = 'No Grouping';
+                                                }
+
+                                            }
+
+                                            for (var i in data) {
+                                                if (data[i].groupId == undefined && (data[i].groupName == undefined || data[i].groupName == 'No Grouping')) {
+                                                    var keyVal = '';
+                                                    for (let key of recordsMap.keys()) {
+                                                        if(key.includes("No Grouping")){
+                                                            keyVal = key; 
+                                                        }
+                                                    }
+                                                    recordsMap.get(keyVal).push(JSON.parse(JSON.stringify(data[i])));
+                                                }
+                                            }
+
+                                            var result = Array.from(recordsMap.entries());
+                                            for (var i in result) {
+                                                var obj = {};
+                                                obj.groupId = result[i][0].split('(#&%*)')[0];
+                                                obj.groupName = result[i][0].split('(#&%*)')[1];
+                                                obj.subGroupRecords = subGroupRecords(result[i][1]);
+                                                listOfRecords.push(obj);
+
+                                            }
+
+                                            listOfRecords = helper.countFunction(component, listOfRecords);
                                             
+                                            return listOfRecords;
                                         }
-                                        for(var i in listOfRecords){
-                                            var obj = {}
-                                            obj['unitPrice'] = 0;
-                                            obj['unitPricekey'] = '';
-                                            obj['orignalbudget'] = 0;
-                                            obj['orignalbudgetkey'] = '';
-                                            obj['TotalApprovals'] = 0;
-                                            obj['TotalApprovalskey'] = '';
-                                            obj['CommittedCost'] = 0;
-                                            obj['CommittedCostkey'] = 0;
-                                            obj['AdditionalCosts'] = 0;
-                                            obj['AdditionalCostsKey'] = '';
-                                            obj['InvoiceCosts'] = 0;
-                                            obj['InvoiceCostsKey'] = '';
-                                            obj['ProjectedCosts'] = 0;
-                                            obj['ProjectedCostskey'] = '';
-                                            obj['Labor1'] = 0;
-                                            obj['Labor1key'] = '';
-                                            obj['Forecast'] = 0;
-                                            obj['Forecastskey'] = '';
-                                            obj['TotalCosts'] = 0;
-                                            obj['TotalCostsKey'] = '';
-                                            obj['ProfitLoss'] = 0;
-                                            obj['ProfitLosskey'] = '';
-                                            obj['fieldType'] = '';
-                                            for(var j=0;j<listOfRecords[i].subGroupRecords[0].records.length;j++){
-                                                // console.log(listOfRecords[i].subGroupRecords[0].records[j])
-                                                var recList = listOfRecords[i].subGroupRecords[0].records[j].recordList;
-                                              // alert('recList...............'+ JSON.stringify(recList));
-                                                for(var k = 0;k<recList.length;k++){
-                                                    //alert(JSON.stringify(recList[k]));
-                                                    if(recList[k].fieldType == "currency"){
-                                                        if(recList[k].fieldName == "buildertek__Unit_Price__c"){
-                                                            obj['unitPrice'] += Number(recList[k].originalValue);
-                                                           // alert( obj['unitPrice']);
-                                                            obj['unitPricekey'] = "buildertek__Unit_Price__c"
-                                                          //  alert( obj['unitPricekey']);
-                                                        }
-                                                        if(recList[k].fieldName == "buildertek__Original_Budget__c"){
-                                                            obj['orignalbudget'] += recList[k].originalValue;
-                                                            obj['orignalbudgetkey'] = "buildertek__Original_Budget__c"
-                                                        }
-                                                        if(recList[k].fieldName == "buildertek__Total_Approvals_CO__c"){
-                                                            obj['TotalApprovals'] += recList[k].originalValue;
-                                                            obj['TotalApprovalskey'] = 'buildertek__Total_Approvals_CO__c'
-                                                        }
-                                                        if(recList[k].fieldName == "buildertek__Committed_Costs__c"){
-                                                            obj['CommittedCost'] += recList[k].originalValue;
-                                                            obj['CommittedCostkey'] = 'buildertek__Committed_Costs__c'
-                                                        }
-                                                        if(recList[k].fieldName == "buildertek__Additional_Costs__c"){
-                                                            obj['AdditionalCosts'] += recList[k].originalValue;
-                                                            obj['AdditionalCostsKey'] = "buildertek__Additional_Costs__c"
-                                                        }
-                                                        if(recList[k].fieldName == "buildertek__Invoice_total__c"){
-                                                            obj['InvoiceCosts'] += recList[k].originalValue;
-                                                            obj['InvoiceCostsKey'] = "buildertek__Invoice_total__c"
-                                                        }
-                                                        if(recList[k].fieldName == "buildertek__Labor1__c"){
-                                                            obj['Labor1'] += recList[k].originalValue;
-                                                            obj['Labor1key'] = 'buildertek__Labor1__c'
-                                                        }
-                                                        if(recList[k].fieldName == "buildertek__Projected_Costs__c"){
-                                                            obj['ProjectedCosts'] += recList[k].originalValue;
-                                                            obj['ProjectedCostskey'] = 'buildertek__Projected_Costs__c'
-                                                        }
-                                                        if(recList[k].fieldName == "buildertek__Forecast_To_Complete__c"){
-                                                            obj['Forecast'] += recList[k].originalValue;
-                                                            obj['Forecastskey'] = 'buildertek__Forecast_To_Complete__c'
-                                                        }
-                                                        if(recList[k].fieldName == "buildertek__Total_Costs__c"){
-                                                            obj['TotalCosts'] +=  recList[k].originalValue;
-                                                            obj['TotalCostsKey'] = 'buildertek__Total_Costs__c'
-                                                        }
-                                                        if(recList[k].fieldName == "buildertek__Profit_Loss__c"){
-                                                            obj['ProfitLoss'] += recList[k].originalValue;
-                                                            obj['ProfitLosskey'] = 'buildertek__Profit_Loss__c'
-                                                        }
-                                                        obj['fieldType'] = recList[k].fieldType;
-                                                       // alert( obj['fieldType']);
-                                                    }
-                                                    
-                                                    /* if(recList[k].fieldType == "currency" && 
-                                                    recList[k].fieldName != "buildertek__Original_Budget__c"){
-                                                     obj['orignalbudget'] += recList[k].originalValue;
-                                                 }if(recList[k].fieldType == "currency" && recList[k].originalValue != '' && 
-                                                    recList[k].fieldName != "buildertek__Total_Approvals_CO__c"){
-                                                     obj['TotalApprovals'] += recList[k].originalValue;
-                                                 }if(recList[k].fieldType == "currency" && recList[k].originalValue != '' && 
-                                                    recList[k].fieldName != "buildertek__Committed_Costs__c"){
-                                                     alert('recList[k].originalValue'+recList[k].originalValue);
-                                                     obj['commitedcost'] += recList[k].originalValue;
-                                                 }*/
-                                             }
-                                             
-                                             listOfRecords[i]['totals'] = obj;
-                                         }
-                                    }
-                                    // console.log(listOfRecords)
-                                    component.set("v.listOfRecords",listOfRecords);
-                                    return listOfRecords;
-                                }
-                                     function subGroupRecords(data) {
-                                         var listOfRecords = [];
-                                         var recordValue = [];
-                                         let recordsMap = new Map();
-                                         for (var i in data) {
-                                             for(var j in data[i].recordList){
-                                                //  console.log('data[i].recordList[j]',data[i].recordList);
-                                            if(data[i].recordList[j].fieldName == 'buildertek__CostCodeDivision__c' && data[i].recordList[j].originalValue != ''){
-                                                // console.log('data[i].recordList[j].fieldName',data[i].recordList[j].fieldName);
-                                                // console.log('data[i].recordList[j].originalValue',data[i].recordList[j].originalValue);
-                                                if (!recordsMap.has(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue)) {
-                                                    recordsMap.set(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue, []);
+
+                                        function subGroupRecords(data) {
+                                            var listOfRecords = [];
+                                            var recordValue = [];
+                                            let recordsMap = new Map();
+                                            for (var i in data) {
+                                                if (!recordsMap.has(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping')) {
+                                                    recordsMap.set(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping', []);
                                                 }
-                                                recordsMap.get(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue).push(JSON.parse(JSON.stringify(data[i])));
+                                                recordsMap.get(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping').push(JSON.parse(JSON.stringify(data[i])));
                                             }
+
+                                            var result = Array.from(recordsMap.entries());
+                                            for (var i in result) {
+                                                var obj = {};
+                                                var recordValue = [];
+                                                obj.recordValue = [];
+                                                var sumCol = 0;
+                                                obj.subGroupId = result[i][0].split('(#&%*)')[0];
+                                                obj.subGroupName = result[i][0].split('(#&%*)')[1] == undefined ? 'No Grouping' : result[i][0].split('(#&%*)')[1];
+                                                obj.records = result[i][1];
+                                                if (obj.subGroupName != 'No Grouping') {
+                                                    for (var j in obj.records) {
+                                                        // console.log(obj.records[j].recordValue);
+                                                        recordValue.push(obj.records[j].recordValue);
+                                                    }
+                                                    var row = recordValue.length;
+                                                    var col = recordValue[0].length;
+                                                    for (var j = 0; j < col; j++) {
+                                                        sumCol = 0;
+                                                        for (var k = 0; k < row; k++) {
+                                                            // console.log(recordValue[k][j])
+                                                            sumCol += recordValue[k][j];
+                                                        }
+                                                        j == 0 ?
+                                                            obj.recordValue.push(sumCol) :
+                                                            obj.recordValue.push(new Intl.NumberFormat('en-US', {
+                                                                style: 'currency',
+                                                                currency: 'USD'
+                                                            }).format(sumCol));
+                                                    }
+                                                }
+                                                listOfRecords.push(obj);
+                                            }
+                                            return listOfRecords;
                                         }
                                     }
-                                     
-                                     var result = Array.from(recordsMap.entries());
-                                     for (var i in result) {
-                                         var obj = {};
-                                         var recordValue = [];
-                                         obj.recordValue = [];
-                                         var sumCol = 0;
-                                         obj.subGroupId = result[i][0].split('(#&%*)')[0];
-                                         obj.subGroupName = result[i][0].split('(#&%*)')[1] == undefined ? 'No Grouping' : result[i][0].split('(#&%*)')[1];
-                                         obj.records = result[i][1];
-                                         if (obj.subGroupName != 'No Grouping' ) {
-                                             for (var j in obj.records) {
-                                                //  console.log(obj.records[j].recordValue);
-                                                 recordValue.push(obj.records[j].recordValue);
-                                             }
-                                             var row = recordValue.length;
-                                             var col = recordValue[0].length;
-                                             for (var j = 0; j < col; j++) {
-                                                 sumCol = 0;
-                                                 for (var k = 0; k < row; k++) {
-                                                    //  console.log(recordValue[k][j])
-                                                     sumCol += recordValue[k][j];
-                                                 }
-                                                 j == 0 ?
-                                                     obj.recordValue.push(sumCol) :
-                                                 obj.recordValue.push(new Intl.NumberFormat('en-US', {
-                                                     style: 'currency',
-                                                     currency: 'USD'
-                                                 }).format(sumCol));
-                                             }
-                                         }
-                                         listOfRecords.push(obj);
-                                     }
-                                     
-                                    //  console.log('listOfRecords',listOfRecords);
-                                     return listOfRecords;
-                                     
-                                 }
-                                     
-                                 }
-                                
-                                 }
-                                
-                                
-                                
+                                }
                             }
-                            
+                            if (bt1 == false && toggleVal2 == false) {
+
+                                if (toggleVal1) {
+                                    if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
+                                        var records = result.tarTable.ListOfEachRecord;
+                                        result.groupHierarchy = groupRecords(records);
+                                        // alert(JSON.stringify(records)); 
+                                        function groupRecords(data) {
+                                            var listOfRecords = [];
+                                            let recordsMap = new Map();
+                                            for (var i in data) {
+                                                if (data[i].groupId != undefined && data[i].groupName != undefined) {
+                                                    if (!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName)) {
+                                                        recordsMap.set(data[i].groupId + '(#&%*)' + data[i].groupName, []);
+                                                    }
+                                                    recordsMap.get(data[i].groupId + '(#&%*)' + data[i].groupName).push(JSON.parse(JSON.stringify(data[i])));
+                                                } else if (data[i].groupId == undefined && data[i].groupName == undefined) {
+                                                    data[i].groupName = 'No Grouping';
+                                                }
+
+                                            }
+                                            var result = Array.from(recordsMap.entries());
+                                            for (var i in result) {
+                                                var obj = {};
+                                                obj.groupId = result[i][0].split('(#&%*)')[0];
+                                                obj.groupName = result[i][0].split('(#&%*)')[1];
+                                                obj.subGroupRecords = subGroupRecords(result[i][1]);
+                                                listOfRecords.push(obj);
+
+                                            }
+                                            return listOfRecords;
+                                        }
+
+                                        function subGroupRecords(data) {
+                                            var listOfRecords = [];
+                                            var recordValue = [];
+                                            let recordsMap = new Map();
+                                            for (var i in data) {
+                                                if (!recordsMap.has(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping')) {
+                                                    recordsMap.set(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping', []);
+                                                }
+                                                recordsMap.get(data[i].subGroupId != undefined ? data[i].subGroupId + '(#&%*)' + data[i].subGroupName : 'No Grouping').push(JSON.parse(JSON.stringify(data[i])));
+                                            }
+
+                                            var result = Array.from(recordsMap.entries());
+                                            for (var i in result) {
+                                                var obj = {};
+                                                var recordValue = [];
+                                                obj.recordValue = [];
+                                                var sumCol = 0;
+                                                obj.subGroupId = result[i][0].split('(#&%*)')[0];
+                                                obj.subGroupName = result[i][0].split('(#&%*)')[1] == undefined ? 'No Grouping' : result[i][0].split('(#&%*)')[1];
+                                                obj.records = result[i][1];
+                                                if (obj.subGroupName != 'No Grouping') {
+                                                    for (var j in obj.records) {
+                                                        // console.log(obj.records[j].recordValue);
+                                                        recordValue.push(obj.records[j].recordValue);
+                                                    }
+                                                    var row = recordValue.length;
+                                                    var col = recordValue[0].length;
+                                                    for (var j = 0; j < col; j++) {
+                                                        sumCol = 0;
+                                                        for (var k = 0; k < row; k++) {
+                                                            // console.log(recordValue[k][j])
+                                                            sumCol += recordValue[k][j];
+                                                        }
+                                                        j == 0 ?
+                                                            obj.recordValue.push(sumCol) :
+                                                            obj.recordValue.push(new Intl.NumberFormat('en-US', {
+                                                                style: 'currency',
+                                                                currency: 'USD'
+                                                            }).format(sumCol));
+                                                    }
+                                                }
+                                                listOfRecords.push(obj);
+                                            }
+                                            return listOfRecords;
+                                        }
+                                    }
+                                }
+                            }
+
+                            else {
+                                if (bt1 == true && toggleVal2 == false) {
+                                    if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
+                                        var records = result.tarTable.ListOfEachRecord;
+                                        result.groupHierarchy = groupRecords(records);
+                                        function groupRecords(data) {
+                                            var listOfRecords = [];
+                                            let recordsMap = new Map();
+                                            for (var i in data) {
+                                                for (var j in data[i].recordList) {
+                                                    if (data[i].recordList[j].fieldName == 'buildertek__CostCodeDivision__c' && data[i].recordList[j].originalValue != '') {
+
+                                                        if (!recordsMap.has(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue)) {
+                                                            recordsMap.set(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue, []);
+                                                        }
+                                                        recordsMap.get(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue).push(JSON.parse(JSON.stringify(data[i])));
+                                                    } else if (data[i].recordList[j].fieldName == 'buildertek__CostCodeDivision__c' && data[i].recordList[j].originalValue == '') {
+
+                                                        data[i].recordList[j].originalValue = 'No Cost Code';
+                                                        if (!recordsMap.has('No Cost Code' + '(#&%*)' + 'No Cost Code')) {
+                                                            recordsMap.set('No Cost Code' + '(#&%*)' + 'No Cost Code', []);
+                                                        }
+                                                        recordsMap.get('No Cost Code' + '(#&%*)' + 'No Cost Code').push(JSON.parse(JSON.stringify(data[i])))
+                                                    }
+                                                }
+                                            }
+                                            var result = Array.from(recordsMap.entries());
+                                            for (var i in result) {
+                                                var obj = {};
+                                                obj.groupId = result[i][0].split('(#&%*)')[1];
+                                                // alert(obj.groupId);
+                                                obj.groupName = result[i][0].split('(#&%*)')[0];
+                                                //  alert(obj.groupName);
+                                                obj.subGroupRecords = subGroupRecords(result[i][1]);
+                                                listOfRecords.push(obj);
+
+                                            }
+                                            listOfRecords = helper.countFunction(component, listOfRecords);
+                                            return listOfRecords;
+                                        }
+                                        function subGroupRecords(data) {
+                                            var listOfRecords = [];
+                                            var recordValue = [];
+                                            let recordsMap = new Map();
+                                            for (var i in data) {
+                                                for (var j in data[i].recordList) {
+                                                    //  console.log('data[i].recordList[j]',data[i].recordList);
+                                                    if (data[i].recordList[j].fieldName == 'buildertek__CostCodeDivision__c' && data[i].recordList[j].originalValue != '') {
+                                                        // console.log('data[i].recordList[j].fieldName',data[i].recordList[j].fieldName);
+                                                        // console.log('data[i].recordList[j].originalValue',data[i].recordList[j].originalValue);
+                                                        if (!recordsMap.has(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue)) {
+                                                            recordsMap.set(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue, []);
+                                                        }
+                                                        recordsMap.get(data[i].recordList[j].originalValue + '(#&%*)' + data[i].recordList[j].referenceValue).push(JSON.parse(JSON.stringify(data[i])));
+                                                    }
+                                                }
+                                            }
+
+                                            var result = Array.from(recordsMap.entries());
+                                            for (var i in result) {
+                                                var obj = {};
+                                                var recordValue = [];
+                                                obj.recordValue = [];
+                                                var sumCol = 0;
+                                                obj.subGroupId = result[i][0].split('(#&%*)')[0];
+                                                obj.subGroupName = result[i][0].split('(#&%*)')[1] == undefined ? 'No Grouping' : result[i][0].split('(#&%*)')[1];
+                                                obj.records = result[i][1];
+                                                if (obj.subGroupName != 'No Grouping') {
+                                                    for (var j in obj.records) {
+                                                        //  console.log(obj.records[j].recordValue);
+                                                        recordValue.push(obj.records[j].recordValue);
+                                                    }
+                                                    var row = recordValue.length;
+                                                    var col = recordValue[0].length;
+                                                    for (var j = 0; j < col; j++) {
+                                                        sumCol = 0;
+                                                        for (var k = 0; k < row; k++) {
+                                                            //  console.log(recordValue[k][j])
+                                                            sumCol += recordValue[k][j];
+                                                        }
+                                                        j == 0 ?
+                                                            obj.recordValue.push(sumCol) :
+                                                            obj.recordValue.push(new Intl.NumberFormat('en-US', {
+                                                                style: 'currency',
+                                                                currency: 'USD'
+                                                            }).format(sumCol));
+                                                    }
+                                                }
+                                                listOfRecords.push(obj);
+                                            }
+
+                                            //  console.log('listOfRecords',listOfRecords);
+                                            return listOfRecords;
+
+                                        }
+
+                                    }
+
+                                }
+
+
+
+                            }
+
                         }
                     }
 
@@ -1077,7 +899,7 @@
                     if (toggleVal == true && result.groupHierarchy == '') {
                         console.log('result.groupHierarchy List Null');
                         console.log('*** Result ***');
-                        console.log({result});
+                        console.log({ result });
 
                         var totalRecords = {};
                         var groupHierarchy = [];
@@ -1125,11 +947,12 @@
                         totalRecords['groupHierarchy'] = groupHierarchy;
                         totalRecords['columns'] = result.columns;
 
-                        console.log('TotalRecords ==> ',{totalRecords});
+                        console.log('TotalRecords ==> ', { totalRecords });
                         component.set("v.TotalRecords", totalRecords);
-                        component.set("v.TotalRecordsCopy",totalRecords);
+                        component.set("v.TotalRecordsCopy", totalRecords);
 
-                    } else{
+                    } else {
+
                         component.set("v.columns", result.columns);
                         component.set("v.page", result.page);
                         component.set("v.total", result.total);
@@ -1141,17 +964,17 @@
                         }
                         //component.set("v.isLoaded", true);
                         console.log('*******************************************************');
-                        console.log('TotalRecords ==> ',{result});
+                        console.log('TotalRecords ==> ', { result });
                         component.set("v.TotalRecords", result);
-                        component.set("v.TotalRecordsCopy",result);
-                        console.log('budget lines::',result);
+                        component.set("v.TotalRecordsCopy", result);
+                        console.log('budget lines::', result);
                     }
 
 
-                    
-                    
-                   
-                   $A.get("e.c:BT_SpinnerEvent").setParams({
+
+
+
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
                         action: "HIDE",
                     }).fire();
                     //var end = new Date().getTime();
@@ -1213,7 +1036,7 @@
             //alert('state -------->'+state);
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
-            console.log('result --------> '+JSON.stringify(result));
+                console.log('result --------> ' + JSON.stringify(result));
                 component.set("v.InnerList", result);
                 $A.get("e.c:BT_SpinnerEvent")
                     .setParams({
@@ -1239,7 +1062,7 @@
             isEditable: false,
         });
         var finalString = JSON.stringify(fieldType);
-       // alert(finalString);
+        // alert(finalString);
         var action = component.get("c.getBudgetItemData");
         action.setParams({
             recordId: recordId,
@@ -1248,7 +1071,7 @@
         });
         action.setCallback(this, function (response) {
             var state = response.getState();
-           // alert('state -------> '+state);
+            // alert('state -------> '+state);
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
                 ////console.log('Final result --------> '+JSON.stringify(result));
@@ -1370,362 +1193,362 @@
         $A.enqueueAction(actions);
     },
     doSave: function (component, event, helper) {
-		debugger;
-		$A.get("e.c:BT_SpinnerEvent").setParams({
-			"action": "SHOW"
-		}).fire();
-		component.set("v.isNewExpense", false);
+        debugger;
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        component.set("v.isNewExpense", false);
         component.set("v.duplicateExp", false);
-		var expenseDescription = component.get("v.expenseDescription");
-		var expensebudget = component.get("v.expensebudget");
-		var expenseType = component.get("v.expenseType");
-		var expenseCostCode = component.get("v.expenseCostCode");
-		var expensePaymentMethod = component.get("v.expensePaymentMethod");
-		var expenseRefNo = component.get("v.expenseRefNo");
-		var expenseAmount = component.get("v.expenseAmount");
-		var expenseNote = component.get("v.expenseNote");
-		var isExpenseUpdate = component.get("v.isExpenseUpdate");
-		var budgetItemId = component.get("v.budgetItemId");
-       var proj =  component.get("v.sampleNewRecord");
-       // alert( JSON.stringify(proj));
-      //  alert('kkkkk'+component.get("v.sampleNewRecord").buildertek__Project__c);
-      //  alert(budgetItemId);
-       	if(budgetItemId){
-           // isExpenseUpdate = true;
+        var expenseDescription = component.get("v.expenseDescription");
+        var expensebudget = component.get("v.expensebudget");
+        var expenseType = component.get("v.expenseType");
+        var expenseCostCode = component.get("v.expenseCostCode");
+        var expensePaymentMethod = component.get("v.expensePaymentMethod");
+        var expenseRefNo = component.get("v.expenseRefNo");
+        var expenseAmount = component.get("v.expenseAmount");
+        var expenseNote = component.get("v.expenseNote");
+        var isExpenseUpdate = component.get("v.isExpenseUpdate");
+        var budgetItemId = component.get("v.budgetItemId");
+        var proj = component.get("v.sampleNewRecord");
+        // alert( JSON.stringify(proj));
+        //  alert('kkkkk'+component.get("v.sampleNewRecord").buildertek__Project__c);
+        //  alert(budgetItemId);
+        if (budgetItemId) {
+            // isExpenseUpdate = true;
         }
-		//Update Expense  
-		if (budgetItemId != undefined && isExpenseUpdate) {
-			var action = component.get("c.updateBudgetItemFromExpenseItem");
-         //  alert('^^^');
-			action.setParams({
-				"expenseDescription": expenseDescription,
-				"expensebudgetId": expensebudget,
-				"expenseType": expenseType,
-				"expenseCostCode": expenseCostCode,
-				"expensePaymentMethod": expensePaymentMethod,
-				"expenseRefNo": expenseRefNo,
-				"expenseAmount": expenseAmount,
-				"expenseNote": expenseNote,
-				"projectId": component.get("v.sampleNewRecord").buildertek__Project__c,
-				'budgetItemId': budgetItemId
-			});
-			action.setCallback(this, function (response) {
+        //Update Expense  
+        if (budgetItemId != undefined && isExpenseUpdate) {
+            var action = component.get("c.updateBudgetItemFromExpenseItem");
+            //  alert('^^^');
+            action.setParams({
+                "expenseDescription": expenseDescription,
+                "expensebudgetId": expensebudget,
+                "expenseType": expenseType,
+                "expenseCostCode": expenseCostCode,
+                "expensePaymentMethod": expensePaymentMethod,
+                "expenseRefNo": expenseRefNo,
+                "expenseAmount": expenseAmount,
+                "expenseNote": expenseNote,
+                "projectId": component.get("v.sampleNewRecord").buildertek__Project__c,
+                'budgetItemId': budgetItemId
+            });
+            action.setCallback(this, function (response) {
                 var responses = response.getReturnValue();
-				if (responses != null) {
-					$A.get("e.c:BT_SpinnerEvent").setParams({
-						"action": "HIDE"
-					}).fire();
-                  //  alert('hai'+response.getState() );
-					//$A.getCallback(function () {
-						var toastEvent = $A.get("e.force:showToast");
-						toastEvent.setParams({
-							mode: 'sticky',
-							message: 'Budget Line created successfully',
-							type: 'success',
-							duration: '10000',
-							mode: 'dismissible'
-						});
-						toastEvent.fire();
-					//});
-					$A.get('e.force:refreshView').fire();
-					component.refreshData();
-					component.set("v.expenseDescription", null);
-					component.set("v.expensebudget", null);
-					component.set("v.expenseType", null);
-					component.set("v.expenseCostCode", null);
-					component.set("v.expensePaymentMethod", null);
-					component.set("v.expenseRefNo", null);
-					component.set("v.expenseAmount", null);
-					component.set("v.expenseNote", null);
+                if (responses != null) {
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+                    //  alert('hai'+response.getState() );
+                    //$A.getCallback(function () {
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        mode: 'sticky',
+                        message: 'Budget Line created successfully',
+                        type: 'success',
+                        duration: '10000',
+                        mode: 'dismissible'
+                    });
+                    toastEvent.fire();
+                    //});
+                    $A.get('e.force:refreshView').fire();
+                    component.refreshData();
+                    component.set("v.expenseDescription", null);
+                    component.set("v.expensebudget", null);
+                    component.set("v.expenseType", null);
+                    component.set("v.expenseCostCode", null);
+                    component.set("v.expensePaymentMethod", null);
+                    component.set("v.expenseRefNo", null);
+                    component.set("v.expenseAmount", null);
+                    component.set("v.expenseNote", null);
                     component.set("v.budgetItemId", null);
                     var noRecord = [];
                     component.set('v.selectedRecs', noRecord);
                     //alert("@@3"+component.get("v.budgetItemId"));
-				} 
-                else 
+                }
+                else
                     /*if (response.getState() === "ERROR") {
-					let errors = response.getError();
-					let message = 'Unknown error'; // Default error message
-					// Retrieve the error message sent by the server
-					if (errors && Array.isArray(errors) && errors.length > 0) {
-						message = errors[0].message;
-					}
-					// Display the message
-					console.error(message);
-					$A.getCallback(function () {*/
-						var toastEvent = $A.get("e.force:showToast");
-						toastEvent.setParams({
-							mode: 'sticky',
-							message: 'We cannot create New Expense, because this Budget has not associated with the Project.',
-							type: 'ERROR',
-							duration: '10000',
-							mode: 'dismissible'
-						});
-						toastEvent.fire();
-					//});
-					$A.get('e.force:refreshView').fire();
-				//}
-			});
-			$A.enqueueAction(action);
-            //alert("@@2"+component.get("v.budgetItemId"));
-		} 
-        else {
-          //  alert('hello');
-			var action = component.get("c.createBudgetItemFromExpenseItem");
-			action.setParams({
-				"expenseDescription": expenseDescription,
-				"expensebudgetId": expensebudget,
-				"expenseType": expenseType,
-				"expenseCostCode": expenseCostCode,
-				"expensePaymentMethod": expensePaymentMethod,
-				"expenseRefNo": expenseRefNo,
-				"expenseAmount": expenseAmount,
-				"expenseNote": expenseNote,
-				"projectId": component.get("v.sampleNewRecord").buildertek__Project__c
-			});
-			action.setCallback(this, function (response) {
-                  var res = response.getReturnValue();
-			//	if (response.getState() === "SUCCESS") {
-					$A.get("e.c:BT_SpinnerEvent").setParams({
-						"action": "HIDE"
-					}).fire();
-					//$A.getCallback(function () {
-                  if (res != null) {
-					//alert('oye'+response.getReturnValue());
-						var toastEvent = $A.get("e.force:showToast");
-						toastEvent.setParams({
-							mode: 'sticky',
-							message: 'Budget Line created successfully',
-							type: 'success',
-							duration: '10000',
-							mode: 'dismissible'
-						});
-						toastEvent.fire();
-					//});
-					$A.get('e.force:refreshView').fire();
-					component.refreshData();
-					component.set("v.expenseDescription", null);
-					component.set("v.expensebudget", null);
-					component.set("v.expenseType", null);
-					component.set("v.expenseCostCode", null);
-					component.set("v.expensePaymentMethod", null);
-					component.set("v.expenseRefNo", null);
-					component.set("v.expenseAmount", null);
-					component.set("v.expenseNote", null);
-                    component.set("v.budgetItemId", null);
-                  } else {
-                  //  alert("helo......");
-                    /*if (response.getState() === "ERROR") {
-					let errors = response.getError();
-					let message = 'Unknown error'; // Default error message
-					// Retrieve the error message sent by the server
-					if (errors && Array.isArray(errors) && errors.length > 0) {
-						message = errors[0].message;
-					}
-					// Display the message
-					console.error(message);*/
-					//$A.getCallback(function () {
-						var toastEvent = $A.get("e.force:showToast");
-						toastEvent.setParams({
-							mode: 'sticky',
-							message: 'We cannot create New Expense, because this Budget has not associated with the Project.',
-							type: 'ERROR',
-							duration: '10000',
-							mode: 'dismissible'
-						});
-						toastEvent.fire();
-					//});
-					$A.get('e.force:refreshView').fire();
-                  }
-				//}
+                    let errors = response.getError();
+                    let message = 'Unknown error'; // Default error message
+                    // Retrieve the error message sent by the server
+                    if (errors && Array.isArray(errors) && errors.length > 0) {
+                        message = errors[0].message;
+                    }
+                    // Display the message
+                    console.error(message);
+                    $A.getCallback(function () {*/
+                    var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    mode: 'sticky',
+                    message: 'We cannot create New Expense, because this Budget has not associated with the Project.',
+                    type: 'ERROR',
+                    duration: '10000',
+                    mode: 'dismissible'
+                });
+                toastEvent.fire();
+                //});
+                $A.get('e.force:refreshView').fire();
                 //}
-			});
-			$A.enqueueAction(action);
-		}
+            });
+            $A.enqueueAction(action);
+            //alert("@@2"+component.get("v.budgetItemId"));
+        }
+        else {
+            //  alert('hello');
+            var action = component.get("c.createBudgetItemFromExpenseItem");
+            action.setParams({
+                "expenseDescription": expenseDescription,
+                "expensebudgetId": expensebudget,
+                "expenseType": expenseType,
+                "expenseCostCode": expenseCostCode,
+                "expensePaymentMethod": expensePaymentMethod,
+                "expenseRefNo": expenseRefNo,
+                "expenseAmount": expenseAmount,
+                "expenseNote": expenseNote,
+                "projectId": component.get("v.sampleNewRecord").buildertek__Project__c
+            });
+            action.setCallback(this, function (response) {
+                var res = response.getReturnValue();
+                //	if (response.getState() === "SUCCESS") {
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                //$A.getCallback(function () {
+                if (res != null) {
+                    //alert('oye'+response.getReturnValue());
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        mode: 'sticky',
+                        message: 'Budget Line created successfully',
+                        type: 'success',
+                        duration: '10000',
+                        mode: 'dismissible'
+                    });
+                    toastEvent.fire();
+                    //});
+                    $A.get('e.force:refreshView').fire();
+                    component.refreshData();
+                    component.set("v.expenseDescription", null);
+                    component.set("v.expensebudget", null);
+                    component.set("v.expenseType", null);
+                    component.set("v.expenseCostCode", null);
+                    component.set("v.expensePaymentMethod", null);
+                    component.set("v.expenseRefNo", null);
+                    component.set("v.expenseAmount", null);
+                    component.set("v.expenseNote", null);
+                    component.set("v.budgetItemId", null);
+                } else {
+                    //  alert("helo......");
+                    /*if (response.getState() === "ERROR") {
+                    let errors = response.getError();
+                    let message = 'Unknown error'; // Default error message
+                    // Retrieve the error message sent by the server
+                    if (errors && Array.isArray(errors) && errors.length > 0) {
+                        message = errors[0].message;
+                    }
+                    // Display the message
+                    console.error(message);*/
+                    //$A.getCallback(function () {
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        mode: 'sticky',
+                        message: 'We cannot create New Expense, because this Budget has not associated with the Project.',
+                        type: 'ERROR',
+                        duration: '10000',
+                        mode: 'dismissible'
+                    });
+                    toastEvent.fire();
+                    //});
+                    $A.get('e.force:refreshView').fire();
+                }
+                //}
+                //}
+            });
+            $A.enqueueAction(action);
+        }
 
-	},
-    getpoList : function (component, pageNumber, pageSize) {
+    },
+    getpoList: function (component, pageNumber, pageSize) {
         var recId = component.get("v.recordId");
         var action = component.get("c.getBudgetData");
         action.setParams({
-          pageNumber: pageNumber,
-          pageSize: pageSize,
-          RecId : recId
+            pageNumber: pageNumber,
+            pageSize: pageSize,
+            RecId: recId
         });
         action.setCallback(this, function (result) {
-          var state = result.getState();
-          if (component.isValid() && state === "SUCCESS") {
-            var resultData = result.getReturnValue();
-            for(var i in resultData.recordList){
-                resultData.recordList[i].budgetCheck =false;
+            var state = result.getState();
+            if (component.isValid() && state === "SUCCESS") {
+                var resultData = result.getReturnValue();
+                for (var i in resultData.recordList) {
+                    resultData.recordList[i].budgetCheck = false;
+                }
+                component.set("v.recordList", resultData.recordList);
+                component.set("v.PageNumber", resultData.pageNumber);
+                component.set("v.TotalRecord", resultData.totalRecords);
+                component.set("v.RecordStart", resultData.recordStart);
+                component.set("v.RecordEnd", resultData.recordEnd);
+                component.set(
+                    "v.TotalPages",
+                    Math.ceil(resultData.totalRecords / pageSize)
+                );
             }
-            component.set("v.recordList", resultData.recordList);
-            component.set("v.PageNumber", resultData.pageNumber);
-            component.set("v.TotalRecord", resultData.totalRecords);
-            component.set("v.RecordStart", resultData.recordStart);
-            component.set("v.RecordEnd", resultData.recordEnd);
-            component.set(
-              "v.TotalPages",
-              Math.ceil(resultData.totalRecords / pageSize)
-            );
-          }
         });
         $A.enqueueAction(action);
-  },
-  /*  doSave: function (component, event, helper) {
-		debugger;
-		$A.get("e.c:BT_SpinnerEvent").setParams({
-			"action": "SHOW"
-		}).fire();
-		component.set("v.isNewExpense", false);
-        component.set("v.duplicateExp", false);
-		var expenseDescription = component.get("v.expenseDescription");
-		var expensebudget = component.get("v.expensebudget");
-		var expenseType = component.get("v.expenseType");
-		var expenseCostCode = component.get("v.expenseCostCode");
-		var expensePaymentMethod = component.get("v.expensePaymentMethod");
-		var expenseRefNo = component.get("v.expenseRefNo");
-		var expenseAmount = component.get("v.expenseAmount");
-		var expenseNote = component.get("v.expenseNote");
-		var isExpenseUpdate = component.get("v.isExpenseUpdate");
-		var budgetItemId = component.get("v.budgetItemId");
-		//Update Expense  
-		if (budgetItemId != undefined && isExpenseUpdate) {
-			var action = component.get("c.updateBudgetItemFromExpenseItem");
-			action.setParams({
-				"expenseDescription": expenseDescription,
-				"expensebudgetId": expensebudget,
-				"expenseType": expenseType,
-				"expenseCostCode": expenseCostCode,
-				"expensePaymentMethod": expensePaymentMethod,
-				"expenseRefNo": expenseRefNo,
-				"expenseAmount": expenseAmount,
-				"expenseNote": expenseNote,
-				"projectId": component.get("v.sampleNewRecord").buildertek__Project__c,
-				'budgetItemId': budgetItemId
-			});
-			action.setCallback(this, function (response) {
-				if (response.getState() === "SUCCESS") {
-					$A.get("e.c:BT_SpinnerEvent").setParams({
-						"action": "HIDE"
-					}).fire();
-					$A.getCallback(function () {
-						var toastEvent = $A.get("e.force:showToast");
-						toastEvent.setParams({
-							mode: 'sticky',
-							message: 'Budget Line created successfully',
-							type: 'success',
-							duration: '10000',
-							mode: 'dismissible'
-						});
-						toastEvent.fire();
-					});
-					$A.get('e.force:refreshView').fire();
-					component.refreshData();
-					component.set("v.expenseDescription", null);
-					component.set("v.expensebudget", null);
-					component.set("v.expenseType", null);
-					component.set("v.expenseCostCode", null);
-					component.set("v.expensePaymentMethod", null);
-					component.set("v.expenseRefNo", null);
-					component.set("v.expenseAmount", null);
-					component.set("v.expenseNote", null);
-                    component.set("v.budgetItemId", '');
-				} else if (response.getState() === "ERROR") {
-					let errors = response.getError();
-					let message = 'Unknown error'; // Default error message
-					// Retrieve the error message sent by the server
-					if (errors && Array.isArray(errors) && errors.length > 0) {
-						message = errors[0].message;
-					}
-					// Display the message
-					console.error(message);
-					$A.getCallback(function () {
-						var toastEvent = $A.get("e.force:showToast");
-						toastEvent.setParams({
-							mode: 'sticky',
-							message: 'Budget Line not created',
-							type: 'ERROR',
-							duration: '10000',
-							mode: 'dismissible'
-						});
-						toastEvent.fire();
-					});
-					$A.get('e.force:refreshView').fire();
-				}
-			});
-			$A.enqueueAction(action);
-		} else {
-			// alert('hello');
-			var action = component.get("c.createBudgetItemFromExpenseItem");
-			action.setParams({
-				"expenseDescription": expenseDescription,
-				"expensebudgetId": expensebudget,
-				"expenseType": expenseType,
-				"expenseCostCode": expenseCostCode,
-				"expensePaymentMethod": expensePaymentMethod,
-				"expenseRefNo": expenseRefNo,
-				"expenseAmount": expenseAmount,
-				"expenseNote": expenseNote,
-				"projectId": component.get("v.sampleNewRecord").buildertek__Project__c
-			});
-			action.setCallback(this, function (response) {
-				if (response.getState() === "SUCCESS") {
-					$A.get("e.c:BT_SpinnerEvent").setParams({
-						"action": "HIDE"
-					}).fire();
-					$A.getCallback(function () {
-						var toastEvent = $A.get("e.force:showToast");
-						toastEvent.setParams({
-							mode: 'sticky',
-							message: 'Budget Line created successfully',
-							type: 'success',
-							duration: '10000',
-							mode: 'dismissible'
-						});
-						toastEvent.fire();
-					});
-					$A.get('e.force:refreshView').fire();
-					component.refreshData();
-					component.set("v.expenseDescription", null);
-					component.set("v.expensebudget", null);
-					component.set("v.expenseType", null);
-					component.set("v.expenseCostCode", null);
-					component.set("v.expensePaymentMethod", null);
-					component.set("v.expenseRefNo", null);
-					component.set("v.expenseAmount", null);
-					component.set("v.expenseNote", null);
-                    component.set("v.budgetItemId", '');
-				} else if (response.getState() === "ERROR") {
-					let errors = response.getError();
-					let message = 'Unknown error'; // Default error message
-					// Retrieve the error message sent by the server
-					if (errors && Array.isArray(errors) && errors.length > 0) {
-						message = errors[0].message;
-					}
-					// Display the message
-					console.error(message);
-					$A.getCallback(function () {
-						var toastEvent = $A.get("e.force:showToast");
-						toastEvent.setParams({
-							mode: 'sticky',
-							message: 'Budget Line not created',
-							type: 'ERROR',
-							duration: '10000',
-							mode: 'dismissible'
-						});
-						toastEvent.fire();
-					});
-					$A.get('e.force:refreshView').fire();
-				}
-			});
-			$A.enqueueAction(action);
-		}
-
-	},*/
-    getUOMValues : function(component, event, helper){
+    },
+    /*  doSave: function (component, event, helper) {
+          debugger;
+          $A.get("e.c:BT_SpinnerEvent").setParams({
+              "action": "SHOW"
+          }).fire();
+          component.set("v.isNewExpense", false);
+          component.set("v.duplicateExp", false);
+          var expenseDescription = component.get("v.expenseDescription");
+          var expensebudget = component.get("v.expensebudget");
+          var expenseType = component.get("v.expenseType");
+          var expenseCostCode = component.get("v.expenseCostCode");
+          var expensePaymentMethod = component.get("v.expensePaymentMethod");
+          var expenseRefNo = component.get("v.expenseRefNo");
+          var expenseAmount = component.get("v.expenseAmount");
+          var expenseNote = component.get("v.expenseNote");
+          var isExpenseUpdate = component.get("v.isExpenseUpdate");
+          var budgetItemId = component.get("v.budgetItemId");
+          //Update Expense  
+          if (budgetItemId != undefined && isExpenseUpdate) {
+              var action = component.get("c.updateBudgetItemFromExpenseItem");
+              action.setParams({
+                  "expenseDescription": expenseDescription,
+                  "expensebudgetId": expensebudget,
+                  "expenseType": expenseType,
+                  "expenseCostCode": expenseCostCode,
+                  "expensePaymentMethod": expensePaymentMethod,
+                  "expenseRefNo": expenseRefNo,
+                  "expenseAmount": expenseAmount,
+                  "expenseNote": expenseNote,
+                  "projectId": component.get("v.sampleNewRecord").buildertek__Project__c,
+                  'budgetItemId': budgetItemId
+              });
+              action.setCallback(this, function (response) {
+                  if (response.getState() === "SUCCESS") {
+                      $A.get("e.c:BT_SpinnerEvent").setParams({
+                          "action": "HIDE"
+                      }).fire();
+                      $A.getCallback(function () {
+                          var toastEvent = $A.get("e.force:showToast");
+                          toastEvent.setParams({
+                              mode: 'sticky',
+                              message: 'Budget Line created successfully',
+                              type: 'success',
+                              duration: '10000',
+                              mode: 'dismissible'
+                          });
+                          toastEvent.fire();
+                      });
+                      $A.get('e.force:refreshView').fire();
+                      component.refreshData();
+                      component.set("v.expenseDescription", null);
+                      component.set("v.expensebudget", null);
+                      component.set("v.expenseType", null);
+                      component.set("v.expenseCostCode", null);
+                      component.set("v.expensePaymentMethod", null);
+                      component.set("v.expenseRefNo", null);
+                      component.set("v.expenseAmount", null);
+                      component.set("v.expenseNote", null);
+                      component.set("v.budgetItemId", '');
+                  } else if (response.getState() === "ERROR") {
+                      let errors = response.getError();
+                      let message = 'Unknown error'; // Default error message
+                      // Retrieve the error message sent by the server
+                      if (errors && Array.isArray(errors) && errors.length > 0) {
+                          message = errors[0].message;
+                      }
+                      // Display the message
+                      console.error(message);
+                      $A.getCallback(function () {
+                          var toastEvent = $A.get("e.force:showToast");
+                          toastEvent.setParams({
+                              mode: 'sticky',
+                              message: 'Budget Line not created',
+                              type: 'ERROR',
+                              duration: '10000',
+                              mode: 'dismissible'
+                          });
+                          toastEvent.fire();
+                      });
+                      $A.get('e.force:refreshView').fire();
+                  }
+              });
+              $A.enqueueAction(action);
+          } else {
+              // alert('hello');
+              var action = component.get("c.createBudgetItemFromExpenseItem");
+              action.setParams({
+                  "expenseDescription": expenseDescription,
+                  "expensebudgetId": expensebudget,
+                  "expenseType": expenseType,
+                  "expenseCostCode": expenseCostCode,
+                  "expensePaymentMethod": expensePaymentMethod,
+                  "expenseRefNo": expenseRefNo,
+                  "expenseAmount": expenseAmount,
+                  "expenseNote": expenseNote,
+                  "projectId": component.get("v.sampleNewRecord").buildertek__Project__c
+              });
+              action.setCallback(this, function (response) {
+                  if (response.getState() === "SUCCESS") {
+                      $A.get("e.c:BT_SpinnerEvent").setParams({
+                          "action": "HIDE"
+                      }).fire();
+                      $A.getCallback(function () {
+                          var toastEvent = $A.get("e.force:showToast");
+                          toastEvent.setParams({
+                              mode: 'sticky',
+                              message: 'Budget Line created successfully',
+                              type: 'success',
+                              duration: '10000',
+                              mode: 'dismissible'
+                          });
+                          toastEvent.fire();
+                      });
+                      $A.get('e.force:refreshView').fire();
+                      component.refreshData();
+                      component.set("v.expenseDescription", null);
+                      component.set("v.expensebudget", null);
+                      component.set("v.expenseType", null);
+                      component.set("v.expenseCostCode", null);
+                      component.set("v.expensePaymentMethod", null);
+                      component.set("v.expenseRefNo", null);
+                      component.set("v.expenseAmount", null);
+                      component.set("v.expenseNote", null);
+                      component.set("v.budgetItemId", '');
+                  } else if (response.getState() === "ERROR") {
+                      let errors = response.getError();
+                      let message = 'Unknown error'; // Default error message
+                      // Retrieve the error message sent by the server
+                      if (errors && Array.isArray(errors) && errors.length > 0) {
+                          message = errors[0].message;
+                      }
+                      // Display the message
+                      console.error(message);
+                      $A.getCallback(function () {
+                          var toastEvent = $A.get("e.force:showToast");
+                          toastEvent.setParams({
+                              mode: 'sticky',
+                              message: 'Budget Line not created',
+                              type: 'ERROR',
+                              duration: '10000',
+                              mode: 'dismissible'
+                          });
+                          toastEvent.fire();
+                      });
+                      $A.get('e.force:refreshView').fire();
+                  }
+              });
+              $A.enqueueAction(action);
+          }
+  
+      },*/
+    getUOMValues: function (component, event, helper) {
         var action = component.get("c.getProductUOM");
-        var productId = component.get("v.productId"); 
+        var productId = component.get("v.productId");
         action.setParams({
             "productId": productId
         });
@@ -1734,41 +1557,41 @@
             var ProductDetails = component.get("v.newQuote");
             if (res != null) {
                 var existuom = false;
-                var quoteUOM =  component.get("v.options");
-                for(var i= 0; i < quoteUOM.length; i++){
-                    if(quoteUOM[i]. value == res){
+                var quoteUOM = component.get("v.options");
+                for (var i = 0; i < quoteUOM.length; i++) {
+                    if (quoteUOM[i].value == res) {
                         existuom = true;
                         break;
                     }
                 }
-                if(existuom == true){
+                if (existuom == true) {
                     component.set("v.UOMvalues", res);
-                }else{
+                } else {
                     component.set("v.UOMvalues", 'Each');
                 }
-            }else{
+            } else {
                 component.set("v.UOMvalues", 'Each');
-            } 
+            }
         });
         $A.enqueueAction(action);
-        
+
     },
-        
+
     fetchCORecordType: function (component, event, helper) {
-        var actions = component.get("c.getCOCustomerRecordType");        
+        var actions = component.get("c.getCOCustomerRecordType");
         actions.setCallback(this, function (response) {
             if (response.getState() == "SUCCESS") {
-                var result = response.getReturnValue();               
+                var result = response.getReturnValue();
                 component.set("v.COCustomerRecordType", result);
             }
         });
         $A.enqueueAction(actions);
     },
     fetchInvoiceRecordType: function (component, event, helper) {
-        var actions = component.get("c.getInvoiceCustomerRecordType");        
+        var actions = component.get("c.getInvoiceCustomerRecordType");
         actions.setCallback(this, function (response) {
             if (response.getState() == "SUCCESS") {
-                var result = response.getReturnValue();               
+                var result = response.getReturnValue();
                 component.set("v.InvoiceCustomerRecordType", result);
             }
         });
@@ -1776,7 +1599,7 @@
     },
 
     // Method for Group By Cost Code Button
-    CostCodeFilterHelper: function (component, event, helper, page){
+    CostCodeFilterHelper: function (component, event, helper, page) {
         component.set("v.page", page);
 
         var action = component.get("c.retrieveGroups");
@@ -1787,10 +1610,10 @@
         });
         action.setCallback(this, function (response) {
             var state = response.getState();
-            console.log('State =>  ',{state});
+            console.log('State =>  ', { state });
 
-            console.log('Response =>',response.getReturnValue());
-            
+            console.log('Response =>', response.getReturnValue());
+
             var result = response.getReturnValue()
 
             var TotalRecords = {};
@@ -1811,16 +1634,16 @@
             var groupHierarchyMap = {};
 
             result.tarTable.records.forEach((element, index) => {
-                if(element.buildertek__Cost_Code__c == undefined){
+                if (element.buildertek__Cost_Code__c == undefined) {
                     element.buildertek__Cost_Code__c == 'No Code Cost';
                 }
                 groupHierarchyMap = {};
-                if(!costCodeList.includes(element.buildertek__Cost_Code__c)) {
+                if (!costCodeList.includes(element.buildertek__Cost_Code__c)) {
                     costCodeList.push(element.buildertek__Cost_Code__c);
                     groupHierarchyMap['groupId'] = element.buildertek__Cost_Code__c;
-                    if(element.buildertek__Cost_Code__c != undefined){
+                    if (element.buildertek__Cost_Code__c != undefined) {
                         groupHierarchyMap['groupName'] = element.buildertek__Cost_Code__r.Name;
-                    } else{
+                    } else {
                         groupHierarchyMap['groupName'] = 'No Code Cost';
                     }
                     groupHierarchy.push(groupHierarchyMap);
@@ -1845,6 +1668,8 @@
                 totalObj['unitPricekey'] = '';
                 totalObj['orignalbudget'] = 0;
                 totalObj['orignalbudgetkey'] = '';
+                totalObj['totalSalesPrice'] = 0;
+                totalObj['totalSalesPricekey'] = '';
                 totalObj['TotalApprovals'] = 0;
                 totalObj['TotalApprovalskey'] = '';
                 totalObj['CommittedCost'] = 0;
@@ -1879,7 +1704,7 @@
 
                         totalObj = helper.setTotalHelper(recordsList, totalObj);
                         // console.log('totalObj => ',{totalObj})
-                        
+
                     }
                 });
                 element['totals'] = totalObj;
@@ -1891,7 +1716,7 @@
             TotalRecords['groupHierarchy'] = groupHierarchy;
             TotalRecords['columns'] = result.columns;
 
-            console.log('TotalRecords ==> ',{TotalRecords});
+            console.log('TotalRecords ==> ', { TotalRecords });
             component.set("v.TotalRecords", TotalRecords);
 
             $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -1901,73 +1726,172 @@
         });
         $A.enqueueAction(action);
 
-        
-    }, 
 
-    setTotalHelper: function(ele, totalObj){
+    },
 
-            ele.forEach(e => {
+    setTotalHelper: function (ele, totalObj) {
 
-                if(e.fieldName == 'buildertek__Unit_Price__c' && e.originalValue != ''){
-                    totalObj['unitPrice'] += e.originalValue;
-                    totalObj['unitPricekey'] = "buildertek__Unit_Price__c";
-                }
-    
-                if(e.fieldName == 'buildertek__Original_Budget__c'){
-                    totalObj['orignalbudget'] += e.originalValue;
-                    totalObj['orignalbudgetkey'] = "buildertek__Original_Budget__c";
-                }
-    
-                if(e.fieldName == 'buildertek__Total_Approvals_CO__c'){
-                    totalObj['TotalApprovals'] += e.originalValue;
-                    totalObj['TotalApprovalskey'] = "buildertek__Total_Approvals_CO__c";
-                }
-    
-                if(e.fieldName == 'buildertek__Committed_Costs__c'){
-                    totalObj['CommittedCost'] += e.originalValue;
-                    totalObj['CommittedCostkey'] = "buildertek__Committed_Costs__c";
-                }
-    
-                if(e.fieldName == 'buildertek__Additional_Costs__c'){
-                    totalObj['AdditionalCosts'] += e.originalValue;
-                    totalObj['AdditionalCostsKey'] = "buildertek__Additional_Costs__c";
-                }
-                
-                if(e.fieldName == 'buildertek__Invoice_total__c'){
-                    totalObj['InvoiceCosts'] += e.originalValue;
-                    totalObj['InvoiceCostsKey'] = "buildertek__Invoice_total__c";
-                }
-    
-                if(e.fieldName == 'buildertek__Labor1__c'){
-                    totalObj['Labor1'] += e.originalValue;
-                    totalObj['Labor1key'] = "buildertek__Labor1__c";
-                }
-    
-                if(e.fieldName == 'buildertek__Projected_Costs__c'){
-                    totalObj['ProjectedCosts'] += e.originalValue;
-                    totalObj['ProjectedCostskey'] = "buildertek__Projected_Costs__c";
-                }
-    
-                if(e.fieldName == 'buildertek__Forecast_To_Complete__c'){
-                    totalObj['Forecast'] += e.originalValue;
-                    totalObj['Forecastskey'] = "buildertek__Forecast_To_Complete__c";
-                }
-    
-                if(e.fieldName == 'buildertek__Total_Costs__c'){
-                    totalObj['TotalCosts'] += e.originalValue;
-                    totalObj['TotalCostsKey'] = "buildertek__Total_Costs__c";
-                }
-    
-                if(e.fieldName == 'buildertek__Profit_Loss__c'){
-                    totalObj['ProfitLoss'] += e.originalValue;
-                    totalObj['ProfitLosskey'] = "buildertek__Profit_Loss__c";
-                }
-    
-                totalObj['fieldType'] = "currency"; 
+        ele.forEach(e => {
 
-            });
+            if (e.fieldName == 'buildertek__Unit_Price__c' && e.originalValue != '') {
+                totalObj['unitPrice'] += e.originalValue;
+                totalObj['unitPricekey'] = "buildertek__Unit_Price__c";
+            }
+
+            if (e.fieldName == 'buildertek__Original_Budget__c') {
+                totalObj['orignalbudget'] += e.originalValue;
+                totalObj['orignalbudgetkey'] = "buildertek__Original_Budget__c";
+            }
+
+            if (e.fieldName == 'buildertek__Total_Sales_Price__c') {
+                totalObj['totalSalesPrice'] += e.originalValue;
+                totalObj['totalSalesPricekey'] = "buildertek__Total_Sales_Price__c";
+            }
+
+            if (e.fieldName == 'buildertek__Total_Approvals_CO__c') {
+                totalObj['TotalApprovals'] += e.originalValue;
+                totalObj['TotalApprovalskey'] = "buildertek__Total_Approvals_CO__c";
+            }
+
+            if (e.fieldName == 'buildertek__Committed_Costs__c') {
+                totalObj['CommittedCost'] += e.originalValue;
+                totalObj['CommittedCostkey'] = "buildertek__Committed_Costs__c";
+            }
+
+            if (e.fieldName == 'buildertek__Additional_Costs__c') {
+                totalObj['AdditionalCosts'] += e.originalValue;
+                totalObj['AdditionalCostsKey'] = "buildertek__Additional_Costs__c";
+            }
+
+            if (e.fieldName == 'buildertek__Invoice_total__c') {
+                totalObj['InvoiceCosts'] += e.originalValue;
+                totalObj['InvoiceCostsKey'] = "buildertek__Invoice_total__c";
+            }
+
+            if (e.fieldName == 'buildertek__Labor1__c') {
+                totalObj['Labor1'] += e.originalValue;
+                totalObj['Labor1key'] = "buildertek__Labor1__c";
+            }
+
+            if (e.fieldName == 'buildertek__Projected_Costs__c') {
+                totalObj['ProjectedCosts'] += e.originalValue;
+                totalObj['ProjectedCostskey'] = "buildertek__Projected_Costs__c";
+            }
+
+            if (e.fieldName == 'buildertek__Forecast_To_Complete__c') {
+                totalObj['Forecast'] += e.originalValue;
+                totalObj['Forecastskey'] = "buildertek__Forecast_To_Complete__c";
+            }
+
+            if (e.fieldName == 'buildertek__Total_Costs__c') {
+                totalObj['TotalCosts'] += e.originalValue;
+                totalObj['TotalCostsKey'] = "buildertek__Total_Costs__c";
+            }
+
+            if (e.fieldName == 'buildertek__Profit_Loss__c') {
+                totalObj['ProfitLoss'] += e.originalValue;
+                totalObj['ProfitLosskey'] = "buildertek__Profit_Loss__c";
+            }
+
+            totalObj['fieldType'] = "currency";
+
+        });
 
         return totalObj;
 
-    }, 
+    },
+
+
+    countFunction: function (component, listOfRecords){
+        for (var i in listOfRecords) {
+            var obj = {}
+            obj['unitPrice'] = 0;
+            obj['unitPricekey'] = '';
+            obj['orignalbudget'] = 0;
+            obj['orignalbudgetkey'] = '';
+            obj['totalSalesPrice'] = 0;
+            obj['totalSalesPricekey'] = '';
+            obj['TotalApprovals'] = 0;
+            obj['TotalApprovalskey'] = '';
+            obj['CommittedCost'] = 0;
+            obj['CommittedCostkey'] = 0;
+            obj['AdditionalCosts'] = 0;
+            obj['AdditionalCostsKey'] = '';
+            obj['InvoiceCosts'] = 0;
+            obj['InvoiceCostsKey'] = '';
+            obj['ProjectedCosts'] = 0;
+            obj['ProjectedCostskey'] = '';
+            obj['Labor1'] = 0;
+            obj['Labor1key'] = '';
+            obj['Forecast'] = 0;
+            obj['Forecastskey'] = '';
+            obj['TotalCosts'] = 0;
+            obj['TotalCostsKey'] = '';
+            obj['ProfitLoss'] = 0;
+            obj['ProfitLosskey'] = '';
+            obj['fieldType'] = '';
+            for (var j = 0; j < listOfRecords[i].subGroupRecords[0].records.length; j++) {
+                var recList = listOfRecords[i].subGroupRecords[0].records[j].recordList;
+                for (var k = 0; k < recList.length; k++) {
+                    if (recList[k].fieldType == "currency") {
+                        if (recList[k].fieldName == "buildertek__Unit_Price__c") {
+                            obj['unitPrice'] += Number(recList[k].originalValue);
+                            obj['unitPricekey'] = "buildertek__Unit_Price__c"
+                        }
+                        if (recList[k].fieldName == "buildertek__Original_Budget__c") {
+                            obj['orignalbudget'] += recList[k].originalValue;
+                            obj['orignalbudgetkey'] = "buildertek__Original_Budget__c"
+                        }
+                        if (recList[k].fieldName == "buildertek__Total_Sales_Price__c") {
+                            obj['totalSalesPrice'] += recList[k].originalValue;
+                            obj['totalSalesPricekey'] = "buildertek__Total_Sales_Price__c"
+                        }
+                        if (recList[k].fieldName == "buildertek__Total_Approvals_CO__c") {
+                            obj['TotalApprovals'] += recList[k].originalValue;
+                            obj['TotalApprovalskey'] = 'buildertek__Total_Approvals_CO__c'
+                        }
+                        if (recList[k].fieldName == "buildertek__Committed_Costs__c") {
+                            obj['CommittedCost'] += recList[k].originalValue;
+                            obj['CommittedCostkey'] = 'buildertek__Committed_Costs__c'
+                        }
+                        if (recList[k].fieldName == "buildertek__Additional_Costs__c") {
+                            obj['AdditionalCosts'] += recList[k].originalValue;
+                            obj['AdditionalCostsKey'] = "buildertek__Additional_Costs__c"
+                        }
+                        if (recList[k].fieldName == "buildertek__Invoice_total__c") {
+                            obj['InvoiceCosts'] += recList[k].originalValue;
+                            obj['InvoiceCostsKey'] = "buildertek__Invoice_total__c"
+                        }
+                        if (recList[k].fieldName == "buildertek__Labor1__c") {
+                            obj['Labor1'] += recList[k].originalValue;
+                            obj['Labor1key'] = 'buildertek__Labor1__c'
+                        }
+                        if (recList[k].fieldName == "buildertek__Projected_Costs__c") {
+                            obj['ProjectedCosts'] += recList[k].originalValue;
+                            obj['ProjectedCostskey'] = 'buildertek__Projected_Costs__c'
+                        }
+                        if (recList[k].fieldName == "buildertek__Forecast_To_Complete__c") {
+                            obj['Forecast'] += recList[k].originalValue;
+                            obj['Forecastskey'] = 'buildertek__Forecast_To_Complete__c'
+                        }
+                        if (recList[k].fieldName == "buildertek__Total_Costs__c") {
+                            obj['TotalCosts'] += recList[k].originalValue;
+                            obj['TotalCostsKey'] = 'buildertek__Total_Costs__c'
+                        }
+                        if (recList[k].fieldName == "buildertek__Profit_Loss__c") {
+                            obj['ProfitLoss'] += recList[k].originalValue;
+                            obj['ProfitLosskey'] = 'buildertek__Profit_Loss__c'
+                        }
+                        obj['fieldType'] = recList[k].fieldType;
+                    }
+                }
+    
+                listOfRecords[i]['totals'] = obj;
+            }
+        }
+        component.set("v.listOfRecords", listOfRecords);
+        return listOfRecords;
+    }
+
+    
 })

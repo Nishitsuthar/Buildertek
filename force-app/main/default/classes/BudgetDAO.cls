@@ -1336,7 +1336,11 @@ insert s;*/
       //  myquery = 'select buildertek__Group__c ' + queryFields + ' from buildertek__Budget_Item__c where buildertek__Budget__c =: recordId Order by buildertek__Group_Name__c DESC limit ' + recordToDisply + ' OFFSET ' + offset;
 
        // myquery = 'select buildertek__Cost_Code_Name__c ' + queryFields + ' from buildertek__Budget_Item__c where buildertek__Budget__c =: recordId Order by buildertek__Cost_Code_Name__c ASC limit ' + recordToDisply + ' OFFSET ' + offset;
-        BudgetItemList = database.query(myquery);
+       
+       System.debug('---------------------');
+       System.debug('myquery ==> '+myquery);
+       
+       BudgetItemList = database.query(myquery);
         
         for (string sumOfFields : currencyFields){
             //sai

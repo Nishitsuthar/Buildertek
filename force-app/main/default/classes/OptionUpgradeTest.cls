@@ -38,20 +38,44 @@ public with sharing class OptionUpgradeTest {
         prod.buildertek__Selection_Category_Lookup__c = section.Id;
         insert prod;
         
-       // OptionUpgrade.upgradeOption(option,prod);
-        
     }
 
     @isTest
     static void testMethod1(){
-        buildertek__Question__c option=new buildertek__Question__c();
-        option=[select id,Name,buildertek__Question_Group__c from buildertek__Question__c LIMIT 1];
+        buildertek__Question__c option = new buildertek__Question__c();
+        option = [select id,Name,buildertek__Question_Group__c from buildertek__Question__c LIMIT 1];
         
-        Product2 prod=new Product2();
-        prod=[select Id,Name,buildertek__Manufacturer__c from Product2 LIMIT 1];
+        Product2 prod = new Product2();
+        prod = [select Id,Name,buildertek__Manufacturer__c from Product2 LIMIT 1];
+
+        Test.startTest();
+
         OptionUpgrade.getProductDetails(option.Id, 'a', 'b', 'c', 'd', 'e', true);
-        OptionUpgrade.getProductDetails(option.Id, '', '', '', '', '', true);
-        OptionUpgrade.upgradeOption(option,prod);
+        OptionUpgrade.upgradeOption(option, prod);
+        OptionUpgrade.getProductFamily('f');
+        OptionUpgrade.getProductType('p');
+        OptionUpgrade.getProductName('t');
+        OptionUpgrade.getManufacturer('t');
 		
+        Test.stopTest();
+
+    }
+
+    @isTest
+    static void testMethod2(){
+        buildertek__Question__c option = new buildertek__Question__c();
+        option = [select id,Name,buildertek__Question_Group__c from buildertek__Question__c LIMIT 1];
+
+        Test.startTest();
+
+        OptionUpgrade.getProductDetails(option.Id, 'a', 'b', 'c', 'd', 'e', false);
+        OptionUpgrade.getProductDetails(option.Id, '', '', '', '', '', true);
+        OptionUpgrade.getProductFamily('');
+        OptionUpgrade.getProductType('');
+        OptionUpgrade.getProductName('');
+        OptionUpgrade.getManufacturer('');
+		
+        Test.stopTest();
+
     }
 }

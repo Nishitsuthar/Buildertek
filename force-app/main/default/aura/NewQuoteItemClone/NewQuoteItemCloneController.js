@@ -2428,6 +2428,7 @@ return other.Id == current.Id
                 }
             }
             component.set("v.data1", rows);
+            helper.sortData(component, component.get("v.sortedBy"), component.get("v.sortedDirection"));
             component.set("v.filteredData", rows);
         });
         $A.enqueueAction(action);

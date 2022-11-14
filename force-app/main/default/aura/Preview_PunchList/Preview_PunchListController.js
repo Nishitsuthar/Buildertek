@@ -1,66 +1,74 @@
 ({
-    init : function(component, event, helper) {
+    init: function(component, event, helper) {
         component.set("v.Spinner", true);
+
+
         var dbAction = component.get("c.getTemplates");
         dbAction.setParams({
-            recordId : component.get("v.recordId")
+            recordId: component.get("v.recordId")
         });
-        dbAction.setCallback(this, function (response) {
+        dbAction.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
                 component.set("v.templates", response.getReturnValue());
                 component.set("v.Spinner", false);
-                 $A.get('e.force:refreshView').fire();
+                $A.get('e.force:refreshView').fire();
             }
-           
+
         });
-        $A.enqueueAction(dbAction);   
+        $A.enqueueAction(dbAction);
+
+
     },
-    
-     //isRefreshed: function(component, event, helper) {
-        //location.reload();
+
+    //isRefreshed: function(component, event, helper) {
+    //location.reload();
     //},
-    
-    preiewEmailTemplate : function(component, event, helper) {
+
+    preiewEmailTemplate: function(component, event, helper) {
+        var cmpTarget = component.find('changeIt');
+        $A.util.addClass(cmpTarget, 'changeMe');
+
+
         var selectedTemplate = component.get("v.selectedTemplate");
-        if(selectedTemplate != undefined){
+        if (selectedTemplate != undefined) {
             component.set("v.isTemplateSelected", true);
-            
+
             helper.getTemplateBody(component, event, helper);
         }
     },
-    
-    closeModel : function(component, event, helper) {
-        $A.get("e.force:closeQuickAction").fire();    
+
+    closeModel: function(component, event, helper) {
+        $A.get("e.force:closeQuickAction").fire();
     },
-    
-    sendEmail : function(component, event, helper){
+
+    sendEmail: function(component, event, helper) {
         component.set("v.Spinner", true);
-        var toIds = []; 
+        var toIds = [];
         var ccIds = [];
         var to = component.get("v.selectedToContact");
         var cc = component.get("v.selectedCcContact");
         var emailIds = component.get("v.emailIds");
-        to.forEach(function(v){ toIds.push(v.Id) });
-        cc.forEach(function(v){ ccIds.push(v.Id) });
-        if(toIds.length != 0|| emailIds.length != 0){
-            var action = component.get("c.sendProposal"); 
+        to.forEach(function(v) { toIds.push(v.Id) });
+        cc.forEach(function(v) { ccIds.push(v.Id) });
+        if (toIds.length != 0 || emailIds.length != 0) {
+            var action = component.get("c.sendProposal");
             action.setParams({
-                htmlBody : component.get("v.payableLines"),
-                recordId : component.get("v.recordId"),
-                templateId : component.get("v.selectedTemplate"),
-                to : toIds,
-                cc : ccIds,
+                htmlBody: component.get("v.payableLines"),
+                recordId: component.get("v.recordId"),
+                templateId: component.get("v.selectedTemplate"),
+                to: toIds,
+                cc: ccIds,
                 emailIds: emailIds,
             });
-            action.setCallback(this, function(response){
+            action.setCallback(this, function(response) {
                 var state = response.getState();
-                var subject = 'PunchList[ref:'+component.get("v.recordId")+']';
-                if(state === "SUCCESS"){
+                var subject = 'PunchList[ref:' + component.get("v.recordId") + ']';
+                if (state === "SUCCESS") {
                     var result = response.getReturnValue();
-                    if(result === 'Success'){
+                    if (result === 'Success') {
                         component.set("v.Spinner", false);
-                        $A.get("e.force:closeQuickAction").fire();  
+                        $A.get("e.force:closeQuickAction").fire();
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             "title": "Success!",
@@ -74,20 +82,20 @@
     		                "emailSubject" : subject
     		            });
     		            $A.enqueueAction(taskaction);*/
-                    }else{
-                        $A.get("e.force:closeQuickAction").fire();  
+                    } else {
+                        $A.get("e.force:closeQuickAction").fire();
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             "type": 'error',
                             "message": result
                         });
-                        toastEvent.fire();    
+                        toastEvent.fire();
                     }
                     $A.get('e.force:refreshView').fire();
                 }
             });
-            $A.enqueueAction(action);    
-        }else{
+            $A.enqueueAction(action);
+        } else {
             component.set("v.Spinner", false);
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
@@ -95,10 +103,10 @@
                 "type": 'error',
                 "message": "Please select To Address to send Email"
             });
-            toastEvent.fire();    
+            toastEvent.fire();
         }
     },
-    onEmailChange: function (component, event, helper) {
+    onEmailChange: function(component, event, helper) {
         var emailId = component.find('emailForm').get('v.value');
         var emailIds = component.get('v.emailIds');
         var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
@@ -111,14 +119,14 @@
                 }
             }
         }
-        if(emailIds != null && emailIds != ''){
-            component.set('v.emailIds', emailIds);  
-        }else{
+        if (emailIds != null && emailIds != '') {
+            component.set('v.emailIds', emailIds);
+        } else {
             component.set('v.emailIds', emailId);
         }
-        
+
     },
-    handleEmailRemove: function (component, event, helper) {
+    handleEmailRemove: function(component, event, helper) {
         var removeIndex = event.getSource().get("v.name");
         var emailIds = component.get('v.emailIds');
         emailIds.splice(removeIndex, 1);

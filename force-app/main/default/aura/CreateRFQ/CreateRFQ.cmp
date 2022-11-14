@@ -1,0 +1,27 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="Spinner" type="Boolean" default="false"/>
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="createRfq" type="RFQ__c" default="{'sobjectType':'RFQ__c',
+        'buildertek__Description__c':'',
+        'buildertek__Due_Date__c':'',
+        'buildertek__RFQ_Details__c':''}" />
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if> 
+
+    <lightning:recordEditForm objectApiName="buildertek__RFQ__c">
+        <lightning:inputField fieldName="buildertek__Description__c" value="{!v.createRfq.buildertek__Description__c}" />
+        <lightning:inputField fieldName="buildertek__Due_Date__c" value="{!v.createRfq.buildertek__Due_Date__c}" />
+        <lightning:inputField fieldName="buildertek__RFQ_Details__c" value="{!v.createRfq.buildertek__RFQ_Details__c}" />
+    </lightning:recordEditForm>
+    <footer role="contentinfo" class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;">
+        <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}"/>
+        <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRFQ}"/>
+    </footer>
+</aura:component>
