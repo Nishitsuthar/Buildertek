@@ -2,9 +2,6 @@
 public with sharing class BT_ImportPurchaseOrderTest {
     @IsTest
     static void testMethod1(){
-        try {
-            
-        
 
         List<Account> accList = new List<Account>();
 
@@ -36,7 +33,7 @@ public with sharing class BT_ImportPurchaseOrderTest {
         prod.add(prodObj1);
         
         buildertek__Project__c prodObj2 = new buildertek__Project__c();
-        prodObj2.Name = 'test';
+        prodObj2.Name = 'test1';
         prod.add(prodObj2);
         insert prod;
 
@@ -96,11 +93,6 @@ public with sharing class BT_ImportPurchaseOrderTest {
         Test.startTest();
             BT_ImportPurchaseOrder.insertData(json);
         Test.stopTest();
-    } catch (Exception e) {
-        System.debug('Error');
-        System.debug('Error Message => '+e.getMessage());
-        System.debug('Error Line no => '+e.getLineNumber());
-    }
         
     }
 }

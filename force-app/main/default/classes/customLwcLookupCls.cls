@@ -32,7 +32,7 @@ public without sharing class customLwcLookupCls {
             }
         }
         
-        system.debug(myQuery);
+        system.debug('check dynamic query here& '+myQuery);
         List<sObject> lookUpList = database.query(myQuery);
         return lookUpList;
     }

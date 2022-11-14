@@ -880,6 +880,10 @@ public class BT_NewGanttChartCls{
 
     @AuraEnabled
     public static buildertek__Project_Task__c saveResourceForRecord(Id taskId, String resourceId, String resourceApiName){
+        System.debug('check param here');
+        System.debug('taskID '+taskId);
+        System.debug('resourceID '+resourceId);
+        System.debug('resourceAPIName '+resourceApiName);
         string rel = resourceApiName.split('__c')[0] + '__r.Name';
         String queryStr = 'Select Id,Name,' + resourceApiName + ',' + rel + ' From buildertek__Project_Task__c Where Id=:taskId';
         String apiName = resourceApiName;

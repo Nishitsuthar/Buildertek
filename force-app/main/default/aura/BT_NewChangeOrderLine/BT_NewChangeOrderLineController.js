@@ -193,10 +193,11 @@
         //helper.validateRecordData(component, event, helper);
        
         if (buttonName == 'saveButton') {
-          //  alert("haiiiiii");
+        //    alert("haiiiiii");
             var workspaceAPI = component.find("workspace");
             workspaceAPI.getFocusedTabInfo().then(function (response) {
                 var focusedTabId = response.tabId;
+                console.log('tabId',{focusedTabId});
                 workspaceAPI.closeTab({
                     tabId: focusedTabId
                 });
@@ -229,9 +230,9 @@
                     "slideDevName": "related"
                 });
                 navEvt.fire();
-            }, 200);
+            }, 100);
             component.set('v.isLoading', false);
-             $A.get('e.force:refreshView').fire();
+             $A.get('e.force:closeQuickAction').fire();
         }
 
         if (buttonName == 'saveAndNewButton'){

@@ -371,9 +371,12 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   }
   saveSelectedContact() {
     var that = this;
+    console.log('checking method*&');
     if (!this.taskRecordId.includes("_generated")) {
+      console.log('^ other side condition ^');
       //Added for contractor ****Start****
-      if (this.contracFieldApiName == "buildertek__Contractor__c") {
+      if (this.contracFieldApiName === "buildertek__Contractor__c") {
+        console.log('^ In If ^');
         that.showContractor = false; //Added for contractor
         this.isLoaded = true;
 
@@ -392,6 +395,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       }
       //Added for contractor ****End****
       else {
+        console.log('^ In else ^');
         that.showEditResourcePopup = false;
         this.isLoaded = true;
 

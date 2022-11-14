@@ -66,6 +66,7 @@ export default class customLwcLookUp extends LightningElement {
     connectedCallback() {
         //if(this.selectedValueFromParent)
         if(this.valueFromParent){
+            console.log('In conectedCall Back');
             this.fetchData();
             this.fetchDataAll()
         }else{
