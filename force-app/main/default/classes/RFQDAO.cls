@@ -1646,9 +1646,10 @@ Returns: Radio options list
 Throws [Exceptions]: NA
 ****************************************************************************/
     public static void linkNewRfqItems(Map<Id, RFQ_Item__c> rfqItemById){
+        try{
         
         map<Id, List<RFQ_Item__c>> itemByParent = new map<Id, List<RFQ_Item__c>>();
-        
+        System.debug(rfqItemById.values());
         for (RFQ_Item__c item : rfqItemById.values()){
             if (itemByParent.containsKey(item.RFQ_Package__c)){
                 itemByParent.get(item.RFQ_Package__c).add(item);
@@ -1661,10 +1662,13 @@ Throws [Exceptions]: NA
                                                                    from RFQ_to_Vendors__r)
                                                        from RFQ__c
                                                        where Id IN :itemByParent.keySet()]);
-        
+        System.debug(rfqById);
         
         List<RFQ_Vendor_Item__c> rfqToVendorItems = new List<RFQ_Vendor_Item__c>();
-        
+        System.debug(itemByParent.keyset());
+        System.debug(itemByParent);
+
+
         for (Id rfqId : itemByParent.keyset()){
             for (RFQ_Item__c rfqItem : itemByParent.get(rfqId)){
                 for (RFQ_to_Vendor__c vendor : rfqById.get(rfqId).RFQ_to_Vendors__r){
@@ -1691,6 +1695,13 @@ Throws [Exceptions]: NA
         system.debug('rfqToVendorItems ---------> ' + rfqToVendorItems);
         if (!rfqToVendorItems.isEmpty())
             insert rfqToVendorItems;
+    }catch( Exception e){
+        String msg =e.getMessage();
+        Integer line = e.getLineNumber();
+        System.debug(msg);
+        System.debug(line);
+       
+    }
     }
     
     public static void deleteLinkedVendorItems(Map<Id, RFQ_Item__c> rfqItemById){

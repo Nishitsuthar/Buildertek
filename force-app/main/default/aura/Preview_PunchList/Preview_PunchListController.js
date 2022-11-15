@@ -19,6 +19,11 @@
         $A.enqueueAction(dbAction);
 
 
+        // var cmpTarget = document.querySelector('.fixedFooter');
+        // alert(cmpTarget);
+        // $A.util.removeClass(cmpTarget, 'fixedFooter');
+        // $A.util.addClass(cmpTarget, 'test');
+
     },
 
     //isRefreshed: function(component, event, helper) {
@@ -26,8 +31,14 @@
     //},
 
     preiewEmailTemplate: function(component, event, helper) {
-        var cmpTarget = component.find('changeIt');
-        $A.util.addClass(cmpTarget, 'changeMe');
+        // var cmpTarget = component.find('changeIt');
+        // $A.util.addClass(cmpTarget, 'changeMe');
+
+
+        // var cmpTarget = document.querySelector('.fixedFooter');
+        // alert(cmpTarget);
+        // $A.util.addClass(cmpTarget, 'fixedFooter');
+        // $A.util.removeClass(cmpTarget, 'test');
 
 
         var selectedTemplate = component.get("v.selectedTemplate");

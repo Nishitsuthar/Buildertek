@@ -392,6 +392,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           that.gettaskrecords();
           that.showEditResourcePopup = false;
         });
+        that.contracFieldApiName = '';
       }
       //Added for contractor ****End****
       else {

@@ -26,6 +26,7 @@ public class SubContractOrderFromProjectClass {
                                 FROM buildertek__Budget_Item__c Where buildertek__Budget__r.buildertek__Project__c =: recId AND buildertek__Sub_Contract__c != ''  ORDER BY Name ASC  ];    
                
            }
+           System.debug(rfqList);
         for(buildertek__Budget_Item__c bud : rfqList){
             MasterBudgetsClass MasterBudgetsClassRecord = new MasterBudgetsClass(); 
             MasterBudgetsClassRecord.budgetRecord = bud;

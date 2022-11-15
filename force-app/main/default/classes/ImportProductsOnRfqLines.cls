@@ -267,16 +267,21 @@ WHERE buildertek__Status__c ='Awarded' OR buildertek__Status__c ='Accepted'];
     }
     
     @AuraEnabled
-    public static String addProductToRfq(List<String>productIds, String RfqId){
+    public static void addProductToRfq(List<String>productIds, String RfqId){
         try{
             List<String> SelectedProductIds = productIds;
+            System.debug(SelectedProductIds);
             // List<String> RFQrecordIds = productIds;
             
             String RfqRecId = RfqId;
+            System.debug(RfqRecId);
+
             // String budgetRecId = RfqId;
             // 
             List<Product2> Products = [SELECT Id, Name,  buildertek__Trade_Type__c  FROM Product2 Where id IN :SelectedProductIds];
+            System.debug(Products);
             List<buildertek__RFQ_Item__c> rfqItemList = new List<buildertek__RFQ_Item__c>();
+            System.debug(rfqItemList);
             for(Product2  Product : Products){
                 String sizeString = Product.Name;
                 Integer maxSize = 79;
@@ -299,12 +304,16 @@ rfqItem.buildertek__Contractor__c = rfqLineItem.buildertek__RFQ_Package__r.build
                 rfqItem.buildertek__Trade_Type__c = Product.buildertek__Trade_Type__c;
                 rfqItemList.add(rfqItem);
             }
-            // system.debug(rfqItemList);
+            system.debug(rfqItemList);
             insert rfqItemList;
-            return rfqItemList[0].id;
+            System.debug(rfqItemList + '----');
+            // return rfqItemList;
         }catch (Exception ex){
             String error =ex.getMessage();
-            return error;
+            Integer line = ex.getLineNumber();
+            System.debug(line);
+            System.debug(error);
+            // return error;
         }
         
     }
