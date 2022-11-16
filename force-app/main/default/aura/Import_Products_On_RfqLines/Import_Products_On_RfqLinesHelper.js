@@ -50,6 +50,18 @@
 
                 }).fire();
 
+                var workspaceAPI = component.find("workspace");
+                workspaceAPI.getFocusedTabInfo().then(function(response) {
+                    var focusedTabId = response.tabId;
+                    workspaceAPI.refreshTab({
+                            tabId: focusedTabId,
+                            includeAllSubtabs: true
+                    });
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+
                 /* var urlEvent = $A.get("e.force:navigateToURL");
                  urlEvent.setParams({
                      "url": '/lightning/r/buildertek__RFQ_Items__c/'+recordId+'/related/buildertek__RFQ_Items__r/view'

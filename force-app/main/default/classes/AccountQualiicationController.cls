@@ -1,37 +1,45 @@
 public class AccountQualiicationController {
-
+    
     @AuraEnabled
     public static String getPreQualStage(String recordId) {
         List<Account> acc = [select id,name,buildertek__Qualification_Stage__c from Account where id =:recordId];
         return acc[0].buildertek__Qualification_Stage__c;
     }
-
-    @AuraEnabled
+    
+    
+    
+    
+    @AuraEnabled  
     public static String ChangeAccountStatus(String recordId) {
         Account accountStatus = [select Id, buildertek__Qualification_Stage__c from Account where Id =: recordId];
         system.debug(accountStatus );
         accountStatus.buildertek__Qualification_Stage__c = 'Qualified';
-
+        
+        
+        
         update accountStatus;
         system.debug(accountStatus );
-        return 'Success';
-    }
-    @AuraEnabled
+        return 'Success';  
+    }  
+    @AuraEnabled  
     public static String ChangeAccountStatustoOld(String recordId,string oldstatus) {
         Account accountStatus = [select Id, buildertek__Qualification_Stage__c from Account where Id =: recordId];
         system.debug(accountStatus );
-
+        
         if(oldstatus != null && oldstatus != ''){
             accountStatus.buildertek__Qualification_Stage__c = oldstatus;
             update accountStatus;
         }
-
+        
         system.debug(accountStatus );
-        return 'Success';
-    }
-
+        return 'Success';  
+    }  
+    
+    
+    
+    
     /* File Upload code */
-
+    
     @AuraEnabled
     public static Id saveFile(Id parentId, String fileName, String base64Data, String contentType, String fileId) {
         // check if fileId id ''(Always blank in first chunk), then call the saveTheFile method,
@@ -43,15 +51,16 @@ public class AccountQualiicationController {
         } else {
             appendToFile(fileId, base64Data);
         }
+        
         return Id.valueOf(fileId);
     }
-
+    
     public static Id saveTheFile(Id parentId, String fileName, String base64Data, String contentType) {
         system.debug(parentId);
         system.debug(fileName);
         system.debug(base64Data);
         system.debug(contentType);
-        List<Account> lstAcc=[SELECT Id,Name FROM Account WHERE id =:parentId];
+        List<Account> lstAcc=[SELECT Id,Name FROM Account WHERE id =:parentId];        
         base64Data = EncodingUtil.urlDecode(base64Data, 'UTF-8');
         ContentVersion conVer = new ContentVersion();
         conVer.ContentLocation = 'S'; // to use S specify this document is in Salesforce, to use E for external files
@@ -61,7 +70,7 @@ public class AccountQualiicationController {
         insert conVer;    //Insert ContentVersion
         system.debug(conVer.Id);
         system.debug('******************'+parentId);
-
+        
         Id conDoc = [SELECT ContentDocumentId
                      FROM ContentVersion
                      WHERE Id = :conVer.Id].ContentDocumentId;
@@ -72,37 +81,44 @@ public class AccountQualiicationController {
         conDocLink.shareType = 'I';
         insert conDocLink;
         return conDocLink.Id;
-
+        
+        
+        
+        
+        
         /*base64Data = EncodingUtil.urlDecode(base64Data, 'UTF-8');
-        Attachment oAttachment = new Attachment();
-        oAttachment.parentId = parentId;
-        oAttachment.Body = EncodingUtil.base64Decode(base64Data);
-        oAttachment.Name = fileName;
-        oAttachment.ContentType = contentType;
-        insert oAttachment;
-        return oAttachment.Id;*/
-    }
 
+Attachment oAttachment = new Attachment();
+oAttachment.parentId = parentId;
+
+oAttachment.Body = EncodingUtil.base64Decode(base64Data);
+oAttachment.Name = fileName;
+oAttachment.ContentType = contentType;
+
+insert oAttachment;        
+return oAttachment.Id;*/
+    }
+    
     private static void appendToFile(Id fileId, String base64Data) {
-        base64Data = EncodingUtil.urlDecode(base64Data, 'UTF-8');
+        base64Data = EncodingUtil.urlDecode(base64Data, 'UTF-8');        
         Attachment a = [
             SELECT Id, Body
             FROM Attachment
             WHERE Id = : fileId
         ];
-
-        String existingBody = EncodingUtil.base64Encode(a.Body);
-        a.Body = EncodingUtil.base64Decode(existingBody + base64Data);
+        
+        String existingBody = EncodingUtil.base64Encode(a.Body);        
+        a.Body = EncodingUtil.base64Decode(existingBody + base64Data);        
         update a;
     }
-
+    
     public class Innerclass{
         @AuraEnabled public string fileName;
         @AuraEnabled public string fileContent;
     }
     @AuraEnabled
     public static void sendEmail(String recordId,string filedata){
-
+        
         List<Innerclass> inn;
         if(filedata != null && filedata != '' && filedata != '[]'){
             system.debug('filedata'+filedata);
@@ -111,8 +127,8 @@ public class AccountQualiicationController {
             system.debug(inn[0].fileName);
             system.debug(inn[0].fileContent);
         }
-
-
+        
+        
         buildertek__MSA_Settings__c msaSettings = [Select Id, buildertek__Site_URL__c,
                                                    buildertek__MSA_PDF_Template__c,
                                                    buildertek__MSA_Template__c,buildertek__Send_MSA_Template_Name__c
@@ -152,6 +168,11 @@ public class AccountQualiicationController {
         system.debug(toAddresses.size());
         if(toAddresses.size() > 0){
             system.debug('hi');
+            
+            
+            
+            
+            
             for(account acc : accountlist){
                 //toAddresses = new String[] {acc.buildertek__MSA_Additional_Email__c};
                 Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
@@ -160,10 +181,13 @@ public class AccountQualiicationController {
                 email.setSubject(emailSubject);
                 //String body = '<html><body><p><span>Congratulations, you have been pre-qualified. You will be receiving additional instructions shortly on next steps.  Please fill out our MSA form.  If you have any questions please let us know.';
                 //body += '</span><br/><span><a href="'+msaSettings.buildertek__Site_URL__c+'/'+msaSettings.buildertek__MSA_Template__c+'?id='+Acc.Id+'">Click here to open the Web Form</a>';
-                //body += '</span></p></body></html>';
+                //body += '</span></p></body></html>'; 
                 email.setHtmlBody(body);
                 if(filedata != null && filedata != '' && filedata != '[]'){
                     List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
+                    
+                    
+                    
                     for(Innerclass i:inn){
                         Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
                         efa.setFileName(i.fileName);
@@ -172,8 +196,10 @@ public class AccountQualiicationController {
                         fileAttachments.add(efa);
                         email.setFileAttachments(fileAttachments);
                     }
+                    
                 }
-                mails.add(email);
+                
+                mails.add(email);   
             }
             string addresses= '';
             string CCaddresses= '';
@@ -183,7 +209,7 @@ public class AccountQualiicationController {
                     List<Account> accountsList = [SELECT Id, buildertek__Qualification_Date__c,buildertek__Qualification_Stage__c FROM Account WHERE Id =:recordId];
                     for(Account acc : accountsList){
                         acc.buildertek__Qualification_Date__c = system.now();
-                        acc.buildertek__Qualification_Stage__c = 'MSA Sent';
+                        acc.buildertek__Qualification_Stage__c = 'MSA Sent';    
                     }
                     update accountsList;
                     integer i = 0;
@@ -209,7 +235,7 @@ public class AccountQualiicationController {
                     caseEmailMessage.status = '5';
                     caseEmailMessage.RelatedToId = accountlist[0].id;
                     caseEmailMessage.buildertek__Subject__c = emailSubject;
-
+                    
                     insert caseEmailMessage;
                 }
             }
@@ -217,5 +243,5 @@ public class AccountQualiicationController {
             //accountlist[0].Name.addError('Error added to Name on trigger');
         }
     }
-
+    
 }

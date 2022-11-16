@@ -3,13 +3,13 @@
 		/*var recordId = component.get("v.recordId")
 		console.log('getting recordId '+recordId);*/
          var pageRef = component.get("v.pageReference");
-        var state = pageRef.state; 
+        var state = pageRef.state;
         var base64Context = state.inContextOfRef;
          if (base64Context.startsWith("1\.")) {
             base64Context = base64Context.substring(2);
         }
         var addressableContext = JSON.parse(window.atob(base64Context));
-        component.set("v.recordId", addressableContext.attributes.recordId);              
+        component.set("v.recordId", addressableContext.attributes.recordId);
         component.set('v.Option.buildertek__Question_Group__c' , addressableContext.attributes.recordId );
 
 	},
@@ -104,9 +104,11 @@
 			});
 			$A.enqueueAction(action);
 		}
+	},
 
-
-
+	saveAndNew: function(component, event, helper){
+		helper.saveAndNew(component, event);
+		$A.get("e.force:refreshView").fire();
 	},
 
 	onSelectedChanged: function(component, event, helper){
@@ -129,6 +131,6 @@
 		Option.buildertek__Upgrade__c = checkValue;
 		component.set("v.Option", Option);
 	},
-    
+
 
 })

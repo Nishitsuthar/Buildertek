@@ -2,7 +2,7 @@
 	<aura:attribute name="Spinner" type="Boolean" default="false"/>
 	<aura:attribute name="Option" type="Question__c" default="{ 'sobjectType': 'Question__c'}" />
 	<aura:attribute name="Product" type="Product2" default="{ 'sobjectType': 'Product2'}" />
-    
+
     <aura:attribute name="recordId" type="Id"/>
 
 	<lightning:workspaceAPI aura:id="workspace" />
@@ -12,7 +12,6 @@
 			padding: 0 10px;
 		}
 	</aura:html>
-
 
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
@@ -88,16 +87,12 @@
 				<!-- <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModel}"/>
 				<lightning:button variant="brand" label="Upgrade" onclick="{!c.onUpgrade}"/> -->
 				<lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
+				<lightning:button name='SaveandNew' label='Save &amp; New' onclick='{!c.saveAndNew}' />
 				<lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRecord}"/>
 			</footer>
 		</div>
 	</section>
 	<div class="slds-backdrop slds-backdrop_open"></div>
-
-
-
-
-
 
 		<!-- <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
 		<lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRecord}"/> -->

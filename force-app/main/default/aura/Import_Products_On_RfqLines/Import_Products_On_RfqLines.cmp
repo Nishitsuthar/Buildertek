@@ -46,6 +46,7 @@
     <aura:attribute name="rfqvendorList" type="List" />
     
     <aura:attribute name="pbList"  type="Pricebook2[]" />
+    <lightning:workspaceAPI aura:id="workspace"/>
     
     <ltng:require styles="{!$Resource.MOdalPreviewWidth72}"/>
     <!-- <aura:html tag="style">

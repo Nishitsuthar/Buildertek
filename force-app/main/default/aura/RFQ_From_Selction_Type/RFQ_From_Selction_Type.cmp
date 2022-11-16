@@ -1,12 +1,15 @@
-<aura:component controller="Pricing_Request_From_Section" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+<aura:component controller="createRFQClass" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
     <aura:attribute name="Spinner" type="Boolean" default="false"/>
-    <aura:attribute name="columns" type="List" />
-    <aura:attribute name="data" type="Object" />
-    <aura:attribute name="sortedDirection" type="String" default="asc" />
-    <aura:attribute name="sortedBy" type="String" default="Name" />
+    <aura:attribute name="myData" type="Object" />
+    <aura:attribute name="myColumns" type="List" />
+    <aura:attribute name="createRfq" type="RFQ__c" default="{'sobjectType':'RFQ__c',
+                                                            'Name':'',
+                                                            'buildertek__Due_Date__c':'',
+                                                            'buildertek__RFQ_Details__c':''}" />
     <aura:attribute name="selectedRowList" type="object" default="" />
-    <aura:attribute name="pricingRequest" type="Pricing_Request__c" default="{'sobjectType':'Pricing_Request__c', 'Name':''}" />
+
+    <aura:handler name="init" value="{! this }" action="{! c.init }" />
+
 
     <aura:if isTrue="{!v.Spinner}">
         <div aura:id="spinnerId" class="slds-spinner_container">
@@ -54,19 +57,22 @@
         <div class="slds">
             <header class="slds-modal__header">
                 <div class="" id="header" style="font-size:20px;">
-                    Create Pricing Request
+                    Create RFQ
                 </div>
             </header>    
-            <div style="max-height: 75vh;overflow:auto;">
+            <div style="max-height: 74vh;overflow:auto;">
                 <div style="padding: 10px 10px 0px;">
-                    <lightning:recordEditForm objectApiName="buildertek__Pricing_Request__c">
-                        <lightning:inputField fieldName="Name" value="{!v.pricingRequest.Name}" required = "true"/>
+                    <lightning:recordEditForm objectApiName="buildertek__RFQ__c">
+                        <lightning:inputField fieldName="Name" value="{!v.createRfq.Name}" required = "true"/>
+                        <lightning:inputField fieldName="buildertek__Due_Date__c" value="{!v.createRfq.buildertek__Due_Date__c}" />
+                        <lightning:inputField fieldName="buildertek__RFQ_Details__c" value="{!v.createRfq.buildertek__RFQ_Details__c}" />
                     </lightning:recordEditForm>
                 </div>
 
                 <div style="margin: 15px 5px;">
-                    <lightning:datatable keyField="Id" data="{!v.data}" hideCheckboxColumn="false" columns="{!v.columns}" selectedRows="{!v.selectedRows}" onrowselection="{!c.updateSelected}" onsort="{!c.updateColumnSorting}" sortedBy="{!v.sortedBy}" sortedDirection="{!v.sortedDirection}" />
-                    <aura:if isTrue="{!empty(v.data)}">
+                    <!-- <lightning:datatable keyField="Id" data="{!v.data}" hideCheckboxColumn="false" columns="{!v.columns}" selectedRows="{!v.selectedRows}" onrowselection="{!c.updateSelected}" onsort="{!c.updateColumnSorting}" sortedBy="{!v.sortedBy}" sortedDirection="{!v.sortedDirection}" /> -->
+                    <lightning:datatable columns="{! v.myColumns }" data="{! v.myData }" keyField="id" selectedRows="{!v.selectedRows}" onrowselection="{!c.updateSelectedText}"/>
+                    <aura:if isTrue="{!empty(v.myData)}">
                         <div class="modalBodyDiv">
                             No Data Found
                         </div>
@@ -75,7 +81,7 @@
             </div>
             <footer role="contentinfo" class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;">
                 <button class="slds-button slds-button--neutral" onclick="{!c.closeModal}"> Cancel </button>
-                <button class="slds-button slds-button--brand" onclick="{!c.createRecord}" style="margin: 0 0.5rem;"> Create </button>
+                <button class="slds-button slds-button--brand" onclick="{!c.createRFQ}" style="margin: 0 0.5rem;"> Create </button>
             </footer>
         </div>
     </div>

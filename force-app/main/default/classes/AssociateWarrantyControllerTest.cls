@@ -29,9 +29,9 @@ private class AssociateWarrantyControllerTest {
      //   selectedId.add(warrantyList2[0].Id);
         
         //AssociateWarrantyController AWC = new AssociateWarrantyController();
-      //   AssociateWarrantyController.warrantydetails(warrantyList[0].Id);
-      //  AssociateWarrantyController.newWarranty(warranty2.id,warranty.id,5);
-     //AssociateWarrantyController.newWarranty(warrantyList2[0].Id,warrantyList[0].Id,5);
+        //AssociateWarrantyController.warrantydetails(warrantyList[0].Id);
+      	//AssociateWarrantyController.newWarranty(warranty2.id,warranty.id,5);
+     	//AssociateWarrantyController.newWarranty(warrantyList2[0].Id,warrantyList[0].Id,5);
     }
 
 }

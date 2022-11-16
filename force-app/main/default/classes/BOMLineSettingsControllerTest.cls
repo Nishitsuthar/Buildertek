@@ -17,5 +17,3 @@ public with sharing class BOMLineSettingsControllerTest {
 
     }
 }
-
-

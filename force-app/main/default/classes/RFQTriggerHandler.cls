@@ -95,6 +95,7 @@ public with sharing class RFQTriggerHandler {
         Set<Id> RfqstatusId = new Set<Id>();
         SET<Id> RfqvendrId = new SET<Id>();
         Set<Id> RfqitemId = new Set<Id>();
+        Set<Id> RfqIds = new Set<Id>();
         
         Set<Id> RfqvendoritemsId = new Set<Id>();
         List<buildertek__RFQ_Item__c> rfqItemListToInsert = new List<buildertek__RFQ_Item__c>();
@@ -103,12 +104,48 @@ public with sharing class RFQTriggerHandler {
             if(rf.buildertek__Status__c == 'Accepted'  && rf.buildertek__Status__c != oldRFqrec.buildertek__Status__c){
                 RfqstatusId.add(rf.Id);
             }
+            if(rf.buildertek__Status__c == 'Awarded'  && rf.buildertek__Status__c != oldRFqrec.buildertek__Status__c){
+                RfqIds.add(rf.Id);
+            }
         }
-        List<buildertek__RFQ__c> rfqrec;
+
+        if (RfqIds.size() > 0) {
+            // For Ticket BUIL-2857
+            List<buildertek__RFQ_Item__c> rfqLineList = [SELECT Id, Name, buildertek__Pricing_Request_Line_Detail__c, buildertek__RFQ_Package__r.buildertek__Vendor_Quote__c FROM buildertek__RFQ_Item__c WHERE buildertek__RFQ_Package__c IN: RfqIds];
+            Set<Id> prldIds = new Set<Id>();
+            for (buildertek__RFQ_Item__c rfqLine : rfqLineList) {
+                if (rfqLine.buildertek__Pricing_Request_Line_Detail__c != null) {
+                    prldIds.add(rfqLine.buildertek__Pricing_Request_Line_Detail__c);
+                }
+            }
+    
+            List<buildertek__Question__c> optionList = [SELECT Id, Name, buildertek__Pricing_Request_Line_Detail__c, buildertek__Cost__c FROM buildertek__Question__c WHERE buildertek__Pricing_Request_Line_Detail__c IN: prldIds];
+            for (buildertek__Question__c option : optionList) {
+                for (buildertek__RFQ_Item__c rfqLine : rfqLineList) {
+                    if (option.buildertek__Pricing_Request_Line_Detail__c == rfqLine.buildertek__Pricing_Request_Line_Detail__c) {
+                        if (rfqLine.buildertek__RFQ_Package__r.buildertek__Vendor_Quote__c != null) {
+                            option.buildertek__Cost__c = rfqLine.buildertek__RFQ_Package__r.buildertek__Vendor_Quote__c;
+                        }
+                    }
+                }
+            }
+            update optionList;
+
+            // For Ticket BUIL-2856
+            List<buildertek__Question__c> newOptionList=[SELECT Id, Name, buildertek__Cost__c, buildertek__Manufacturer__c, buildertek__RFQ_Line__r.buildertek__Unit_Price__c, buildertek__RFQ_Line__r.buildertek__Vendor__c FROM buildertek__Question__c WHERE buildertek__RFQ_Line__r.buildertek__RFQ_Package__c IN: RfqIds];
+            for(buildertek__Question__c opt: newOptionList){
+                opt.buildertek__Cost__c = opt.buildertek__RFQ_Line__r.buildertek__Unit_Price__c;
+                opt.buildertek__Manufacturer__c = opt.buildertek__RFQ_Line__r.buildertek__Vendor__c;
+            }
+            update newOptionList;
+        }
+
+
+        // List<buildertek__RFQ__c> rfqrec;
         /* if(Schema.sObjectType.buildertek__RFQ__c.fields.id.isAccessible()
 && Schema.sObjectType.buildertek__RFQ__c.fields.Name.isAccessible() 
 && Schema.sObjectType.buildertek__RFQ__c.fields.buildertek__Status__c.isAccessible()){*/
-        rfqrec = [select Id,Name,buildertek__Status__c from buildertek__RFQ__c where Id =:RfqstatusId];
+        // rfqrec = [select Id,Name,buildertek__Status__c from buildertek__RFQ__c where Id =:RfqstatusId];
         // }
         List<RFQ_To_Vendor__c> rfqVendorList;
         /* if(Schema.sObjectType.RFQ_To_Vendor__c.fields.id.isAccessible()
