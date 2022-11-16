@@ -1,9 +1,10 @@
 ({
     createRFQ: function (component, event, helper) {
+        
         var cOrder = component.get('v.createRfq');
         console.log('cOrder ==> ' + cOrder.Name);
         var action = component.get("c.RFQFrom_Option");
-        console.log('========');
+        if(cOrder.Name != ''){
         action.setParams({
             rfq: cOrder,
             optionId: component.get("v.recordId")
@@ -14,8 +15,12 @@
             console.log('State--------->'+response.getState());
             console.log(state);
             console.log('State => ' + state);
-            if (state == "SUCCESS") {
+            
                 var result = response.getReturnValue();
+                if(result=='Error'){
+                    helper.showToast("Error", "Error", "RFQ is already exist", "5000");
+                }else{
+                    if (state == "SUCCESS") {
                 helper.showToast("Success", "Success", "New RFQ is created.", "5000");
                 $A.get("e.force:closeQuickAction").fire();
                 var navEvt = $A.get("e.force:navigateToSObject");
@@ -24,14 +29,19 @@
                     "slideDevName": "Detail"
                 });
                 navEvt.fire();
+            
             } else {
                 helper.showToast("Error", "Error", "Something Went Wrong", "5000");
                 var error = response.getError();
                 console.log('Error =>', { error });
-            }
+            }}
             component.set("v.Spinner", false);
         });
         $A.enqueueAction(action);
+    }
+    else{
+        helper.showToast("Error", "Error", "RFQ Name is required", "5000");
+    }
 
     },
     closeModal: function (component, event, helper) {
