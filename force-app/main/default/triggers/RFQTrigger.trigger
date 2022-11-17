@@ -34,7 +34,7 @@ trigger RFQTrigger on RFQ__c (after delete, after insert, after undelete, after 
                 
             }
             handler.OnAfterUpdateforAward(Trigger.new);
-            handler.onAfterUpdateTheBudget(Trigger.new);
+            handler.onAfterUpdateTheBudget(Trigger.new, Trigger.oldMap);
         }
         
         else if(Trigger.isDelete && Trigger.isBefore){

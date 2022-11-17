@@ -45,9 +45,11 @@
                 var optionList = [];
 
                 selectedRowList.forEach(element => {
-                    element.buildertek__Questions__r.forEach(ele => {
-                        optionList.push(ele);
-                    });
+                    if (element.buildertek__Questions__r != undefined) {
+                        element.buildertek__Questions__r.forEach(ele => {
+                            optionList.push(ele);
+                        });
+                    }
                 });
 
                 var action = component.get("c.createPR");
