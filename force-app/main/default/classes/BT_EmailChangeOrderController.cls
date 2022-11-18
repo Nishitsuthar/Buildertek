@@ -18,15 +18,21 @@ public class BT_EmailChangeOrderController {
     @AuraEnabled
     public Static List<EmailTemplate> getbodyTemplates(String folderName){
         system.debug('folderName ----------> ' + folderName);
+        System.debug(String.isNotBlank(folderName));
+
         if(String.isNotBlank(folderName)){
+            System.debug(folderName);
             List<EmailTemplate> emailTemplateList;
+
+            System.debug(emailTemplateList);
+
             //  if (Schema.sObjectType.Emailtemplate.fields.Id.isAccessible() && Schema.sObjectType.Emailtemplate.fields.Name.isAccessible() && Schema.sObjectType.Folder.fields.Name.isAccessible()){
             
             emailTemplateList = [Select Id, Name, folder.name,Body
                                  from Emailtemplate
                                  where folder.name = :folderName];
             //  }
-            system.debug(emailTemplateList[0].Body);
+            // system.debug(emailTemplateList[0].Body);
             return emailTemplateList;
         } 
         return null;
@@ -101,6 +107,12 @@ Schema.sObjectType.buildertek__File__c.fields.Name.isAccessible() ){*/
         system.debug('customFilesList --------> ' + customFilesList.size());
         List<FinalFileAttachmentsClass> FinalFileAttachmentsList = new List<FinalFileAttachmentsClass>();
         List<Attachment> attList = new List<Attachment>();
+        System.debug(Id.valueOf(recordId));
+        System.debug(Id.valueOf(recordId).getSObjectType());
+        System.debug(Id.valueOf(recordId).getSObjectType().getDescribe());
+        System.debug(Id.valueOf(recordId).getSObjectType().getDescribe().getName());
+        System.debug(Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__Quote__c');
+        
         if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__Quote__c'){
             for (Attachment att : [select Id, Name
                                    FROM Attachment
@@ -335,7 +347,8 @@ body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
             //added by sai end
             
             List<File__c> flList;
-            
+            system.debug([Select Id, Name, Bucket_Name__c, Amazon_File_Key__c, File_Presigned_URL__c from File__c]);
+
             
             flList = [Select Id, Name, Bucket_Name__c, Amazon_File_Key__c, File_Presigned_URL__c
                       from File__c
@@ -412,11 +425,15 @@ body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
                        from Attachment
                        where Id IN :files];
             
-            
+            system.debug([Select Id, Name, Body  from Attachment  where Id IN :files]);
             system.debug('attList -----------> ' + attList);
             system.debug('attList size -------> ' + attList.size());
+            system.debug(docList.size() > 0);
+
             if (docList.size() > 0){
                 for (Attachment att : attList){
+                    system.debug(attList);
+
                     Messaging.Emailfileattachment efa2 = new Messaging.Emailfileattachment();
                     efa2.setFileName(att.Name);
                     efa2.setBody(att.Body);
@@ -472,11 +489,18 @@ body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
                     caseEmailMessage.FromName = UserInfo.getUserName();
                     system.debug('caseEmailMessage.ToAddress'+caseEmailMessage.FromName);
                     caseEmailMessage.CcAddress = CCaddresses;
+                    system.debug('CCaddresses'+caseEmailMessage.CcAddress);
                     caseEmailMessage.Subject = subject;
+                    system.debug('CCaddresses'+caseEmailMessage.Subject);
                     caseEmailMessage.HtmlBody = body;
+                    system.debug('CCaddresses'+caseEmailMessage.HtmlBody);
                     caseEmailMessage.Incoming = False;
+                    system.debug('CCaddresses'+caseEmailMessage.Incoming);
                     caseEmailMessage.buildertek__Is_Incoming_Email__c = false;
+                    system.debug('CCaddresses'+caseEmailMessage.buildertek__Is_Incoming_Email__c);
                     caseEmailMessage.MessageDate = system.now();
+                    system.debug('CCaddresses'+caseEmailMessage.MessageDate);
+
                     //caseEmailMessage.TextBody = body.replaceAll('<br/>', '\n');
                     //caseEmailMessage.TextBody = body;
                     
@@ -489,13 +513,13 @@ caseEmailMessage.buildertek__Email_Body__c = body.substring(0, 131000);
 caseEmailMessage.buildertek__Email_Body__c = body;
 }*/
                     caseEmailMessage.status = '5';
-                  //remove  caseEmailMessage.RelatedToId = recordId;
+                    system.debug('status'+caseEmailMessage.status);
                     caseEmailMessage.buildertek__Subject__c = 'Re: ' + subject;
-                    //caseEmailMessage.ActivityId = '0011K00002S8KIbQAN';
+                    system.debug('status'+caseEmailMessage.buildertek__Subject__c);
                     
                     insert caseEmailMessage;
                     
-                    
+                    System.debug('===========INSERT===============');
                     
                     EmailMessageRelation emr = new EmailMessageRelation();
                     emr.emailMessageId = caseEmailMessage.id;
@@ -697,16 +721,20 @@ insert emrs;*/
             }
             vendorID = c.id;
         }
+        System.debug(vendorID);
         
         buildertek__RFQ_To_Vendor__c rfq;
+        System.debug(Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.buildertek__Contact__c.isAccessible());
         if (Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.buildertek__Contact__c.isAccessible()){
             
             rfq = [select Id, Name, buildertek__Contact__c
                    from buildertek__RFQ_To_Vendor__c
                    where Id = :parentRecordID];
         }
+        System.debug(rfq);
         
         List<contact> contactList;
+        System.debug(contactList);
         if (Schema.sObjectType.Contact.fields.Id.isAccessible() && Schema.sObjectType.Contact.fields.Name.isAccessible() && Schema.sObjectType.Contact.fields.Email.isAccessible()){
             
             contactList = [select Id, Name, Email

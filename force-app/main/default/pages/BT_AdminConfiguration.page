@@ -184,18 +184,18 @@
                 <div id="adminConfigMainPanel" class="slds-panel slds-grid slds-grid--vertical slds-nowrap">
                     <div class="slds-form--stacked slds-grow slds-scrollable--y">
                         <apex:outputPanel layout="block" id="initPanel" styleClass="apLightningOneTile" rendered="{!IF(listNodeConfigurations.size == 0 && isNewOrganization == True, TRUE, FALSE)}">
-                            <div style="padding:10px 0px 10px 0px;">{!$Label.buildertek__initialize_new_org_message}</div>
+                            <div style="padding:10px 0px 10px 0px;">{!$Label.buildertek__Initialize_New_Org_Message}</div>
                             <div>
-                                <apex:commandButton action="{!initializeNewOrg}" styleClass="apLightningOneTileButton slds-button slds-button_brand" status="splashStatus" rerender="configFrm" value="{!$Label.buildertek__initialize_new_org_button}" />
+                                <apex:commandButton action="{!initializeNewOrg}" styleClass="apLightningOneTileButton slds-button slds-button_brand" status="splashStatus" rerender="configFrm" value="{!$Label.buildertek__Initialize_New_Org_Button}" />
                             </div>
                             <script>
                                 j$("div[id$='adminConfigMainPanel']").css('background', '#f4f6f9');
                             </script>
                         </apex:outputPanel>
                         <apex:outputPanel layout="block" id="resetPanel" styleClass="apLightningOneTile" rendered="{!IF(listNodeConfigurations.size == 0 && isNewOrganization == False, TRUE, FALSE)}">
-                            <div style="padding:10px 0px 10px 0px;">{!$Label.buildertek__initialize_admin_configuration_message}</div>
+                            <div style="padding:10px 0px 10px 0px;">{!$Label.buildertek__Initialize_Admin_Configuration_Message}</div>
                             <div>
-                                <apex:commandButton action="{!reset}" styleClass="apLightningOneTileButton slds-button slds-button_brand" status="splashStatus" rerender="configFrm" value="{!$Label.buildertek__initialize_admin_configuration_button}"/>
+                                <apex:commandButton action="{!reset}" styleClass="apLightningOneTileButton slds-button slds-button_brand" status="splashStatus" rerender="configFrm" value="{!$Label.buildertek__Initialize_Admin_Configuration_Button}"/>
                             </div>
                             <script>
                                 j$("div[id$='adminConfigMainPanel']").css('background', '#f4f6f9');

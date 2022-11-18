@@ -1,5 +1,5 @@
 ({
-    expandAll: function (component, event, helper) {
+    expandAll: function(component, event, helper) {
         var recordId = component.get("v.recordId");
         var selectedVendorList = component.get('v.selectedVendorList');
         var expandicon = document.getElementsByClassName(recordId + 'expandGrpIcon_');
@@ -14,7 +14,7 @@
         }
         component.set('v.selectedVendorList', selectedVendorList);
     },
-    CollapeAll: function (component, event, helper) {
+    CollapeAll: function(component, event, helper) {
         var recordId = component.get("v.recordId");
         var selectedVendorList = component.get('v.selectedVendorList');
         var expandicon = document.getElementsByClassName(recordId + 'expandGrpIcon_');
@@ -29,67 +29,67 @@
         component.set('v.selectedVendorList', selectedVendorList);
     },
 
-    initialize: function (component, event, helper) {
+    initialize: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
         component.set('v.columns', [{
-            label: 'Line name',
-            fieldName: 'Name',
-            type: 'text'
-        },
-        {
-            label: 'Item Name',
-            fieldName: 'Name',
-            type: 'text'
-        },
+                label: 'Line name',
+                fieldName: 'Name',
+                type: 'text'
+            },
+            {
+                label: 'Item Name',
+                fieldName: 'Name',
+                type: 'text'
+            },
 
-        {
-            label: 'Description',
-            fieldName: 'buildertek__Description__c',
-            type: 'text'
-        },
+            {
+                label: 'Description',
+                fieldName: 'buildertek__Description__c',
+                type: 'text'
+            },
 
-        {
-            label: 'Quantity',
-            fieldName: 'buildertek__Quantity__c',
-            type: 'number',
-            class: 'slds-align-left'
-        },
-        {
-            label: 'Unit Price',
-            fieldName: 'buildertek__Unit_Price__c',
-            type: 'currency'
-        },
-        {
-            label: 'Total Price',
-            fieldName: 'buildertek__Total_Price__c',
-            type: 'currency',
-            typeAttributes: {
-                currencyCode: 'USD',
-                align: 'center'
+            {
+                label: 'Quantity',
+                fieldName: 'buildertek__Quantity__c',
+                type: 'number',
+                class: 'slds-align-left'
+            },
+            {
+                label: 'Unit Price',
+                fieldName: 'buildertek__Unit_Price__c',
+                type: 'currency'
+            },
+            {
+                label: 'Total Price',
+                fieldName: 'buildertek__Total_Price__c',
+                type: 'currency',
+                typeAttributes: {
+                    currencyCode: 'USD',
+                    align: 'center'
+                }
+            },
+            {
+                label: 'Vendor Notes',
+                fieldName: 'buildertek__Vendor_Note__c',
+                type: 'text'
             }
-        },
-        {
-            label: 'Vendor Notes',
-            fieldName: 'buildertek__Vendor_Note__c',
-            type: 'text'
-        }
         ]);
         helper.getdata(component, event, helper);
         helper.RFQStatus(component, event, helper);
         helper.getcurr(component, event, helper);
         helper.getmulticur(component, event, helper);
     },
-    scriptsLoaded: function (component, event, helper) {
+    scriptsLoaded: function(component, event, helper) {
 
     },
 
-    vendorLoaded: function (component, event, helper) {
+    vendorLoaded: function(component, event, helper) {
         //helper.moreDetails(component.get("v.rfqToVendorList")[0].Id,'0');
     },
 
-    selectAll: function (component, event, helper) {
+    selectAll: function(component, event, helper) {
         //alert("hai");
         debugger;
         var checkAllSelected = event.getSource().get("v.value");
@@ -144,23 +144,23 @@
         //alert( JSON. stringify(vendorList));
     },
 
-    openRFQ: function (component, event, helper) {
+    openRFQ: function(component, event, helper) {
         var recordId = component.get("v.recordId");
         window.open('/' + recordId);
     },
 
-    openVendor: function (component, event, helper) {
+    openVendor: function(component, event, helper) {
         var recordId = event.getSource().get("v.name");
         window.open('/' + recordId);
     },
 
-    openVendoraccount: function (component, event, helper) {
+    openVendoraccount: function(component, event, helper) {
         var accid = event.target.id;
 
         window.open('/' + accid);
     },
 
-    showMoreDetails: function (component, event, helper) {
+    showMoreDetails: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -180,7 +180,7 @@
                 }],
 
             ],
-            function (components, status) {
+            function(components, status) {
                 if (status === 'SUCCESS') {
                     component.set("v.IsOnLoad", false);
                     component.set("v.recordViewForm", components);
@@ -198,11 +198,11 @@
 
     },
 
-    uncheckAll: function (component, event, helper) {
+    uncheckAll: function(component, event, helper) {
         component.find("vendorCheckall").set("v.checked", false);
     },
 
-    awardRFQ: function (component, event, helper) {
+    awardRFQ: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -229,25 +229,25 @@
         }
     },
 
-    awardSelectedVendor: function (component, event, helper) {
+    awardSelectedVendor: function(component, event, helper) {
         component.set('v.vendorName', '');
         component.set('v.vendorId', '');
         component.set('v.isAwardedClick', true);
         component.set('v.vendorName', event.getSource().get("v.alternativeText"));
         component.set('v.vendorId', event.getSource().get("v.name"));
     },
-    deleteselectedVendor: function (component, event, helper) {
+    deleteselectedVendor: function(component, event, helper) {
         component.set('v.vendorName', '');
         component.set('v.vendorId', '');
         component.set('v.isdeleteClick', true);
         component.set('v.vendorName', event.getSource().get("v.alternativeText"));
         component.set('v.vendorId', event.getSource().get("v.name"));
     },
-    cancelvendor: function (component, event, helper) {
+    cancelvendor: function(component, event, helper) {
         component.set('v.isdeleteClick', false);
         component.set('v.vendorList', []);
     },
-    confirmdelete: function (component, event, helper) {
+    confirmdelete: function(component, event, helper) {
         component.set('v.isdeleteClick', false);
         //component.set('v.isComparePopupOpen', false);
         $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -260,7 +260,7 @@
     },
 
 
-    confirmAward: function (component, event, helper) {
+    confirmAward: function(component, event, helper) {
         component.set('v.isAwardedClick', false);
         component.set('v.MultipleAwardedClick', false);
         component.set('v.isComparePopupOpen', false);
@@ -278,7 +278,7 @@
         action.setParams({
             vendorId: selectedVendor
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
@@ -291,33 +291,33 @@
         $A.enqueueAction(action);
     },
 
-    cancelAward: function (component, event, helper) {
+    cancelAward: function(component, event, helper) {
         component.set('v.isAwardedClick', false);
         component.set('v.vendorList', []);
     },
 
-    rejectRFQ: function (component, event, helper) {
+    rejectRFQ: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
         helper.updateStatus(component, event, helper, component.get("v.activeRFQVendor").Id, "Rejected");
     },
 
-    acceptedRFQ: function (component, event, helper) {
+    acceptedRFQ: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
         helper.updateStatus(component, event, helper, component.get("v.activeRFQVendor").Id, "Accepted");
     },
 
-    canceledRFQ: function (component, event, helper) {
+    canceledRFQ: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
         helper.updateStatus(component, event, helper, component.get("v.activeRFQVendor").Id, "Canceled");
     },
 
-    sendRFQ: function (component, event, helper) {
+    sendRFQ: function(component, event, helper) {
         var selectedvendors = [];
         selectedvendors.push(component.get("v.activeRFQVendor").Id);
         $A.createComponents(
@@ -332,8 +332,8 @@
                 ["c:BT_RFQ_Email_Preview", {
                     "rfqId": component.get("v.recordId"),
                     "vendorIds": selectedvendors,
-                    "onSuccess": function (object, contactId) {
-                        component.get('v.modalPromise').then(function (modal) {
+                    "onSuccess": function(object, contactId) {
+                        component.get('v.modalPromise').then(function(modal) {
                             modal.close();
                         });
                         $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -344,7 +344,7 @@
                 }],
 
             ],
-            function (components, status) {
+            function(components, status) {
                 if (status === 'SUCCESS') {
                     var modalPromise = component.find('overlayLib').showCustomModal({
                         header: components[0],
@@ -359,19 +359,19 @@
 
     },
 
-    sendMassEmails: function (component, event, helper) {
+    sendMassEmails: function(component, event, helper) {
 
         var selectedvendors1 = [];
         var selectedVendorList = component.get('v.selectedVendorList');
 
-        selectedVendorList.filter(function (selectedVendor) {
+        selectedVendorList.filter(function(selectedVendor) {
             selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true ? selectedvendors1.push(selectedVendor.Id) : '';
         });
 
 
-        debugger;
+        // debugger;
         var btadminaction = component.get("c.getadminvalues");
-        btadminaction.setCallback(this, function (response) {
+        btadminaction.setCallback(this, function(response) {
             if (response.getState() === 'SUCCESS') {
                 var result = response.getReturnValue();
                 if (result == true) {
@@ -383,11 +383,11 @@
                         recordId: component.get("v.recordId"),
                         selectedVendors: selectedvendors1
                     });
-                    action.setCallback(this, function (response) {
-                        debugger;
+                    action.setCallback(this, function(response) {
+                        // debugger;
                         if (response.getState() == 'SUCCESS') {
                             var result = response.getReturnValue();
-                            debugger;
+                            // debugger;
                             if (result.isportal == true) {
                                 component.set("v.isPortalUser", true);
 
@@ -402,9 +402,7 @@
                                         "message": "You cannot Email this RFQ because this RFQ is already Awarded"
                                     });
                                     toastEvent.fire();
-                                }
-
-                                else {
+                                } else {
                                     var vendorList = component.get("v.rfqToVendorList");
 
                                     var selectedvendors = [];
@@ -416,12 +414,12 @@
 
                                     var isValidEmail = [];
 
-                                    selectedVendorList.filter(function (selectedVendor) {
+                                    selectedVendorList.filter(function(selectedVendor) {
                                         selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true ? selectedvendors.push(selectedVendor.Id) : '';
 
-                                        (selectedVendor.isEmail == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noMailVedors.push(selectedVendor.Id) : '';
-                                        (selectedVendor.isContact == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
-                                        (selectedVendor.isValidEmail == false && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
+                                        (selectedVendor.isEmail == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noMailVedors.push(selectedVendor.Id): '';
+                                        (selectedVendor.isContact == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id): '';
+                                        (selectedVendor.isValidEmail == false && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id): '';
 
                                     });
 
@@ -441,8 +439,7 @@
                                             "message": "There is no valid email address for this Primary Contact"
                                         });
                                         toastEvent.fire();
-                                    }
-                                    else if (isValidEmail.length) {
+                                    } else if (isValidEmail.length) {
                                         console.log('no validemail length');
                                         var toastEvent = $A.get("e.force:showToast");
                                         toastEvent.setParams({
@@ -450,8 +447,7 @@
                                             "message": "There is no valid email address for this Primary Contact"
                                         });
                                         toastEvent.fire();
-                                    }
-                                    else {
+                                    } else {
                                         if (selectedvendors.length > 0) {
 
                                             $A.createComponents(
@@ -466,10 +462,10 @@
                                                     ["c:BT_RFQ_Email_Preview", {
                                                         "rfqId": component.get("v.recordId"),
                                                         "vendorIds": selectedvendors,
-                                                        "onSuccess": function (object) {
-                                                            component.get('v.modalPromise').then(function (modal) {
+                                                        "onSuccess": function(object) {
+                                                            component.get('v.modalPromise').then(function(modal) {
                                                                 modal.close();
-                                                            }).catch(function (error) {
+                                                            }).catch(function(error) {
                                                                 console.log(error)
                                                             });
                                                             $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -479,7 +475,7 @@
                                                         },
                                                     }],
                                                 ],
-                                                function (components, status) {
+                                                function(components, status) {
                                                     if (status === 'SUCCESS') {
                                                         var modalPromise = component.find('overlayLib').showCustomModal({
                                                             header: components[0],
@@ -506,9 +502,7 @@
                                     }
                                 }
 
-                            }
-
-                            else {
+                            } else {
                                 debugger;
 
                                 if (result.ConList) {
@@ -533,9 +527,7 @@
                             "message": "You cannot Email this RFQ because this RFQ is already Awarded"
                         });
                         toastEvent.fire();
-                    }
-
-                    else {
+                    } else {
                         var vendorList = component.get("v.rfqToVendorList");
 
                         var selectedvendors = [];
@@ -547,12 +539,12 @@
 
                         var isValidEmail = [];
 
-                        selectedVendorList.filter(function (selectedVendor) {
+                        selectedVendorList.filter(function(selectedVendor) {
                             selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true ? selectedvendors.push(selectedVendor.Id) : '';
 
-                            (selectedVendor.isEmail == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noMailVedors.push(selectedVendor.Id) : '';
-                            (selectedVendor.isContact == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
-                            (selectedVendor.isValidEmail == false && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id) : '';
+                            (selectedVendor.isEmail == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noMailVedors.push(selectedVendor.Id): '';
+                            (selectedVendor.isContact == true && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id): '';
+                            (selectedVendor.isValidEmail == false && selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true) ? noContactVendors.push(selectedVendor.Id): '';
 
                         });
 
@@ -573,8 +565,7 @@
                                 "message": "There is no valid email address for this Primary Contact"
                             });
                             toastEvent.fire();
-                        }
-                        else if (isValidEmail.length) {
+                        } else if (isValidEmail.length) {
                             console.log('no1 valid length');
                             var toastEvent = $A.get("e.force:showToast");
                             toastEvent.setParams({
@@ -582,8 +573,7 @@
                                 "message": "There is no valid email address for this Primary Contact"
                             });
                             toastEvent.fire();
-                        }
-                        else {
+                        } else {
                             if (selectedvendors.length > 0) {
 
                                 $A.createComponents(
@@ -598,10 +588,10 @@
                                         ["c:BT_RFQ_Email_Preview", {
                                             "rfqId": component.get("v.recordId"),
                                             "vendorIds": selectedvendors,
-                                            "onSuccess": function (object) {
-                                                component.get('v.modalPromise').then(function (modal) {
+                                            "onSuccess": function(object) {
+                                                component.get('v.modalPromise').then(function(modal) {
                                                     modal.close();
-                                                }).catch(function (error) {
+                                                }).catch(function(error) {
                                                     console.log(error)
                                                 });
                                                 $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -611,7 +601,7 @@
                                             },
                                         }],
                                     ],
-                                    function (components, status) {
+                                    function(components, status) {
                                         if (status === 'SUCCESS') {
                                             var modalPromise = component.find('overlayLib').showCustomModal({
                                                 header: components[0],
@@ -646,7 +636,7 @@
     },
 
 
-    closeQuotelineModel: function (component, event, helper) {
+    closeQuotelineModel: function(component, event, helper) {
         // for Hide/Close Model,set the "isOpen" attribute to "Fasle"  
         component.set("v.isQuotelinedelete", false);
         $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -654,7 +644,7 @@
         }).fire();
     },
 
-    deleteVendors: function (component, event, helper) {
+    deleteVendors: function(component, event, helper) {
         var isDisabled = component.get("v.isDisabled");
         if (isDisabled == true) {
             var toastEvent = $A.get("e.force:showToast");
@@ -671,8 +661,7 @@
             //	alert(component.find("vendorselection").length)
             if (component.find("vendorselection").length == undefined) {
                 allcheckbox.push(component.find("vendorselection"));
-            }
-            else {
+            } else {
                 allcheckbox = component.find("vendorselection");
             }
             //   alert('allcheck'+JSON.stringify(allcheckbox))
@@ -688,12 +677,13 @@
                         selectedvendors.push(vendorList[allcheckbox[i].get("v.value")].Id);
                     }
                 }
-            }/* else {
-                            //alert(allcheckbox.get("v.checked"));
-                            if (allcheckbox.get("v.checked")) {
-                                selectedvendors.push(vendorList[allcheckbox.get("v.value")].Id);
-                            }
-                        } */
+            }
+            /* else {
+                                        //alert(allcheckbox.get("v.checked"));
+                                        if (allcheckbox.get("v.checked")) {
+                                            selectedvendors.push(vendorList[allcheckbox.get("v.value")].Id);
+                                        }
+                                    } */
 
             if (selectedvendors.length > 0) {
                 $A.createComponents(
@@ -719,7 +709,7 @@
                             "onclick": component.getReference("c.removeVendors")
                         }]
                     ],
-                    function (contant, status) {
+                    function(contant, status) {
                         if (status === "SUCCESS") {
                             var footer = [];
                             footer.push(contant[1]);
@@ -759,20 +749,20 @@
         }
     },
 
-    closeRemoveVendor: function (component, event, helper) {
-        component.get('v.modalPromise').then(function (modal) {
+    closeRemoveVendor: function(component, event, helper) {
+        component.get('v.modalPromise').then(function(modal) {
             modal.close();
         });
     },
 
-    removeVendors: function (component, event, helper) {
+    removeVendors: function(component, event, helper) {
 
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
         var selectedvendors = [];
         var selectedVendorList = component.get('v.selectedVendorList');
-        selectedVendorList.filter(function (selectedVendor) {
+        selectedVendorList.filter(function(selectedVendor) {
             selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true ? selectedvendors.push(selectedVendor.Id) : '';
         });
         component.set('v.selectedVendorList', selectedVendorList);
@@ -795,7 +785,7 @@
         }
     },
 
-    addVendors: function (component, event, helper) {
+    addVendors: function(component, event, helper) {
         var isrfqStatus = component.get("v.rfqStatus");
         if (isrfqStatus == 'Accepted' || isrfqStatus == 'Awarded') {
             component.set('v.openModal', true);
@@ -816,10 +806,10 @@
                     }],
                     ["c:BT_VendorAdder", {
                         "aura:id": "vendorAdder",
-                        "onCancel": function () {
+                        "onCancel": function() {
                             overlayLib.close();
                         },
-                        "savecallback": function (items) {
+                        "savecallback": function(items) {
                             $A.get('e.force:refreshView').fire();
 
                             $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -836,14 +826,14 @@
                     }],
 
                 ],
-                function (contant, status) {
+                function(contant, status) {
                     if (status === "SUCCESS") {
                         component.find('overlayLib').showCustomModal({
                             header: contant[0],
                             body: contant[1],
                             showCloseButton: true,
                             cssClass: 'uiModal--large'
-                        }).then(function (overlay) {
+                        }).then(function(overlay) {
                             overlayLib = overlay;
                         });
                         component.set("v.overlayLib", overlayLib);
@@ -856,7 +846,7 @@
         }
     },
 
-    checkAll: function (component, event, helper) {
+    checkAll: function(component, event, helper) {
         var allcheckbox = component.find("vendorselection");
         var vendorCheckall = component.find("vendorCheckall").get("v.checked");
         var vendorList = component.get("v.rfqToVendorList");
@@ -881,13 +871,13 @@
         }
 
     },
-    expandVendor: function (component, event, helper) {
+    expandVendor: function(component, event, helper) {
         var recordId = component.get("v.recordId");
         var expandedId = event.getSource().get("v.name");
         var selectedVendorList = component.get('v.selectedVendorList');
         console.log('Expnded id ::', expandedId);
         var i = 0;
-        selectedVendorList.filter(function (selectedVendor) {
+        selectedVendorList.filter(function(selectedVendor) {
             if (selectedVendor.Id == expandedId) {
                 selectedVendor.buildertek__IS_VENDOR_EXPANDED__c = true;
             }
@@ -905,13 +895,13 @@
         }
 
     },
-    collapseVendor: function (component, event, helper) {
+    collapseVendor: function(component, event, helper) {
         var recordId = component.get("v.recordId");
         var collapsedId = event.getSource().get("v.name");
         var selectedVendorList = component.get('v.selectedVendorList');
         console.log('Collapsed id ::', collapsedId);
         var i = 0;
-        selectedVendorList.filter(function (selectedVendor) {
+        selectedVendorList.filter(function(selectedVendor) {
             if (selectedVendor.Id == collapsedId) {
                 selectedVendor.buildertek__IS_VENDOR_EXPANDED__c = false;
             }
@@ -929,7 +919,7 @@
         }
 
     },
-    onVendorSelectionChange: function (component, event, helper) {
+    onVendorSelectionChange: function(component, event, helper) {
         var vendorId = event.getSource().get("v.checked");
         //  alert(vendorId);
         if (vendorId == false) {
@@ -956,7 +946,7 @@ component.set('v.selectedVendorList',selectedVendorList);
 }*/
     },
 
-    awardMultipleVendor: function (component, event, helper) {
+    awardMultipleVendor: function(component, event, helper) {
         var isAwarded = component.get('v.isAwarded');
         var isAccepted = component.get('v.isAccepted');
         var isDisabled = component.get("v.isDisabled");
@@ -987,7 +977,7 @@ component.set('v.selectedVendorList',selectedVendorList);
                     action.setParams({
                         rfqtovendorids: vendorList
                     });
-                    action.setCallback(this, function (response) {
+                    action.setCallback(this, function(response) {
                         var fieldSetObj = response.getReturnValue();
                         var vendorrfinotclosedcount = 0;
                         var vendorid = '';
@@ -1029,7 +1019,7 @@ component.set('v.selectedVendorList',selectedVendorList);
                     action2.setParams({
                         rfqtovendorids: vendorList
                     });
-                    action2.setCallback(this, function (response) {
+                    action2.setCallback(this, function(response) {
                         if (response.getState() === "SUCCESS") {
                             //  alert(response.getReturnValue());
                             if (response.getReturnValue()) {
@@ -1062,15 +1052,14 @@ component.set('v.selectedVendorList',selectedVendorList);
 
                     //component.set('v.isMultipleAwardedClick', true);
                     //component.set('v.vendorList', vendorList);
-                }
-                else if (vendorList.length > 1) {
+                } else if (vendorList.length > 1) {
 
                     // component.set('v.MultipleAwardedClick', true);
                     var action = component.get("c.checkClosedRFIs");
                     action.setParams({
                         rfqtovendorids: vendorList
                     });
-                    action.setCallback(this, function (response) {
+                    action.setCallback(this, function(response) {
                         var fieldSetObj = response.getReturnValue();
                         var vendorrfinotclosedcount = 0;
                         var vendorid = '';
@@ -1112,7 +1101,7 @@ component.set('v.selectedVendorList',selectedVendorList);
                     action2.setParams({
                         rfqtovendorids: vendorList
                     });
-                    action2.setCallback(this, function (response) {
+                    action2.setCallback(this, function(response) {
                         if (response.getState() === "SUCCESS") {
                             //alert(response.getReturnValue());
                             if (response.getReturnValue()) {
@@ -1137,8 +1126,7 @@ component.set('v.selectedVendorList',selectedVendorList);
                         "message": 'Please select Only One Vendor to Award.'
                     });
                     toastEvent.fire();*/
-                }
-                else {
+                } else {
                     toastEvent.setParams({
                         "type": "error",
                         "title": "Select Vendor",
@@ -1164,7 +1152,7 @@ component.set('v.selectedVendorList',selectedVendorList);
             toastEvent.fire();
         }
     },
-    cancelRFQ: function (component, event, helper) {
+    cancelRFQ: function(component, event, helper) {
         debugger;
         var isAwarded = component.get('v.isAwarded');
         var isAccepted = component.get('v.isAccepted');
@@ -1206,7 +1194,7 @@ toastEvent.fire();
             toastEvent.fire();
         }
     },
-    cancelvoidRFQ: function (component, event, helper) {
+    cancelvoidRFQ: function(component, event, helper) {
         debugger;
         var isAwarded = component.get('v.isAwarded');
         var isAccepted = component.get('v.isAccepted');
@@ -1264,7 +1252,7 @@ toastEvent.setParams({
 toastEvent.fire();
 }
 },*/
-    cancelconfirmModelRFQ: function (component, event, helper) {
+    cancelconfirmModelRFQ: function(component, event, helper) {
         component.set('v.isCancelRFQ', false);
         //var vendorList = component.get('v.vendorList');
         $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -1293,7 +1281,7 @@ helper.cancelAcceptedRFQ(component, event, helper, vendorList, contactIds);*/
 $A.enqueueAction(action);*/
     },
 
-    confirmModelRFQ: function (component, event, helper) {
+    confirmModelRFQ: function(component, event, helper) {
         component.set('v.isCancelRFQ', false);
         var vendorList = component.get('v.vendorList');
         $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -1305,7 +1293,7 @@ $A.enqueueAction(action);*/
         action.setParams({
             vendorId: vendorList
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS" && response.getReturnValue()) {
                 var result = response.getReturnValue();
@@ -1319,22 +1307,22 @@ $A.enqueueAction(action);*/
         });
         $A.enqueueAction(action);
     },
-    cancelModelRFQ: function (component, event, helper) {
+    cancelModelRFQ: function(component, event, helper) {
         component.set('v.vendorList', []);
         component.set('v.isCancelRFQ', false);
     },
-    cancelvoidconfirmModelRFQ: function (component, event, helper) {
+    cancelvoidconfirmModelRFQ: function(component, event, helper) {
         //component.set('v.vendorList', []);
         component.set('v.isvoidRFQ', false);
     },
-    voidconfirmModelRFQ: function (component, event, helper) {
+    voidconfirmModelRFQ: function(component, event, helper) {
         component.set('v.isvoidRFQ', false);
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
         helper.voidRFQ(component, event, helper);
     },
-    confirmMultipleAwards: function (component, event, helper) {
+    confirmMultipleAwards: function(component, event, helper) {
         component.set('v.MultipleAwardedClick', false);
         //  alert("haii");
         component.set('v.isMultipleAwardedClick', false);
@@ -1350,7 +1338,7 @@ $A.enqueueAction(action);*/
         action.setParams({
             vendorId: vendorList
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS" && response.getReturnValue()) {
                 //  alert(state);
@@ -1367,21 +1355,21 @@ $A.enqueueAction(action);*/
         $A.enqueueAction(action);
     },
 
-    cancelMultipleAwards: function (component, event, helper) {
+    cancelMultipleAwards: function(component, event, helper) {
         component.set('v.vendorList', []);
         component.set('v.isMultipleAwardedClick', false);
         component.set('v.MultipleAwardedClick', false);
 
     },
 
-    compare: function (component, event, helper) {
+    compare: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
         component.set("v.IsOnLoad", false);
         var vendorList = component.get("v.rfqToVendorList");
         var selectedvendors = component.get('v.selectedVendorList');
-        var selectedVendor = selectedvendors.filter(function (getSelected) {
+        var selectedVendor = selectedvendors.filter(function(getSelected) {
             return getSelected.buildertek__IS_VENDOR_SELECTED__c == true;
         });
         var dynamicClass = '';
@@ -1437,21 +1425,21 @@ $A.enqueueAction(action);*/
         }
 
     },
-    closeModel: function (component, event, helper) {
+    closeModel: function(component, event, helper) {
         component.set('v.isComparePopupOpen', false);
     },
 
-    attachDocument: function (component, event, helper) {
+    attachDocument: function(component, event, helper) {
 
         component.set('v.isAttachDocClick', true);
     },
-    doCancel: function (component, event, helper) {
+    doCancel: function(component, event, helper) {
         component.set("v.fileName", '');
         component.set("v.selectedfilesFill", []);
         component.set("v.isAttachDocClick", false);
 
     },
-    handleFilesChange: function (component, event, helper) {
+    handleFilesChange: function(component, event, helper) {
         var fileName = 'No File Selected..';
         //alert(event.getSource().get("v.files").length);
         if (event.getSource().get("v.files").length > 0) {
@@ -1486,8 +1474,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
                 }
                 mapData.push(obj);
             }
-        }
-        else {
+        } else {
             files = fileName;
         }
         component.set("v.fileName", files);
@@ -1497,7 +1484,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
     },
 
 
-    addFiles: function (component, event, helper) {
+    addFiles: function(component, event, helper) {
         var fills = component.get("v.selectedfilesFill");
         if (fills.length > 0) {
 
@@ -1523,7 +1510,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
 
 
 
-    uploadFile1: function (component, event, helper) {
+    uploadFile1: function(component, event, helper) {
         $A.createComponents(
             [
                 ["aura:html", {
@@ -1537,14 +1524,14 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
                     "mainObjectFieldAPI": component.get("v.objectAPI"),
                     "mainObjectId": component.get("v.recordId"),
                     "selectedFiles": component.get("v.selectedFiles"),
-                    "onCancel": function () {
-                        component.get('v.modalPromise').then(function (modal) {
+                    "onCancel": function() {
+                        component.get('v.modalPromise').then(function(modal) {
                             modal.close();
                         });
                         $A.get('e.force:refreshView').fire();
                     },
-                    "onSuccess": function (file) {
-                        component.get('v.modalPromise').then(function (modal) {
+                    "onSuccess": function(file) {
+                        component.get('v.modalPromise').then(function(modal) {
                             modal.close();
                         });
 
@@ -1564,7 +1551,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
                             "files": selectedFiles,
                             "RFQid": component.get("v.recordId")
                         });
-                        action.setCallback(this, function (response) {
+                        action.setCallback(this, function(response) {
                             if (response.getState() === "SUCCESS") {
                                 $A.get("e.c:BT_SpinnerEvent").setParams({
                                     "action": "SHOW"
@@ -1580,7 +1567,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
                 }],
 
             ],
-            function (components, status) {
+            function(components, status) {
                 if (status === 'SUCCESS') {
 
                     var modalPromise = component.find('overlayLib').showCustomModal({
@@ -1588,7 +1575,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
                         body: components[1],
                         footer: components[1].find("footer"),
                         showCloseButton: true,
-                        closeCallback: function () {
+                        closeCallback: function() {
 
                         }
                     });
@@ -1596,11 +1583,11 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
                 }
             });
     },
-    closeStatusModel: function (component, event, helper) {
+    closeStatusModel: function(component, event, helper) {
         component.set('v.openModal', false);
     },
 
-    uploadFileToVendor: function (component, event, helper) {
+    uploadFileToVendor: function(component, event, helper) {
         var activeRFQVendor = component.get("v.activeRFQVendor");
         $A.createComponents(
             [
@@ -1614,13 +1601,13 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
                 ["c:BT_UploadFiles", {
                     "mainObjectFieldAPI": component.get("v.objectAPI"),
                     "mainObjectId": component.get("v.recordId"),
-                    "onCancel": function () {
-                        component.get('v.modalPromise').then(function (modal) {
+                    "onCancel": function() {
+                        component.get('v.modalPromise').then(function(modal) {
                             modal.close();
                         });
                     },
-                    "onSuccess": function (file) {
-                        component.get('v.modalPromise').then(function (modal) {
+                    "onSuccess": function(file) {
+                        component.get('v.modalPromise').then(function(modal) {
                             modal.close();
                         });
 
@@ -1630,7 +1617,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
                             "fileId": file.Id,
                             "vendorId": activeRFQVendor.Id
                         });
-                        action.setCallback(this, function (response) {
+                        action.setCallback(this, function(response) {
                             if (response.getState() === "SUCCESS") {
                                 $A.get("e.c:BT_SpinnerEvent").setParams({
                                     "action": "SHOW"
@@ -1646,7 +1633,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
                 }],
 
             ],
-            function (components, status) {
+            function(components, status) {
                 if (status === 'SUCCESS') {
 
                     var modalPromise = component.find('overlayLib').showCustomModal({
@@ -1654,7 +1641,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
                         body: components[1],
                         footer: components[1].find("footer"),
                         showCloseButton: true,
-                        closeCallback: function () {
+                        closeCallback: function() {
 
                         }
                     });
@@ -1662,7 +1649,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
                 }
             });
     },
-    filelist: function (component, event, helper) {
+    filelist: function(component, event, helper) {
         //alert('Vendor Id   '+event.currentTarget.dataset.rowid);
         var vendorId = event.target.id;
         var recordId = component.get("v.recordId");
@@ -1672,7 +1659,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
             arecordId: vendorId,
             rfqID: recordId
         });
-        action.setCallback(this, function (actionResult) {
+        action.setCallback(this, function(actionResult) {
             component.set('v.files', actionResult.getReturnValue());
             var fileslist = component.get('v.files');
             //alert('fileslist'+ fileslist.length);
@@ -1687,13 +1674,13 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
         });
         $A.enqueueAction(action);
     },
-    closefilesModel: function (component, event, helper) {
+    closefilesModel: function(component, event, helper) {
         component.set("v.Isfiles", false);
         component.set("v.noFiles", false);
     },
 
     // function for clear the Record Selaction 
-    clear: function (component, event, heplper) {
+    clear: function(component, event, heplper) {
         var selectedPillId = event.getSource().get("v.name");
         var AllPillsList = component.get("v.selectedfilesFill");
 
@@ -1705,14 +1692,14 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
         }
     },
 
-    refreshAll: function (component, event, helper) {
+    refreshAll: function(component, event, helper) {
         $A.enqueueAction(component.get("c.initialize"));
     },
 
 
 
 
-    AddContactsButtonClick: function (component, event, helper) {
+    AddContactsButtonClick: function(component, event, helper) {
         var recordid = event.target.id.split('_')[1];
         var accrecordId = event.target.id.split('_')[0];
 
@@ -1721,7 +1708,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
             recordid: recordid,
             accrecordId: accrecordId
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             var selectedIds = component.get("v.listOfSelectedSOVIds");
             //  alert(selectedIds);
@@ -1750,7 +1737,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
                 "recordId": accrecordId,
                 "vendorRFQId": recordid
             });
-            action.setCallback(this, function (result) {
+            action.setCallback(this, function(result) {
                 var state = result.getState();
                 if (component.isValid() && state === "SUCCESS") {
                     component.set("v.IsSpinner", false);
@@ -1793,7 +1780,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
         $A.enqueueAction(action);
 
     },
-    handleNext: function (component, event, helper) {
+    handleNext: function(component, event, helper) {
         //alert(component.find('headCheckRFQ').("v.checked"))
         component.set("v.IsSpinner", true);
         component.find("headCheckRFQ").set("v.checked", false);
@@ -1803,7 +1790,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
         helper.getContactList(component, pageNumber, pageSize);
     },
 
-    handlePrev: function (component, event, helper) {
+    handlePrev: function(component, event, helper) {
         component.set("v.IsSpinner", true);
         component.find("headCheckRFQ").set("v.checked", false);
         var pageNumber = component.get("v.PageNumber");
@@ -1812,13 +1799,13 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
         helper.getContactList(component, pageNumber, pageSize);
     },
 
-    onSelectChange: function (component, event, helper) {
+    onSelectChange: function(component, event, helper) {
         var page = 1
         var pageSize = component.get("v.PageSize");
         helper.getContactList(component, page, pageSize);
     },
 
-    selectRfq: function (component, event, helper) {
+    selectRfq: function(component, event, helper) {
         var checkbox = event.getSource();
         var selectedRfqIds = component.get("v.listOfSelectedSOVIds");
         var getAllId = component.find("checkRFQ");
@@ -1860,7 +1847,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
 
     },
 
-    selectAllRfq: function (component, event, helper) {
+    selectAllRfq: function(component, event, helper) {
         var checkStatus = event.getSource().get("v.checked");
         var rfqRecordList = JSON.parse(JSON.stringify(component.get("v.ContactList")));
         // alert( JSON.stringify(rfqRecordList));
@@ -1910,13 +1897,13 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
         }
         console.log(recordIds);
     },
-    close: function (component, event, helper) {
+    close: function(component, event, helper) {
         // component.find("headCheckRFQ").set("v.checked", true);
         component.set("v.iscontactModalOpen", false);
         //$A.get("e.force:closeQuickAction").fire();
     },
 
-    savecontact: function (component, event, helper) {
+    savecontact: function(component, event, helper) {
         component.set("v.Spinner", true);
         var recordIds = [];
         var recordId = component.get('v.vendorId');
@@ -1928,7 +1915,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
             contractId: contractId,
             recordId: recordId
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
                 $A.get('e.force:refreshView').fire();
@@ -1957,7 +1944,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
     },
 
 
-    filelist1: function (component, event, helper) {
+    filelist1: function(component, event, helper) {
         var rfqvendorId = event.target.id.split('_')[1];
         var vendorId = event.target.id.split('_')[0];
         var recordId = component.get("v.recordId");
@@ -1966,7 +1953,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
             arecordId: vendorId,
             rfqID: recordId
         });
-        action.setCallback(this, function (actionResult) {
+        action.setCallback(this, function(actionResult) {
             component.set('v.files', actionResult.getReturnValue());
             var urlEvent = $A.get("e.force:navigateToURL");
             // alert("hai");
@@ -1990,7 +1977,7 @@ component.set("v.noFiles",true);
     },
 
 
-    closePortalContactScreen: function (component, event, helper) {
+    closePortalContactScreen: function(component, event, helper) {
         component.set("v.isNonPortalContactPopUP", false);
 
     },

@@ -13,7 +13,10 @@
             var result = response.getReturnValue();
             console.log('Result =>', { result });
 
-			if (result[0].buildertek__Pricing_Request_Line__r.buildertek__RFQ__c != null) {
+            if (result.length === 0 ) {
+                $A.get("e.force:closeQuickAction").fire();
+				helper.showToast("Error", "Error", "There Are No PRLD", "5000");
+            } else if (result.length > 0 && result[0].buildertek__Pricing_Request_Line__r.buildertek__RFQ__c != null) {
 				$A.get("e.force:closeQuickAction").fire();
 				helper.showToast("Error", "Error", "RFQ is already exists on PRL", "5000");
 			} else {
