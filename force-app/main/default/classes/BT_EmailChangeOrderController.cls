@@ -348,13 +348,12 @@ body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
             
             List<File__c> flList;
             system.debug([Select Id, Name, Bucket_Name__c, Amazon_File_Key__c, File_Presigned_URL__c from File__c]);
+            system.debug([Select Id, Name, Bucket_Name__c, Amazon_File_Key__c, File_Presigned_URL__c from File__c where Id IN :files]);
 
-            
             flList = [Select Id, Name, Bucket_Name__c, Amazon_File_Key__c, File_Presigned_URL__c
                       from File__c
                       where Id IN :files];
-            
-            
+            System.debug(flList+ 'FLIST');
             String fileDetails = getFileDetails(flList);
             system.debug('fileDetails --------> ' + fileDetails);
             if (fileDetails != null){
@@ -677,7 +676,9 @@ insert emrs;*/
             return null;
         }
         // Get AWS credentials
+        System.debug('outer loop');
         AmazonS3Credential s3Credentials = new AmazonS3Credential();
+        System.debug(s3Credentials);
         String fileDownloadURL = '';
         String emailContent = '';
         emailContent += '<table cellpadding="5"><tr style="background-color:#007fcc;color:white;font-weight:bold;">';

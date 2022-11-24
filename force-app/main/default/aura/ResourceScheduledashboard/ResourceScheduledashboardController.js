@@ -104,8 +104,8 @@
         //alert('conflictview---'+conflictview);
         var weekDates = component.get("v.weekDates");
         var eventList = component.get("v.eventList");
-        console.log('Week Dates::', JSON.stringify(weekDates));
-        console.log('Event List::', JSON.stringify(eventList));
+        // console.log('Week Dates::', JSON.stringify(weekDates));
+        // console.log('Event List::', JSON.stringify(eventList));
 
         var tbody = '';
         var datatable = '';
@@ -116,9 +116,14 @@
         tbody += '</tr></thead>';
         tbody += '<tbody>';
         console.log('EventList =======> ' + eventList.length);
+        
+        console.log('weekDates ====> ',{weekDates});
+
+        console.log('-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-');
         for (var i = 0; i < eventList.length; i++) {
 
-            console.log(eventList[i]);
+            var Event = eventList[i];
+            console.log('Event '+ i + ' -> ',{Event});
             // document.getElementById("colorpad").style.color = dynamiccolor;
 
             tbody += '<tr style="height: 50px;">';
@@ -148,8 +153,17 @@
 
                 if (tasks == 1) {
                     if (weekDates[k].Day != 'Sun' && conflictview != 'Conflicts') {
+                        var backgroundColor = '#3a8ed8' ;
+                        for (var t = 0; t < EquipmentRecordsList.length; t++) {
+                            if (new Date(weekDates[k].Date).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf() && new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf()) {
+                                if (EquipmentRecordsList[t].Completion == 100) {
+                                    backgroundColor = '#2caa10' ;
+                                }
+                            }
+                        }
+
                         datatable += '<td class="top-td-box" onclick="{!c.displayPopup}" style="vertical-align: middle;text-align: center;padding: 0px !important;" data-account="' + eventList[i].ContractresourceName + '">';
-                        datatable += '<li style="display: inline-block;" data-account="' + eventList[i].ContractresourceId + '"><span data-account="' + eventList[i].ContractresourceId + '" style="display: block;margin: 0 auto;background: #3a8ed8;padding: 3px 5px;border-radius: 4px;color: #fff;font-size: 15px;height: 30px;width: 30px;"><image data-account="' + eventList[i].ContractresourceId + '" src="/resource/buildertek__buildingfa" height="20px" width="20px" onclick="{!c.displayresources}"/></span>';
+                        datatable += '<li style="display: inline-block;" data-account="' + eventList[i].ContractresourceId + '"><span data-account="' + eventList[i].ContractresourceId + '" style="display: block;margin: 0 auto;background: ' + backgroundColor + ';padding: 3px 5px;border-radius: 4px;color: #fff;font-size: 15px;height: 30px;width: 30px;"><image data-account="' + eventList[i].ContractresourceId + '" src="/resource/buildertek__buildingfa" height="20px" width="20px" onclick="{!c.displayresources}"/></span>';
                         // datatable += '<li style="display: inline-block;"><span style="display: block;margin: 0 auto;background: #3a8ed8;padding: 3px 5px;border-radius: 4px;color: #fff;font-size: 15px;height: 30px;width: 30px;"><image  src="/resource/buildertek__buildingfa" height="20px" width="20px" onclick="{!c.displayresources}"/></span>';
                         datatable += '<div class="hover-box" style="display: none;clear: both;position: absolute;background: #fff;border-radius: 4px;margin-top: 14px;">';
                         datatable += '<h2 style="background: #d8dada;margin: 0;font-size: 14px;color: #000;text-align: left; margin-left: -32rem;padding:8px 10px"><image src="/resource/playbutton" style="float:left;width: 17px;margin-left: 509px;position: absolute;top: -12px;" />' + eventList[i].ContractresourceName + ' </h2>';
@@ -214,9 +228,17 @@
                     // console.log('Event List::', eventList[i].simultaneousTasksContractorResources);
                 }
                 if (tasks > 1 && eventList[i].simultaneousTasksContractorResources != undefined && tasks > eventList[i].simultaneousTasksContractorResources) {
+                    var backgroundColor = '#3a8ed8' ;
+                    for (var t = 0; t < EquipmentRecordsList.length; t++) {
+                        if (new Date(weekDates[k].Date).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf() && new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf()) {
+                            if (EquipmentRecordsList[t].Completion == 100) {
+                                backgroundColor = '#2caa10' ;
+                            }
+                        }
+                    }
                     if (weekDates[k].Day != 'Sun') {
                         datatable += '<td class="top-td-box" onclick="{!c.displayPopup}" style="vertical-align: middle;text-align: center;padding: 0px !important;">';
-                        datatable += '<li style="display: inline-block;"data-account="' + eventList[i].ContractresourceId + '"><span data-account="' + eventList[i].ContractresourceId + '" style="display: block;margin: 0 auto; background: #d30f0f;padding: 3px 5px;border-radius: 4px;color: #fff;font-size: 15px;height: 30px;width: 30px;"><image data-account="' + eventList[i].ContractresourceId + '" src="/resource/buildertek__buildingfa" height="20px" width="20px" onclick="{!c.displayresources}" /></span>';
+                        datatable += '<li style="display: inline-block;"data-account="' + eventList[i].ContractresourceId + '"><span data-account="' + eventList[i].ContractresourceId + '" style="display: block;margin: 0 auto; background: ' + backgroundColor + ';padding: 3px 5px;border-radius: 4px;color: #fff;font-size: 15px;height: 30px;width: 30px;"><image data-account="' + eventList[i].ContractresourceId + '" src="/resource/buildertek__buildingfa" height="20px" width="20px" onclick="{!c.displayresources}" /></span>';
                         datatable += '<div class="hover-box" style="display: none;clear: both;position: absolute;background: #fff;border-radius: 4px;margin-top: 14px;">';
                         datatable += '<h2 style="background: #d8dada;margin: 0;font-size: 14px;color: #000;text-align: left; margin-left: -32rem;padding:8px 10px"><image src="/resource/playbutton" style="float:left;width: 17px;margin-left: 509px;position: absolute;top: -12px;" />' + eventList[i].ContractresourceName + ' </h2>';
                         datatable += '<table class="tabel table-bordered" style="border: 1px solid #ddd !important;width: 700px;padding: 10px; margin-left: -32rem; float:left; background: #fff;">';
@@ -256,8 +278,16 @@
                     }
                 } else if (tasks > 1 && eventList[i].simultaneousTasksContractorResources != undefined && tasks <= eventList[i].simultaneousTasksContractorResources) {
                     if (weekDates[k].Day != 'Sun') {
+                        var backgroundColor = '#3a8ed8' ;
+                        for (var t = 0; t < EquipmentRecordsList.length; t++) {
+                            if (new Date(weekDates[k].Date).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf() && new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf()) {
+                                if (EquipmentRecordsList[t].Completion == 100) {
+                                    backgroundColor = '#2caa10' ;
+                                }
+                            }
+                        }
                         datatable += '<td class="top-td-box" onclick="{!c.displayPopup}" style="vertical-align: middle;text-align: center;padding: 0px !important;">';
-                        datatable += '<li style="display: inline-block;"data-account="' + eventList[i].ContractresourceId + '"><span data-account="' + eventList[i].ContractresourceId + '" style="display: block;margin: 0 auto; background: #3a8ed8;padding: 3px 5px;border-radius: 4px;color: #fff;font-size: 15px;height: 30px;width: 30px;"><image data-account="' + eventList[i].ContractresourceId + '" src="/resource/buildertek__buildingfa" height="20px" width="20px"/></span>';
+                        datatable += '<li style="display: inline-block;"data-account="' + eventList[i].ContractresourceId + '"><span data-account="' + eventList[i].ContractresourceId + '" style="display: block;margin: 0 auto; background: ' + backgroundColor + ';padding: 3px 5px;border-radius: 4px;color: #fff;font-size: 15px;height: 30px;width: 30px;"><image data-account="' + eventList[i].ContractresourceId + '" src="/resource/buildertek__buildingfa" height="20px" width="20px"/></span>';
                         datatable += '<div class="hover-box" style="display: none;clear: both;position: absolute;background: #fff;border-radius: 4px;margin-top: 14px;">';
                         datatable += '<h2 style="background: #d8dada;margin: 0;font-size: 14px;color: #000;text-align: left;margin-left: -32rem; padding:8px 10px"><image src="/resource/playbutton" style="float:left;width: 17px;margin-left: 509px;position: absolute;top: -12px;" />' + eventList[i].ContractresourceName + ' </h2>';
                         datatable += '<table class="tabel table-bordered" style="border: 1px solid #ddd !important;width: 700px;padding: 10px; margin-left: -32rem; float:left; background: #fff;">';
@@ -500,11 +530,19 @@
                 }
                 if (tasks == 1) {
                     if (conflictview != 'Conflicts') {
+                        var backgroundColor = '#3a8ed8' ;
+                        for (var t = 0; t < EquipmentRecordsList.length; t++) {
+                            if (new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf() && new Date(weekDates[k].weekEndDate).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf()) {
+                                if (EquipmentRecordsList[t].Completion == 100) {
+                                    backgroundColor = '#2caa10' ;
+                                }
+                            }
+                        }
                         datatable += '<td class="top-td-box" onclick="{!c.displayPopup}" style="vertical-align: middle;text-align: center;padding: 0px !important;">';
-                        datatable += '<li style="display: inline-block;" data-account="' + eventList[i].ContractresourceId + '"><span data-account="' + eventList[i].ContractresourceId + '" style="display: block;margin: 0 auto;background: #3a8ed8;padding: 3px 5px;border-radius: 4px;color: #fff;font-size: 15px;height: 30px;width: 30px;" ><image data-account="' + eventList[i].ContractresourceId + '" src="/resource/buildertek__buildingfa" height="20px" width="20px"/></span>';
+                        datatable += '<li style="display: inline-block;" data-account="' + eventList[i].ContractresourceId + '"><span data-account="' + eventList[i].ContractresourceId + '" style="display: block;margin: 0 auto;background: ' + backgroundColor + ';padding: 3px 5px;border-radius: 4px;color: #fff;font-size: 15px;height: 30px;width: 30px;" ><image data-account="' + eventList[i].ContractresourceId + '" src="/resource/buildertek__buildingfa" height="20px" width="20px"/></span>';
                         datatable += '<div class="hover-box" style="display: none;clear: both;position: absolute;background: #fff;border-radius: 4px;margin-top: 14px;">';
                         datatable += '<h2 style="background: #d8dada;margin: 0;font-size: 14px;color: #000;text-align: left; margin-left: -32rem;padding:8px 10px"><image src="/resource/playbutton" style="float:left;width: 17px;margin-left: 509px;position: absolute;top: -12px;" />' + eventList[i].ContractresourceName + ' </h2>';
-                        datatable += '<table class="tabel table-bordered" style="border: 1px solid #ddd;width: 700px;padding: 10px; margin-left: -32rem; float:left;">';
+                        datatable += '<table class="tabel table-bordered" style="border: 1px solid #ddd;width: 700px;padding: 10px; margin-left: -32rem; float:left;background: #fff;">';
                         datatable += '<tbody><tr>';
                         datatable += '<th style="border: 1px solid #ddd;font-size: 12px;padding: 3px; width: 90px">Project Name</th>';
                         datatable += '<th style="border: 1px solid #ddd;font-size: 12px;padding: 3px; width: 80px">Schedule Name</th>';
@@ -604,8 +642,16 @@
                      }*/
                 } else if (tasks >= 2 && eventList[i].simultaneousTasksContractorResources != undefined && tasks >= eventList[i].simultaneousTasksContractorResources) {
                     // if( weekDates[k].Day != 'Sun'){
+                    var backgroundColor = '#3a8ed8' ;
+                    for (var t = 0; t < EquipmentRecordsList.length; t++) {
+                        if (new Date(weekDates[k].Date).valueOf() <= new Date(EquipmentRecordsList[t].endday).valueOf() && new Date(weekDates[k].weekEndDate).valueOf() >= new Date(EquipmentRecordsList[t].day).valueOf()) {
+                            if (EquipmentRecordsList[t].Completion == 100) {
+                                backgroundColor = '#2caa10' ;
+                            }
+                        }
+                    }
                     datatable += '<td class="top-td-box" onclick="{!c.displayPopup}" style="vertical-align: middle;text-align: center;padding: 0px !important;">';
-                    datatable += '<li style="display: inline-block;" data-account="' + eventList[i].ContractresourceId + '"><span data-account="' + eventList[i].ContractresourceId + '" style="display: block;margin: 0 auto; background: #3a8ed8;padding: 3px 5px;border-radius: 4px;color: #fff;font-size: 15px;height: 30px;width: 30px;"><image data-account="' + eventList[i].ContractresourceId + '" src="/resource/buildertek__buildingfa" height="20px" width="20px"/></span>';
+                    datatable += '<li style="display: inline-block;" data-account="' + eventList[i].ContractresourceId + '"><span data-account="' + eventList[i].ContractresourceId + '" style="display: block;margin: 0 auto; background: ' + backgroundColor + ';padding: 3px 5px;border-radius: 4px;color: #fff;font-size: 15px;height: 30px;width: 30px;"><image data-account="' + eventList[i].ContractresourceId + '" src="/resource/buildertek__buildingfa" height="20px" width="20px"/></span>';
                     datatable += '<div class="hover-box" style="display: none;clear: both;position: absolute;background: #fff;border-radius: 4px;margin-top: 14px;">';
                     datatable += '<h2 style="background: #d8dada;margin: 0;font-size: 14px;color: #000;text-align: left;padding:8px 10px"><image src="/resource/playbutton" style="float:left;width: 17px;margin-left: 0px;position: absolute;top: -12px;" />' + eventList[i].ContractresourceName + ' </h2>';
                     datatable += '<table class="tabel table-bordered" style="border: 1px solid #ddd !important;width:700px;padding: 10px;">';

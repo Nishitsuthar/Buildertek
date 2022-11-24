@@ -9,14 +9,36 @@
     <aura:attribute name="cancelCallback" type="object"/>
     <ltng:require styles="{!$Resource.ModalPreviewWidth85}"/> 
     
-    <aura:attribute name="isShowQuoteDetails" type="Boolean" default="false"/>
-    
-    <aura:attribute name="columns" type="List"/>
-    
+    <aura:attribute name="isShowQuoteDetails" type="Boolean" default="false"/>    
+    <aura:attribute name="columns" type="List"/>    
     <aura:attribute name="quoteColumns" type="List"/>
-     <aura:attribute name="quotes" type="List" />
+    <aura:attribute name="quotes" type="List" />
+
+    <aura:attribute name="accountlist" type="List"/>    
+
+
+	<aura:attribute name="searchKeyword" type="String" default="" />
+	<aura:attribute name="searchProject" type="String" default="" />
+	<aura:attribute name="searchVendor" type="String" default="" />
+
+	<aura:handler name="init" value="{!this}" action="{!c.retrieveRFQ}" />
+
+	<lightning:layout multipleRows="true" class="searchbarList">
      
-    <aura:handler name="init" value="{!this}" action="{!c.retrieveRFQ}" />
+        <lightning:layoutItem padding="around-small" size="4">
+			<lightning:input value="{!v.searchKeyword}" placeholder="Search For Name" name="searchField" onchange="{! c.onSearch }"/>
+        </lightning:layoutItem>
+
+		<lightning:layoutItem padding="around-small" size="4">
+			<lightning:input value="{!v.searchProject}" placeholder="Search For Project" name="searchField1" onchange="{! c.onSearch }"/>
+        </lightning:layoutItem>
+
+		<lightning:layoutItem padding="around-small" size="4">
+			<lightning:input value="{!v.searchVendor}" placeholder="Search For Vendor" name="searchField2" onchange="{! c.onSearch }"/>
+        </lightning:layoutItem>
+		
+	</lightning:layout>
+
     
      <aura:if isTrue="{! !v.isShowQuoteDetails}">
 	     <lightning:datatable
@@ -26,8 +48,24 @@
 	                hideCheckboxColumn="false"
 	                showRowNumberColumn="true"
 	                onrowselection="{! c.getSelected }"/>
-                
      </aura:if>
+
+	<!-- <aura:iteration items="{!v.columns}" var="acc" indexVar="index">
+                        <tr>
+                            <td>
+                                <div class="slds-truncate" title="">{!acc.Name}</div>
+                            </td>
+                        </tr>
+						
+    </aura:iteration> -->
+	<aura:iteration items="{!v.accountlist}" var="acc" indexVar="index">
+                        <tr>
+                            <td>
+                                <div class="slds-truncate" title="">{!acc.Name}</div>
+                            </td>
+                        </tr>
+						
+    </aura:iteration>
      
      <aura:if isTrue="{!v.isShowQuoteDetails}">
      	<table class="slds-table slds-table_bordered slds-table_cell-buffer" style = "width: 100%">

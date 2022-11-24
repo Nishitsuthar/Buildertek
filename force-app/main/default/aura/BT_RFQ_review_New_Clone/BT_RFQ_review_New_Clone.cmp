@@ -865,8 +865,8 @@
         @media (min-width: 48em){
             .mymodal .slds-modal__container {
                 margin: 0 auto;
-                width: 50% !important;
-                max-width: 40rem !important;
+                width: 75% !important;
+                max-width: 80rem !important;
                 min-width: 20rem;
             }
         }

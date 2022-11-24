@@ -38,9 +38,14 @@ public class ScheduleIteminlineEditcontroller {
         List<sObject> lstResult = new List<sObject>();
         String result = '[]';
         try{
+            System.debug(fieldNameJson);
             List<String> fieldNames = (List<String>) JSON.deserialize(fieldNameJson, List<String>.class);
+            System.debug(fieldNames);
             Set<String> setFieldNames = new Set<String>();
+            System.debug(setFieldNames);
             String query = 'SELECT ' + String.join(fieldNames, ',') + ' FROM ' + sObjectName;
+            System.debug(query);
+            
             if(parentFieldName != NULL && parentFieldName != '' && parentRecordId != NULL){
                 query += ' WHERE ' + parentFieldName + '= \'' +  parentRecordId + '\' ';
             }
@@ -54,6 +59,7 @@ public class ScheduleIteminlineEditcontroller {
         }
         catch(Exception e){
             result += e.getLineNumber() + ' : ' + e.getMessage();
+            System.debug(result);
         }
         return result;
     }
@@ -152,7 +158,7 @@ public class ScheduleIteminlineEditcontroller {
               
         } catch(Exception e) {  
               system.debug(e);
-            system.debug(e.getLineNumber());
+            system.debug(e.getMessage());
             //Srtring msg = e.getMessage();
             return e.getMessage();  
               
@@ -302,6 +308,7 @@ public class ScheduleIteminlineEditcontroller {
     public static String updateTaskOrder(String scheduleItemListJSON,Integer currentPage){
      String result = '';
         try{
+            System.debug(scheduleItemListJSON);
             List<buildertek__Project_Task__c> scheduleItemList= (List<buildertek__Project_Task__c>)System.JSON.deserialize(scheduleItemListJSON, List<buildertek__Project_Task__c>.class);
             system.debug(scheduleItemList.Size());
             List<buildertek__Project_Task__c> updateList = new List<buildertek__Project_Task__c>();
@@ -319,6 +326,7 @@ public class ScheduleIteminlineEditcontroller {
         }
         catch(Exception e){
             result += e.getLineNumber() + ' : ' + e.getMessage();
+            System.debug(result);
         }
         return result;
     }
@@ -377,11 +385,15 @@ public class ScheduleIteminlineEditcontroller {
             }
            
         }
-        
+          System.debug(milestoneTaskList);
          if(milestoneTaskList.Size()>0){
+           System.debug('inisde if');
+
                 for(buildertek__Project_Task__c milestone : milestoneTaskList){
+                       System.debug(milestone);
                    // if(milestone.buildertek__Phase__c != null){
                         list<buildertek__Project_Task__c> newProjectTaskList = oppMap.get(milestone.buildertek__Phase__c);
+                       System.debug(newProjectTaskList);
                         newProjectTaskList.add(milestone);    
                         oppMap.put(milestone.buildertek__Phase__c,newProjectTaskList);  
                   /*  }else{

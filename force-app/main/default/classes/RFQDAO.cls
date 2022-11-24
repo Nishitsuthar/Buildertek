@@ -1875,6 +1875,26 @@ Throws [Exceptions]:
         }
     }
     
+    //Search RFQs based on Name, Project and Vendor
+    @AuraEnabled
+    public static List<buildertek__RFQ__c> getRFQSearch (String quotId, String searchKeyword, String searchProject, String searchVendor){
+        buildertek__Quote__c quote = [SELECT Id, buildertek__Project__c FROM buildertek__Quote__c WHERE Id = :quotId];
+
+        string status = 'Accepted';
+        String query= 'SELECT Id, Name, buildertek__RFQ_Details__c, buildertek__Vendor__c, buildertek__Vendor__r.Name, buildertek__Vendor_Quote__c,';
+        query += ' buildertek__Status__c FROM buildertek__RFQ__c WHERE buildertek__project__c = \''+quote.buildertek__Project__c+'\' AND buildertek__status__c =\''+status+'\'';
+        if ( searchKeyword != '' && searchKeyword != null ) {
+            query = query + ' AND Name LIKE \'' + searchKeyword + '%\'';
+        }
+        if ( searchProject != '' && searchProject != null ) {
+            query = query + ' AND buildertek__Project__r.Name LIKE \'' + searchProject + '%\'';
+        }
+        if ( searchVendor != '' && searchVendor != null ) {
+            query = query + ' AND buildertek__Vendor__r.Name LIKE \'' + searchVendor + '%\'';
+        }
+        return Database.query(query);
+    } 
+    
     @AuraEnabled
     public static string createCOFromRFQ(string rfqId){
         String query = 'Select buildertek__Vendor__r.vendor__c,' + BT_Utils.getQueryStringForObjectWithAllFields('RFQ__c')+',(Select ' + BT_Utils.getQueryStringForObjectWithAllFields('RFQ_Item__c')+' from RFQ_Items__r) From RFQ__c where Id =:rfqId order by Name';

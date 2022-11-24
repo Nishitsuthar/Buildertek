@@ -12,14 +12,14 @@
         getAllApprovedRFQ.setCallback(this, function(response){
             var state = response.getState();
             if(component.isValid() && state === "SUCCESS"){
-                component.set("v.rfqs", response.getReturnValue());  
+                // component.set("v.rfqs", response.getReturnValue());  
                 //   alert('ok')
                 console.log( response.getReturnValue())
                 var result = response.getReturnValue();
                 component.set('v.columns', [
                     {label: 'Name', fieldName: 'Name', type: 'text', sortable:false},
                     {label: 'RFQ Details', fieldName: 'buildertek__RFQ_Details__c', type: 'text'},
-                    {label: 'Contractor', fieldName: 'buildertek__Vendor__r.Name', type: 'text'},
+                    {label: 'Vendor', fieldName: 'vendorName', type: 'text'},
                     {label: 'Contractor Ammount', fieldName: 'buildertek__Vendor_Quote__c', type: 'currency', 
                      typeAttributes: { currencyCode: { fieldName: 'CurrencyIso' }, currencyDisplayAs: "code" },cellAttributes: { alignment: 'left' }},
                     {label: 'Status', fieldName: 'buildertek__Status__c', type: 'text'}
@@ -33,7 +33,14 @@
                }
                 
             }
-           component.set("v.rfqs", response.getReturnValue()); 
+            result.forEach(element => {
+                if (element.buildertek__Vendor__c != null) {
+                    element.vendorName = element.buildertek__Vendor__r.Name;
+                }
+            });
+            console.log('result ==>',{result});
+            component.set("v.rfqs", result); 
+        //    component.set("v.rfqs", response.getReturnValue()); 
             }else{
                 console.log("Failed with state: "+ state);
             }
@@ -41,6 +48,10 @@
         
         $A.enqueueAction(getAllApprovedRFQ);
     },
+
+    onSearch: function (component, event, helper) {
+        helper.doSearchHelper(component, event, helper);
+   },
     
     close: function(component){
         component.get("v.cancelCallback")();

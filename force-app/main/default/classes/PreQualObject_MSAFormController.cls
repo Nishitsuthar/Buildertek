@@ -581,6 +581,7 @@ contractor = 'false';
                         //String emailbody = '<html>  <body>      <p>         <span>              Contractor have been singed. please see attached link           </span>                         <br/>           <span>              {!Account.Link}         </span>     </p>    </body></html>';
                         string urls = String.valueof(URL.getOrgDomainUrl()).replace('Url:[delegate=','').replace(']','');
                         emailbody = emailbody.replace('{!Account.Link}',urls +'/'+ acc.Id);
+                        System.debug('html emial body ===> '+emailbody);
                         emails.setHtmlBody(emailbody);
                         List<Messaging.Emailfileattachment> listfileAttachments = new List<Messaging.Emailfileattachment>();
                         Messaging.Emailfileattachment efas = new Messaging.Emailfileattachment();

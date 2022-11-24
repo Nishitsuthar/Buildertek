@@ -23,7 +23,7 @@
     },
 
     currentWeekDates: function(component, Datevalue) {
-        console.log('currentWeekDates ========> ');
+        // console.log('currentWeekDates ========> ');
         var today = new Date(Datevalue);
         //alert('current date===='+today);
         var week = [];
@@ -72,7 +72,7 @@
             Date: $A.localizationService.formatDate(sundayOfWeek, 'MM/dd/yyyy'),
             DayMonth: $A.localizationService.formatDate(sundayOfWeek, 'MMMM')
         });
-        console.log('currentWeekDates 1 ========> ');
+        // console.log('currentWeekDates 1 ========> ');
         var nextmondayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay() + 8);
         week.push({
             Day: 'Mon',
@@ -165,7 +165,7 @@
         var beforeOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay() - 20);
         // var beforeOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()-6);
 
-        console.log('currentWeekDates 2 ========> ');
+        // console.log('currentWeekDates 2 ========> ');
         component.set("v.weekDates", week);
         component.set("v.beforeweekDate", beforeOfWeek);
         component.set("v.weekfirstDate", mondayOfWeek);
@@ -176,7 +176,7 @@
         var fromdateStr = fromDate.toString()
         var toDate = $A.localizationService.formatDate(next2sundayOfWeek, 'MM/dd/yyyy');
         var todateStr = toDate.toString();
-        console.log('currentWeekDates 4 ========> ');
+        // console.log('currentWeekDates 4 ========> ');
         //alert(JSON.stringify(component.get("v.selectedTradetype")));
         //alert(fromdateStr+'<-------from-----todate---->'+todateStr);
         action.setParams({
@@ -188,7 +188,7 @@
         });
         action.setCallback(this, function(response) {
             var state = response.getState();
-            console.log('state ----------' + state + ' ' + JSON.stringify(response.getReturnValue()));
+            // console.log('state ----------' + state + ' ' + JSON.stringify(response.getReturnValue()));
             if (component.isValid() && state === "SUCCESS") {
                 console.log('response.getReturnValue()::', response.getReturnValue());
                 component.set("v.eventList", response.getReturnValue());

@@ -29,8 +29,12 @@ public class BT_FormatGanttData {
         //var taskWithphaseList = [];
 
         cls_children taskPhaseRow = new cls_children();
+        System.debug(taskPhaseRow == null);
+        System.debug(taskPhaseRow);
+
         Integer phIndex = -1;
         for(Integer i=0;i<taskListForPhase.Size();i++){
+            System.debug(!String.isBlank(taskListForPhase[i].buildertek__Phase__c) + '--------------' );
             if(taskListForPhase[i].buildertek__Phase__c != null && taskPhaseRow != null){
                 if(taskPhaseRow.name != taskListForPhase[i].buildertek__Phase__c){
                     phIndex = phIndex+1;

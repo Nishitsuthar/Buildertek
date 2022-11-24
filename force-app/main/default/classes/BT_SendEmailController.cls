@@ -946,6 +946,8 @@ public with sharing class BT_SendEmailController{
                                where Name = :emailTemplateName and isActive = true].id);
         msg.setWhatId(parentRecordID);
 
+        System.debug(templateId + '---' + emailTemplateName +'==='+ parentRecordID);
+
         msg.setTargetObjectId(ID.valueOf(vendorID));
         msg.setToAddresses(new List<String>{'noreplay@buildertek.com'});
         List<OrgWideEmailAddress> owe;
