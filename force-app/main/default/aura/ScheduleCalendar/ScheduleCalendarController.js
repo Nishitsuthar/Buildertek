@@ -10,10 +10,10 @@
         // helper.getActiveProjects(component, event, helper);
         //helper.gettabname(component);
 	},
-    onScheduleItemChange : function(component, event, helper) {
+    // onScheduleItemChange : function(component, event, helper) {
         //$('#calendar').fullCalendar('removeEvents', function () { return true; });
         //helper.getActiveProjects(component, event, helper);
-    },
+    // },
     onProjectChange : function(component, event, helper) {
     	 
     },
