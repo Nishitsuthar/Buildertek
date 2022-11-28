@@ -14,6 +14,7 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var storeResponse = response.getReturnValue();
+                console.log('storeResponse ==> ', {storeResponse});
                 //alert(JSON.stringify(storeResponse));
               // if storeResponse size is equal 0 ,display No Result Found... message on screen.                }
                 if (storeResponse.length == 0) {

@@ -20,7 +20,7 @@
     <aura:attribute name="isContract" type="Boolean" default = "false"/>
     <aura:attribute name="newPo" type="Purchase_Order__c" default="{ 'sobjectType': 'Purchase_Order__c'}"
         access="global" />
-    <lightning:workspaceAPI aura:id="workspace" /> 
+    <lightning:workspaceAPI aura:id="workspace" />
     <aura:attribute name="isOpen" type="Boolean" default="true" />
     <aura:if isTrue="{!v.isOpen}">
         <div role="dialog" class="slds-modal slds-fade-in-open ">
@@ -31,7 +31,7 @@
                     <h1 class="slds-text-heading--medium">New Purchase Order</h1>
                 </header>
 
-                <div class="slds-modal__content slds-p-around--medium">
+                <div class="slds-modal__content slds-p-around--medium main_body_div">
 
                     <lightning:recordEditForm objectApiName="buildertek__Purchase_Order__c">
                         <lightning:messages />
@@ -44,7 +44,7 @@
                             <div class="slds-col">
                                 <lightning:inputField fieldName="buildertek__Required_Delivery_Date__c"
                                     value="{!v.requiredDeliverydate}" />
-                                 <lightning:inputField fieldName="buildertek__Type__c" value="{!v.POtype}" /> 
+                                 <lightning:inputField fieldName="buildertek__Type__c" value="{!v.POtype}" />
                             </div>
                         </div>
                         <h3 class="slds-section-title--divider">Ship To Address</h3>
@@ -144,5 +144,5 @@
         </section>
         <div aura:id="ModelBackdrop" class="slds-backdrop slds-backdrop_open"></div>
     </aura:if>
-     <lightning:notificationsLibrary aura:id="notifLib" />                           
+     <lightning:notificationsLibrary aura:id="notifLib" />
 </aura:component>

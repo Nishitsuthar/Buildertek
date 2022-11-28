@@ -1,30 +1,24 @@
 public class ScheduleCalendarController {
     @AuraEnabled
-    public static List<buildertek__Project_Task__c> getProjects(String scheduleItemsStatus, String projectId, String tradeTypeId, String vendorId, String taskId){
-        system.debug('projectId --------> '+projectId);
+    public static List<buildertek__Project_Task__c> getProjects(List<Id> projectIdList, String tradeTypeId, String vendorId){
+        // system.debug('projectId --------> '+projectId);
         system.debug('tradeTypeId --------> '+tradeTypeId);
         system.debug('vendorId --------> '+vendorId);
-        system.debug('taskId --------> '+taskId);
+
         List<ScheduleWrapper> scheduleWrapperList = new List<ScheduleWrapper>();
         string scheduletype = 'Master';
         String query = 'SELECT Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Notes__c, buildertek__Contractor__c, buildertek__Contractor__r.Name, buildertek__Schedule__r.buildertek__Project__c, buildertek__Schedule__r.buildertek__Project__r.Name,buildertek__Schedule__r.buildertek__Type__c FROM  buildertek__Project_Task__c';
-        if(scheduleItemsStatus == 'Active'){
-            query += ' WHERE buildertek__Completion__c != 100';
-        }else if(scheduleItemsStatus == 'Completed'){
-            query += ' WHERE buildertek__Completion__c = 100';
-        }
-        if(taskId != 'All' && taskId != ''){
+        // if(scheduleItemsStatus == 'Active'){
+        //     query += ' WHERE buildertek__Completion__c != 100';
+        // }else if(scheduleItemsStatus == 'Completed'){
+        //     query += ' WHERE buildertek__Completion__c = 100';
+        // }
+
+        if(projectIdList.size() > 0){
             if(query.contains('WHERE')){
-                query += ' AND Id =: taskId';
+                query += ' AND buildertek__Schedule__r.buildertek__Project__c IN: projectIdList';
             }else{
-                query += ' WHERE Id =: taskId';
-            }
-        }
-        if(projectId != 'All' && projectId != ''){
-            if(query.contains('WHERE')){
-                query += ' AND buildertek__Schedule__r.buildertek__Project__c =: projectId';
-            }else{
-                query += ' WHERE buildertek__Schedule__r.buildertek__Project__c =: projectId';
+                query += ' WHERE buildertek__Schedule__r.buildertek__Project__c IN: projectIdList';
             }
         }
         if(vendorId != 'All' && vendorId != ''){

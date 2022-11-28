@@ -7,28 +7,28 @@
         }).then(function(response){
             workspaceAPI.setTabLabel({
                 tabId: response ,
-                label: "Task Dashboard" 
+                label: "Task Dashboard"
             })
         })
      },
 		 getResources: function(component) {
-	    var action = component.get("c.getAllResourcess"); 
+	    var action = component.get("c.getAllResourcess");
 	    action.setCallback(this, function(response) {
 	        var state = response.getState();
 	        if (component.isValid() && state === "SUCCESS") {
 	            component.set("v.contactList", response.getReturnValue());
             }
-	    }); 
+	    });
 	    $A.enqueueAction(action);
 	},
-    
+
     currentWeekDates : function(component,Datevalue) {
-        
+
     console.log('currentWeekDates ========> ');
 	var today = new Date(Datevalue);
    // alert('current date===='+today);
     var week = [];
-       
+
         var dayOfWeekStartingSundayZeroIndexBased = today.getDay(); // 0 : Sunday ,1 : Monday,2,3,4,5,6 : Saturday
         var mondayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+1);
         week.push({Day:'Mon',Date: $A.localizationService.formatDate(mondayOfWeek, 'MM/dd/yyyy'), Dayview : $A.localizationService.formatDate(mondayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(mondayOfWeek, 'MMMM')});
@@ -40,12 +40,14 @@
         week.push({Day:'Thu',Date: $A.localizationService.formatDate(thuedayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(thuedayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(thuedayOfWeek, 'MMMM')});
         var fridayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+5);
         week.push({Day:'Fri',Date: $A.localizationService.formatDate(fridayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(fridayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(fridayOfWeek, 'MMMM')});
+
         var satdayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+6);
-      // week.push({Day:'Sat',Date: $A.localizationService.formatDate(satdayOfWeek, 'MM/dd/yyyy')});
-       var sundayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+7);
-        week.push({Day:'Sun',Date: $A.localizationService.formatDate(sundayOfWeek, 'MM/dd/yyyy'),DayMonth : $A.localizationService.formatDate(sundayOfWeek, 'MMMM')});
+        week.push({Day:'Sat',Date: $A.localizationService.formatDate(satdayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(satdayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(satdayOfWeek, 'MMMM')});
+        var sundayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+7);
+        week.push({Day:'Sun',Date: $A.localizationService.formatDate(sundayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(sundayOfWeek, 'dd'),DayMonth : $A.localizationService.formatDate(sundayOfWeek, 'MMMM')});
         console.log('currentWeekDates 1 ========> ');
         var nextmondayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+8);
+
         week.push({Day:'Mon',Date: $A.localizationService.formatDate(nextmondayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(nextmondayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(nextmondayOfWeek, 'MMMM')});
         var nexttuedayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+9);
 		week.push({Day:'Tue',Date: $A.localizationService.formatDate(nexttuedayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(nexttuedayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(nexttuedayOfWeek, 'MMMM')});
@@ -54,14 +56,15 @@
         var nextthuedayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+11);
         week.push({Day:'Thu',Date: $A.localizationService.formatDate(nextthuedayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(nextthuedayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(nextthuedayOfWeek, 'MMMM')});
         var nextfridayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+12);
-        week.push({Day:'Fri',Date: $A.localizationService.formatDate(nextfridayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(nextfridayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(nextfridayOfWeek, 'MMMM')});
+        week.push({Day:'Fri',Date: $A.localizationService.formatDate(nextfridayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(nextfridayOfWeek, 'dd'), DayMonth : $A.localizationService.formatDate(nextfridayOfWeek, 'MMMM')});
+
         var nextsatdayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+13);
-       // week.push({Day:'Sat',Date: $A.localizationService.formatDate(nextsatdayOfWeek, 'MM/dd/yyyy')});
+        week.push({Day:'Sat',Date: $A.localizationService.formatDate(nextsatdayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(nextsatdayOfWeek, 'dd'), DayMonth : $A.localizationService.formatDate(nextsatdayOfWeek, 'MMMM')});
         var nextsundayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+14);
-       week.push({Day:'Sun',Date: $A.localizationService.formatDate(nextsundayOfWeek, 'MM/dd/yyyy'), DayMonth : $A.localizationService.formatDate(nextsundayOfWeek, 'MMMM')});   
-        
-              
-          var next2mondayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+15);
+        week.push({Day:'Sun',Date: $A.localizationService.formatDate(nextsundayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(nextsundayOfWeek, 'dd'), DayMonth : $A.localizationService.formatDate(nextsundayOfWeek, 'MMMM')});
+
+
+        var next2mondayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+15);
         week.push({Day:'Mon',Date: $A.localizationService.formatDate(next2mondayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(next2mondayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(next2mondayOfWeek, 'MMMM')});
         var next2tuedayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+16);
 		week.push({Day:'Tue',Date: $A.localizationService.formatDate(next2tuedayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(next2tuedayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(next2tuedayOfWeek, 'MMMM')});
@@ -71,26 +74,27 @@
         week.push({Day:'Thur',Date: $A.localizationService.formatDate(next2thuedayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(next2thuedayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(next2thuedayOfWeek, 'MMMM')});
         var next2fridayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+19);
         week.push({Day:'Fri',Date: $A.localizationService.formatDate(next2fridayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(next2fridayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(next2fridayOfWeek, 'MMMM')});
+
         var next2satdayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+20);
-      //week.push({Day:'Sat',Date: $A.localizationService.formatDate(next2satdayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(next2fridayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(next2satdayOfWeek, 'MMMM')});
+        week.push({Day:'Sat',Date: $A.localizationService.formatDate(next2satdayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(next2satdayOfWeek, 'dd'),  DayMonth : $A.localizationService.formatDate(next2satdayOfWeek, 'MMMM')});
         var next2sundayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()+21);
-      week.push({Day:'Sun',Date: $A.localizationService.formatDate(next2sundayOfWeek, 'MM/dd/yyyy'),DayMonth : $A.localizationService.formatDate(next2sundayOfWeek, 'MMMM')});
-       
+        week.push({Day:'Sun',Date: $A.localizationService.formatDate(next2sundayOfWeek, 'MM/dd/yyyy'),Dayview : $A.localizationService.formatDate(next2sundayOfWeek, 'dd'), DayMonth : $A.localizationService.formatDate(next2sundayOfWeek, 'MMMM')});
+
         var beforeOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()-20);
        // var beforeOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()-6);
-       
+        console.log('weekend sat and sunday ==> ',{week});
         console.log('currentWeekDates 2 ========> ');
         component.set("v.weekDates",week);
-        component.set("v.beforeweekDate",beforeOfWeek);	
-        component.set("v.weekfirstDate",mondayOfWeek);	
+        component.set("v.beforeweekDate",beforeOfWeek);
+        component.set("v.weekfirstDate",mondayOfWeek);
         component.set("v.weeklastDate",next2sundayOfWeek);
-        
+
         var action = component.get("c.getWeekRecords");
         var fromDate = $A.localizationService.formatDate(mondayOfWeek, 'MM/dd/yyyy');
         var fromdateStr = fromDate.toString()
         var toDate = $A.localizationService.formatDate(sundayOfWeek, 'MM/dd/yyyy');
         var todateStr = toDate.toString();
-        var slippagePicklistvalue = component.find("slippagePicklist").get("v.value"); 
+        var slippagePicklistvalue = component.find("slippagePicklist").get("v.value");
         console.log('currentWeekDates 4 ========> ');
         //alert(JSON.stringify(component.get("v.selectedTradetype")));
          action.setParams({
@@ -117,26 +121,26 @@
                 var PaginationList = [];
                 for(var i=0; i< pageSize; i++){
                     if(component.get("v.eventList").length> i)
-                        PaginationList.push(result[i]);    
+                        PaginationList.push(result[i]);
                 }
                 component.set('v.PaginationList', PaginationList);
               //  component.set("v.Spinner", false);
               //  component.set("v.eventList", response.getReturnValue());
-                component.set("v.showSpinner", false); 
-                component.taskdrawTable(''); 
+                component.set("v.showSpinner", false);
+                component.taskdrawTable('');
             }
             else{
                 component.set("v.showSpinner", false);
-            } 
-	    }); 
-	    $A.enqueueAction(action);   
+            }
+	    });
+	    $A.enqueueAction(action);
 	},
-    
- 
+
+
     currentMonthsDates : function(component,Datevalue) {
         var today = new Date(Datevalue);
     },
-    
-     
-     
+
+
+
 })

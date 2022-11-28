@@ -22,6 +22,9 @@
                     if (element.buildertek__Vendor__c != null) {
                         element.vendorName = element.buildertek__Vendor__r.Name;
                     }
+                    if (element.buildertek__Project__c != null) {
+                        element.projectName = element.buildertek__Project__r.Name;
+                    }
                 });
                 component.set("v.rfqs", result);  
             } else{

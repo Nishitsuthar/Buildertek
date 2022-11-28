@@ -501,6 +501,7 @@ public class ContinuationSheetLineTriggerHandler {
         }
         
         buildertek__SOV_Continuation__c conSheetList = [select Id, Name,buildertek__SOV_Payment_Application__c from buildertek__SOV_Continuation__c where Id =: conSheetIdList[0]  Limit 10000];
+
         
         list<SOV_Continuation_Sheet_Lines__c>  AllConSheetLineIds = [select Id, Name, buildertek__SOV_Continuation_Sheet__c from SOV_Continuation_Sheet_Lines__c where buildertek__SOV_Continuation_Sheet__c =:conSheetList.Id Limit 10000 ];
         

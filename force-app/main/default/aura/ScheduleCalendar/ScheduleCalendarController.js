@@ -131,6 +131,16 @@
             }    
         });
         $A.enqueueAction(action);    
+    }, 
+
+    handleRecordListEvent : function(component, event, helper){
+
+        var recordListByEvent = event.getParam("recordListByEvent");
+        component.set("v.ProjectRecordList", recordListByEvent);
+
+        console.log('--- Event Receive ---');
+        console.log('recordListByEvent => ',{recordListByEvent});
+
     }
     
     

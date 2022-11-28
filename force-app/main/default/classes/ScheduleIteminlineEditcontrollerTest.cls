@@ -65,7 +65,7 @@ public  class ScheduleIteminlineEditcontrollerTest {
         ProjectTaskTriggerHandler.blnSkipTaskTrigger=true;
         ScheduleIteminlineEditcontroller.fetchAccts();
         ScheduleIteminlineEditcontroller.fetchprojecttasks(schedule1.Id);
-        // ScheduleIteminlineEditcontroller.updateprojeccttasks(projectTaskList);
+        ScheduleIteminlineEditcontroller.updateprojeccttasks(projectTaskList);
         ScheduleIteminlineEditcontroller.deletescheduleitemrec(projectTask1.Id);
         ScheduleIteminlineEditcontroller.getFieldSet('buildertek__Project_Task__c' , 'buildertek__Schedule_Item_field_set',schedule1.Id);
         ScheduleIteminlineEditcontroller.getRecords('buildertek__Project_Task__c' , 'Name' , schedule1.Id , jsondata  );

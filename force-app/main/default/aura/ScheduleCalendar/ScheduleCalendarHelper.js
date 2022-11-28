@@ -16,30 +16,25 @@
         var projectInputVal; //= document.getElementById('projectId').value;
         var tradeTypeInputVal //= document.getElementById('tradeTypeId').value;
         var vendorInputVal; //= document.getElementById('vendorId').value;
-        var taskInputVal; //= document.getElementById('vendorId').value;
 
         var tradeTypeId = Object.keys(JSON.parse(JSON.stringify(component.get("v.selectedTradetype")))) ? JSON.parse(JSON.stringify(component.get("v.selectedTradetype"))).Id  : '';
         var vendorId = Object.keys(JSON.parse(JSON.stringify(component.get("v.selectedVendor")))) ? JSON.parse(JSON.stringify(component.get("v.selectedVendor"))).Id : '';
         var projectId = Object.keys(JSON.parse(JSON.stringify(component.get("v.selectedproject")))) ? JSON.parse(JSON.stringify(component.get("v.selectedproject"))).Id : '';
-        var taskId = Object.keys(JSON.parse(JSON.stringify(component.get("v.selectedTask")))) ? JSON.parse(JSON.stringify(component.get("v.selectedTask"))).Id : '';
 
 
         projectInputVal = Object.keys(JSON.parse(JSON.stringify(component.get("v.selectedproject")))) ? JSON.parse(JSON.stringify(component.get("v.selectedproject"))).Name : '';
         tradeTypeInputVal = Object.keys(JSON.parse(JSON.stringify(component.get("v.selectedTradetype")))) ? JSON.parse(JSON.stringify(component.get("v.selectedTradetype"))).Name  : '';
         vendorInputVal = Object.keys(JSON.parse(JSON.stringify(component.get("v.selectedVendor")))) ? JSON.parse(JSON.stringify(component.get("v.selectedVendor"))).Name : '';
-        taskInputVal = Object.keys(JSON.parse(JSON.stringify(component.get("v.selectedTask")))) ? JSON.parse(JSON.stringify(component.get("v.selectedTask"))).Name : '';
 
         component.set("v.selectedProjectId",projectId);
         component.set("v.selectedTradeTypeId",tradeTypeId);
         component.set("v.selectedVendorId",vendorId);
-        component.set("v.selectedTaskId",taskId);
 
 
 
         component.set("v.selectedVendorIdName",vendorInputVal);
         component.set("v.selectedTradeTypeIdName",tradeTypeInputVal);
         component.set("v.selectedProjectIdName",projectInputVal);
-        component.set("v.selectedTaskIdName",taskInputVal);
 
         /*if(projectInputVal == ""){
             component.set("v.selectedProjectId","All");
@@ -95,19 +90,26 @@
         var projectId = component.get("v.selectedProjectId");
         var tradeTypeId = component.get("v.selectedTradeTypeId");
         var vendorId = component.get("v.selectedVendorId");
-        var taskId = component.get("v.selectedTaskId");
         //alert('status -------> '+status);
         //alert('projectId -------> '+projectId);
        // alert('tradeTypeId -------> '+tradeTypeId);
        // alert('vendorId -------> '+vendorId);
+
+       var projectIdList = [];
+       var ProjectRecordList = component.get("v.ProjectRecordList");
+       ProjectRecordList.forEach(element => {
+            projectIdList.push(element.Id);
+       });
+
+       console.log('projectIdList ==> ',{projectIdList});
         var defaultDate = component.get("v.defaultDate");
     	var action = component.get("c.getProjects");
         action.setParams({
             // 'scheduleItemsStatus' : status,
-            'projectId' : projectId ? projectId : '' /*!= "" ? projectId:"All"*/,
+            'projectIdList' : projectIdList,
+            // 'projectId' : projectId ? projectId : '' /*!= "" ? projectId:"All"*/,
             'tradeTypeId' : tradeTypeId ? tradeTypeId : '' /*!= "" ? tradeTypeId:"All"*/,
             'vendorId' : vendorId ? vendorId : ''/*!= "" ? vendorId:"All"*/,
-            'taskId' : taskId ? taskId : ''/*!= "" ? vendorId:"All"*/
         });
         action.setCallback(this, function(response){
             if(response.getState() === "SUCCESS"){
@@ -132,7 +134,6 @@
                             component.set("v.selectedProjectId", component.get("v.selectedProjectId"));
                             component.set("v.selectedTradeTypeId", component.get("v.selectedTradeTypeId"));
                             component.set("v.selectedVendorId", component.get("v.selectedVendorId"));
-                            component.set("v.selectedTaskId", component.get("v.selectedTaskId"));
                         }
                     )
                 );

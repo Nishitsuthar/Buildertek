@@ -68,10 +68,39 @@
         //alert('Clear Lookup');
         var pillTarget = component.find("lookup-pill");
         var lookUpTarget = component.find("lookupField"); 
-        
-        $A.util.addClass(pillTarget, 'slds-hide');
-        $A.util.removeClass(pillTarget, 'slds-show');
-        
+
+        if (component.get("v.SelectMultiRecord")){
+
+            var recordId = event.target.id;
+            var RecordList = component.get("v.RecordList");
+            var newRecordList = [];
+            RecordList.forEach(element => {
+                if (element.Id != recordId) {
+                    newRecordList.push(element);
+                }
+            });
+            // RecordList.pop();
+            if (newRecordList.length == 0) {
+                $A.util.addClass(pillTarget, 'slds-hide');
+                $A.util.removeClass(pillTarget, 'slds-show');
+            } else {
+                $A.util.addClass(pillTarget, 'slds-show');
+                $A.util.removeClass(pillTarget, 'slds-hide');
+            }
+            component.set("v.RecordList", newRecordList);
+
+            var compEvent = $A.get('e.c:passRecordListEvent');
+            compEvent.setParams({
+                "recordListByEvent": newRecordList
+            });
+            compEvent.fire();
+
+            
+        } else {
+            $A.util.addClass(pillTarget, 'slds-hide');
+            $A.util.removeClass(pillTarget, 'slds-show');
+        }
+
         $A.util.addClass(lookUpTarget, 'slds-show');
         $A.util.removeClass(lookUpTarget, 'slds-hide');
         
@@ -110,17 +139,51 @@
         component.set("v.selectedRecord" , selectedAccountGetFromEvent); 
         component.set("v.recordName" , selectedAccountGetFromEvent.Name); 
         
-        var forclose = component.find("lookup-pill");
-        $A.util.addClass(forclose, 'slds-show');
-        $A.util.removeClass(forclose, 'slds-hide');
+        // For multiselect record
+        if (component.get("v.SelectMultiRecord")) {
+            var RecordList = component.get("v.RecordList");
+            RecordList.push(selectedAccountGetFromEvent);
+            component.set("v.RecordList", RecordList);
+
+            var forclose = component.find("lookup-pill");
+            $A.util.addClass(forclose, 'slds-show');
+            $A.util.removeClass(forclose, 'slds-hide');
+
+            // Allow 3 record in multiselect field
+            if (RecordList.length == 3) {
+                var forclose = component.find("searchRes");
+                $A.util.addClass(forclose, 'slds-is-close');
+                $A.util.removeClass(forclose, 'slds-is-open');
+                
+                var lookUpTarget = component.find("lookupField");
+                $A.util.addClass(lookUpTarget, 'slds-hide');
+                $A.util.removeClass(lookUpTarget, 'slds-show');  
+            }
+
+            var testing = component.get("v.RecordList");
+            testing.forEach(element => {
+                console.log('Id -> ' + element.Id + ' Name -> ' + element.Name);
+            });
+            var compEvent = $A.get('e.c:passRecordListEvent');
+            compEvent.setParams({
+                "recordListByEvent": RecordList
+            });
+            compEvent.fire();
+
+        } else {
+            var forclose = component.find("lookup-pill");
+            $A.util.addClass(forclose, 'slds-show');
+            $A.util.removeClass(forclose, 'slds-hide');
+            
+            var forclose = component.find("searchRes");
+            $A.util.addClass(forclose, 'slds-is-close');
+            $A.util.removeClass(forclose, 'slds-is-open');
+            
+            var lookUpTarget = component.find("lookupField");
+            $A.util.addClass(lookUpTarget, 'slds-hide');
+            $A.util.removeClass(lookUpTarget, 'slds-show');  
+        }
         
-        var forclose = component.find("searchRes");
-        $A.util.addClass(forclose, 'slds-is-close');
-        $A.util.removeClass(forclose, 'slds-is-open');
-        
-        var lookUpTarget = component.find("lookupField");
-        $A.util.addClass(lookUpTarget, 'slds-hide');
-        $A.util.removeClass(lookUpTarget, 'slds-show');  
         
     },
 })

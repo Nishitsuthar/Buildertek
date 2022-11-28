@@ -49,7 +49,6 @@
     <aura:attribute name="ResslectedOptions" type="list"  default="[]"/>
     <aura:attribute name="selectedLocations" type="list" />
     <aura:attribute name="selectedContact" type="sObject" default="{}"/>
-    <aura:attribute name="selectedTask" type="sObject" default="{}"/>
     <aura:attribute name="selectedAccount" type="sObject" default="{}"/>
     <aura:attribute name="selectedproject" type="sObject" default="{}"/>
     <aura:attribute name="selectedTradetype" type="sObject" default="{}"/>
@@ -127,11 +126,6 @@
                             <div class="slds-col slds-size_2-of-12">
                                 <div class="slds-form-element__control slds-input-has-icon" style="margin: 10px;">
                                <b> Resource :</b>	 <c:customLookup aura:id="contactId" objectAPIName="Contact" IconName="standard:contact" selectedRecord="{!v.selectedContact}" fromComp="resourceCenter"  />
-								</div>
-                            </div>
-                            <div class="slds-col slds-size_2-of-12">
-                                <div class="slds-form-element__control slds-input-has-icon" style="margin: 10px;">
-                               <b> Task :</b>	 <c:customLookup aura:id="taskId" objectAPIName="buildertek__Project_task__c" IconName="standard:task" selectedRecord="{!v.selectedTask}" fromComp="resourceCenter"  />
 								</div>
                             </div>
 

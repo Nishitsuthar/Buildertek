@@ -129,7 +129,7 @@ public without sharing class CreatePaymentApplicationForBudget {
             newPaymentApplication.buildertek__Project__c = paymentApplicationsRecord.buildertek__Project__c;
             newPaymentApplication.buildertek__Contract_For__c = paymentApplicationsRecord.buildertek__Contract_For__c;
             insert newPaymentApplication;
-            
+            System.debug(newPaymentApplication);
             buildertek__SOV_Payment_Application__c mlistApp = [select id, 
                                                                Name,
                                                                owner.name,
@@ -157,15 +157,13 @@ continutionSheet.Name =*/
             responseclass responseclassrec = new responseclass();
             responseclassrec.isSuccess = false;
             responseclassrec.ErrorMessage = e.getMessage();
+            System.debug(e.getMessage() + e.getLineNumber());
             return responseclassrec;
         }
     }
     
     @AuraEnabled
     public static responseclass insertContinuationSheet(buildertek__SOV_Continuation__c continuationSheet, String paymentApplicationId, String applicationNumber){
-        system.debug('continuationSheet -------> '+continuationSheet);
-        system.debug('paymentApplicationId -------> '+paymentApplicationId);
-        system.debug('applicationNumber -------> '+applicationNumber);
         responseclass rc = new responseclass();
         try{
             continuationSheet.buildertek__Application__c = Integer.valueOf(applicationNumber);
@@ -175,7 +173,8 @@ continutionSheet.Name =*/
             rc.SuccessMessage = continuationSheet.Id; 
         }catch(Exception exp){
             rc.isSuccess = false;
-            rc.ErrorMessage = exp.getMessage();    
+            rc.ErrorMessage = exp.getMessage();   
+            // System.debug(exp.getMessage());
         }
         return rc;
     }
@@ -192,6 +191,7 @@ continutionSheet.Name =*/
                 csl.buildertek__SOV_Continuation_Sheet__c = continuationId;
             }
             insert sheetLinesList;
+            System.debug('---DEBUG----'+sheetLinesList);
             List<buildertek__SOV_Continuation_Sheet_Lines__c> insertedSheetLinesList = [SELECT Id,
                                                                                         Name,
                                                                                         buildertek__Description_of_Work__c,
@@ -207,7 +207,8 @@ continutionSheet.Name =*/
             rc.isSuccess = true;
             rc.sheetLines = insertedSheetLinesList;
         }catch(Exception exp){
-            rc.ErrorMessage = exp.getMessage();     
+            rc.ErrorMessage = exp.getMessage();
+            System.debug(exp.getMessage());
         }
         return rc;
     }
@@ -221,14 +222,15 @@ continutionSheet.Name =*/
         if(userRec.size() > 0){
             portalCode = userRec[0].get('isPortalEnabled').toString();
         }
-        system.debug('postel code'+ portalCode);
-        System.debug('*******************************************');
+        // system.debug('postel code'+ portalCode);
+        // System.debug('*******************************************');
         buildertek__SOV_Continuation__c continuationSheet;
         buildertek__SOV_Payment_Application__c paymentapplication;
         Boolean isApplication;
-        system.debug('recordId'+recordId);
-        system.debug(recordid+' '+Id.valueOf(recordId).getSObjectType().getDescribe().getName());
+        // system.debug('recordId'+recordId);
+        // system.debug(recordid+' '+Id.valueOf(recordId).getSObjectType().getDescribe().getName());
         if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__SOV_Payment_Application__c'){
+            System.debug('RECORDID');
             continuationSheet = [SELECT Id, 
                                  Name,
                                  buildertek__Application__c,
@@ -253,7 +255,7 @@ continutionSheet.Name =*/
                                  buildertek__SOV_Payment_Application__r.recordtype.name
                                  FROM buildertek__SOV_Continuation__c 
                                  WHERE buildertek__SOV_Payment_Application__c =: recordId ];
-            system.debug('continuationSheet'+continuationSheet.id);
+            // system.debug('continuationSheet'+continuationSheet.id);
             
         }else if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__SOV_Continuation__c'){
             continuationSheet = [SELECT Id, 
@@ -281,7 +283,7 @@ continutionSheet.Name =*/
                                  WHERE Id =: recordId];   
             isApplication = false;
         }
-        system.debug('contunitution sheet retainage' + continuationSheet);
+        // system.debug('contunitution sheet retainage' + continuationSheet);
         
         List<buildertek__SOV_Continuation_Sheet_Lines__c> insertedSheetLinesList = [SELECT Id,
                                                                                     Name,
@@ -315,11 +317,12 @@ continutionSheet.Name =*/
         
         
         Map<String,List<buildertek__SOV_Continuation_Sheet_Lines__c>> sheetLineGrpMap = new  Map<String,List<buildertek__SOV_Continuation_Sheet_Lines__c>>();
-        
+        System.debug('sheetLine===> OUTSIDE FOR LOOP');
+        System.debug(insertedSheetLinesList);
+
         for(buildertek__SOV_Continuation_Sheet_Lines__c sheetLine : insertedSheetLinesList){
 
             System.debug('sheetLine===>'+sheetLine);
-            
             if(sheetLine.buildertek__Grouping__c != null){
                 if(sheetLineGrpMap.get(sheetLine.buildertek__Grouping__c)!=null){
                     // system.debug(sheetLine);
@@ -373,12 +376,12 @@ continutionSheet.Name =*/
             }
         }
         
-        system.debug(sheetLineGrpMap.keySet());
+        // system.debug(sheetLineGrpMap.keySet());
         list<buildertek__SOV_Continuation_Sheet_Lines__c> sortedSheetLines = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
         list<buildertek__SOV_Continuation_Sheet_Lines__c> changeOrderSortedSheetLines = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
         for(String grpName : sheetLineGrpMap.keySet()){
-            system.debug(grpName);
-            system.debug(sheetLineGrpMap.get(grpName).Size());
+            // system.debug(grpName);
+            // system.debug(sheetLineGrpMap.get(grpName).Size());
             if(grpName != 'No Grouping' && grpName != 'Change Orders'){
                 sortedSheetLines.addAll(sheetLineGrpMap.get(grpName));
             }else if(grpName == 'Change Orders'){
@@ -386,8 +389,8 @@ continutionSheet.Name =*/
             }
         }
         
-        system.debug(insertedSheetLinesList.Size());
-        system.debug(sortedSheetLines.Size());
+        // system.debug(insertedSheetLinesList.Size());
+        // system.debug(sortedSheetLines.Size());
         
         if(sheetLineGrpMap.get('No Grouping') != null){
             if(sheetLineGrpMap.get('No Grouping').Size() > 0){
@@ -400,7 +403,7 @@ continutionSheet.Name =*/
         }
         
         if(portalCode == 'true'){
-            system.debug('community user');
+            // system.debug('community user');
             
             List<AggregateResult> groupedResults = [SELECT SUM(buildertek__Scheduled_Value__c) scheduleValue,
                                                     SUM(buildertek__Vendor_Work_Completed_from_Previous_Appl__c) fromPrevApp,
@@ -427,14 +430,14 @@ continutionSheet.Name =*/
                 //  cd.gcTotal = (Decimal)groupedResults[0].get('gcTotal');
                 cd.gcTotal = ( (Decimal)groupedResults[0].get('totalWork') / (Decimal)groupedResults[0].get('scheduleValue') ) * 100;
                 cd.balanceTotal = (Decimal)groupedResults[0].get('balanceTotal');
-                system.debug('cdcddddddddddddddddddddddddddddddd'+cd);
+                // system.debug('cdcddddddddddddddddddddddddddddddd'+cd);
             }
             cd.projectId = continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Project__c;
             return cd;
             
         }
         else{
-            system.debug('salesforce user');
+            // system.debug('salesforce user');
             List<AggregateResult> groupedResults = [SELECT SUM(buildertek__Scheduled_Value__c) scheduleValue,
                                                     SUM(buildertek__Work_Completed_from_Previous_Application__c) fromPrevApp,
                                                     SUM(buildertek__Work_Completed__c) workCompleted,
@@ -461,7 +464,7 @@ continutionSheet.Name =*/
                 // cd.gcTotal = (Decimal)groupedResults[0].get('gcTotal');
                 cd.gcTotal = ( (Decimal)groupedResults[0].get('totalWork') / (Decimal)groupedResults[0].get('scheduleValue') ) * 100;
                 cd.balanceTotal = (Decimal)groupedResults[0].get('balanceTotal');
-                system.debug('cdcddddddddddddddddddddddddddddddd'+cd);
+                // system.debug('cdcddddddddddddddddddddddddddddddd'+cd);
             }
             cd.projectId = continuationSheet.buildertek__SOV_Payment_Application__r.buildertek__Project__c;
             return cd;
@@ -472,7 +475,7 @@ continutionSheet.Name =*/
     
     @AuraEnabled
     public static responseclass updateSheetLines(String sheetLines, String sheetId, String recordId){
-        system.debug('sheetLines---------->'+sheetLines);
+        // system.debug('sheetLines---------->'+sheetLines);
         
         buildertek__SOV_Payment_Application__c  ARPayAPP = [select Id, Name, recordtype.name from buildertek__SOV_Payment_Application__c where Id =: recordId];
         
@@ -480,7 +483,7 @@ continutionSheet.Name =*/
         try{
             List<buildertek__SOV_Continuation_Sheet_Lines__c> sheetLinesList = (List<buildertek__SOV_Continuation_Sheet_Lines__c>)System.JSON.deserialize(sheetLines, List<buildertek__SOV_Continuation_Sheet_Lines__c>.class);    
             
-            system.debug('sheetLinesList----------->'+sheetLinesList);
+            // system.debug('sheetLinesList----------->'+sheetLinesList);
             
             List<buildertek__SOV_Continuation_Sheet_Lines__c> newSheetLineItem = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
             
@@ -492,7 +495,7 @@ continutionSheet.Name =*/
                 }
             }
             
-            system.debug('ConSheetLineIds------->'+ConSheetLineIds);
+            // system.debug('ConSheetLineIds------->'+ConSheetLineIds);
             
             list<buildertek__SOV_Continuation_Sheet_Lines__c> lastSOV = [SELECT Id,buildertek__Item_No__c,
                                                                          buildertek__SOV_Continuation_Sheet__c,
@@ -500,7 +503,7 @@ continutionSheet.Name =*/
                                                                          from buildertek__SOV_Continuation_Sheet_Lines__c 
                                                                          Where Id IN: ConSheetLineIds ORDER BY buildertek__Item_No__c ASC];
             
-            system.debug('lastSOV-------->'+lastSOV);
+            // system.debug('lastSOV-------->'+lastSOV);
             integer itemInc = 100;
             
             
@@ -515,7 +518,7 @@ continutionSheet.Name =*/
                 
             }
             
-            system.debug('sheetList==>'+sheetLinesList.Size());
+            // system.debug('sheetList==>'+sheetLinesList.Size());
             Integer totalLength = sheetLinesList.Size();
             for (Integer i = sheetLinesList.size()-1 ;i >= 0 ; --i) {
                 //system.debug(i+' '+sheetLinesList[i]+' '+sheetLinesList[i].Id);
@@ -527,7 +530,7 @@ continutionSheet.Name =*/
                         sheetLinesList[i].Name = String.valueOf(totalLength - newSheetLineItem.Size());
                     }
                     sheetLinesList[i].buildertek__SOV_Continuation_Sheet__c = sheetId;
-                    system.debug('itemInc--------->'+itemInc);
+                    // system.debug('itemInc--------->'+itemInc);
                     if(ARPayAPP.recordtype.name == 'AR'){
                         sheetLinesList[i].buildertek__Status__c = 'Accepted';  
                     }else{
@@ -542,8 +545,8 @@ continutionSheet.Name =*/
                 }
             }
             
-            system.debug('sheetLinesList -------> '+sheetLinesList);
-            system.debug('newSheetLineItem--->'+newSheetLineItem+' '+newSheetLineItem.Size());
+            // system.debug('sheetLinesList -------> '+sheetLinesList);
+            // system.debug('newSheetLineItem--->'+newSheetLineItem+' '+newSheetLineItem.Size());
             update sheetLinesList; 
             //system.debug('Before==>'+newSheetLineItem+' '+newSheetLineItem.Size());
             if(newSheetLineItem.Size()>0){
@@ -651,13 +654,15 @@ continutionSheet.Name =*/
             // if (buildertek__SOV_Continuation_Sheet_Lines__c.sObjectType.getDescribe().isDeletable()){
             delete sheetlineslist;
             
-            
+            System.debug('After delete');
             
             list<buildertek__SOV_Continuation_Sheet_Lines__c> ConSheetLines = [select Id, buildertek__Item_No__c,
                                                                                buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__c
                                                                                from buildertek__SOV_Continuation_Sheet_Lines__c
                                                                                where buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__c =:PayAppId ORDER BY buildertek__Item_No__c ASC];
-            
+            System.debug(ConSheetLines);
+            System.debug([Select Id, buildertek__Item_No__c, buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__c from buildertek__SOV_Continuation_Sheet_Lines__c]);
+
             
             integer itemInc = 100;
             
@@ -693,10 +698,10 @@ continutionSheet.Name =*/
         
         buildertek__SOV_Continuation_Sheet_Lines__c APConnLine = [select Id, Name, buildertek__Vendor_Sheet_line_Id__c,buildertek__Vendor_Work_Completed_This_Period__c,buildertek__Material_Presently_Stored__c, buildertek__Work_Completed__c, buildertek__Status__c, buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.buildertek__PA_Type__c,buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.RecordTypeId, buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.recordtype.name from buildertek__SOV_Continuation_Sheet_Lines__c where Id =:sheetlineIds[0]];
         
-        system.debug('APConnLine----->'+APConnLine);
+        // system.debug('APConnLine----->'+APConnLine);
         List<buildertek__SOV_Continuation_Sheet_Lines__c> sheetlineslist1 = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
         List<buildertek__SOV_Continuation_Sheet_Lines__c> ARPaymentappLine = [select Id, Name,buildertek__Rejection_Reason__c, buildertek__Vendor_Sheet_line_Id__c,buildertek__Vendor_Work_Completed_This_Period__c, buildertek__Work_Completed__c,buildertek__Material_Presently_Stored__c, buildertek__Status__c, buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.buildertek__PA_Type__c, buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.RecordTypeId, buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.recordtype.name from buildertek__SOV_Continuation_Sheet_Lines__c where buildertek__Vendor_Sheet_line_Id__c =:sheetlineIds[0] AND buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.recordtype.name = 'AR'];
-        system.debug('ARPaymentappLine--->'+ARPaymentappLine);
+        // system.debug('ARPaymentappLine--->'+ARPaymentappLine);
         for (buildertek__SOV_Continuation_Sheet_Lines__c lineId : ARPaymentappLine){
             buildertek__SOV_Continuation_Sheet_Lines__c sheetlinerec1 = new buildertek__SOV_Continuation_Sheet_Lines__c();
             sheetlinerec1.Id = lineId.Id;
@@ -706,12 +711,12 @@ continutionSheet.Name =*/
             sheetlinerec1.buildertek__Material_Presently_Stored__c = APConnLine.buildertek__Material_Presently_Stored__c;
             sheetlineslist1.add(sheetlinerec1);
         }
-        system.debug('sheetlineslist1'+sheetlineslist1);
+        // system.debug('sheetlineslist1'+sheetlineslist1);
         
         if(!sheetlineslist1.isEmpty()){
             update sheetlineslist1;
         }
-        system.debug('sheetlineslist2'+sheetlineslist1);
+        // system.debug('sheetlineslist2'+sheetlineslist1);
         
         try{
             update sheetlineslist;
@@ -763,8 +768,8 @@ continutionSheet.Name =*/
         
         
         
-        system.debug('sheetlineIds--->'+sheetlineIds);
-        system.debug('rejectreason'+rejectreason);
+        // system.debug('sheetlineIds--->'+sheetlineIds);
+        // system.debug('rejectreason'+rejectreason);
         list<id> sheetid= new list<id>();
         list<id> paymentids= new list<id>();
         List<buildertek__SOV_Continuation_Sheet_Lines__c> sheetlineslist = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
@@ -830,17 +835,17 @@ continutionSheet.Name =*/
                         newVendorUpdateList.add(newVendor);
                     }                    
                 }
-                system.debug('newVendorUpdateList---->'+newVendorUpdateList);
+                // system.debug('newVendorUpdateList---->'+newVendorUpdateList);
                 if(!newVendorUpdateList.isEmpty()){
                     update newVendorUpdateList;
                 }
             }
             
             update sheetlineslist;
-            system.debug('IOO'+sheetlineslist);
+            // system.debug('IOO'+sheetlineslist);
             list<buildertek__SOV_Continuation_Sheet_Lines__c> linelist = [select id,Name,buildertek__SOV_Continuation_Sheet__c from buildertek__SOV_Continuation_Sheet_Lines__c where Id IN: sheetlineslist];
             for(buildertek__SOV_Continuation_Sheet_Lines__c lineRec : linelist){
-                system.debug('lineRec.buildertek__SOV_Continuation_Sheet__c'+lineRec.buildertek__SOV_Continuation_Sheet__c);
+                // system.debug('lineRec.buildertek__SOV_Continuation_Sheet__c'+lineRec.buildertek__SOV_Continuation_Sheet__c);
                 if(lineRec.buildertek__SOV_Continuation_Sheet__c  != null){
                     sheetid.add(lineRec.buildertek__SOV_Continuation_Sheet__c);
                 }
@@ -881,9 +886,9 @@ continutionSheet.Name =*/
                                                               buildertek__Total_Material_Stored_To_Date__c
                                                               FROM buildertek__SOV_Payment_Application__c where Id =: recordId];
         
-        system.debug('sheetLineToInsert-------->'+sheetLineToInsert);
+        // system.debug('sheetLineToInsert-------->'+sheetLineToInsert);
         buildertek__SOV_Continuation_Sheet_Lines__c sheetItemToInsert = (buildertek__SOV_Continuation_Sheet_Lines__c)JSON.deserialize(sheetLineToInsert, buildertek__SOV_Continuation_Sheet_Lines__c.class);
-        system.debug('sheetItemToInsert--------->'+sheetItemToInsert);
+        // system.debug('sheetItemToInsert--------->'+sheetItemToInsert);
         
         String payAppId = recordId;
         
@@ -901,12 +906,12 @@ continutionSheet.Name =*/
         
         
         
-        system.debug('payAppId---->'+recordId);
+        // system.debug('payAppId---->'+recordId);
         if(payAppId != null){
             
             
-            system.debug('sheetItemToInsert----->'+sheetItemToInsert);
-            system.debug('lastSOV-------->'+lastSOV);
+            // system.debug('sheetItemToInsert----->'+sheetItemToInsert);
+            // system.debug('lastSOV-------->'+lastSOV);
             integer itemInc = 100;
             
             if(lastSOV.size() > 0){
@@ -932,7 +937,7 @@ continutionSheet.Name =*/
         }
         
         
-        system.debug('Inserted Submittal ------> '+sheetItemToInsert);
+        // system.debug('Inserted Submittal ------> '+sheetItemToInsert);
         return sheetItemToInsert.Id;
     }
     
@@ -961,7 +966,7 @@ continutionSheet.Name =*/
             PApp = [select id, Name, buildertek__Owner_Account__c from buildertek__SOV_Payment_Application__c where Id =:sfRecId ];  
         }
         
-        system.debug('projectId----->'+projectId);
+        // system.debug('projectId----->'+projectId);
         List<ApprovedCOClass> approvedCOList = new List<ApprovedCOClass>();
         List<buildertek__Change_Order__c> changeOrdersList;
         
@@ -999,14 +1004,14 @@ continutionSheet.Name =*/
         
         // AND buildertek__Is_CO_Imported__c = false
         
-        system.debug(changeOrdersList);
+        // system.debug(changeOrdersList);
         for(buildertek__Change_Order__c CO : changeOrdersList){
             ApprovedCOClass approvedCO = new ApprovedCOClass(); 
             approvedCO.coRecord = CO;
             approvedCO.coCheck = false;
             approvedCOList.add(approvedCO);
         }
-        system.debug(approvedCOList);
+        // system.debug(approvedCOList);
         return approvedCOList;
         
     }
@@ -1048,7 +1053,7 @@ continutionSheet.Name =*/
         
         buildertek__SOV_Payment_Application__c NewPa = [select Id, Name, buildertek__Is_Pay_App_Created_For__c from buildertek__SOV_Payment_Application__c where Id =: recordId];
         
-        system.debug('NewPa----------->'+NewPa.buildertek__Is_Pay_App_Created_For__c);
+        // system.debug('NewPa----------->'+NewPa.buildertek__Is_Pay_App_Created_For__c);
         
         if(NewPa.buildertek__Is_Pay_App_Created_For__c == 'NEWPAYAPP'){
             list<buildertek__SOV_Continuation_Sheet_Lines__c> lastSOV = [SELECT Id,buildertek__Item_No__c,
@@ -1057,10 +1062,10 @@ continutionSheet.Name =*/
                                                                          from buildertek__SOV_Continuation_Sheet_Lines__c 
                                                                          where buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__c =: recordId ORDER BY buildertek__Item_No__c DESC];
             
-            system.debug('lastSOV-------->'+lastSOV);
+            // system.debug('lastSOV-------->'+lastSOV);
             integer itemInc = 100;
             
-            system.debug('lastSOV.size()--------->'+lastSOV.size());
+            // system.debug('lastSOV.size()--------->'+lastSOV.size());
             if(lastSOV.size() > 0){
                 
                 if(lastSOV[0].buildertek__Item_No__c != null){
@@ -1096,18 +1101,18 @@ continutionSheet.Name =*/
             
             if(!existSheetLines.isEmpty()){
                 for(buildertek__SOV_Continuation_Sheet_Lines__c csline : existSheetLines){
-                    system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+csline.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+csline.buildertek__Vendor_SOV_Line_Id__c);
                     if(csline.buildertek__Vendor_SOV_Line_Id__c != null && csline.buildertek__Vendor_SOV_Line_Id__c != '' ){
                         ExistSheetSovIds.add(csline.buildertek__Vendor_SOV_Line_Id__c);   
                     }
                 }
             }
             
-            system.debug('ExistSheetSovIds-------->'+ExistSheetSovIds);
+            // system.debug('ExistSheetSovIds-------->'+ExistSheetSovIds);
             
             if(!VendorConList.isEmpty()){
                 for(buildertek__SOV_Continuation_Sheet_Lines__c Vcsline : VendorConList){
-                    system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+Vcsline.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+Vcsline.buildertek__Vendor_SOV_Line_Id__c);
                     if(Vcsline.buildertek__Vendor_SOV_Line_Id__c == null || Vcsline.buildertek__Vendor_SOV_Line_Id__c == '' ){
                         vendorAddedCsLineIds.add(Vcsline.Id);  
                     }
@@ -1115,7 +1120,7 @@ continutionSheet.Name =*/
             }
             
             
-            system.debug('vendorAddedCsLineIds-------->'+vendorAddedCsLineIds);
+            // system.debug('vendorAddedCsLineIds-------->'+vendorAddedCsLineIds);
             
             List<buildertek__SOV_Continuation_Sheet_Lines__c> vendorAddedSheetLineList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
             
@@ -1140,7 +1145,7 @@ continutionSheet.Name =*/
                                             WHERE Id IN:vendorAddedCsLineIds];
             }
             
-            system.debug('vendorAddedSheetLineList--------->'+vendorAddedSheetLineList);
+            // system.debug('vendorAddedSheetLineList-/-------->'+vendorAddedSheetLineList);
             
             
             Decimal originalcontract = 0;
@@ -1149,7 +1154,7 @@ continutionSheet.Name =*/
             for(buildertek__SOV_Payment_Application__c pay:payList){
                 if(pay.buildertek__Original_Contract_Sum__c != null){
                     originalcontract += pay.buildertek__Original_Contract_Sum__c - pay.buildertek__Net_Change_by_Change_Orders__c; 
-                    system.debug('originalcontract.....'+originalcontract);
+                    // system.debug('originalcontract.....'+originalcontract);
                 }
                 if(pay.buildertek__Total_Completed__c != null){
                     totalCompleted += pay.buildertek__Total_Completed__c;  
@@ -1177,7 +1182,7 @@ continutionSheet.Name =*/
             Integer i = 1;
             string ImportedPaymentIds = '';
             
-            system.debug('PAIds-->'+PAIds.size());
+            // system.debug('PAIds-->'+PAIds.size());
             for(string paId : PAIds){
                 
                 //payRec.buildertek__Imported_Payment_IDs__c =  payRec.buildertek__Imported_Payment_IDs__c+','+paId;
@@ -1195,13 +1200,13 @@ continutionSheet.Name =*/
                 }
                 
             }
-            system.debug('@@@@@@@@@@@@'+ImportedPaymentIds);
-            system.debug('*****************'+payRec.buildertek__Imported_Payment_IDs__c);
+            // system.debug('@@@@@@@@@@@@'+ImportedPaymentIds);
+            // system.debug('*****************'+payRec.buildertek__Imported_Payment_IDs__c);
             if(payRec.buildertek__Imported_Payment_IDs__c != null){
                 system.debug('not null');
                 payRec.buildertek__Imported_Payment_IDs__c += ImportedPaymentIds;
             }else{
-                system.debug('--- null');
+                // system.debug('--- null');
                 payRec.buildertek__Imported_Payment_IDs__c = ImportedPaymentIds;
                 
             }
@@ -1240,13 +1245,13 @@ continutionSheet.Name =*/
                                                                         FROM buildertek__SOV_Continuation__c
                                                                         WHERE buildertek__SOV_Payment_Application__c IN:PAIds];
             
-            system.debug('&&&&&&'+ContSheetRecList);
+            // system.debug('&&&&&&'+ContSheetRecList);
             if(!ContSheetRecList.isEmpty()){
                 for(buildertek__SOV_Continuation__c con : ContSheetRecList){
                     ContSheetLineIds.add(con.Id);
                 }
             } 
-            system.debug('&&&&&&'+ContSheetLineIds);
+            // system.debug('&&&&&&'+ContSheetLineIds);
             List<buildertek__SOV_Continuation_Sheet_Lines__c> sheetlinesList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
             List<buildertek__SOV_Continuation_Sheet_Lines__c> ClonesheetlinesList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>(); 
             if(!ContSheetLineIds.isEmpty()){
@@ -1282,7 +1287,7 @@ continutionSheet.Name =*/
                                   FROM buildertek__SOV_Continuation_Sheet_Lines__c
                                   WHERE buildertek__SOV_Continuation_Sheet__c IN:ContSheetLineIds]; 
             } 
-            system.debug('&&&&&&'+sheetlinesList);
+            // system.debug('&&&&&&'+sheetlinesList);
             
             if(!ExistSheetSovIds.isEmpty()){
                 map<String, String> SOVSheetLineMap = new map<String, String>();
@@ -1297,17 +1302,17 @@ continutionSheet.Name =*/
                 }
                 
                 for(buildertek__SOV_Continuation_Sheet_Lines__c extSLin : sheetlinesList){
-                    system.debug('extSLin.Id------>'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('extSLin.Id------>'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
                     ConSheetRecMap.put(extSLin.buildertek__Vendor_SOV_Line_Id__c , extSLin);
                 }
                 
                 List<buildertek__SOV_Continuation_Sheet_Lines__c> NewConSheetImpList =  new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
                 for(buildertek__SOV_Continuation_Sheet_Lines__c extSLin : sheetlinesList){
                     buildertek__SOV_Continuation_Sheet_Lines__c newSheetLine =  new buildertek__SOV_Continuation_Sheet_Lines__c();
-                    system.debug('existes----->'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('existes----->'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
                     newClonedIdsList.add(extSLin.buildertek__Vendor_SOV_Line_Id__c);
                     if(extSLin.buildertek__Vendor_SOV_Line_Id__c != null){
-                        system.debug('existessov lines----->'+SOVSheetLineMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c));
+                        // system.debug('existessov lines----->'+SOVSheetLineMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c));
                         if(SOVSheetLineMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c) != null){
                             newSheetLine.Id = SOVSheetLineMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c);
                             if(extSLin.buildertek__Change_Order__c != null){
@@ -1318,7 +1323,7 @@ continutionSheet.Name =*/
                             newSheetLine.buildertek__Status__c = 'Pending';
                             newSheetLine.buildertek__Work_Completed__c = ConSheetRecMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c).buildertek__Work_Completed__c;
                             newSheetLine.buildertek__Vendor_Sheet_line_Id__c = extSLin.Id;
-                            system.debug('1133newSheetLine-->'+newSheetLine);
+                            // system.debug('1133newSheetLine-->'+newSheetLine);
                             itemInc++;
                             newClonedIdsList.add(extSLin.Id);
                             NewConSheetImpList.add(newSheetLine);
@@ -1334,11 +1339,11 @@ continutionSheet.Name =*/
                                 cloneline.buildertek__Change_Order__c = extSLin.buildertek__Change_Order__c;
                             }
                             itemInc++;
-                            system.debug(newClonedIdsList.contains(extSLin.buildertek__Vendor_SOV_Line_Id__c));
+                            // system.debug(newClonedIdsList.contains(extSLin.buildertek__Vendor_SOV_Line_Id__c));
                             //if(!newClonedIdsList.contains(extSLin.buildertek__Vendor_SOV_Line_Id__c)){
                             ClonesheetlinesList.add(cloneline);
                             // }
-                            system.debug('line.Id-------87-->'+extSLin.Id);
+                            // system.debug('line.Id-------87-->'+extSLin.Id);
                             newClonedIdsList.add(extSLin.Id);
                             
                         }
@@ -1352,7 +1357,7 @@ continutionSheet.Name =*/
                 
             }else{
                 if(!sheetlinesList.isEmpty()){
-                    system.debug('callinnnggggggg------->');
+                    // system.debug('callinnnggggggg------->');
                     for(buildertek__SOV_Continuation_Sheet_Lines__c line:sheetlinesList){
                         buildertek__SOV_Continuation_Sheet_Lines__c cloneline = line.clone(false,true,true,false);
                         cloneline.buildertek__SOV_Continuation_Sheet__c  = ContSheetRec.Id;
@@ -1366,14 +1371,14 @@ continutionSheet.Name =*/
                         }
                         itemInc++;
                         ClonesheetlinesList.add(cloneline);
-                        system.debug('line.Id-------87-->'+line.Id);
+                        // system.debug('line.Id-------87-->'+line.Id);
                         newClonedIdsList.add(line.Id);
                     }
                 }  
             }
             
             if(!vendorAddedSheetLineList.isEmpty()){
-                system.debug('callinnnggggggg Vendor added');
+                // system.debug('callinnnggggggg Vendor added');
                 for(buildertek__SOV_Continuation_Sheet_Lines__c Vline:vendorAddedSheetLineList){
                     buildertek__SOV_Continuation_Sheet_Lines__c cloneline = Vline.clone(false,true,true,false);
                     cloneline.buildertek__SOV_Continuation_Sheet__c  = ContSheetRec.Id;
@@ -1387,7 +1392,7 @@ continutionSheet.Name =*/
                         cloneline.buildertek__Change_Order__c = Vline.buildertek__Change_Order__c;
                     }
                     itemInc++;
-                    system.debug('Vline.Id--------->'+Vline.Id);
+                    // system.debug('Vline.Id--------->'+Vline.Id);
                     if(!newClonedIdsList.contains(Vline.Id)){
                         ClonesheetlinesList.add(cloneline);
                     }
@@ -1424,10 +1429,10 @@ continutionSheet.Name =*/
                                                                          from buildertek__SOV_Continuation_Sheet_Lines__c 
                                                                          where buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__c =: recordId ORDER BY buildertek__Item_No__c DESC];
             
-            system.debug('lastSOV-------->'+lastSOV);
+            // system.debug('lastSOV-------->'+lastSOV);
             integer itemInc = 100;
             
-            system.debug('lastSOV.size()--------->'+lastSOV.size());
+            // system.debug('lastSOV.size()--------->'+lastSOV.size());
             if(lastSOV.size() > 0){
                 
                 if(lastSOV[0].buildertek__Item_No__c != null){
@@ -1463,18 +1468,18 @@ continutionSheet.Name =*/
             
             if(!existSheetLines.isEmpty()){
                 for(buildertek__SOV_Continuation_Sheet_Lines__c csline : existSheetLines){
-                    system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+csline.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+csline.buildertek__Vendor_SOV_Line_Id__c);
                     if(csline.buildertek__Vendor_SOV_Line_Id__c != null && csline.buildertek__Vendor_SOV_Line_Id__c != '' ){
                         ExistSheetSovIds.add(csline.buildertek__Vendor_SOV_Line_Id__c);   
                     }
                 }
             }
             
-            system.debug('ExistSheetSovIds-------->'+ExistSheetSovIds);
+            // system.debug('ExistSheetSovIds-------->'+ExistSheetSovIds);
             
             if(!VendorConList.isEmpty()){
                 for(buildertek__SOV_Continuation_Sheet_Lines__c Vcsline : VendorConList){
-                    system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+Vcsline.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+Vcsline.buildertek__Vendor_SOV_Line_Id__c);
                     if(Vcsline.buildertek__Vendor_SOV_Line_Id__c == null || Vcsline.buildertek__Vendor_SOV_Line_Id__c == '' ){
                         vendorAddedCsLineIds.add(Vcsline.Id);  
                     }
@@ -1482,7 +1487,7 @@ continutionSheet.Name =*/
             }
             
             
-            system.debug('vendorAddedCsLineIds-------->'+vendorAddedCsLineIds);
+            // system.debug('vendorAddedCsLineIds-------->'+vendorAddedCsLineIds);
             
             List<buildertek__SOV_Continuation_Sheet_Lines__c> vendorAddedSheetLineList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
             
@@ -1507,7 +1512,7 @@ continutionSheet.Name =*/
                                             WHERE Id IN:vendorAddedCsLineIds];
             }
             
-            system.debug('vendorAddedSheetLineList--------->'+vendorAddedSheetLineList);
+            // system.debug('vendorAddedSheetLineList--------->'+vendorAddedSheetLineList);
             
             
             Decimal originalcontract = 0;
@@ -1516,7 +1521,7 @@ continutionSheet.Name =*/
             for(buildertek__SOV_Payment_Application__c pay:payList){
                 if(pay.buildertek__Original_Contract_Sum__c != null){
                     originalcontract += pay.buildertek__Original_Contract_Sum__c-pay.buildertek__Net_Change_by_Change_Orders__c;
-                    system.debug('originalcontract.....'+originalcontract);
+                    // system.debug('originalcontract.....'+originalcontract);
                 }
                 if(pay.buildertek__Total_Completed__c != null){
                     totalCompleted += pay.buildertek__Total_Completed__c;  
@@ -1544,7 +1549,7 @@ continutionSheet.Name =*/
             Integer i = 1;
             string ImportedPaymentIds = '';
             
-            system.debug('PAIds-->'+PAIds.size());
+            // system.debug('PAIds-->'+PAIds.size());
             for(string paId : PAIds){
                 
                 //payRec.buildertek__Imported_Payment_IDs__c =  payRec.buildertek__Imported_Payment_IDs__c+','+paId;
@@ -1562,8 +1567,8 @@ continutionSheet.Name =*/
                 }
                 
             }
-            system.debug('@@@@@@@@@@@@'+ImportedPaymentIds);
-            system.debug('*****************'+payRec.buildertek__Imported_Payment_IDs__c);
+            // system.debug('@@@@@@@@@@@@'+ImportedPaymentIds);
+            // system.debug('*****************'+payRec.buildertek__Imported_Payment_IDs__c);
             if(payRec.buildertek__Imported_Payment_IDs__c != null){
                 system.debug('not null');
                 payRec.buildertek__Imported_Payment_IDs__c += ImportedPaymentIds;
@@ -1607,13 +1612,13 @@ continutionSheet.Name =*/
                                                                         FROM buildertek__SOV_Continuation__c
                                                                         WHERE buildertek__SOV_Payment_Application__c IN:PAIds];
             
-            system.debug('&&&&&&'+ContSheetRecList);
+            // system.debug('&&&&&&'+ContSheetRecList);
             if(!ContSheetRecList.isEmpty()){
                 for(buildertek__SOV_Continuation__c con : ContSheetRecList){
                     ContSheetLineIds.add(con.Id);
                 }
             } 
-            system.debug('&&&&&&'+ContSheetLineIds);
+            // system.debug('&&&&&&'+ContSheetLineIds);
             List<buildertek__SOV_Continuation_Sheet_Lines__c> sheetlinesList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
             List<buildertek__SOV_Continuation_Sheet_Lines__c> ClonesheetlinesList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>(); 
             if(!ContSheetLineIds.isEmpty()){
@@ -1649,7 +1654,7 @@ continutionSheet.Name =*/
                                   FROM buildertek__SOV_Continuation_Sheet_Lines__c
                                   WHERE buildertek__SOV_Continuation_Sheet__c IN:ContSheetLineIds]; 
             } 
-            system.debug('&&&&&&'+sheetlinesList);
+            // system.debug('&&&&&&'+sheetlinesList);
             
             if(!ExistSheetSovIds.isEmpty()){
                 map<String, String> SOVSheetLineMap = new map<String, String>();
@@ -1664,17 +1669,17 @@ continutionSheet.Name =*/
                 }
                 
                 for(buildertek__SOV_Continuation_Sheet_Lines__c extSLin : sheetlinesList){
-                    system.debug('extSLin.Id------>'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('extSLin.Id------>'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
                     ConSheetRecMap.put(extSLin.buildertek__Vendor_SOV_Line_Id__c , extSLin);
                 }
                 
                 List<buildertek__SOV_Continuation_Sheet_Lines__c> NewConSheetImpList =  new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
                 for(buildertek__SOV_Continuation_Sheet_Lines__c extSLin : sheetlinesList){
                     buildertek__SOV_Continuation_Sheet_Lines__c newSheetLine =  new buildertek__SOV_Continuation_Sheet_Lines__c();
-                    system.debug('existes----->'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('existes----->'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
                     newClonedIdsList.add(extSLin.buildertek__Vendor_SOV_Line_Id__c);
                     if(extSLin.buildertek__Vendor_SOV_Line_Id__c != null){
-                        system.debug('existessov lines----->'+SOVSheetLineMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c));
+                        // system.debug('existessov lines----->'+SOVSheetLineMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c));
                         if(SOVSheetLineMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c) != null){
                             newSheetLine.Id = SOVSheetLineMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c);
                             if(extSLin.buildertek__Change_Order__c != null){
@@ -1685,7 +1690,7 @@ continutionSheet.Name =*/
                             newSheetLine.buildertek__Status__c = 'Pending';
                             newSheetLine.buildertek__Work_Completed__c = ConSheetRecMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c).buildertek__Work_Completed__c;
                             newSheetLine.buildertek__Vendor_Sheet_line_Id__c = extSLin.Id;
-                            system.debug('1133newSheetLine-->'+newSheetLine);
+                            // system.debug('1133newSheetLine-->'+newSheetLine);
                             itemInc++;
                             newClonedIdsList.add(extSLin.Id);
                             NewConSheetImpList.add(newSheetLine);
@@ -1701,11 +1706,11 @@ continutionSheet.Name =*/
                                 cloneline.buildertek__Change_Order__c = extSLin.buildertek__Change_Order__c;
                             }
                             itemInc++;
-                            system.debug(newClonedIdsList.contains(extSLin.buildertek__Vendor_SOV_Line_Id__c));
+                            // system.debug(newClonedIdsList.contains(extSLin.buildertek__Vendor_SOV_Line_Id__c));
                             if(!newClonedIdsList.contains(extSLin.buildertek__Vendor_SOV_Line_Id__c)){
                                 ClonesheetlinesList.add(cloneline);
                             }
-                            system.debug('line.Id-------87-->'+extSLin.Id);
+                            // system.debug('line.Id-------87-->'+extSLin.Id);
                             newClonedIdsList.add(extSLin.Id);
                             
                         }
@@ -1719,7 +1724,7 @@ continutionSheet.Name =*/
                 
             }else{
                 if(!sheetlinesList.isEmpty()){
-                    system.debug('callinnnggggggg------->');
+                    // system.debug('callinnnggggggg------->');
                     for(buildertek__SOV_Continuation_Sheet_Lines__c line:sheetlinesList){
                         buildertek__SOV_Continuation_Sheet_Lines__c cloneline = line.clone(false,true,true,false);
                         cloneline.buildertek__SOV_Continuation_Sheet__c  = ContSheetRec.Id;
@@ -1733,7 +1738,7 @@ continutionSheet.Name =*/
                         }
                         itemInc++;
                         ClonesheetlinesList.add(cloneline);
-                        system.debug('line.Id-------87-->'+line.Id);
+                        // system.debug('line.Id-------87-->'+line.Id);
                         
                         newClonedIdsList.add(line.Id);
                     }
@@ -1741,7 +1746,7 @@ continutionSheet.Name =*/
             }
             
             if(!vendorAddedSheetLineList.isEmpty()){
-                system.debug('callinnnggggggg Vendor added');
+                // system.debug('callinnnggggggg Vendor added');
                 for(buildertek__SOV_Continuation_Sheet_Lines__c Vline:vendorAddedSheetLineList){
                     buildertek__SOV_Continuation_Sheet_Lines__c cloneline = Vline.clone(false,true,true,false);
                     cloneline.buildertek__SOV_Continuation_Sheet__c  = ContSheetRec.Id;
@@ -1755,7 +1760,7 @@ continutionSheet.Name =*/
                         cloneline.buildertek__Change_Order__c = Vline.buildertek__Change_Order__c;
                     }
                     itemInc++;
-                    system.debug('Vline.Id--------->'+Vline.Id);
+                    // system.debug('Vline.Id--------->'+Vline.Id);
                     if(!newClonedIdsList.contains(Vline.Id)){
                         ClonesheetlinesList.add(cloneline);
                     }
@@ -1792,10 +1797,10 @@ continutionSheet.Name =*/
                                                                          from buildertek__SOV_Continuation_Sheet_Lines__c 
                                                                          where buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__c =: recordId ORDER BY buildertek__Item_No__c DESC];
             
-            system.debug('lastSOV-------->'+lastSOV);
+            // system.debug('lastSOV-------->'+lastSOV);
             integer itemInc = 100;
             
-            system.debug('lastSOV.size()--------->'+lastSOV.size());
+            // system.debug('lastSOV.size()--------->'+lastSOV.size());
             if(lastSOV.size() > 0){
                 
                 if(lastSOV[0].buildertek__Item_No__c != null){
@@ -1831,20 +1836,20 @@ continutionSheet.Name =*/
             
             if(!existSheetLines.isEmpty()){
                 for(buildertek__SOV_Continuation_Sheet_Lines__c csline : existSheetLines){
-                    system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+csline.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+csline.buildertek__Vendor_SOV_Line_Id__c);
                     if(csline.buildertek__Vendor_SOV_Line_Id__c != null && csline.buildertek__Vendor_SOV_Line_Id__c != '' ){
                         ExistSheetSovIds.add(csline.buildertek__Vendor_SOV_Line_Id__c);   
                     }
                 }
             }
             
-            system.debug('ExistSheetSovIds-------->'+ExistSheetSovIds);
+            // system.debug('ExistSheetSovIds-------->'+ExistSheetSovIds);
             
             set<String> VendorLineIds = new set<String>();
             
             if(!VendorConList.isEmpty()){
                 for(buildertek__SOV_Continuation_Sheet_Lines__c Vcsline : VendorConList){
-                    system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+Vcsline.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+Vcsline.buildertek__Vendor_SOV_Line_Id__c);
                     
                     vendorAddedCsLineIds.add(Vcsline.Id);  
                     /*  if(Vcsline.buildertek__Vendor_SOV_Line_Id__c == null || Vcsline.buildertek__Vendor_SOV_Line_Id__c == '' ){
@@ -1854,7 +1859,7 @@ continutionSheet.Name =*/
             
             
             
-            system.debug('vendorAddedCsLineIds-------->'+vendorAddedCsLineIds);
+            // system.debug('vendorAddedCsLineIds-------->'+vendorAddedCsLineIds);
             
             List<buildertek__SOV_Continuation_Sheet_Lines__c> vendorAddedSheetLineList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
             
@@ -1879,7 +1884,7 @@ continutionSheet.Name =*/
                                             WHERE Id IN:vendorAddedCsLineIds];
             }
             
-            system.debug('vendorAddedSheetLineList--------->'+vendorAddedSheetLineList);
+            // system.debug('vendorAddedSheetLineList--------->'+vendorAddedSheetLineList);
             
             
             Decimal originalcontract = 0;
@@ -1888,7 +1893,7 @@ continutionSheet.Name =*/
             for(buildertek__SOV_Payment_Application__c pay:payList){
                 if(pay.buildertek__Original_Contract_Sum__c != null){
                     originalcontract += pay.buildertek__Original_Contract_Sum__c- pay.buildertek__Net_Change_by_Change_Orders__c; 
-                    system.debug('originalcontract......'+originalcontract);
+                    // system.debug('originalcontract......'+originalcontract);
                 }
                 if(pay.buildertek__Total_Completed__c != null){
                     totalCompleted += pay.buildertek__Total_Completed__c;  
@@ -1916,7 +1921,7 @@ continutionSheet.Name =*/
             Integer i = 1;
             string ImportedPaymentIds = '';
             
-            system.debug('PAIds-->'+PAIds.size());
+            // system.debug('PAIds-->'+PAIds.size());
             for(string paId : PAIds){
                 
                 //payRec.buildertek__Imported_Payment_IDs__c =  payRec.buildertek__Imported_Payment_IDs__c+','+paId;
@@ -1934,13 +1939,13 @@ continutionSheet.Name =*/
                 }
                 
             }
-            system.debug('@@@@@@@@@@@@'+ImportedPaymentIds);
-            system.debug('*****************'+payRec.buildertek__Imported_Payment_IDs__c);
+            // system.debug('@@@@@@@@@@@@'+ImportedPaymentIds);
+            // system.debug('*****************'+payRec.buildertek__Imported_Payment_IDs__c);
             if(payRec.buildertek__Imported_Payment_IDs__c != null){
-                system.debug('not null');
+                // system.debug('not null');
                 payRec.buildertek__Imported_Payment_IDs__c += ImportedPaymentIds;
             }else{
-                system.debug('--- null');
+                // system.debug('--- null');
                 payRec.buildertek__Imported_Payment_IDs__c = ImportedPaymentIds;
                 
             }
@@ -1979,13 +1984,13 @@ continutionSheet.Name =*/
                                                                         FROM buildertek__SOV_Continuation__c
                                                                         WHERE buildertek__SOV_Payment_Application__c IN:PAIds];
             
-            system.debug('&&&&&&'+ContSheetRecList);
+            // system.debug('&&&&&&'+ContSheetRecList);
             if(!ContSheetRecList.isEmpty()){
                 for(buildertek__SOV_Continuation__c con : ContSheetRecList){
                     ContSheetLineIds.add(con.Id);
                 }
             } 
-            system.debug('&&&&&&'+ContSheetLineIds);
+            // system.debug('&&&&&&'+ContSheetLineIds);
             List<buildertek__SOV_Continuation_Sheet_Lines__c> sheetlinesList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
             List<buildertek__SOV_Continuation_Sheet_Lines__c> ClonesheetlinesList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>(); 
             if(!ContSheetLineIds.isEmpty()){
@@ -2022,9 +2027,9 @@ continutionSheet.Name =*/
                                   FROM buildertek__SOV_Continuation_Sheet_Lines__c
                                   WHERE buildertek__SOV_Continuation_Sheet__c IN:ContSheetLineIds]; 
             } 
-            system.debug('&&&&&&'+sheetlinesList);
+            // system.debug('&&&&&&'+sheetlinesList);
             
-            system.debug('ExistSheetSovIds----45--->'+ExistSheetSovIds);
+            // system.debug('ExistSheetSovIds----45--->'+ExistSheetSovIds);
             if(!ExistSheetSovIds.isEmpty()){
                 map<String, String> SOVSheetLineMap = new map<String, String>();
                 map<String, buildertek__SOV_Continuation_Sheet_Lines__c> ConSheetRecMap = new map<String, buildertek__SOV_Continuation_Sheet_Lines__c>();
@@ -2038,20 +2043,20 @@ continutionSheet.Name =*/
                 }
                 
                 for(buildertek__SOV_Continuation_Sheet_Lines__c extSLin : sheetlinesList){
-                    system.debug('extSLin.Id------>'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('extSLin.Id------>'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
                     ConSheetRecMap.put(extSLin.buildertek__Vendor_SOV_Line_Id__c , extSLin);
                 }
-                system.debug('sheetlinesList--9----->'+sheetlinesList);
+                // system.debug('sheetlinesList--9----->'+sheetlinesList);
                 List<buildertek__SOV_Continuation_Sheet_Lines__c> NewConSheetImpList =  new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
                 for(buildertek__SOV_Continuation_Sheet_Lines__c extSLin : sheetlinesList){
                     buildertek__SOV_Continuation_Sheet_Lines__c newSheetLine =  new buildertek__SOV_Continuation_Sheet_Lines__c();
-                    system.debug('existes----->'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('existes----->'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
                     newClonedIdsList.add(extSLin.buildertek__Vendor_SOV_Line_Id__c);
-                    system.debug('vendorsovlineId-----45-->'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('vendorsovlineId-----45-->'+extSLin.buildertek__Vendor_SOV_Line_Id__c);
                     if(extSLin.buildertek__Vendor_SOV_Line_Id__c != null){
-                        system.debug('existessov lines----->'+SOVSheetLineMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c));
+                        // system.debug('existessov lines----->'+SOVSheetLineMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c));
                         if(SOVSheetLineMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c) != null){
-                            system.debug('test 1--->');
+                            // system.debug('test 1--->');
                             newSheetLine.Id = SOVSheetLineMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c);
                             
                             if(extSLin.buildertek__Change_Order__c != null){
@@ -2065,20 +2070,20 @@ continutionSheet.Name =*/
                             newSheetLine.buildertek__Vendor_Material_Presently_Stored__c = ConSheetRecMap.get(extSLin.buildertek__Vendor_SOV_Line_Id__c).buildertek__Vendor_Material_Presently_Stored__c;
                             
                             newSheetLine.buildertek__Vendor_Sheet_line_Id__c = extSLin.Id;
-                            system.debug('1133newSheetLine-->'+newSheetLine);
+                            // system.debug('1133newSheetLine-->'+newSheetLine);
                             
                             newClonedIdsList.add(extSLin.Id);
                             NewConSheetImpList.add(newSheetLine);
                             itemInc++;
                         }  else{
-                             system.debug('test 2--->');
-                            system.debug('elsepartentering----->');
+                            //  system.debug('test 2--->');
+                            // system.debug('elsepartentering----->');
                             buildertek__SOV_Continuation_Sheet_Lines__c cloneline = extSLin.clone(false,true,true,false);
                             cloneline.buildertek__SOV_Continuation_Sheet__c  = ContSheetRec.Id;
                             cloneline.buildertek__Budget_Grouping__c = extSLin.buildertek__Budget_Grouping__c;
                             cloneline.buildertek__Is_Imported__c = true;
                             cloneline.buildertek__Status__c = 'Pending';
-                            system.debug('existline ids--->'+extSLin.Id);
+                            // system.debug('existline ids--->'+extSLin.Id);
                             cloneline.buildertek__Vendor_Sheet_line_Id__c = extSLin.Id;
                             cloneline.buildertek__Item_No__c=itemInc;
                             if(extSLin.buildertek__Change_Order__c != null){
@@ -2089,7 +2094,7 @@ continutionSheet.Name =*/
                             if(!newClonedIdsList.contains(extSLin.Id)){
                                 ClonesheetlinesList.add(cloneline);
                             }
-                            system.debug('line.Id-------87-->'+extSLin.Id);
+                            // system.debug('line.Id-------87-->'+extSLin.Id);
                             newClonedIdsList.add(extSLin.Id);
                             
                         }
@@ -2102,9 +2107,9 @@ continutionSheet.Name =*/
                 }
                 
             }else{
-                system.debug('sheetlinesList.isEmpty()=--------->'+sheetlinesList.isEmpty());
+                // system.debug('sheetlinesList.isEmpty()=--------->'+sheetlinesList.isEmpty());
                 if(!sheetlinesList.isEmpty()){
-                    system.debug('callinnnggggggg------->');
+                    // system.debug('callinnnggggggg------->');
                     for(buildertek__SOV_Continuation_Sheet_Lines__c line:sheetlinesList){
                         buildertek__SOV_Continuation_Sheet_Lines__c cloneline = line.clone(false,true,true,false);
                         cloneline.buildertek__SOV_Continuation_Sheet__c  = ContSheetRec.Id;
@@ -2118,15 +2123,15 @@ continutionSheet.Name =*/
                         }
                         itemInc++;
                         ClonesheetlinesList.add(cloneline);
-                        system.debug('line.Id-------87-->'+line.Id);
+                        // system.debug('line.Id-------87-->'+line.Id);
                         newClonedIdsList.add(line.Id);
                     }
                 }  
             }
             
-            system.debug('vendorAddedSheetLineList.isEmpty()){------->'+vendorAddedSheetLineList.isEmpty());
+            // system.debug('vendorAddedSheetLineList.isEmpty()){------->'+vendorAddedSheetLineList.isEmpty());
             if(!vendorAddedSheetLineList.isEmpty()){
-                system.debug('callinnnggggggg Vendor added');
+                // system.debug('callinnnggggggg Vendor added');
                 for(buildertek__SOV_Continuation_Sheet_Lines__c Vline:vendorAddedSheetLineList){
                     buildertek__SOV_Continuation_Sheet_Lines__c cloneline = Vline.clone(false,true,true,false);
                    cloneline.buildertek__SOV_Continuation_Sheet__c  = ContSheetRec.Id;
@@ -2140,7 +2145,7 @@ continutionSheet.Name =*/
                         cloneline.buildertek__Change_Order__c = Vline.buildertek__Change_Order__c;
                     }
                     itemInc++;
-                    system.debug('Vline.Id--------->'+Vline.Id);
+                    // system.debug('Vline.Id--------->'+Vline.Id);
                     if(!newClonedIdsList.contains(Vline.Id)){
                         ClonesheetlinesList.add(cloneline);
                     }
@@ -2224,10 +2229,10 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                                                                          from buildertek__SOV_Continuation_Sheet_Lines__c 
                                                                          where buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__c =: recordId ORDER BY buildertek__Item_No__c DESC];
             
-            system.debug('lastSOV-------->'+lastSOV);
+            // system.debug('lastSOV-------->'+lastSOV);
             integer itemInc = 100;
             
-            system.debug('lastSOV.size()--------->'+lastSOV.size());
+            // system.debug('lastSOV.size()--------->'+lastSOV.size());
             if(lastSOV.size() > 0){
                 
                 if(lastSOV[0].buildertek__Item_No__c != null){
@@ -2263,18 +2268,18 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
             
             if(!existSheetLines.isEmpty()){
                 for(buildertek__SOV_Continuation_Sheet_Lines__c csline : existSheetLines){
-                    system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+csline.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+csline.buildertek__Vendor_SOV_Line_Id__c);
                     if(csline.buildertek__Vendor_SOV_Line_Id__c != null && csline.buildertek__Vendor_SOV_Line_Id__c != '' ){
                         ExistSheetSovIds.add(csline.buildertek__Vendor_SOV_Line_Id__c);   
                     }
                 }
             }
             
-            system.debug('ExistSheetSovIds-------->'+ExistSheetSovIds);
+            // system.debug('ExistSheetSovIds-------->'+ExistSheetSovIds);
             
             if(!VendorConList.isEmpty()){
                 for(buildertek__SOV_Continuation_Sheet_Lines__c Vcsline : VendorConList){
-                    system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+Vcsline.buildertek__Vendor_SOV_Line_Id__c);
+                    // system.debug('buildertek__Vendor_SOV_Line_Id__c------->'+Vcsline.buildertek__Vendor_SOV_Line_Id__c);
                     if(Vcsline.buildertek__Vendor_SOV_Line_Id__c == null || Vcsline.buildertek__Vendor_SOV_Line_Id__c == '' ){
                         vendorAddedCsLineIds.add(Vcsline.Id);  
                     }
@@ -2282,7 +2287,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
             }
             
             
-            system.debug('vendorAddedCsLineIds-------->'+vendorAddedCsLineIds);
+            // system.debug('vendorAddedCsLineIds-------->'+vendorAddedCsLineIds);
             
             List<buildertek__SOV_Continuation_Sheet_Lines__c> vendorAddedSheetLineList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
             
@@ -2307,7 +2312,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                                             WHERE Id IN:vendorAddedCsLineIds];
             }
             
-            system.debug('vendorAddedSheetLineList--------->'+vendorAddedSheetLineList);
+            // system.debug('vendorAddedSheetLineList--------->'+vendorAddedSheetLineList);
             
             
             Decimal originalcontract = 0;
@@ -2316,7 +2321,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
             for(buildertek__SOV_Payment_Application__c pay:payList){
                 if(pay.buildertek__Original_Contract_Sum__c != null){
                     originalcontract += pay.buildertek__Original_Contract_Sum__c - pay.buildertek__Net_Change_by_Change_Orders__c;
-                    system.debug('originalcontract.....'+originalcontract);
+                    // system.debug('originalcontract.....'+originalcontract);
                 }
                 if(pay.buildertek__Total_Completed__c != null){
                     totalCompleted += pay.buildertek__Total_Completed__c;  
@@ -2344,7 +2349,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
             Integer i = 1;
             string ImportedPaymentIds = '';
             
-            system.debug('PAIds-->'+PAIds.size());
+            // system.debug('PAIds-->'+PAIds.size());
             for(string paId : PAIds){
                 
                 //payRec.buildertek__Imported_Payment_IDs__c =  payRec.buildertek__Imported_Payment_IDs__c+','+paId;
@@ -2362,13 +2367,13 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                 }
                 
             }
-            system.debug('@@@@@@@@@@@@'+ImportedPaymentIds);
-            system.debug('*****************'+payRec.buildertek__Imported_Payment_IDs__c);
+            // system.debug('@@@@@@@@@@@@'+ImportedPaymentIds);
+            // system.debug('*****************'+payRec.buildertek__Imported_Payment_IDs__c);
             if(payRec.buildertek__Imported_Payment_IDs__c != null){
-                system.debug('not null');
+                // system.debug('not null');
                 payRec.buildertek__Imported_Payment_IDs__c += ImportedPaymentIds;
             }else{
-                system.debug('--- null');
+                // system.debug('--- null');
                 payRec.buildertek__Imported_Payment_IDs__c = ImportedPaymentIds;
                 
             }
@@ -2407,13 +2412,13 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                                                                         FROM buildertek__SOV_Continuation__c
                                                                         WHERE buildertek__SOV_Payment_Application__c IN:PAIds];
             
-            system.debug('&&&&&&'+ContSheetRecList);
+            // system.debug('&&&&&&'+ContSheetRecList);
             if(!ContSheetRecList.isEmpty()){
                 for(buildertek__SOV_Continuation__c con : ContSheetRecList){
                     ContSheetLineIds.add(con.Id);
                 }
             } 
-            system.debug('&&&&&&'+ContSheetLineIds);
+            // system.debug('&&&&&&'+ContSheetLineIds);
             List<buildertek__SOV_Continuation_Sheet_Lines__c> sheetlinesList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
             List<buildertek__SOV_Continuation_Sheet_Lines__c> ClonesheetlinesList = new List<buildertek__SOV_Continuation_Sheet_Lines__c>(); 
             if(!ContSheetLineIds.isEmpty()){
@@ -2449,12 +2454,12 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                                   FROM buildertek__SOV_Continuation_Sheet_Lines__c
                                   WHERE buildertek__SOV_Continuation_Sheet__c IN:ContSheetLineIds]; 
             } 
-            system.debug('&&&&&&'+sheetlinesList);
+            // system.debug('&&&&&&'+sheetlinesList);
             
             
             
             if(!vendorAddedSheetLineList.isEmpty()){
-                system.debug('callinnnggggggg Vendor added');
+                // system.debug('callinnnggggggg Vendor added');
                 for(buildertek__SOV_Continuation_Sheet_Lines__c Vline:vendorAddedSheetLineList){
                     buildertek__SOV_Continuation_Sheet_Lines__c cloneline = Vline.clone(false,true,true,false);
                     cloneline.buildertek__SOV_Continuation_Sheet__c  = ContSheetRec.Id;
@@ -2468,7 +2473,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                         cloneline.buildertek__Change_Order__c = Vline.buildertek__Change_Order__c;
                     }
                     itemInc++;
-                    system.debug('Vline.Id--------->'+Vline.Id);
+                    // system.debug('Vline.Id--------->'+Vline.Id);
                     if(!newClonedIdsList.contains(Vline.Id)){
                         ClonesheetlinesList.add(cloneline);
                     }
@@ -2520,10 +2525,10 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                                                                      from buildertek__SOV_Continuation_Sheet_Lines__c 
                                                                      where buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__c =: recordId ORDER BY buildertek__Item_No__c DESC];
         
-        system.debug('lastSOV-------->'+lastSOV);
+        // system.debug('lastSOV-------->'+lastSOV);
         integer itemInc = 100;
         
-        system.debug('lastSOV.size()--------->'+lastSOV.size());
+        // system.debug('lastSOV.size()--------->'+lastSOV.size());
         if(lastSOV.size() > 0){
             
             if(lastSOV[0].buildertek__Item_No__c != null){
@@ -2544,7 +2549,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
         
         buildertek__SOV_Payment_Application__c PayAppType = [select Id, Name, buildertek__Application__c,recordtype.name  from buildertek__SOV_Payment_Application__c where Id =: recordId];
         
-        system.debug('paymentappId-------->'+recordId);
+        // system.debug('paymentappId-------->'+recordId);
         
         
         
@@ -2586,12 +2591,12 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                                                          FROM buildertek__Change_Order__c
                                                          WHERE Id IN: coIds];
             
-            System.debug('coList1---->'+coList1);
+            // System.debug('coList1---->'+coList1);
             
             
             List<buildertek__Change_Order_Item__c> COLineList = [select Id, Name, buildertek__Total__c, buildertek__Change_Order__c from buildertek__Change_Order_Item__c where buildertek__Change_Order__c IN:coIds ];
             
-            system.debug('COLineList------>'+COLineList);
+            // system.debug('COLineList------>'+COLineList);
             
             List<buildertek__Change_Order__c> PaymentAppCOList1 = new List<buildertek__Change_Order__c>();
             
@@ -2603,7 +2608,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                     PaymentAppCOList1.add(PACO);
                 }
                 
-                system.debug('PaymentAppCOList1------>'+PaymentAppCOList1);
+                // system.debug('PaymentAppCOList1------>'+PaymentAppCOList1);
                 if(PaymentAppCOList1.size() > 0){
                     update PaymentAppCOList1;
                 }
@@ -2623,7 +2628,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                     
                 }
                 
-                system.debug('COPayAppTrackRecs------>'+COPayAppTrackRecs);
+                // system.debug('COPayAppTrackRecs------>'+COPayAppTrackRecs);
                 if(COPayAppTrackRecs.size() > 0){
                     Insert COPayAppTrackRecs;
                 }
@@ -2638,10 +2643,10 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                 }
             }
             
-            system.debug('COPayAppTraKIds------------->'+COPayAppTraKIds);
+            // system.debug('COPayAppTraKIds------------->'+COPayAppTraKIds);
             List<buildertek__BT_Change_Order_Payment_Tracking__c> COTracRecs = [select Id, Name, buildertek__Change_Order__c from buildertek__BT_Change_Order_Payment_Tracking__c where Id IN:COPayAppTraKIds ];
             
-            system.debug('COTracRecs-------->'+COTracRecs);
+            // system.debug('COTracRecs-------->'+COTracRecs);
             
             if(COTracRecs.size() > 0){
                 for(buildertek__BT_Change_Order_Payment_Tracking__c COPATRec : COTracRecs){
@@ -2649,7 +2654,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                 }
             }     
             
-            system.debug('COPAYAPPTracMap---->'+COPAYAPPTracMap);
+            // system.debug('COPAYAPPTracMap---->'+COPAYAPPTracMap);
             
             List<buildertek__Change_Order_Payment_Tracking_Line__c> COPayAppTrackLineRecs = new List<buildertek__Change_Order_Payment_Tracking_Line__c>();
             
@@ -2665,7 +2670,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                 }
             }
             
-            system.debug('COPayAppTrackLineRecs------>'+COPayAppTrackLineRecs);
+            // system.debug('COPayAppTrackLineRecs------>'+COPayAppTrackLineRecs);
             if(COPayAppTrackLineRecs.size() > 0){
                 Insert COPayAppTrackLineRecs;
             }
@@ -2687,7 +2692,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
         if(userRec.size() > 0){
             portalCode = userRec[0].get('isPortalEnabled').toString();
         }        
-        system.debug('postel code'+ portalCode);
+        // system.debug('postel code'+ portalCode/);
         
         ResponseWrapper RC = new ResponseWrapper();
         try{
@@ -2705,9 +2710,9 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                                                         buildertek__Total_Amount_Tax__c,buildertek__Payment_Application_G702__c
                                                         FROM buildertek__Change_Order__c
                                                         WHERE buildertek__Change_Order__c.Id IN: coIds]; 
-            system.debug(coList);
+            // system.debug(coList);
             if(coList.size() > 0){
-                system.debug(coList.size());
+                // system.debug(coList.size());
                 buildertek__SOV_Continuation__c sheetId = [select Id, name, buildertek__SOV_Payment_Application__c from buildertek__SOV_Continuation__c where buildertek__SOV_Payment_Application__c =:recordId];
                 
                 
@@ -2734,12 +2739,12 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                         continuationSheetLines.buildertek__Is_Created_In_This_App__c = true;
                         continuationSheetLinesList.add(continuationSheetLines);
                         itemInc++;
-                        system.debug(continuationSheetLinesList);
+                        // system.debug(continuationSheetLinesList);
                     }
                     if(continuationSheetLinesList.size() > 0){
-                        system.debug(continuationSheetLinesList.size());
+                        // system.debug(continuationSheetLinesList.size());
                         insert continuationSheetLinesList;
-                        system.debug('&&'+continuationSheetLinesList);
+                        // system.debug('&&'+continuationSheetLinesList);
                     }
                     RC.Status = 'Success';
                     RC.Message = 'Continuation Sheet Lines added successfully';
@@ -2755,10 +2760,10 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                         continuationSheetLines.buildertek__Budget_Grouping__c = 'Change Orders';
                         continuationSheetLines.buildertek__Work_Completed_from_Previous_Application__c = 0;
                         continuationSheetLines.buildertek__Work_Completed__c = 0;
-                        system.debug('coItem.Id--------->'+coItem.Id);
+                        // system.debug('coItem.Id--------->'+coItem.Id);
                         continuationSheetLines.buildertek__Change_Order__c = coItem.Id;
                         if(islien == true){
-                            system.debug('COPAYAPPTracMap.get(coItem.Id)---------->'+COPAYAPPTracMap.get(coItem.Id));
+                            // system.debug('COPAYAPPTracMap.get(coItem.Id)---------->'+COPAYAPPTracMap.get(coItem.Id));
                             continuationSheetLines.buildertek__Change_Order_Payment_Tracking__c = COPAYAPPTracMap.get(coItem.Id);
                         }
                         if(PayAppType.recordtype.name == 'AR'){
@@ -2769,12 +2774,12 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                         continuationSheetLines.buildertek__Is_Created_In_This_App__c = true;
                         continuationSheetLinesList.add(continuationSheetLines);
                         itemInc++;
-                        system.debug(continuationSheetLinesList);
+                        // system.debug(continuationSheetLinesList);
                     }
                     if(continuationSheetLinesList.size() > 0){
-                        system.debug(continuationSheetLinesList.size());
+                        // system.debug(continuationSheetLinesList.size());
                         insert continuationSheetLinesList;
-                        system.debug('&&'+continuationSheetLinesList);
+                        // system.debug('&&'+continuationSheetLinesList);
                     }
                     
                     
@@ -2788,6 +2793,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
         }catch(exception exp){
             RC.Status = 'Error';
             RC.Message = exp.getMessage();
+            System.debug(exp.getMessage());
         }
         return RC;
     }
@@ -2854,12 +2860,12 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
     
     @AuraEnabled
     public static buildertek__SOV_Payment_Application__c isSovSubmitted(String recordId){
-        system.debug('*****************');
+        // system.debug('*****************');
         system.debug(recordId);
         buildertek__SOV_Payment_Application__c updateStatus = [select Id, Name, buildertek__Status__c,buildertek__PA_Type__c, RecordTypeId, recordtype.name from buildertek__SOV_Payment_Application__c where Id =:recordId];
         system.debug(updateStatus);
         
-        system.debug('updates status ------> '+ updateStatus);
+        // system.debug('updates status ------> '+ updateStatus);
         return updateStatus;
     }
     
@@ -2907,13 +2913,13 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
     public static string saveSign(String recId, String base64Data, String contentType, string signName, String LienTest){
         try {
             string conversn;
-            system.debug('lien Text'+ LienTest);
-            system.debug('signature string --------->'+base64Data);
+            // system.debug('lien Text'+ LienTest);
+            // system.debug('signature string --------->'+base64Data);
             
             base64Data = EncodingUtil.urlDecode(base64Data, 'UTF-8');
-            system.debug('decoded utf 8string --------->'+base64Data );
+            // system.debug('decoded utf 8string --------->'+base64Data );
             
-            system.debug('final  string --------->'+EncodingUtil.base64Decode(base64Data));
+            // system.debug('final  string --------->'+EncodingUtil.base64Decode(base64Data));
             
             ContentVersion conVer = new ContentVersion();
             conVer.ContentLocation = 'S'; // to use S specify this document is in Salesforce, to use E for external files
@@ -2921,7 +2927,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
             conVer.Title = 'signName'; // Display name of the files
             conVer.VersionData = EncodingUtil.base64Decode(base64Data); // converting your binary string to Blog
             insert conVer;    //Insert ContentVersion
-            system.debug('*******conVer*******' + conVer);
+            // system.debug('*******conVer*******' + conVer);
             // First get the Content Document Id from ContentVersion Object
             Id conDoc = [SELECT ContentDocumentId
                          FROM ContentVersion
@@ -2936,7 +2942,7 @@ InsertedConList = [Select id, name, buildertek__Item_No__c from buildertek__SOV_
                         FROM ContentVersion
                         WHERE ContentDocumentId = :conDoc AND IsLatest = true].Id;
             //system.debug('conversn[0].Id ='+conversn[0].Id);
-            system.debug('conversn'+conversn);
+            // system.debug('conversn'+conversn);
             
             String signId = conVer.Id;
             
@@ -3011,14 +3017,14 @@ return message;
         
         List<buildertek__BT_Payment_App_Sign_Url__c> paymentAppSignUrl = [select Name__c, buildertek__Site_Url__c from buildertek__BT_Payment_App_Sign_Url__c limit 1];
         
-        system.debug('111111111111111111');
-        system.debug('signId'+signId);
+        // system.debug('111111111111111111');
+        // system.debug('signId'+signId);
         PageReference pagePdf = new PageReference(paymentAppSignUrl[0].buildertek__Site_Url__c+'/apex/PALienReleaseSignature'); 
         pagePdf.getParameters().put('LienText', LienTest);
         pagePdf.getParameters().put('ImageId', signId);
-        system.debug('333333333333333333');
+        // system.debug('333333333333333333');
         blob pdfPageBlob = pagePdf.getContentAsPDF();
-        system.debug('pdfPageBlob'+pdfPageBlob);
+        // system.debug('pdfPageBlob'+pdfPageBlob);
         
         Attachment attachmentPDF = new Attachment();
         attachmentPdf.parentId = recId;
@@ -3113,7 +3119,7 @@ system.debug('Final templateBody ----------> ' + templateBody);*/
         list<buildertek__SOV_Continuation_Sheet_Lines__c> sheetlinelist = [select id,Name,buildertek__Status__c,buildertek__SOV_Continuation_Sheet__c,buildertek__Material_Presently_Stored__c,buildertek__Vendor_Sheet_line_Id__c, buildertek__Vendor_Work_Completed_This_Period__c from buildertek__SOV_Continuation_Sheet_Lines__c
                                                                            where buildertek__SOV_Continuation_Sheet__c =: continuationsheetRec.id ];
         
-        system.debug('sheetlinelist---->'+sheetlinelist);
+        // system.debug('sheetlinelist---->'+sheetlinelist);
         list<String> ConSheetLineIds = new list<String> ();
         if(!sheetlinelist.isEmpty()){
             for(SOV_Continuation_Sheet_Lines__c sheetLine : sheetlinelist){
@@ -3121,14 +3127,14 @@ system.debug('Final templateBody ----------> ' + templateBody);*/
             }
         }
         
-        system.debug('ConSheetLineIds---->'+ConSheetLineIds);
+        // system.debug('ConSheetLineIds---->'+ConSheetLineIds);
         
         list<buildertek__SOV_Continuation_Sheet_Lines__c> APConnLine = [select Id, Name, buildertek__Vendor_Sheet_line_Id__c,buildertek__Material_Presently_Stored__c,buildertek__Vendor_Work_Completed_This_Period__c, buildertek__Work_Completed__c, buildertek__Status__c, buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.buildertek__PA_Type__c,buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.RecordTypeId, buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.recordtype.name from buildertek__SOV_Continuation_Sheet_Lines__c where Id IN:ConSheetLineIds];
         
         List<buildertek__SOV_Continuation_Sheet_Lines__c> sheetlineslist1 = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
         List<buildertek__SOV_Continuation_Sheet_Lines__c> ARPaymentappLine = [select Id, Name,buildertek__Rejection_Reason__c, buildertek__Material_Presently_Stored__c,buildertek__Vendor_Sheet_line_Id__c,buildertek__Vendor_Work_Completed_This_Period__c, buildertek__Work_Completed__c, buildertek__Status__c, buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.buildertek__PA_Type__c,buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.RecordTypeId, buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.recordtype.name from buildertek__SOV_Continuation_Sheet_Lines__c where buildertek__Vendor_Sheet_line_Id__c IN: ConSheetLineIds AND  buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__r.recordtype.name = 'AR'];
         
-        system.debug('ARPaymentappLine--------->'+ARPaymentappLine);
+        // system.debug('ARPaymentappLine--------->'+ARPaymentappLine);
         
         Map<String,Decimal> vendorLineWorkCompletedMap = new  Map<String,Decimal>();
          Map<String,Decimal> vendorLinematerialStored = new  Map<String,Decimal>();
@@ -3140,12 +3146,12 @@ system.debug('Final templateBody ----------> ' + templateBody);*/
             vendorLinematerialStored.put(sheetRec.Id,sheetRec.buildertek__Material_Presently_Stored__c);
         }
         
-        system.debug('vendorLineWorkCompletedMap------>'+vendorLineWorkCompletedMap);
+        // system.debug('vendorLineWorkCompletedMap------>'+vendorLineWorkCompletedMap);
         if(coslist.size() > 0){
             update coslist;
             
             List<buildertek__SOV_Continuation_Sheet_Lines__c> ARineslist = new List<buildertek__SOV_Continuation_Sheet_Lines__c>();
-            system.debug('ARPaymentappLine--->'+ARPaymentappLine);
+            // system.debug('ARPaymentap/pLine--->'+ARPaymentappLine);
             for (buildertek__SOV_Continuation_Sheet_Lines__c lineId : ARPaymentappLine){
                 buildertek__SOV_Continuation_Sheet_Lines__c sheetlinerec1 = new buildertek__SOV_Continuation_Sheet_Lines__c();
                 sheetlinerec1.Id = lineId.Id;
@@ -3156,16 +3162,16 @@ system.debug('Final templateBody ----------> ' + templateBody);*/
                 sheetlinerec1.buildertek__Material_Presently_Stored__c = lineId.buildertek__Material_Presently_Stored__c;
                 sheetlinerec1.buildertek__Material_Presently_Stored__c = vendorLinematerialStored.get(lineId.buildertek__Vendor_Sheet_line_Id__c);
                 
-                system.debug('sheetlinerec1.buildertek__Vendor_Sheet_line_Id__c'+lineId.buildertek__Vendor_Sheet_line_Id__c);
-                system.debug('vendorLineWorkCompletedMap.get(sheetlinerec1.buildertek__Vendor_Sheet_line_Id__c)'+vendorLineWorkCompletedMap.get(lineId.buildertek__Vendor_Sheet_line_Id__c));
+                // system.debug('sheetlinerec1.buildertek__Vendor_Sheet_line_Id__c'+lineId.buildertek__Vendor_Sheet_line_Id__c);
+                // system.debug('vendorLineWorkCompletedMap.get(sheetlinerec1.buildertek__Vendor_Sheet_line_Id__c)'+vendorLineWorkCompletedMap.get(lineId.buildertek__Vendor_Sheet_line_Id__c));
                 sheetlinerec1.buildertek__Work_Completed__c = vendorLineWorkCompletedMap.get(lineId.buildertek__Vendor_Sheet_line_Id__c);
                 sheetlineslist1.add(sheetlinerec1);
             }
-            system.debug('sheetlineslist1'+sheetlineslist1);
+            // system.debug('sheetlineslist1'+sheetlineslist1);
             if(!sheetlineslist1.isEmpty()){
                 update sheetlineslist1;
             }
-            system.debug('sheetlineslist2'+sheetlineslist1);
+            // system.debug('sheetlineslist2'+sheetlineslist1);
         }
         
         return 'success';
