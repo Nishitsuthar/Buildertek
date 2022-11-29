@@ -104,8 +104,9 @@
                         var curDate = dt2;
                         while (curDate < dt1) {
                             var dayOfWeek = curDate.getDay();
-                            if(!((dayOfWeek == 6) || (dayOfWeek == 0)))
-                                count++;
+                            //* if(!((dayOfWeek == 6) || (dayOfWeek == 0)))
+                            //* commented above line because client wants to add count for weekend as well (Nishit Suthar MV Clouds)
+                            count++;
                             curDate.setDate(curDate.getDate() + 1);
                         }
                         var businessworkingdys = 0;
