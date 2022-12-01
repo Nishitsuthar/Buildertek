@@ -50,13 +50,13 @@ public without sharing class PreviewQuoteController{
         list<Messaging.SingleEmailMessage> msgList1 = new List<Messaging.SingleEmailMessage>();
         List<String> templateList = new List<String>();
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-        string theTemplate;
+        EmailTemplate theTemplate;
         if (Schema.sObjectType.EmailTemplate.fields.id.isAccessible()){
-            theTemplate = [SELECT Id
+            theTemplate = [SELECT Id, Name
                            FROM EmailTemplate
-                           WHERE Id = :templateId].Id;
+                           WHERE Id = :templateId];
         }
-        email.setTemplateId(theTemplate);
+        email.setTemplateId(theTemplate.Id);
         email.setWhatId(recordId);
         email.setTargetObjectId(con.Id);
         email.setSaveAsActivity(true);
@@ -70,27 +70,32 @@ public without sharing class PreviewQuoteController{
             templateBody1 = emailNew.getHTMLBody();
         }
 
+        if (theTemplate.Name != 'Quote - HISAB') {
+            Messaging.SingleEmailMessage email1 = new Messaging.SingleEmailMessage();
+            string theTemplate1 = [SELECT Id
+                                FROM EmailTemplate
+                                WHERE Name = 'BT Proposal Images'].Id;
+            email1.setTemplateId(theTemplate1);
+            System.debug(theTemplate1);
+            email1.setWhatId(recordId);
+            email1.setTargetObjectId(con.Id);
+            email1.setSaveAsActivity(true);
+            email1.setToAddresses(toaddres);
+            msgList1.add(email1);
+            Messaging.SendEmailResult[] r1 = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{email1});
+            System.debug('Email Results isSuccess = ' + r1[0].IsSuccess());
+            Database.rollback(sp);
+            for (Messaging.SingleEmailMessage emailNew1 : msgList1){
+                templateBody2 = emailNew1.getHTMLBody();
+            }
+            system.debug('templateBody 2 ----------> ' + templateBody2);
+            templateBody = templateBody1 + templateBody2;
+            system.debug('Final templateBody ----------> ' + templateBody);
+        } else {
+            templateBody = templateBody1;
 
-        Messaging.SingleEmailMessage email1 = new Messaging.SingleEmailMessage();
-        string theTemplate1 = [SELECT Id
-                               FROM EmailTemplate
-                               WHERE Name = 'BT Proposal Images'].Id;
-        email1.setTemplateId(theTemplate1);
-        System.debug(theTemplate1);
-        email1.setWhatId(recordId);
-        email1.setTargetObjectId(con.Id);
-        email1.setSaveAsActivity(true);
-        email1.setToAddresses(toaddres);
-        msgList1.add(email1);
-        Messaging.SendEmailResult[] r1 = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{email1});
-        System.debug('Email Results isSuccess = ' + r1[0].IsSuccess());
-        Database.rollback(sp);
-        for (Messaging.SingleEmailMessage emailNew1 : msgList1){
-            templateBody2 = emailNew1.getHTMLBody();
         }
-        system.debug('templateBody 2 ----------> ' + templateBody2);
-        templateBody = templateBody1 + templateBody2;
-        system.debug('Final templateBody ----------> ' + templateBody);
+        
         return templateBody;
     }
 

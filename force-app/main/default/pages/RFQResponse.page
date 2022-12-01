@@ -146,11 +146,8 @@
 
     }
 
-
-
-
         function submitQuote() {
-            var agreeFunction = new Function("Appurin.lightning.hideModalPopup({'modalPopupId' : 'lightningInfoPopup'}); acfsubmintQuote(); return false;");
+            var agreeFunction = new Function("Appurin.lightning.hideModalPopup({'modalPopupId' : 'lightningInfoPopup'}); acfsubmintQuote(); multiFiles(); return false;");
             var confirmPromptOptions = {
                 'modalPopupId': 'lightningInfoPopup',
                 'title': 'Confirm',
@@ -161,7 +158,7 @@
                 'agreeFunction': agreeFunction
             }
             Appurin.lightning.showConfirmPrompt(confirmPromptOptions);
-            multiFiles();
+
 
         }
         function uploadDocument() {
@@ -249,6 +246,7 @@
             var size = document.getElementById('fileToUpload');
             uploadFileData = size.files;
             if (size.files.length > 0) {
+                document.getElementById('fileToUpload').disabled = true;
                 for (let index = 0; index < size.files.length; index++) {
                     var file = document.getElementById('fileToUpload').files[index];
                     if (file) {
@@ -278,6 +276,7 @@
             console.log('uploadFileData ==> ',{uploadFileData});
             var filelst = uploadFileData;
             var newFileList = [];
+            document.getElementById('fileToUpload').disabled = false;
 
             for (var index = 0; index < filelst.length; index++) {
                 if(ind != index) {
@@ -290,14 +289,13 @@
             document.getElementById('fileNameFieldId').innerHTML = null;
 
             for (let index = 0; index < newFileList.length; index++) {
-                
+
                 var file = newFileList[index]
                 console.log('newFileList ==> ',{file});
-
                 document.getElementById('fileError').style.display = 'none';
                 document.getElementById('fileNameFieldId').innerHTML += `<img class="slds-button__icon slds-button__icon--left" src="https://i.ibb.co/bdvnXxK/close.png" alt="remove" onclick="removeFiles(`+ index +`)"/>`+newFileList[index].name+`<br/>` ;
                 document.getElementById('fileNameFieldId').style.display = 'block';
-                
+
             }
 
 
@@ -753,7 +751,7 @@
 
                         <div class="slds-file-selector__dropzone customMargin">
                             <input id="fileToUpload" type="file" name="file" class="slds-file-selector__input slds-assistive-text"
-                                     aria-describedby="fileLabel" onchange="fileSelected()" multiple="true"/>
+                                     aria-describedby="fileLabel" onchange="fileSelected()" />
                             <label class="slds-file-selector__body" for="fileToUpload">
                                 <div class="slds-file-selector__button slds-button slds-button_brand" id="buttonWidth">
                                     <img class="slds-button__icon slds-button__icon--left" src="{!$Resource.buildertek__SLDS+'/assets/icons/utility/upload_60.png'}"
