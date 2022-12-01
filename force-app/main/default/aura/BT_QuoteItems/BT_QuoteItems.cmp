@@ -23,6 +23,7 @@
     <aura:attribute name="isProfiteMargin" type="boolean" default="false" />
     <aura:attribute name="isGrossProfte" type="boolean" default="false" />
     <aura:handler name="onSelectEvt" event="c:BT_LookupEvent" action="{!c.getLookUpValues}" />
+    <aura:attribute name="parent" type="Aura.Component"/>
     
 	<aura:registerEvent name="datafromChild" type="c:senDatafromChild"/>
     
@@ -55,7 +56,7 @@
             <lightning:input type="number" formatter="percent-fixed" value="{!v.cellValue}"
                 name="{!v.index+'-'+v.fieldName}" onchange="{!c.onInputChange}" />
         </aura:if>
-        <aura:if isTrue="{!v.isDropDownField}">
+        <aura:if isTrue="{!v.isDropDownField}">            
             <lightning:select aura:id="select" class="field label-hidden" name="{!v.index+'-'+v.fieldName}"
                 variant="label-hidden" onchange="{!c.onInputChange}">
                 <option value="None">None</option>
@@ -65,7 +66,7 @@
                 </aura:iteration>
             </lightning:select>
         </aura:if>
-        <aura:if isTrue="{!v.isDateTimeField}">
+        <aura:if isTrue="{!v.isDateTimeField}"> 
             <lightning:input type="datetime" name="{!v.index+'-'+v.fieldName}" value="{!v.cellValue}"
                 onchange="{!c.onInputChange}" />
         </aura:if>

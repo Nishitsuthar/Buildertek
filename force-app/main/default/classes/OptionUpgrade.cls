@@ -130,13 +130,14 @@ public with sharing class OptionUpgrade {
                 productFamilyList.add(entry.getLabel());
             }
         }
+        productFamilyList.sort();
         return productFamilyList;
     }
 
     @AuraEnabled
     public static List<String> getProductType(String searchTypeValue){
         List<String> productTypeList = new List<String>();
-        List<buildertek__Product_Type__c> prodTypeList = [SELECT Id, Name FROM buildertek__Product_Type__c];
+        List<buildertek__Product_Type__c> prodTypeList = [SELECT Id, Name FROM buildertek__Product_Type__c ORDER BY Name ASC];
 
         if(!String.isBlank(searchTypeValue)){
             for (buildertek__Product_Type__c prodType : prodTypeList) {
@@ -155,7 +156,7 @@ public with sharing class OptionUpgrade {
     @AuraEnabled
     public static List<String> getProductName(String searchNameValue){
         List<String> productNameList = new List<String>();
-        List<Product2> productList = [SELECT Id, Name FROM Product2];
+        List<Product2> productList = [SELECT Id, Name FROM Product2 ORDER BY name ASC];
 
         if(!String.isBlank(searchNameValue)){
             for (Product2 prod : productList) {
@@ -174,7 +175,7 @@ public with sharing class OptionUpgrade {
     @AuraEnabled
     public static List<String> getManufacturer(String searchManufacturerValue){
         List<String> ManufacturerList = new List<String>();
-        List<Account> accountList = [SELECT Id, Name FROM Account];
+        List<Account> accountList = [SELECT Id, Name FROM Account ORDER BY name ASC];
 
         if(!String.isBlank(searchManufacturerValue)){
             for (Account acc : accountList) {

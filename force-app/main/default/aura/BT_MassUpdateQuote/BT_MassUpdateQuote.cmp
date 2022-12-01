@@ -33,6 +33,10 @@
     <aura:attribute name="RecordEnd" type="integer" default="0" />
     <aura:attribute name="isNextDisabled" type="Boolean" default="true" />
      <aura:attribute name="deleteQuoteLines" type="List" />
+
+     <aura:method name="reloadMethod" action="{!c.reloadMethod}" access="public">
+
+    </aura:method>
     
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <lightning:overlayLibrary aura:id="overlayLib" />
@@ -87,7 +91,7 @@
                             <tr style="{!v.massUpdateEnable ? '':'height:35px; !important'}">
                                 <aura:iteration items="{!v.fieldSetValues}" var="field">
                                    <td>
-                                        <c:BT_QuoteItems record="{!row}" listRec="{!v.listOfRecords}" index="{!index}" field="{!field}"
+                                        <c:BT_QuoteItems parent="{!this}" record="{!row}" listRec="{!v.listOfRecords}" index="{!index}" field="{!field}"
                                                          isMassUpdateEnable="{!v.massUpdateEnable}" /> 
                                     </td> 
                                 </aura:iteration>

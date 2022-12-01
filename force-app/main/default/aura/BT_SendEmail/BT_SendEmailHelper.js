@@ -177,6 +177,9 @@
       //  alert('hii'+component.get("v.selectedInvoiceBodyContent"));
 		//alert('body -------> '+body);
 		//alert('body -------> '+fileIds);
+
+        console.log('fileIds ==>',{fileIds});
+
 		subject = component.get("v.subject"); 
 		templateId = component.get("v.selectedTemplate");
         console.log("Selected template id : ",templateId)
@@ -307,6 +310,7 @@
         // get the selected files using aura:id [return array of files]
         //var fileInput = component.find("fuploader").get("v.files");
         var fileInput = component.get("v.selectedfileslist");
+        console.log('fileInput ==> '+fileInput);
         //alert('fileInput--->'+fileInput);
         this.fileInputLenght = fileInput.length; 
         //alert('uploadHelper--->'+recid);
@@ -382,12 +386,20 @@
      * @param: File Data,Safety Event Id
      */
     uploadInChunk: function(component, file, fileContents, startPosition, endPosition, attachId,recid,helper) {
+        console.log('== uploadInChunk ==');
         //component.set("v.IsSpinner",true); 
        // component.set("v.isSubmit",true);
         // call the apex method 'SaveFile'
         //alert('uploadInChunk--->'+recid);       
         var getchunk = fileContents.substring(startPosition, endPosition);
         //alert('getchunk--->'+getchunk);
+
+        console.log('recid ==> '+recid);
+        console.log('file.name ==> '+file.name);
+        console.log('getchunk ==> '+getchunk);
+        console.log('file.type ==> '+file.type);
+        console.log('attachId ==> '+attachId);
+
         var action = component.get("c.uploadFile");
         action.setParams({ 
             parentId: recid,
@@ -398,12 +410,17 @@
         });
         // set call back 
         action.setCallback(this, function(response) { 
+            console.log(' -- setCallback --');
             //component.set("v.IsSpinner",true);
             // store the response / Attachment Id   
             attachId = response.getReturnValue();
+            console.log('attachId ==> '+attachId);
             //alert('attachId--->'+attachId);
             this.fileIds.push(attachId);
             var state = response.getState();
+            console.log('state ==> '+state);
+            var responce = response.getReturnValue();
+            console.log('Responce -> ',{responce});
             //alert('state--->'+state);
             if (state === "SUCCESS") {
                 //component.set("v.IsSpinner",true);
@@ -430,9 +447,13 @@
                 }
                 if(this.filesCount == this.fileInputLenght){ 
                     //alert(this.fileIds.length);
+                    console.log('this.fileIds ==> '+this.fileIds);
                     component.set("v.selectedFillIds",this.fileIds);
                     $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "SHOW" }).fire();
                 	this.send(component, event, helper);
+                    this.filesCount = 0;
+                    this.fileInputLenght = 0;
+                    this.fileIds = [];
                    
                 }
                 // handel the response errors        

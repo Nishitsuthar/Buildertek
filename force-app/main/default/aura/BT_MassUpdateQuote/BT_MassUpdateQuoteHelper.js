@@ -21,14 +21,14 @@
         $A.enqueueAction(action);
     },
     getTotalRecord: function (component, event, helper) {
-        debugger;
+        // debugger;
         var action = component.get("c.getCount");
         action.setParams({
             recordId: component.get('v.recordId'),
         });
         action.setCallback(this, function (response) {
             if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
-                debugger;
+                // debugger;
                 component.set("v.TotalRecords", response.getReturnValue());
                 console.log('Total record',response.getReturnValue());
             }
@@ -37,7 +37,7 @@
     },
     
     getTableRows: function (component, event, helper ,pageNumber, pageSize) {
-        debugger;
+        // debugger;
         var action = component.get("c.getRecords");
         var fieldSetValues = component.get("v.fieldSetValues");
         var setfieldNames = new Set();
@@ -169,7 +169,7 @@
     
     updateMassRecords: function (component, event, helper) {
         
-        debugger;
+        // debugger;
         component.set('v.isLoading', true);
         var listOfRecords = component.get('v.listOfRecords');
        // alert( JSON.stringify(listOfRecords));
@@ -199,7 +199,7 @@
         });
         
         action.setCallback(this, function (response) {
-            debugger;
+            // debugger;
             var state = response.getState();
             if (state === "SUCCESS") {
                 var list = JSON.parse(response.getReturnValue());

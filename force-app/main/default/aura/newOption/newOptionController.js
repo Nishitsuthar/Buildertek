@@ -63,16 +63,30 @@
 	},
 
     closePopup: function(component, event, helper) {
-        var workspaceAPI = component.find("workspace");
-        workspaceAPI.getFocusedTabInfo().then(function (response) {
+		$scope.isConsole = sforce.console.isInConsole();
+        var recordId = component.get("v.recordId");
+			if(recordId){
+        	var navEvt = $A.get("e.force:navigateToSObject");
+        	navEvt.setParams({
+        	    "recordId": recordId,
+        	    "slideDevName": "detail"
+        	});
+        	navEvt.fire();
+		}else if(sforce.console.isInConsole()){
+			
+		}
+		else{
+			var workspaceAPI = component.find("workspace");
+        	workspaceAPI.getFocusedTabInfo().then(function (response) {
             var focusedTabId = response.tabId;
             workspaceAPI.closeTab({
                 tabId: focusedTabId
             });
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+        	})
+        	.catch(function (error) {
+            	console.log(error);
+        	});
+		}
     },
 
 	changeProduct: function(component, event, helper){

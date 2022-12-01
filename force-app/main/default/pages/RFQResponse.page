@@ -8,9 +8,9 @@
     <head>
      <!-- <apex:stylesheet value="{!URLFOR($Resource.SLDSv0122, 'assets/styles/salesforce-lightning-design-system-vf.css')}" /> -->
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-        
+
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-        
+
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" />
         <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"/>
          <apex:includeScript value="{!$Resource.FileUploadJs}"/>
@@ -25,9 +25,9 @@
     padding: 10px;
     position: absolute;
     z-index: 9999;
-    /* These are the 3 css properties you will need to tweak so the pop 
-                            up displays in the center of the screen. First set the width. Then set 
-                            margin-left to negative half of what the width is. You can also add 
+    /* These are the 3 css properties you will need to tweak so the pop
+                            up displays in the center of the screen. First set the width. Then set
+                            margin-left to negative half of what the width is. You can also add
                             the height property for a fixed size pop up.*/
     width: 500px;
     top: 20%;
@@ -42,7 +42,7 @@
     display: table;
     padding: 2px 1px;
     text-align:right;
-}   
+}
 
 .closeButton {
     float: right;
@@ -59,6 +59,13 @@
             border-top: unset;
         }
 
+        .customMargin{
+            margin-top: 6px;
+        }
+        #buttonWidth{
+            width: 164px;
+        }
+
         .pbHeader {
             display: none;
         }
@@ -66,7 +73,7 @@
         .helpOrb {
             display: none;
         }
-        
+
         .customPopup{
     background-color: lightgrey;
     border-style: solid;
@@ -94,27 +101,27 @@
 .customPopup .close:hover{
     color: red;
 }
-        
+
     </style>
     <script>
-        
+
     function updateFileName() {
         var img1 = document.getElementById('page:form1:infile');
-        
-        var file = document.getElementById("infile").files[0];        
+
+        var file = document.getElementById("infile").files[0];
         var file_name = document.getElementById('page:form1:fdesc');
         var fileNameIndex = file.name.lastIndexOf("\\");
         file_name.value = file.name.substring(fileNameIndex + 1);
-        
+
     }
-       
-    
+
+
     var client = new forcetk.Client();
-    client.setSessionToken('{!$Api.Session_ID}');  
-    
+    client.setSessionToken('{!$Api.Session_ID}');
+
     function upload1() {
         alert('upload');
-        document.getElementById("message").innerHTML = 
+        document.getElementById("message").innerHTML =
             "Please wait while file is Uploading.........";
         var file = document.getElementById("infile").files[0];
         alert(file);
@@ -124,24 +131,24 @@
         }, file.name, 'VersionData', file, function(response){
             console.log(response);
             alert(response);
-            document.getElementById("message").innerHTML = 
+            document.getElementById("message").innerHTML =
                 "File Uploaded Successfully";
-            
+
             var ContentVerId=response.id;
             var FileName = file.name;
             alert(FileName);
             UploadFile(ContentVerId,FileName);
         }, function(request, status, response){
             console.log(response);
-            document.getElementById("message").innerHTML = 
-                "Error: " + status;   
+            document.getElementById("message").innerHTML =
+                "Error: " + status;
         });
-        
+
     }
-    
-        
-        
-        
+
+
+
+
         function submitQuote() {
             var agreeFunction = new Function("Appurin.lightning.hideModalPopup({'modalPopupId' : 'lightningInfoPopup'}); acfsubmintQuote(); return false;");
             var confirmPromptOptions = {
@@ -149,14 +156,12 @@
                 'title': 'Confirm',
                 'message': 'Are you sure that you want to submit your Quote? Once you submit the quote you cannot edit it.',
                 'agreeButtonLabel': 'Yes',
-                
-                
-                
-                
+
                 'discardButtonLabel': '{!JSENCODE($Label.buildertek__Cancel)}',
                 'agreeFunction': agreeFunction
             }
             Appurin.lightning.showConfirmPrompt(confirmPromptOptions);
+            multiFiles();
 
         }
         function uploadDocument() {
@@ -235,27 +240,69 @@
                 setSuccessActionUrl(att);
             }
         }*/
-    
+
+        var uploadFileData = [];
+
         function fileSelected(){
-            var file = document.getElementById('fileToUpload').files[0];
-            if (file) {
-                document.getElementById('fileError').style.display = 'none';
-                document.getElementById('fileNameFieldId').innerHTML = file.name;
-                document.getElementById('fileNameFieldId').style.display = 'block';
-                var fileSize = 0;
-                if (file.size > (36 * 1024 * 1024)) {
-                    alert('File too large, greater than 36MB');
-                    return;
+            var temp = event.target;
+            console.log('Event Data == >',{temp});
+            var size = document.getElementById('fileToUpload');
+            uploadFileData = size.files;
+            if (size.files.length > 0) {
+                for (let index = 0; index < size.files.length; index++) {
+                    var file = document.getElementById('fileToUpload').files[index];
+                    if (file) {
+                        console.log('files log ',file);
+                        document.getElementById('fileError').style.display = 'none';
+                        document.getElementById('fileNameFieldId').innerHTML += `<img class="slds-button__icon slds-button__icon--left" src="https://i.ibb.co/bdvnXxK/close.png" alt="remove" onclick="removeFiles(${index})"/> ${file.name} <br/>` ;
+                        document.getElementById('fileNameFieldId').style.display = 'block';
+                        // document.getElementById('fileNameFieldId').style.flexDirection = 'column';
+
+                        var fileSize = 0;
+                        if (file.size > (36 * 1024 * 1024)) {
+                            alert('File too large, greater than 36MB');
+                            return;
+                        }
+                        if (file.size > 1024 * 1024)
+                            fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+                        else
+                            fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+                    }else{
+
+                    }
                 }
-                if (file.size > 1024 * 1024)
-                    fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
-                else
-                    fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
-            }else{
-                
             }
         }
-        
+
+        function removeFiles(ind) {
+            console.log('uploadFileData ==> ',{uploadFileData});
+            var filelst = uploadFileData;
+            var newFileList = [];
+
+            for (var index = 0; index < filelst.length; index++) {
+                if(ind != index) {
+                    newFileList.push(filelst[index]);
+                }
+            }
+            console.log({newFileList});
+
+            uploadFileData = newFileList;
+            document.getElementById('fileNameFieldId').innerHTML = null;
+
+            for (let index = 0; index < newFileList.length; index++) {
+                
+                var file = newFileList[index]
+                console.log('newFileList ==> ',{file});
+
+                document.getElementById('fileError').style.display = 'none';
+                document.getElementById('fileNameFieldId').innerHTML += `<img class="slds-button__icon slds-button__icon--left" src="https://i.ibb.co/bdvnXxK/close.png" alt="remove" onclick="removeFiles(`+ index +`)"/>`+newFileList[index].name+`<br/>` ;
+                document.getElementById('fileNameFieldId').style.display = 'block';
+                
+            }
+
+
+        }
+
         function upload(){
             var file = document.getElementById('fileToUpload').files[0];
             if(file){
@@ -266,9 +313,32 @@
             }else{
                 document.getElementById('fileError').style.display = 'block';
             }
-             
+
         }
-        
+
+        function multiFiles() {
+            var fileData = uploadFileData[0];
+            var reader = new FileReader();
+            reader.onload = multiFilesLoad;
+            reader.onerror = errorHandler;
+            reader.readAsDataURL(fileData);
+        }
+
+        function multiFilesLoad(evt) {
+            var fileData = uploadFileData[0];
+            console.log('fileData ',{fileData});
+            var filename = fileData.name;
+            var fileType = fileData.type;
+            var fileSize = fileData.size;
+            var fileContent = String(evt.target.result);
+
+            console.log('fileContent ==> '+fileContent);
+            fileContent = fileContent.substr(fileContent.indexOf(',') + 1);
+            uploadContentVersion(filename, fileContent, fileSize, fileType);
+        }
+
+
+
         function loaded(evt) {
             var filename = document.getElementById('fileToUpload').files[0].name;
             var fileType = document.getElementById('fileToUpload').files[0].type;
@@ -286,7 +356,7 @@
             }
         }
         function uploadContentVersion(filename, filecontent, fileSize, fileType) {
-            InsertFileInS3(filename, encodeURIComponent(filecontent), fileSize, fileType);    
+            InsertFileInS3(filename, encodeURIComponent(filecontent), fileSize, fileType);
         }
 
         function setFileNameWithExtension(att) {
@@ -349,14 +419,14 @@
             acfRefreshFiles();
         }
         function closeRFIModal() {
-            
+
             document.getElementById("idDialog1").className = document.getElementById("idDialog").className.replace(/(?:^|\s)slds-fade-in-open(?!\S)/g, ' slds-fade-in-close');
             document.getElementById("idBackDrop1").className = document.getElementById("idBackDrop").className.replace(/(?:^|\s)slds-modal-backdrop--open(?!\S)/g, ' slds-modal-backdrop--close');
             acfRefreshFiles();
         }
-         function saveNewRFI() {                       
+         function saveNewRFI() {
             //acCreateRFI();
-            acfsubmintRFI();             
+            acfsubmintRFI();
         }
 
         function inputLimiter(e, allow) {
@@ -379,23 +449,25 @@
                 return true;
             }
         }
-    
-        
+
+
     </script>
     <apex:form id="form" html-autocomplete="off">
-        
+
   <apex:actionStatus id="splashStatus" onstart="startSplash();" onstop="endSplash(); " />
- 
+
         <apex:actionFunction name="acfsubmintQuote" action="{!submintQuote}" status="splashStatus" rerender="form,iserrorMessage"
         />
-      
-       
+        <apex:actionFunction name="fileToBackEnd" action="{!submintQuote}" status="splashStatus" rerender="form,iserrorMessage"
+        />
+
+
         <apex:actionFunction name="acfuploadDocument" action="{!uploadDocument}" status="splashStatus" rerender="pageId" />
         <apex:actionFunction name="gets3Key" action="{!gets3Key}" status="splashStatus" onComplete="saveFile();" />
         <apex:actionFunction name="InsertFile" action="{!insertFile}" status="splashStatus" oncomplete="closeWindow()" />
        <!-- <apex:actionFunction name="InsertFile" action="{!insertFile}" status="splashStatus" oncomplete="closeWindow()" />
         <apex:actionFunction name="test" action="{!openNewVFpage}" status="test">
-        
+
             <apex:param name="firstParam" value="" assignTo="{!latestFileName}"/>
             <apex:param name="secondParam" value="" />
             <apex:param name="filesize" value="" assignTo="{!fileSize}"/>
@@ -430,7 +502,7 @@
         </apex:outputPanel>
         <apex:outputPanel rendered="{!rfisaved == true}" id="rfisaved">
             <apex:outputPanel rendered="{!rfisaved == true}">
-               
+
                     <span class="slds-assistive-text">RFI Created</span>
                     <h2>
                         <!-- RFI created successfully -->
@@ -450,7 +522,7 @@
             <apex:outputPanel >
                 <apex:pagemessages id="pageLoadErrorMessage" />
                 <script>
-                    // Appurin.lightning.createLightningPageMessage({ 'classicPageMessageId': '{!JSENCODE($Component.pageLoadErrorMessage)}' });   
+                    // Appurin.lightning.createLightningPageMessage({ 'classicPageMessageId': '{!JSENCODE($Component.pageLoadErrorMessage)}' });
                 </script>
             </apex:outputPanel>
             <!-- <apex:commandLink styleclass="slds-button slds-button_brand slds-m-top--small" style="float: right;" status="busy" onclick="openNewRFIModal();" value="Create RFI" rerender="false" /> -->
@@ -463,7 +535,7 @@
                         <span>
                             <img src="{!$Resource.buildertek__Company_Logo}" width="20%" height="15%" />
                         </span>
-                         
+
                         <span>
                             <center>
                                 <b>
@@ -473,7 +545,7 @@
                                 </b>
                             </center>
                             <br/>
-                            
+
                         </span>
                     </div>
 
@@ -500,10 +572,10 @@
 
                     <!--<center><b><ul><h2 style="font-size: 1.3rem;text-transform: uppercase;text-decoration: underline;">Thank-You for submitting your bid <br/>You will hear from us shortly</h2></ul></b></center><br/>-->
                 </apex:outputPanel>
-                 
-        
+
+
                 <apex:pageBlock title="" mode="Edit">
-                
+
                     <div>
                         <apex:pageBlockSection title="RFQ Details" columns="2">
                             <apex:outputField value="{!rfqToVendor.buildertek__RFQ__r.buildertek__Project__r.Name}" />
@@ -532,7 +604,7 @@
                                         Line Item
                                     </th>
                                     <th scope="col" width="23%">
-                                    
+
                                         Description
                                     </th>
                                     <th scope="col" width="10%">
@@ -560,7 +632,7 @@
                                             <apex:outputField value="{!item.Name}" />
                                         </td>
                                         <td style="white-space: normal">
-                                            
+
                                             <apex:outputField value="{!item.Description__c}" />
                                         </td>
                                         <td>
@@ -655,8 +727,8 @@
                             <div class="slds-badge" style="background-color: #e0e5ee;font-size: 0.8rem;border-radius: 0 !important;">Related Documents</div>
                             <div style="float:right;">
                                 <apex:outputPanel rendered="{!showCreateRFI == true}">
-                                    <apex:commandLink styleclass="slds-button slds-button_brand " style="float: right;" status="busy" onclick="openNewRFIModal();" value="Create RFI" rerender="false" /> 
-                                </apex:outputPanel>    
+                                    <apex:commandLink styleclass="slds-button slds-button_brand " style="float: right;" status="busy" onclick="openNewRFIModal();" value="Create RFI" rerender="false" />
+                                </apex:outputPanel>
                             </div>
                         </b>
                         <ul>
@@ -674,12 +746,28 @@
                     <div class="slds-box">
                         <b>
                             <div class="slds-badge" style="background-color: #e0e5ee;font-size: 0.8rem;border-radius: 0 !important;">Vendor Documents</div>
-                            <div style="float:right;">
+                            <!-- <div style="float:right;">
                                 <apex:commandLink styleClass="{!if(rfqToVendor.Status__c == 'Quote Submitted','display:none','')}" onclick="openDeleteConfirm();"
                                     value="Upload New Document" rerender="false" />
-                            </div>
-                        </b>
-                        <ul id="vendorDocId">
+                            </div> -->
+
+                        <div class="slds-file-selector__dropzone customMargin">
+                            <input id="fileToUpload" type="file" name="file" class="slds-file-selector__input slds-assistive-text"
+                                     aria-describedby="fileLabel" onchange="fileSelected()" multiple="true"/>
+                            <label class="slds-file-selector__body" for="fileToUpload">
+                                <div class="slds-file-selector__button slds-button slds-button_brand" id="buttonWidth">
+                                    <img class="slds-button__icon slds-button__icon--left" src="{!$Resource.buildertek__SLDS+'/assets/icons/utility/upload_60.png'}"
+                                    /> Upload New Files
+                                </div>
+                                <div styleClass="slds-file-selector__text">
+                                    <!-- or Drop Files -->
+                                </div>
+                            </label>
+                            <div id="fileNameFieldId" style="display: none" class="slds-text-body_small slds-text-color_success"></div>
+                            <div id="fileError" style="display:none;" class="slds-text-body_small slds-text-color_error">{!$Label.Please_Select_File}</div>
+                        </div>
+                    </b>
+                        <!-- <ul id="vendorDocId">
                             <apex:repeat value="{!files}" var="file">
                                 <li>
                                     &nbsp;&nbsp;
@@ -692,7 +780,7 @@
                                     <a href="{!file.File_Presigned_URL__c}" title="{!file.Description__c}">{!file.Name}</a>
                                 </li>
                             </apex:repeat>
-                        </ul>
+                        </ul> -->
                     </div>
                     <br/>
                    <!-- <div style="height: 180px;">-->
@@ -739,7 +827,7 @@
                 </div>
                 <div class="slds-backdrop slds-backdrop--open" style="z-index: 5881;"></div>
             </apex:outputPanel>
-            <div aria-hidden="false" role="dialog" class="slds-modal slds-fade-in-close" id="idDialog">
+            <!-- <div aria-hidden="false" role="dialog" class="slds-modal slds-fade-in-close" id="idDialog">
                 <div class="slds-modal__container" style="width:50%">
                     <div class="slds-modal__header">
                         <h2>Upload Files</h2>
@@ -752,25 +840,25 @@
                             <input type="hidden" id="policy" name="policy" />
                             <input type="hidden" id="signature" name="signature" />
                             <input type="hidden" id="fileJSONId" name="fileJSON" />
-                            <!--<input type="hidden" id="acl" name="acl" value="{!acl}"/>-->
+
                             <input type="hidden" name="success_action_redirect" id="successActionRedirect" />
                             <div class="slds-grid" style="background:#f4f6f9;padding: 0px;">
-                                <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-is-editing" style="box-shadow: none;">
-                                    <div class="slds-form--stacked slds-grow slds-scrollable--y">
+                                <div class="slds-panel slds-grid slds-grid-vertical slds-nowrap slds-is-editing" style="box-shadow: none;">
+                                    <div class="slds-form-stacked slds-grow slds-scrollable-y">
                                         <div class="slds-panel__section">
                                             <div class="slds-form-element">
                                                 <div class="slds-form-element__control">
-                                                    <div class="slds-file-selector slds-file-selector--files">
+                                                    <div class="slds-file-selector slds-file-selector-files">
                                                         <div class="slds-file-selector__dropzone">
                                                             <input id="fileToUpload" type="file" name="file" class="slds-file-selector__input slds-assistive-text"
                                                                      aria-describedby="fileLabel" onchange="fileSelected()"/>
                                                             <label class="slds-file-selector__body" for="fileToUpload">
                                                                 <div class="slds-file-selector__button slds-button slds-button_brand">
-                                                                    <img class="slds-button__icon slds-button__icon--left" src="{!$Resource.buildertek__SLDS+'/assets/icons/utility/upload_60.png'}"
+                                                                    <img class="slds-button__icon slds-button__icon-left" src="{!$Resource.buildertek__SLDS+'/assets/icons/utility/upload_60.png'}"
                                                                     /> Upload New Files
                                                                 </div>
                                                                 <div styleClass="slds-file-selector__text">
-                                                                    <!-- or Drop Files -->
+
                                                                 </div>
                                                             </label>
                                                             <div id="fileNameFieldId" style="display: none" class="slds-text-body_small slds-text-color_success"></div>
@@ -779,8 +867,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="slds-grid slds-grid--pull-padded-medium">
-                                                <div class="slds-col slds-p-horizontal--medium slds-size--1-of-2">
+                                            <div class="slds-grid slds-grid-pull-padded-medium">
+                                                <div class="slds-col slds-p-horizontal-medium slds-size-1-of-2">
                                                     <div id="fileNameField">
 
                                                     </div>
@@ -795,118 +883,118 @@
 
                     </div>
                     <div class="slds-modal__footer">
-                        <div class="slds-button-group slds-float--right" role="group">
-                            <input type="button" class="slds-button slds-button--neutral cancel" onclick="closeWindow();" value="Cancel" />
-                            <input type="button" class="slds-button slds-button--brand save" onclick="upload();" value="Upload" />
+                        <div class="slds-button-group slds-float-right" role="group">
+                            <input type="button" class="slds-button slds-button-neutral cancel" onclick="closeWindow();" value="Cancel" />
+                            <input type="button" class="slds-button slds-button-brand save" onclick="upload();" value="Upload" />
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="slds-modal-backdrop slds-modal-backdrop--close" id="idBackDrop"></div>
         </div>
-      
-        
+
+
             <div class="slds-modal-backdrop slds-modal-backdrop--close" id="idBackDrop1"></div>
     </apex:form>
-    
-    
+
+
      <apex:form id="form1" html-autocomplete="off" enctype="multipart/form-data">
-        <apex:actionFunction name="acfsubmintRFI" action="{!createRFI}" 
+        <apex:actionFunction name="acfsubmintRFI" action="{!createRFI}"
         />
-                
+
         <apex:actionFunction name="UploadFile" action="{!UploadFileonClick}" status="status" rerender="message">
             <apex:param value="" name="firstvalue"/>
             <apex:param value="" name="secondvalue"/>
         </apex:actionFunction>
-                
+
        <div aria-hidden="false" role="dialog" class="slds-modal slds-fade-in-close" id="idDialog1">
                 <div class="slds-modal__container" style="width:100%">
                     <div class="slds-modal__header" style="width:633px;">
                         <h2>Create New RFI</h2>
                     </div>
                     <div class="slds-modal__content" style="width:633px;">
-                   
-                    <apex:pageBlock >                    
+
+                    <apex:pageBlock >
                            <apex:pageBlockSection >
-                             <table width="100%" class="slds-table slds-table_bordered slds-table_cell-buffer">                               
-                                <tbody> 
+                             <table width="100%" class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                <tbody>
                                     <tr>
                                              <td>
                                                 <span class="slds-required" title="required">* </span>
                                                 <apex:outputField value="{!rfqrec1.Name}"  label="RFQ" style="width:320px;" />
-                                            </td>                                            
+                                            </td>
                                         </tr>
                                        <tr>
                                              <td>
                                                 <span class="slds-required" title="required">* </span>
                                                 <apex:inputField value="{!newrfi.Subject__c}" styleClass="slds-input"  style="width:406px;" required="true"/>
-                                            </td>                                            
-                                        </tr>                                  
+                                            </td>
+                                        </tr>
                                        <tr>
                                             <td>
                                                 <span class="slds-required" title="required">* </span>
                                                 <apex:inputField value="{!newrfi.Question__c}" styleClass="slds-input" style="width:320px;" required="true"/>
-                                            </td>                                                                                    
+                                            </td>
                                         </tr>
-                                       
+
                                          <!--<tr>
                                             <td>
                                                 <!-- <span class="slds-required" title="required">* </span> -->
                                                 <!-- <apex:inputField value="{!rfqToVendor.RFQ__r.buildertek__Project__r.Name}" styleClass="slds-input" style="width:320px;" /> -->
                                                <!-- <apex:outputField value="{!rfqToVendor.RFQ__r.buildertek__Project__r.Name}"  label="Project Name" style="width:320px;"/>
-                                            </td>                                                                                      
+                                            </td>
                                         </tr>-->
                                          <tr>
                                              <td>
                                                 <span class="slds-required" title="required">* </span>
                                                 <apex:inputField value="{!newrfi.Due_Date__c}" styleClass="slds-input" style="width:320px;" required="true"/>
-                                            </td>                                            
+                                            </td>
                                         </tr>
                                         <!-- <tr>
-                                            <td>                                                                                              
-                                                  <apex:inputField value="{!newrfi.RFI_Assigned_To__c}" styleClass="slds-input" />   
-                                            </td>                                                                                  
+                                            <td>
+                                                  <apex:inputField value="{!newrfi.RFI_Assigned_To__c}" styleClass="slds-input" />
+                                            </td>
                                         </tr> -->
                                         <tr>
-                                            <td>                                               
+                                            <td>
                                                 <!-- <apex:outputLabel >RFI Assigned To</apex:outputLabel> -->
                                                 <apex:outputField value="{!rfqrec1.RFI_Owner__c}"  label="RFI Assigned To" style="width:320px;"/>
-                                                
-                                            </td>                                                                                  
+
+                                            </td>
                                         </tr>
-                                        
+
                                         <!-- <tr>
                                             <td></td>
                                             <td>
-                                                <apex:inputFile value="{!attachRec.body}" filename="{!attachRec.name}" id="file" style="margin-left:10px !important;border: none;" styleclass="slds-button slds-file-selector__button"  />                                              
+                                                <apex:inputFile value="{!attachRec.body}" filename="{!attachRec.name}" id="file" style="margin-left:10px !important;border: none;" styleclass="slds-button slds-file-selector__button"  />
                                             </td>
-                                            
+
                                         </tr> -->
-                                       
+
                                 </tbody>
                             </table>
                         </apex:pageBlockSection>
-                        
-                        
-                    </apex:pageBlock>
-                    
-                    
-                    
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                    <apex:inputFile value="{!attachRec.body}" filename="{!attachRec.name}" id="file" style="margin-left:220px !important;border: none;" styleclass="slds-button slds-file-selector__button"  />                                                     
 
-                    <!-- <div class="slds-file-selector__dropzone">                        
+
+                    </apex:pageBlock>
+
+
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <apex:inputFile value="{!attachRec.body}" filename="{!attachRec.name}" id="file" style="margin-left:220px !important;border: none;" styleclass="slds-button slds-file-selector__button"  />
+
+                    <!-- <div class="slds-file-selector__dropzone">
                         <label class="slds-file-selector__body" for="fileToUpload1">
                             <div class="slds-file-selector__button slds-button slds-button_brand">
                                 <img class="slds-button__icon slds-button__icon--left" src="{!$Resource.buildertek__SLDS+'/assets/icons/utility/upload_60.png'}"
                                 /> Upload Files
                             </div>
                             <div styleClass="slds-file-selector__text">
-                                
+
                             </div>
                         </label>
                     </div>  -->
-                    
+
                     <br/>
                     <br/>
                     </div>
@@ -918,10 +1006,10 @@
                     </div>
                 </div>
             </div>
-      
+
      </apex:form>
-    
-  
-    
-    
+
+
+
+
 </apex:page>

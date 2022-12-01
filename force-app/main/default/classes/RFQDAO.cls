@@ -1859,11 +1859,18 @@ Throws [Exceptions]:
         // return [Select Id, Name, RFQ_Details__c, Status__c, Vendor__r.Name, Vendor_Quote__c
         //   from RFQ__c
         //  where project__c = :quote.Project__c and status__c = 'Accepted'];
+        System.debug('quote ==> '+quote.buildertek__Project__c);
         list<buildertek__RFQ__c> rfqlist= new list<buildertek__RFQ__c>();
         string status = 'Accepted';
         if(UserInfo.isMultiCurrencyOrganization()){
+            
+            String projectId = '';
+            if (quote.buildertek__Project__c != null) {
+                projectId = quote.buildertek__Project__c;
+            }
+
             string rfqItemrecords = 'Select Id, Name, buildertek__RFQ_Details__c, buildertek__Status__c, buildertek__Vendor__r.Name, buildertek__Vendor_Quote__c,CurrencyIsoCode, buildertek__Project__c, buildertek__Project__r.Name from buildertek__RFQ__c'+
-                ' where buildertek__project__c =\'' +quote.buildertek__Project__c+'\' and buildertek__status__c =\'' +status+'\' ORDER BY Name';
+                ' where buildertek__project__c =\'' + projectId +'\' and buildertek__status__c =\'' +status+'\' ORDER BY Name';
             system.debug('rfqItemrecords'+rfqItemrecords);
             rfqlist = Database.query(rfqItemrecords);
             return rfqlist;
@@ -1879,10 +1886,15 @@ Throws [Exceptions]:
     @AuraEnabled
     public static List<buildertek__RFQ__c> getRFQSearch (String quotId, String searchKeyword, String searchProject, String searchVendor){
         buildertek__Quote__c quote = [SELECT Id, buildertek__Project__c FROM buildertek__Quote__c WHERE Id = :quotId];
+        
+        String projectId = '';
+        if (quote.buildertek__Project__c != null) {
+            projectId = quote.buildertek__Project__c;
+        }
 
         string status = 'Accepted';
         String query= 'SELECT Id, Name, buildertek__RFQ_Details__c, buildertek__Vendor__c, buildertek__Vendor__r.Name, buildertek__Vendor_Quote__c, buildertek__Project__c, buildertek__Project__r.Name,';
-        query += ' buildertek__Status__c FROM buildertek__RFQ__c WHERE buildertek__project__c = \''+quote.buildertek__Project__c+'\' AND buildertek__status__c =\''+status+'\'';
+        query += ' buildertek__Status__c FROM buildertek__RFQ__c WHERE buildertek__project__c = \''+ projectId +'\' AND buildertek__status__c =\''+status+'\'';
         if ( searchKeyword != '' && searchKeyword != null ) {
             query = query + ' AND Name LIKE \'' + searchKeyword + '%\'';
         }

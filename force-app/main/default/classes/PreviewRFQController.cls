@@ -118,6 +118,7 @@ public with sharing class PreviewRFQController {
              mail.setFileAttachments(fileAttachments);
              mails.add(mail);
              Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);
+             System.debug('results=========>===='+results);
              String message = 'Success';
                 if(results.size() > 0){
                 if (results[0].isSuccess()) {

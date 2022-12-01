@@ -57,20 +57,86 @@
 
     onInputChange: function (component, event, helper) {
         var fieldName = event.getSource().get("v.name").split('-');
-       // alert('fieldName'+fieldName);
         var index = fieldName[0];
-      //  alert('index'+index);
         var fieldLabel = fieldName[1];
-      //  alert('fieldLabel'+fieldLabel);
-             // for (var index = 0; index < 5; index++) {
 
         var selectedValue = event.getSource().get("v.value");
-       // alert('selectedValue'+selectedValue);
+        console.log('selectedValue--->'+selectedValue);
+
         var record = component.get('v.record');
-       // alert('record'+record);
+
+
         record[fieldLabel] = selectedValue != '' && selectedValue != 'None' ? selectedValue : '';
+
+        var NetUnit;        // buildertek__Net_Unit__c          = buildertek__Unit_Cost__c + (buildertek__Unit_Cost__c * buildertek__Markup__c) - (buildertek__Unit_Cost__c * buildertek__Additional_Discount__c)
+        var Total;          // buildertek__Net_Total_Price__c   = buildertek__Total_Cost__c + buildertek__Markup_Amount__c + buildertek__Tax_Amount__c - buildertek__Discount_Amount__c
+        var GrossProfit;    // buildertek__Gross_Profit__c      = buildertek__Net_Total_Price__c - buildertek__Total_Cost__c
+        var ProfitMargin;   // buildertek__Profit_Margin__c     = (buildertek__Net_Total_Price__c - buildertek__Total_Cost__c)/buildertek__Net_Total_Price__c
+        var Quantity, UnitCost, TotalCost, Markup, Discount;
+
+        console.log(' - - - - - - - - - - - - - - - - - - - ');
+        for (var key in record){
+            console.log("key -> " + key + ", value -> " + record[key]);
+            if (key == 'buildertek__Quantity__c') {
+                Quantity = parseInt(record['buildertek__Quantity__c']);
+                console.log('Quantity --> '+Quantity);
+            } 
+            else if(key == 'buildertek__Unit_Cost__c'){
+                UnitCost = parseInt(record['buildertek__Unit_Cost__c']);
+                console.log('UnitCost --> '+UnitCost);
+
+            } 
+            else if(key == 'buildertek__Total_Cost__c'){
+                TotalCost = parseInt(record['buildertek__Total_Cost__c']);
+                console.log('TotalCost --> '+TotalCost);
+
+            } 
+            else if(key == 'buildertek__Markup__c'){
+                Markup = parseInt(record['buildertek__Markup__c']);
+                console.log('Markup --> '+Markup);
+
+            } 
+            else if(key == 'buildertek__Additional_Discount__c'){
+                Discount = parseInt(record['buildertek__Additional_Discount__c']);
+                console.log('Discount --> '+Discount);
+
+            } 
+        }
+
+        if (UnitCost != null && Markup != null && Discount != null) {
+            // buildertek__Unit_Cost__c + (buildertek__Unit_Cost__c * buildertek__Markup__c) - (buildertek__Unit_Cost__c * buildertek__Additional_Discount__c)
+
+            NetUnit = (UnitCost + ((UnitCost * Markup)/100) - ((UnitCost * Discount)/100)).toFixed(2);
+            record['buildertek__Net_Unit__c'] = NetUnit;
+
+            console.log('NetUnit ----> '+NetUnit);
+        }
+        if (TotalCost != null && Markup != null && UnitCost != null && Discount != null) {
+                UnitCost = parseInt(record['buildertek__Unit_Cost__c']);
+            Total = ((Quantity * UnitCost) + (((Quantity * UnitCost)/100)*Markup) - (((Quantity * UnitCost)/100)*Discount)).toFixed(2);
+            record['buildertek__Net_Total_Price__c'] = Total;
+
+            console.log('TotalCost ----> '+TotalCost);
+
+        }
+        if (Total != null && TotalCost != null) {
+            GrossProfit = (Total-(Quantity * UnitCost)).toFixed(2);
+            record['buildertek__Gross_Profit__c'] = GrossProfit;
+            console.log('GrossProfit ----> '+GrossProfit);
+
+            ProfitMargin = ((GrossProfit/Total)*100).toFixed(2);
+            record['buildertek__Profit_Margin__c'] = ProfitMargin;
+            console.log('ProfitMargin ----> '+ProfitMargin);
+        }
+
         component.set('v.record', record);
-       // alert(JSON.stringify(record));
-            //  } 
+
+        console.log('Record --> ', JSON.stringify(record));
+
+        var parentComponent = component.get("v.parent");  
+        if(NetUnit != null || Total != null || GrossProfit != null || ProfitMargin != null){
+            parentComponent.reloadMethod();
+        }                      
+
     }
 })

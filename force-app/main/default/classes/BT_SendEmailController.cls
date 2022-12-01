@@ -616,6 +616,7 @@ public with sharing class BT_SendEmailController{
             mail.setFileAttachments(fileAttachments);
             } 
             
+            System.debug('mail ==> '+mail);
             
             mails.add(mail);
             Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);

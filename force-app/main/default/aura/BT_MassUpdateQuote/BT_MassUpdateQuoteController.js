@@ -220,5 +220,16 @@
             helper.delete(component, event, helper, records[index].Id);
             component.set('v.isModalOpen', false);
         }
+    }, 
+
+    reloadMethod: function (component, event, helper){
+        console.log('************ reloadMethod ************');
+        var action = component.get("c.getFieldSet");
+        action.setCallback(this, function (response) {
+            console.log('Field Set Values::', response.getReturnValue());
+            var fieldSetObj = JSON.parse(response.getReturnValue());
+            component.set("v.fieldSetValues", fieldSetObj);
+        })
+        $A.enqueueAction(action);
     }
 })
