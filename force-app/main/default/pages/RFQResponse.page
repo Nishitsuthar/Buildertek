@@ -252,7 +252,7 @@
                     if (file) {
                         console.log('files log ',file);
                         document.getElementById('fileError').style.display = 'none';
-                        document.getElementById('fileNameFieldId').innerHTML += `<img class="slds-button__icon slds-button__icon--left" src="https://i.ibb.co/bdvnXxK/close.png" alt="remove" onclick="removeFiles(${index})"/> ${file.name} <br/>` ;
+                        document.getElementById('fileNameFieldId').innerHTML += `<img class="slds-button__icon slds-button__icon--left" src="{!$Resource.Close_Icon}" alt="remove" onclick="removeFiles(${index})"/> ${file.name} <br/>` ;
                         document.getElementById('fileNameFieldId').style.display = 'block';
                         // document.getElementById('fileNameFieldId').style.flexDirection = 'column';
 
@@ -293,7 +293,7 @@
                 var file = newFileList[index]
                 console.log('newFileList ==> ',{file});
                 document.getElementById('fileError').style.display = 'none';
-                document.getElementById('fileNameFieldId').innerHTML += `<img class="slds-button__icon slds-button__icon--left" src="https://i.ibb.co/bdvnXxK/close.png" alt="remove" onclick="removeFiles(`+ index +`)"/>`+newFileList[index].name+`<br/>` ;
+                document.getElementById('fileNameFieldId').innerHTML += `<img class="slds-button__icon slds-button__icon--left" src="{!$Resource.Close_Icon}" alt="remove" onclick="removeFiles(`+ index +`)"/>`+newFileList[index].name+`<br/>` ;
                 document.getElementById('fileNameFieldId').style.display = 'block';
 
             }
@@ -315,11 +315,14 @@
         }
 
         function multiFiles() {
-            var fileData = uploadFileData[0];
-            var reader = new FileReader();
-            reader.onload = multiFilesLoad;
-            reader.onerror = errorHandler;
-            reader.readAsDataURL(fileData);
+            console.log('uploadFileData @@ ',{uploadFileData});
+            if (uploadFileData.length > 0) {
+                var fileData = uploadFileData[0];
+                var reader = new FileReader();
+                reader.onload = multiFilesLoad;
+                reader.onerror = errorHandler;
+                reader.readAsDataURL(fileData);
+            }
         }
 
         function multiFilesLoad(evt) {

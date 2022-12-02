@@ -4,6 +4,7 @@ public class CreatePOFromCO {
     @AuraEnabled
 
     public Static ResponseBase CreatePOMethod(string COId){
+        system.debug('----->Init<----');
         ResponseBase response = new ResponseBase();
         Boolean isInComplete = false;
         try {
@@ -72,7 +73,7 @@ public class CreatePOFromCO {
 
                 buildertek__Purchase_Order__c PO1 = new buildertek__Purchase_Order__c();
                 PO1.buildertek__Project__c = CO.buildertek__Project__c;
-                PO1.buildertek__Status__c = 'Approved';
+                PO1.buildertek__Status__c = 'Open';
                 PO1.buildertek__Type__c = 'Contractor';
                 PO1.buildertek__Vendor__c = CO.buildertek__Vendor__c;
                 PO1.buildertek__Budget__c = CO.buildertek__Budget__c;
@@ -80,6 +81,7 @@ public class CreatePOFromCO {
                 PO1.buildertek__Description__c = CO.Name;
                 PO1.buildertek__Tax__c = CO.buildertek__Tax_Rate__c;
                 insert PO1;
+                system.debug('PO----------------------->>>>>>>>'+PO1);
                 PO1.buildertek__Tax__c = CO.buildertek__Tax_Rate__c;
                 update PO1;
                 List<buildertek__Purchase_Order_Item__c> POLines = new List<buildertek__Purchase_Order_Item__c>();
@@ -134,7 +136,7 @@ public class CreatePOFromCO {
                 for(string str : CoItemMap.keyset()){
                     buildertek__Purchase_Order__c PO = new buildertek__Purchase_Order__c();
                     PO.buildertek__Project__c = CO.buildertek__Project__c;
-                    PO.buildertek__Status__c = 'Approved';
+                    PO.buildertek__Status__c = 'Open';
                     PO.buildertek__Type__c = 'Contractor';
                     PO.buildertek__Vendor__c = str;
                     PO.buildertek__Budget__c = CO.buildertek__Budget__c;
@@ -144,6 +146,7 @@ public class CreatePOFromCO {
                 }
 
                 insert PurchaseOrderlist;
+                system.debug('----------->PurchaseOrderlist<------------'+PurchaseOrderlist);
                 for(buildertek__Purchase_Order__c POorder : PurchaseOrderlist){
                     if(CoItemMap.get(POorder.buildertek__Vendor__c) != null){
                         for(buildertek__Change_Order_Item__c chngeOrder : CoItemMap.get(POorder.buildertek__Vendor__c)){

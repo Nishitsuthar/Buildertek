@@ -95,7 +95,7 @@ public without sharing class PreviewQuoteController{
             templateBody = templateBody1;
 
         }
-        
+
         return templateBody;
     }
 
@@ -130,19 +130,19 @@ public without sharing class PreviewQuoteController{
             }
 
              list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
-                                                                                                  buildertek__Quote_Configuration__c,buildertek__Email_Subject__c 
+                                                                                                  buildertek__Quote_Configuration__c,buildertek__Email_Subject__c
                                                                                                   from buildertek__Admin_Interface_Node_Configuration__c
                                                                                                   WHERE Name=:'Quote Configuration' and buildertek__Email_Subject__c !=null limit 1];
             if(adminInterfaceNodeConfigurations.size()>0){
                 subject = adminInterfaceNodeConfigurations[0].buildertek__Email_Subject__c;
             }else{
-                subject = 'Quote'; 
+                subject = 'Quote';
             }
-            
-        
+
+
         List<EmailTemplate> et = [SELECT Id,Name,Subject FROM EmailTemplate WHERE Id =:templateId];
-        
-        
+
+
         system.debug('recordId----' + recordId);
             system.debug('templateId----' + templateId);
             list<buildertek__Quote__c> quoterecbody = new list<buildertek__Quote__c>();
@@ -153,7 +153,7 @@ public without sharing class PreviewQuoteController{
             if (quoterecbody.size() > 0){
                 quoterecbody[0].buildertek__TemplateId__c = templateId;
                 if(!et.isEmpty()){
-                   quoterecbody[0].buildertek__Template_Name__c	 = et[0].Name; 
+                   quoterecbody[0].buildertek__Template_Name__c	 = et[0].Name;
                 }
                 quoterecbody[0].buildertek__Memo__c = memovalue;
                 //List<String> values = to.split(',');
@@ -170,7 +170,7 @@ public without sharing class PreviewQuoteController{
                 update quoterecbody;
                 System.debug('Memo : '+quoterecbody[0].buildertek__Memo__c);
             }
-           
+
             List<Contact> conList = [SELECT Id, email FROM Contact WHERE Id IN :to AND Email != null];
 
             // contact conrec = [select id, Email
@@ -216,7 +216,7 @@ public without sharing class PreviewQuoteController{
             }
             system.debug('templateBody 2 ----------> ' + templateBody2);
             templateBody = templateBody1 + templateBody2;*/
-        
+
             List<string> strTO = new List<string>();
             List<string> strCC = new List<string>();
             SET<Id> contactIdSet = new SET<Id>();
@@ -259,11 +259,9 @@ public without sharing class PreviewQuoteController{
                 mail.setCcAddresses(strCC);
             }
             EmailServicesAddress eServices;
-            if (Schema.sObjectType.EmailServicesAddress.fields.Id.isAccessible() && Schema.sObjectType.EmailServicesAddress.fields.AuthorizedSenders.isAccessible() && Schema.sObjectType.EmailServicesAddress.fields.EmailDomainName.isAccessible() && Schema.sObjectType.EmailServicesAddress.fields.LocalPart.isAccessible() && Schema.sObjectType.EmailServicesAddress.fields.IsActive.isAccessible()){
-                eServices = [SELECT Id, AuthorizedSenders, EmailDomainName, IsActive, LocalPart
-                             FROM EmailServicesAddress
-                             where LocalPart = 'projects'];
-            }
+
+            eServices = [SELECT Id, AuthorizedSenders, EmailDomainName, IsActive, LocalPart FROM EmailServicesAddress where LocalPart = 'projects'];
+
             string fromAddress = eServices.LocalPart + '@' + eServices.EmailDomainName;
             List<buildertek__ConfirmationPageSiteURL__c> confirmationurl = buildertek__ConfirmationPageSiteURL__c.getall().values();
             string SiteUrl;
@@ -284,7 +282,7 @@ public without sharing class PreviewQuoteController{
             //mail.setTargetObjectId(conrec.Id);
             mail.setSaveAsActivity(true);
             mail.setWhatId(recordId);
-            
+
             List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
             Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
             efa.setFileName('Quote.pdf');
@@ -351,7 +349,7 @@ public without sharing class PreviewQuoteController{
                         from buildertek__Quote__c
                         where Id = :recordId
                         limit 1];
-        
+
         system.debug('quoterec----------->'+quoterec);
 
             if (quoterec.size() > 0){
@@ -363,7 +361,7 @@ public without sharing class PreviewQuoteController{
                 update quoterec;
 
             }
-       
+
         system.debug('updatedquoterec----------->'+quoterec);
 
             return message;
@@ -376,7 +374,7 @@ public without sharing class PreviewQuoteController{
 
     @AuraEnabled
     public static String acceptandsendProposal(string signName, String htmlBody, String recordId, String templateId, List<String> to, List<String> cc, string fileid, List<String> emailIds, string memovalue){
-        
+
         try{
             //String  conversionid ;
             /* if(base64Data.length() > 1696 || Test.isRunningTest()){
@@ -410,13 +408,13 @@ public without sharing class PreviewQuoteController{
             String body = '';
             String subject = '';
              list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
-                                                                                                  buildertek__Quote_Configuration__c,buildertek__Email_Subject__c 
+                                                                                                  buildertek__Quote_Configuration__c,buildertek__Email_Subject__c
                                                                                                   from buildertek__Admin_Interface_Node_Configuration__c
                                                                                                   WHERE Name=:'Quote Configuration' and buildertek__Email_Subject__c !=null limit 1];
             if(adminInterfaceNodeConfigurations.size()>0){
                 subject = adminInterfaceNodeConfigurations[0].buildertek__Email_Subject__c;
             }else{
-                subject = 'Quote'; 
+                subject = 'Quote';
             }
             String salesRepEmailId='';
             List<buildertek__Quote__c> salesRepEmail=[SELECT Id, buildertek__Sales_Rep__r.Email FROM buildertek__Quote__c WHERE Id = : recordId LIMIT 1];
@@ -580,9 +578,9 @@ public without sharing class PreviewQuoteController{
         System.debug(templateId);
         System.debug(fileid);
 
-        
 
-        
+
+
         pagereference pdf;
         pdf = Page.buildertek__BT_GenerateQuotePDF;
         system.debug('*********'+pdf);

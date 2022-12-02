@@ -90,85 +90,6 @@ public class ProjectTaskTriggerHandler{
 		}
 	}
 
-	public void OnBeforeUpdate(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
-		Set<Id> accountIds = new Set<Id>();
-		for (Project_Task__c updatedProjectTask : updatedProjectTasks){
-			accountIds.add(updatedProjectTask.buildertek__Contractor__c);
-		}
-		Map<id, Account> updatedMapAccounts = new Map<id, Account>([Select id, buildertek__Trade_Type_Lookup__c
-		                                                            from Account
-		                                                            where id IN:accountIds]);
-		for (Project_Task__c updatedProjectTask : updatedProjectTasks){
-			//Calculate Start Date And End Date with Weekends.
-			//system.debug(updatedProjectTask.buildertek__Start__c);
-
-			//Actual Completion date
-			if (updatedProjectTask.buildertek__Completion__c == 100){
-				updatedProjectTask.buildertek__Actual_Completion_date__c = system.today();
-				updatedProjectTask.buildertek__Completed__c = true;
-			} else if (updatedProjectTask.buildertek__Completion__c < 100){
-				updatedProjectTask.buildertek__Actual_Completion_date__c = null;
-				updatedProjectTask.buildertek__Completed__c = false;
-			}
-			if (updatedProjectTask.buildertek__Completion__c > 0 && updatedProjectTask.buildertek__Completion_updated__c == false){
-				updatedProjectTask.buildertek__Actual_Start_Date__c = system.today();
-				updatedProjectTask.buildertek__Completion_updated__c = true;
-			}
-
-			//duration should not be 0
-			if (updatedProjectTask.buildertek__Duration__c != null && updatedProjectTask.buildertek__Duration__c <= 0){
-				updatedProjectTask.buildertek__Duration__c = 1;
-			}
-
-			if (!updatedProjectTask.buildertek__Milestone__c){
-				Date finishDate = updatedProjectTask.buildertek__Finish__c;
-				Decimal duration = updatedProjectTask.buildertek__Duration__c;
-
-				if (updatedProjectTask.buildertek__Start__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Start__c && updatedProjectTask.buildertek__Finish__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Finish__c && updatedProjectTask.buildertek__Duration__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Duration__c){
-					//0 0 1 => Update Finish Date
-					Date sDate = updatedProjectTask.buildertek__Start__c;
-					Date eDate = sDate.addDays(Integer.valueOf(updatedProjectTask.buildertek__Duration__c) - 1);
-					finishDate = getEndDate(sDate, eDate);
-				} else if ((updatedProjectTask.buildertek__Start__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Start__c && updatedProjectTask.buildertek__Finish__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Finish__c && updatedProjectTask.buildertek__Duration__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Duration__c) || (updatedProjectTask.buildertek__Start__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Start__c && updatedProjectTask.buildertek__Finish__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Finish__c && updatedProjectTask.buildertek__Duration__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Duration__c)){
-					//0 1 1 => Update Finish Date
-					Date sDate = updatedProjectTask.buildertek__Start__c;
-					sDate = getStartDate(sDate);
-					Date eDate = sDate.addDays(Integer.valueOf(updatedProjectTask.buildertek__Duration__c) - 1);
-					finishDate = getEndDate(sDate, eDate);
-				} else if ((updatedProjectTask.buildertek__Start__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Start__c && updatedProjectTask.buildertek__Finish__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Finish__c && updatedProjectTask.buildertek__Duration__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Duration__c) || (updatedProjectTask.buildertek__Start__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Start__c && updatedProjectTask.buildertek__Finish__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Finish__c && updatedProjectTask.buildertek__Duration__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Duration__c) || (updatedProjectTask.buildertek__Start__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Start__c && updatedProjectTask.buildertek__Finish__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Finish__c && updatedProjectTask.buildertek__Duration__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Duration__c)){
-					//0 1 0 => Update Duration
-					//1 0 0 => Update Duration
-					Date sDate = updatedProjectTask.buildertek__Start__c;
-					sDate = ProjectTaskTriggerHandler.getStartDate(sDate);
-					duration = calculateDuration(sDate, updatedProjectTask.buildertek__Finish__c);
-					System.debug('duration in before ==> ' + duration + ' updatedProjectTask task id ' + updatedProjectTask.id);
-				}
-				System.debug('duration in before outside condition ==> ' + duration + ' updatedProjectTask task id ' + updatedProjectTask.id);
-				updatedProjectTask.buildertek__Finish__c = finishDate;
-				updatedProjectTask.buildertek__Duration__c = duration;
-			} else{
-
-			}
-
-			//Get 'Trade Type' from selected Contractor[Account] and update 'Trade Type' field in Schedule Item
-			if (updatedProjectTask.buildertek__Contractor__c != null && updatedMapAccounts.containsKey(updatedProjectTask.buildertek__Contractor__c)){
-				//Check 'Trade Type' in Contractor(Account)
-				if (updatedMapAccounts.get(updatedProjectTask.buildertek__Contractor__c).buildertek__Trade_Type_Lookup__c != null){
-					// Change 'Trade Type', if Contactor(Account) changed (or) 'Trade Type' in Schedule Item is null (or) 'Trade Type' in Schedule Item not equal to 'Trade Type' in Contractor(Account)
-					if (updatedProjectTask.buildertek__Contractor__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Contractor__c || updatedProjectTask.buildertek__Trade_Type__c == null || updatedProjectTask.buildertek__Trade_Type__c != updatedMapAccounts.get(updatedProjectTask.buildertek__Contractor__c).buildertek__Trade_Type_Lookup__c){
-						updatedProjectTask.buildertek__Trade_Type__c = updatedMapAccounts.get(updatedProjectTask.buildertek__Contractor__c).buildertek__Trade_Type_Lookup__c;
-					}
-				}
-			} else if (updatedProjectTask.buildertek__Contractor__c == null && oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Contractor__c != null){
-				// if Contractor is removed, making 'Trade Type' field in schedule item as null
-				updatedProjectTask.buildertek__Trade_Type__c = null;
-			}
-
-			if (String.isBlank(updatedProjectTask.buildertek__Dependency__c)){
-				updatedProjectTask.buildertek__Schedule_Item_Dependency_Path__c = '';
-			}
-		}
-	}
 
 	public void OnAfterInsert(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
 		Map<String, Decimal> purchaseOrderMap = new Map<String, Decimal>();
@@ -286,6 +207,10 @@ public class ProjectTaskTriggerHandler{
 		processRecords(scheduleIds, ProjectTasks[0].buildertek__Schedule__c, ProjectTaskMap.keySet(), ProjectTaskTriggerHandler.isFromImport, 'insert');
 	}
 
+
+
+
+	
 	public void UpdateOriginalstartandEndDates(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
 
 		Map<id, Project_Task__c> ProjectTaskIds = new Map<Id, Project_Task__c>();
@@ -355,6 +280,88 @@ public class ProjectTaskTriggerHandler{
 		}
 		System.debug('3rd method data at end of method new list ==> ' + updatedProjectTasks);
 	}
+
+
+	public void OnBeforeUpdate(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
+		Set<Id> accountIds = new Set<Id>();
+		for (Project_Task__c updatedProjectTask : updatedProjectTasks){
+			accountIds.add(updatedProjectTask.buildertek__Contractor__c);
+		}
+		Map<id, Account> updatedMapAccounts = new Map<id, Account>([Select id, buildertek__Trade_Type_Lookup__c
+		                                                            from Account
+		                                                            where id IN:accountIds]);
+		for (Project_Task__c updatedProjectTask : updatedProjectTasks){
+			//Calculate Start Date And End Date with Weekends.
+			//system.debug(updatedProjectTask.buildertek__Start__c);
+
+			//Actual Completion date
+			if (updatedProjectTask.buildertek__Completion__c == 100){
+				updatedProjectTask.buildertek__Actual_Completion_date__c = system.today();
+				updatedProjectTask.buildertek__Completed__c = true;
+			} else if (updatedProjectTask.buildertek__Completion__c < 100){
+				updatedProjectTask.buildertek__Actual_Completion_date__c = null;
+				updatedProjectTask.buildertek__Completed__c = false;
+			}
+			if (updatedProjectTask.buildertek__Completion__c > 0 && updatedProjectTask.buildertek__Completion_updated__c == false){
+				updatedProjectTask.buildertek__Actual_Start_Date__c = system.today();
+				updatedProjectTask.buildertek__Completion_updated__c = true;
+			}
+
+			//duration should not be 0
+			if (updatedProjectTask.buildertek__Duration__c != null && updatedProjectTask.buildertek__Duration__c <= 0){
+				updatedProjectTask.buildertek__Duration__c = 1;
+			}
+
+			if (!updatedProjectTask.buildertek__Milestone__c){
+				Date finishDate = updatedProjectTask.buildertek__Finish__c;
+				Decimal duration = updatedProjectTask.buildertek__Duration__c;
+
+				if (updatedProjectTask.buildertek__Start__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Start__c && updatedProjectTask.buildertek__Finish__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Finish__c && updatedProjectTask.buildertek__Duration__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Duration__c){
+					//0 0 1 => Update Finish Date
+					Date sDate = updatedProjectTask.buildertek__Start__c;
+					Date eDate = sDate.addDays(Integer.valueOf(updatedProjectTask.buildertek__Duration__c) - 1);
+					finishDate = getEndDate(sDate, eDate);
+				} else if ((updatedProjectTask.buildertek__Start__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Start__c && updatedProjectTask.buildertek__Finish__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Finish__c && updatedProjectTask.buildertek__Duration__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Duration__c) || (updatedProjectTask.buildertek__Start__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Start__c && updatedProjectTask.buildertek__Finish__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Finish__c && updatedProjectTask.buildertek__Duration__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Duration__c)){
+					//0 1 1 => Update Finish Date
+					Date sDate = updatedProjectTask.buildertek__Start__c;
+					sDate = getStartDate(sDate);
+					Date eDate = sDate.addDays(Integer.valueOf(updatedProjectTask.buildertek__Duration__c) - 1);
+					finishDate = getEndDate(sDate, eDate);
+				} else if ((updatedProjectTask.buildertek__Start__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Start__c && updatedProjectTask.buildertek__Finish__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Finish__c && updatedProjectTask.buildertek__Duration__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Duration__c) || (updatedProjectTask.buildertek__Start__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Start__c && updatedProjectTask.buildertek__Finish__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Finish__c && updatedProjectTask.buildertek__Duration__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Duration__c) || (updatedProjectTask.buildertek__Start__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Start__c && updatedProjectTask.buildertek__Finish__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Finish__c && updatedProjectTask.buildertek__Duration__c == oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Duration__c)){
+					//0 1 0 => Update Duration
+					//1 0 0 => Update Duration
+					Date sDate = updatedProjectTask.buildertek__Start__c;
+					sDate = ProjectTaskTriggerHandler.getStartDate(sDate);
+					duration = calculateDuration(sDate, updatedProjectTask.buildertek__Finish__c);
+					System.debug('duration in before ==> ' + duration + ' updatedProjectTask task id ' + updatedProjectTask.id);
+				}
+				System.debug('duration in before outside condition ==> ' + duration + ' updatedProjectTask task id ' + updatedProjectTask.id);
+				updatedProjectTask.buildertek__Finish__c = finishDate;
+				updatedProjectTask.buildertek__Duration__c = duration;
+			} else{
+
+			}
+
+			//Get 'Trade Type' from selected Contractor[Account] and update 'Trade Type' field in Schedule Item
+			if (updatedProjectTask.buildertek__Contractor__c != null && updatedMapAccounts.containsKey(updatedProjectTask.buildertek__Contractor__c)){
+				//Check 'Trade Type' in Contractor(Account)
+				if (updatedMapAccounts.get(updatedProjectTask.buildertek__Contractor__c).buildertek__Trade_Type_Lookup__c != null){
+					// Change 'Trade Type', if Contactor(Account) changed (or) 'Trade Type' in Schedule Item is null (or) 'Trade Type' in Schedule Item not equal to 'Trade Type' in Contractor(Account)
+					if (updatedProjectTask.buildertek__Contractor__c != oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Contractor__c || updatedProjectTask.buildertek__Trade_Type__c == null || updatedProjectTask.buildertek__Trade_Type__c != updatedMapAccounts.get(updatedProjectTask.buildertek__Contractor__c).buildertek__Trade_Type_Lookup__c){
+						updatedProjectTask.buildertek__Trade_Type__c = updatedMapAccounts.get(updatedProjectTask.buildertek__Contractor__c).buildertek__Trade_Type_Lookup__c;
+					}
+				}
+			} else if (updatedProjectTask.buildertek__Contractor__c == null && oldProjectTaskMap.get(updatedProjectTask.Id).buildertek__Contractor__c != null){
+				// if Contractor is removed, making 'Trade Type' field in schedule item as null
+				updatedProjectTask.buildertek__Trade_Type__c = null;
+			}
+
+			if (String.isBlank(updatedProjectTask.buildertek__Dependency__c)){
+				updatedProjectTask.buildertek__Schedule_Item_Dependency_Path__c = '';
+			}
+		}
+	}
+
 
 	public void OnAfterUpdate(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
 		System.debug('updatedProjectTasks in the beginning of method ==> ' + updatedProjectTasks);
@@ -674,7 +681,7 @@ public class ProjectTaskTriggerHandler{
 							//endDate = startDate.addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 						}
 						numberDaysDue = startDate.daysBetween(endDate);
-
+						System.debug('get Start called');
 						projectTask.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(startDate);//startDate;
 						if (numberDaysDue <= 0){
 							projectTask.buildertek__finish__c = projectTask.buildertek__Start__c;
@@ -805,15 +812,19 @@ public class ProjectTaskTriggerHandler{
 
 
 		for (Id taskId : mapAllTask.keySet()){
-
+			System.debug('Inside for***');
 			buildertek__Project_Task__c projectTask = mapAllTask.get(taskId);
 			//system.debug(projectTask.buildertek__Milestone__c);
 			Id Dependency = projectTask.buildertek__Dependency__c;
 			if (previuosTasks.Size() > 0 && !previousTaskmap.containsKey(projectTask.Id) && !projectTask.buildertek__Milestone__c && isFromImport){
+				System.debug('Inside first If***');
+
 				Integer lastIdx = previuosTasks.Size() - 1;
 				if (lastIdx >= 0){
+					System.debug('Inside second If***');
 					projectTask.buildertek__Start__c = previuosTasks[lastIdx].buildertek__finish__c.addDays(1);
 					projectTask.buildertek__Original_Start_Date__c = ProjectTaskTriggerHandler.getStartDate(projectTask.buildertek__Start__c);
+					System.debug('startDate==='+projectTask.buildertek__Original_Start_Date__c);
 					if (projectTask.buildertek__Duration__c != null && projectTask.buildertek__Duration__c > 0){
 						projectTask.buildertek__Original_End_Date__c = projectTask.buildertek__Start__c.addDays(Integer.valueOf(projectTask.buildertek__Duration__c) - 1);
 						projectTask.buildertek__Original_End_Date__c = ProjectTaskTriggerHandler.getEndDate(projectTask.buildertek__Start__c, projectTask.buildertek__Original_End_Date__c);
@@ -902,8 +913,10 @@ public class ProjectTaskTriggerHandler{
 					//startDate = ProjectTaskTriggerHandler.getStartDate(startDate);
 					//endDate = ProjectTaskTriggerHandler.getStartDate(parentTask.buildertek__finish__c).addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
 					//endDate = parentTask.buildertek__finish__c.addDays(Integer.valueOf(mapAllTask.get(taskId).buildertek__Duration__c));
+					System.debug('endDate=='+endDate);
+					System.debug('startDate.daysBetween(endDate)==='+startDate.daysBetween(endDate));
 					numberDaysDue = startDate.daysBetween(endDate);
-					System.debug('3rd method before changing start Date ==> ' + projectTask.buildertek__Start__c + ' Id ' + projectTask.Id);
+					// System.debug('3rd method before changing start Date ==> ' + projectTask.buildertek__Start__c + ' Id ' + projectTask.Id);
 					// projectTask.buildertek__Start__c = ProjectTaskTriggerHandler.getStartDate(startDate);//startDate;
 
 
@@ -1008,7 +1021,13 @@ public class ProjectTaskTriggerHandler{
 		// UpdateScheduleItemdatesbatchhelper.batchjobexcute(mapAllTask.keySet());
 
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+
 	}
+
+
+	// Method to calculate Holidays
+	// 1
+
 
 	public void insertUpdateMilestones(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
 		System.debug('In insertUpdateMilestones Method');
@@ -1450,30 +1469,95 @@ public class ProjectTaskTriggerHandler{
 		return i3 == 0 ? 1:i3;
 	}
 
-	//
+	// 
+	// public static Date getStartDate(Date startDate){
+	// 	DateTime currDate = DateTime.newInstance(startDate.year(), startDate.month(), startDate.day());
+	// 	String todayDay = currDate.format('EEEE');
+	// 	if (todayDay == 'Saturday'){
+	// 		startDate = startDate.addDays(2);
+	// 	} else if (todayDay == 'Sunday'){
+	// 		startDate = startDate.addDays(1);
+	// 	}
+	// 	return startDate;
+	// }
+
+	// //added for 2850
 	public static Date getStartDate(Date startDate){
-		DateTime currDate = DateTime.newInstance(startDate.year(), startDate.month(), startDate.day());
-		String todayDay = currDate.format('EEEE');
-		if (todayDay == 'Saturday'){
-			startDate = startDate.addDays(2);
-		} else if (todayDay == 'Sunday'){
-			startDate = startDate.addDays(1);
-		}
+	
+		
+		List<Holiday> holidayList = new List<Holiday>([SELECT Id,ActivityDate FROM Holiday WHERE ActivityDate >=: startDate]);
+		System.debug('holidayList=='+holidayList);
+		if(holidayList.size() > 0){
+			Set<String> holiDate = new Set<String>();
+			for(Holiday holi : holidayList){
+				System.debug('In second for');
+				DateTime test = DateTime.newInstance(holi.ActivityDate.year(), holi.ActivityDate.month(), holi.ActivityDate.day());
+				holiDate.add(test.format('yyyy-mm-dd'));
+			}
+			System.debug('holiDate==='+holiDate);
+			for (integer j = 0; j <= holidayList.size(); j++){
+				System.debug('In second for');
+				DateTime currDate = DateTime.newInstance(startDate.year(), startDate.month(), startDate.day());
+				String currentDateString = currDate.format('yyyy-mm-dd');
+				String todayDay = currDate.format('EEEE');
+
+				System.debug('currDate==='+currDate);
+				System.debug('currentDateString==='+currentDateString);
+				System.debug('todayDay==='+todayDay);
+				System.debug('contains holiday=='+holiDate.contains(currentDateString));
+				if (todayDay == 'Saturday' || todayDay == 'Sunday'  || holiDate.contains(currentDateString)){
+					System.debug('in if====Day count 1');
+					startDate += 1;
+				} 
+
+			}
+		}	
 		return startDate;
 	}
 
 	//Calculate and add weekends.
+	// public static Date getEndDate(Date sDate, Date eDate){
+	// 	try{
+
+	// 		for (integer j = 0; j <= sDate.daysBetween(eDate); j++){
+	// 			Date dt = sDate + j;
+	// 			DateTime currentDate = DateTime.newInstance(dt.year(), dt.month(), dt.day());
+	// 			String todayDay = currentDate.format('EEEE');
+	// 			if (todayDay == 'Saturday' || todayDay == 'Sunday'){
+	// 				eDate = eDate.addDays(1);
+	// 			}
+	// 		}
+	// 		return eDate;
+	// 	} catch (Exception e){
+	// 		throw new AuraHandledException(e.getMessage());
+	// 	}
+	// }
+
+
+
+	// added for 2850
 	public static Date getEndDate(Date sDate, Date eDate){
 		try{
+		List<Holiday> holidayList = new List<Holiday>([SELECT Id,ActivityDate FROM Holiday WHERE ActivityDate >=: sDate AND ActivityDate <=: eDate]);
+		System.debug('holidayList=='+holidayList);
 
-			for (integer j = 0; j <= sDate.daysBetween(eDate); j++){
-				Date dt = sDate + j;
-				DateTime currentDate = DateTime.newInstance(dt.year(), dt.month(), dt.day());
-				String todayDay = currentDate.format('EEEE');
-				if (todayDay == 'Saturday' || todayDay == 'Sunday'){
-					eDate = eDate.addDays(1);
-				}
+		Set<String> holiDate = new Set<String>();
+		for(Holiday holi : holidayList){
+			DateTime test = DateTime.newInstance(holi.ActivityDate.year(), holi.ActivityDate.month(), holi.ActivityDate.day());
+			holiDate.add(test.format('yyyy-mm-dd'));
+		}
+		for (integer j = 0; j <= sDate.daysBetween(eDate); j++){
+			Date dt = sDate + j;
+			DateTime currentDate = DateTime.newInstance(dt.year(), dt.month(), dt.day());
+			String currentDateString = currentDate.format('yyyy-mm-dd');
+			String todayDay = currentDate.format('EEEE');
+			if (todayDay == 'Saturday' || todayDay == 'Sunday' || holiDate.contains(currentDateString)){
+				eDate = eDate.addDays(1);
 			}
+			// else if(todayDay == 'Saturday' || todayDay == 'Sunday' || !(holiDate.contains(currentDateString))){
+			//     eDate = eDate.addDays(1);
+			// }
+		}
 			return eDate;
 		} catch (Exception e){
 			throw new AuraHandledException(e.getMessage());

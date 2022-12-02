@@ -133,7 +133,7 @@
                     //var checkbox = component.find("vendorselection").get("v.text");
                     vendorList[i].buildertek__IS_VENDOR_SELECTED__c = true;
                 } else {
-                    //   component.find("vendorselection").set("v.value", false); 
+                    //   component.find("vendorselection").set("v.value", false);
                     //var checkbox = component.find("vendorselection").get("v.text");
                     var vendorList = component.get("v.selectedVendorList");
                     vendorList[i].buildertek__IS_VENDOR_SELECTED__c = false;
@@ -637,7 +637,7 @@
 
 
     closeQuotelineModel: function(component, event, helper) {
-        // for Hide/Close Model,set the "isOpen" attribute to "Fasle"  
+        // for Hide/Close Model,set the "isOpen" attribute to "Fasle"
         component.set("v.isQuotelinedelete", false);
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "HIDE"
@@ -927,7 +927,7 @@
         }
         /*var selectedVendorList = component.get('v.selectedVendorList');
 var vendorId = event.getSource().get("v.name");
- 
+
 var count = 0;
 var limitExceed=false;
 var selectedVendor = selectedVendorList.filter(function(getSelected) {
@@ -941,7 +941,7 @@ var selectedVendorLimit;
 if(limitExceed){
 selectedVendorList.filter(function(records) {
 records.Id == vendorId ? records.buildertek__IS_VENDOR_SELECTED__c=false:records;
-});                
+});
 component.set('v.selectedVendorList',selectedVendorList);
 }*/
     },
@@ -982,10 +982,10 @@ component.set('v.selectedVendorList',selectedVendorList);
                         var vendorrfinotclosedcount = 0;
                         var vendorid = '';
 
-                        //alert(fieldSetObj); 
+                        //alert(fieldSetObj);
                         for (var i = 0; i < Object.keys(fieldSetObj).length; i++) {
                             //alert(Object.keys(fieldSetObj)[i]);
-                            //alert( Object.values(fieldSetObj)[i]);  
+                            //alert( Object.values(fieldSetObj)[i]);
                             if (Object.values(fieldSetObj)[i] == 'RFIs Not Closed') {
                                 vendorrfinotclosedcount = vendorrfinotclosedcount + 1;
                                 vendorid = Object.keys(fieldSetObj)[i];
@@ -1043,7 +1043,7 @@ component.set('v.selectedVendorList',selectedVendorList);
                                 "message": 'You cannot Awa.'
                             });
                             toastEvent.fire();
-                    
+
                 }*/
 
 
@@ -1064,10 +1064,10 @@ component.set('v.selectedVendorList',selectedVendorList);
                         var vendorrfinotclosedcount = 0;
                         var vendorid = '';
 
-                        //alert(fieldSetObj); 
+                        //alert(fieldSetObj);
                         for (var i = 0; i < Object.keys(fieldSetObj).length; i++) {
                             //alert(Object.keys(fieldSetObj)[i]);
-                            //alert( Object.values(fieldSetObj)[i]);  
+                            //alert( Object.values(fieldSetObj)[i]);
                             if (Object.values(fieldSetObj)[i] == 'RFIs Not Closed') {
                                 vendorrfinotclosedcount = vendorrfinotclosedcount + 1;
                                 vendorid = Object.keys(fieldSetObj)[i];
@@ -1450,10 +1450,10 @@ $A.enqueueAction(action);*/
         /*var xyz  =   [];
 if(component.get("v.selectedfileslist")!=null){
 xyz = component.get("v.selectedfileslist");
-xyz.push(event.getSource().get("v.files"));       
-component.set("v.selectedfileslist",xyz);  
+xyz.push(event.getSource().get("v.files"));
+component.set("v.selectedfileslist",xyz);
 }else{
-component.set("v.selectedfileslist",event.getSource().get("v.files"));  
+component.set("v.selectedfileslist",event.getSource().get("v.files"));
 }*/
 
 
@@ -1479,7 +1479,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
         }
         component.set("v.fileName", files);
         component.set("v.selectedfilesFill", mapData);
-        //alert(typeof event.getSource().get("v.files"));        
+        //alert(typeof event.getSource().get("v.files"));
         //component.set("v.fileName", fileName);
     },
 
@@ -1679,7 +1679,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
         component.set("v.noFiles", false);
     },
 
-    // function for clear the Record Selaction 
+    // function for clear the Record Selaction
     clear: function(component, event, heplper) {
         var selectedPillId = event.getSource().get("v.name");
         var AllPillsList = component.get("v.selectedfilesFill");
@@ -1934,7 +1934,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
             component.set("v.Contractids", result);
             component.set("v.listOfSelectedSOVIds", []);
             $A.get('e.force:refreshView').fire();
-            // location.reload() 
+            // location.reload()
             // window.reload();
 
 
@@ -1967,7 +1967,7 @@ component.set("v.selectedfileslist",event.getSource().get("v.files"));
             /*   if(fileslist.length > 0){
 component.set("v.Isfiles",true);
 component.set("v.noFiles",false);
- 
+
 }else{
 component.set("v.Isfiles",false);
 component.set("v.noFiles",true);
