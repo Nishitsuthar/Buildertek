@@ -1,7 +1,13 @@
 <aura:component controller="PO_From_Selection_Sheet" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
-
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute name="Spinner" type="Boolean" default="false" />
+    <aura:attribute name="data" type="Object" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="selectedRowsCount" type="Integer" default="0" />
+    <aura:attribute name="maxRowSelection" type="Integer" default="5" />
+    <aura:attribute name="selectedRowList" type="object" default="" />
 
+    <aura:attribute name="projectId" type="String" default="" />
 
     <ltng:require styles="{!$Resource.ModalPreviewCSS}" />
 
@@ -21,26 +27,34 @@
     </aura:html>
     <div class="slds-modal__content">
         <div class="slds">
+            <!-- ==== Start Header ==== -->
             <header class="slds-modal__header">
                 <div class="" id="header" style="font-size:20px;">
                     Create Purchase Order
                 </div>
             </header>
+            <!-- ==== End Header ==== -->
+
+            <!-- ==== Start Main Body ===== -->
             <div>
                 <div style="margin: 15px 5px;">
-                    <!-- <lightning:datatable keyField="Id" data="{!v.data}" hideCheckboxColumn="false" columns="{!v.columns}" selectedRows="{!v.selectedRows}" onrowselection="{!c.updateSelectedText}" onsort="{!c.updateColumnSorting}" sortedBy="{!v.sortedBy}" sortedDirection="{!v.sortedDirection}"
-                    />
+                    <!-- ========== Display option list in to data table =========== -->
+                    <lightning:datatable columns="{! v.columns }" data="{! v.data }" keyField="id" maxRowSelection="{! v.maxRowSelection }" onrowselection="{! c.updateSelectedText }" onsort="{!c.updateColumnSorting}" />
                     <aura:if isTrue="{!empty(v.data)}">
                         <div class="modalBodyDiv">
                             No Data Found
                         </div>
-                    </aura:if> -->
+                    </aura:if>
                 </div>
             </div>
+            <!-- ==== End Main Body ===== -->
+
+            <!-- =========Start Footer====== -->
             <footer role="contentinfo" class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;">
                 <button class="slds-button slds-button--neutral" onclick="{!c.closeModal}"> Cancel </button>
-                <button class="slds-button slds-button--brand" onclick="{!c.createRecord}" style="margin: 0 0.5rem;"> Create </button>
+                <button class="slds-button slds-button--brand" onclick="{!c.createPOrecord}" style="margin: 0 0.5rem;"> Yes </button>
             </footer>
+            <!-- =========End Footer====== -->
         </div>
     </div>
 

@@ -1419,6 +1419,7 @@ public class ProjectTaskTriggerHandler{
 			if (holidays == null)
 				holidays = [Select h.StartTimeInMinutes, h.Name, h.ActivityDate
 				            From Holiday h
+
 				            Limit 50000];
 			return holidays;
 		}
@@ -1481,38 +1482,41 @@ public class ProjectTaskTriggerHandler{
 	// 	return startDate;
 	// }
 
-	// //added for 2850
+	//added for 2850
 	public static Date getStartDate(Date startDate){
-	
-		
-		List<Holiday> holidayList = new List<Holiday>([SELECT Id,ActivityDate FROM Holiday WHERE ActivityDate >=: startDate]);
-		System.debug('holidayList=='+holidayList);
-		if(holidayList.size() > 0){
-			Set<String> holiDate = new Set<String>();
-			for(Holiday holi : holidayList){
-				System.debug('In second for');
-				DateTime test = DateTime.newInstance(holi.ActivityDate.year(), holi.ActivityDate.month(), holi.ActivityDate.day());
-				holiDate.add(test.format('yyyy-mm-dd'));
-			}
-			System.debug('holiDate==='+holiDate);
-			for (integer j = 0; j <= holidayList.size(); j++){
-				System.debug('In second for');
-				DateTime currDate = DateTime.newInstance(startDate.year(), startDate.month(), startDate.day());
-				String currentDateString = currDate.format('yyyy-mm-dd');
-				String todayDay = currDate.format('EEEE');
+		try{
 
-				System.debug('currDate==='+currDate);
-				System.debug('currentDateString==='+currentDateString);
-				System.debug('todayDay==='+todayDay);
-				System.debug('contains holiday=='+holiDate.contains(currentDateString));
-				if (todayDay == 'Saturday' || todayDay == 'Sunday'  || holiDate.contains(currentDateString)){
-					System.debug('in if====Day count 1');
-					startDate += 1;
-				} 
+			// List<Holiday> holidayList = new List<Holiday>([SELECT Id,ActivityDate FROM Holiday WHERE ActivityDate >=: startDate]);
+			// System.debug('holidayList=='+holidayList);
+			if(holidays.size() > 0){
+				Set<String> holiDate = new Set<String>();
+				for(Holiday holi : holidays){
+					System.debug('In second for');
+					DateTime test = DateTime.newInstance(holi.ActivityDate.year(), holi.ActivityDate.month(), holi.ActivityDate.day());
+					holiDate.add(test.format('yyyy-mm-dd'));
+				}
+				System.debug('holiDate==='+holiDate);
+				for (integer j = 0; j <= holidays.size(); j++){
+					System.debug('In second for');
+					DateTime currDate = DateTime.newInstance(startDate.year(), startDate.month(), startDate.day());
+					String currentDateString = currDate.format('yyyy-mm-dd');
+					String todayDay = currDate.format('EEEE');
 
-			}
-		}	
-		return startDate;
+					System.debug('currDate==='+currDate);
+					System.debug('currentDateString==='+currentDateString);
+					System.debug('todayDay==='+todayDay);
+					System.debug('contains holiday=='+holiDate.contains(currentDateString));
+					if (todayDay == 'Saturday' || todayDay == 'Sunday'  || holiDate.contains(currentDateString)){
+						System.debug('in if====Day count 1');
+						startDate += 1;
+					} 
+
+				}
+			}	
+			return startDate;
+		} catch (Exception e){
+			throw new AuraHandledException(e.getMessage());
+		}
 	}
 
 	//Calculate and add weekends.
@@ -1538,26 +1542,28 @@ public class ProjectTaskTriggerHandler{
 	// added for 2850
 	public static Date getEndDate(Date sDate, Date eDate){
 		try{
-		List<Holiday> holidayList = new List<Holiday>([SELECT Id,ActivityDate FROM Holiday WHERE ActivityDate >=: sDate AND ActivityDate <=: eDate]);
-		System.debug('holidayList=='+holidayList);
+			// List<Holiday> holidayList = new List<Holiday>([SELECT Id,ActivityDate FROM Holiday WHERE ActivityDate >=: sDate AND ActivityDate <=: eDate]);
+			// System.debug('holidayList=='+holidayList);
 
-		Set<String> holiDate = new Set<String>();
-		for(Holiday holi : holidayList){
-			DateTime test = DateTime.newInstance(holi.ActivityDate.year(), holi.ActivityDate.month(), holi.ActivityDate.day());
-			holiDate.add(test.format('yyyy-mm-dd'));
-		}
-		for (integer j = 0; j <= sDate.daysBetween(eDate); j++){
-			Date dt = sDate + j;
-			DateTime currentDate = DateTime.newInstance(dt.year(), dt.month(), dt.day());
-			String currentDateString = currentDate.format('yyyy-mm-dd');
-			String todayDay = currentDate.format('EEEE');
-			if (todayDay == 'Saturday' || todayDay == 'Sunday' || holiDate.contains(currentDateString)){
-				eDate = eDate.addDays(1);
+			Set<String> holiDate = new Set<String>();
+			if(holidays.size() > 0){
+				for(Holiday holi : holidays){
+					DateTime test = DateTime.newInstance(holi.ActivityDate.year(), holi.ActivityDate.month(), holi.ActivityDate.day());
+					holiDate.add(test.format('yyyy-mm-dd'));
+				}
+				for (integer j = 0; j <= sDate.daysBetween(eDate); j++){
+					Date dt = sDate + j;
+					DateTime currentDate = DateTime.newInstance(dt.year(), dt.month(), dt.day());
+					String currentDateString = currentDate.format('yyyy-mm-dd');
+					String todayDay = currentDate.format('EEEE');
+					if (todayDay == 'Saturday' || todayDay == 'Sunday' || holiDate.contains(currentDateString)){
+						eDate = eDate.addDays(1);
+					}
+					// else if(todayDay == 'Saturday' || todayDay == 'Sunday' || !(holiDate.contains(currentDateString))){
+					//     eDate = eDate.addDays(1);
+					// }
+				}
 			}
-			// else if(todayDay == 'Saturday' || todayDay == 'Sunday' || !(holiDate.contains(currentDateString))){
-			//     eDate = eDate.addDays(1);
-			// }
-		}
 			return eDate;
 		} catch (Exception e){
 			throw new AuraHandledException(e.getMessage());

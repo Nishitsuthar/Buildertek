@@ -25,6 +25,7 @@
             searchTypeValue : '',
             searchManufacturerValue : '',
             searchFamilyValue : '',
+            searchCategoryValue : '',
             selectedPriceBook : selectedPriceBook,
             priceBookFilter : priceBookFilter
         });
@@ -75,17 +76,23 @@
     searchHelper: function(component, event, helper){
         console.log('== searchHelper ==');
         var searchFamilyValue = component.get("v.searchFamilyFilter");
+        var searchCategoryValue = component.get("v.searchCategoryFilter");
         var searchTypeValue = component.get("v.searchTypeFilter");
         var searchNameValue = component.get("v.searchNameFilter");
         var searchManufacturerValue = component.get("v.searchManufacturerFilter");
 
         var oldSearchFamilyValue = component.get("v.oldSearchFamilyFilter");
+        var oldSearchCategoryValue = component.get("v.oldSearchCategoryFilter");
         var oldSearchTypeValue = component.get("v.oldSearchTypeFilter");
         var oldSearchNameValue = component.get("v.oldSearchNameFilter");
         var oldSearchManufacturerValue = component.get("v.oldSearchManufacturerFilter");
 
         if (oldSearchFamilyValue != '' && searchFamilyValue == '') {
             var action = component.get("c.searchProductFamily");
+            $A.enqueueAction(action);
+        }
+        if (oldSearchCategoryValue != '' && searchCategoryValue == '') {
+            var action = component.get("c.searchProductCategory");
             $A.enqueueAction(action);
         }
         if (oldSearchTypeValue != '' && searchTypeValue == '') {
@@ -111,6 +118,7 @@
             searchTypeValue : searchTypeValue,
             searchManufacturerValue : searchManufacturerValue,
             searchFamilyValue : searchFamilyValue,
+            searchCategoryValue : searchCategoryValue,
             selectedPriceBook : selectedPriceBook,
             priceBookFilter : priceBookFilter
 	    });
@@ -134,7 +142,7 @@
                 } else{
                     component.set("v.nullProduct", false);
                 }
-
+                component.set("v.pageNumber", 1);
                 helper.paginationHelper(component, event, helper);
 
                 if (searchNameValue == '' && searchTypeValue == '' && searchManufacturerValue == '' && searchFamilyValue == '') {

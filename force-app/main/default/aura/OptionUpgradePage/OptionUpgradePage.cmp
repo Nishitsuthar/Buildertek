@@ -29,6 +29,12 @@
     <aura:attribute name="ProductFamilyList" type="List" />
     <aura:attribute name="displayFamilyList" type="Boolean" default="false" />
 
+    <aura:attribute name="oldSearchCategoryFilter" type="String" default="" />
+    <aura:attribute name="searchCategoryFilter" type="String" default="" />
+    <aura:handler name="change" value="{!v.searchCategoryFilter}" action="{!c.doSearch}" />
+    <aura:attribute name="ProductCategoryList" type="List" />
+    <aura:attribute name="displayCategoryList" type="Boolean" default="false" />
+
     <aura:attribute name="oldSearchTypeFilter" type="String" default="" />
     <aura:attribute name="searchTypeFilter" type="String" default="" />
     <aura:handler name="change" value="{!v.searchTypeFilter}" action="{!c.doSearch}" />
@@ -71,13 +77,13 @@
                 </lightning:select>
             </lightning:layoutItem>
             
-            <lightning:layoutItem padding="around-small" class="slds19"> 
+            <lightning:layoutItem padding="around-small" class="slds15"> 
                 <lightning:input autocomplete="off" type="search" placeholder="Search Product Family" variant="label-hidden" value="{!v.searchFamilyFilter}" onfocus="{!c.searchProductFamily}" onkeyup="{!c.searchProductFamily}" />
                 <aura:if isTrue="{!v.displayFamilyList}" >
                     <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
                             <aura:iteration items="{!v.ProductFamilyList}" var="result">
-                                <li role="presentation" class="slds-listbox__item" data-value="{!result}" onclick="{!c.clickHandler1}">
+                                <li role="presentation" class="slds-listbox__item" data-value="{!result}" onclick="{!c.clickHandler0}">
                                     <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
                                         <span class="slds-media__body">
                                             <span class="slds-truncate" title="All Opportunities">
@@ -98,8 +104,36 @@
                     </div>
                 </aura:if>
             </lightning:layoutItem>
+
+            <lightning:layoutItem padding="around-small" class="slds15"> 
+                <lightning:input autocomplete="off" type="search" placeholder="Search Product Category" variant="label-hidden" value="{!v.searchCategoryFilter}" onfocus="{!c.searchProductCategory}" onkeyup="{!c.searchProductCategory}" />
+                <aura:if isTrue="{!v.displayCategoryList}" >
+                    <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
+                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                            <aura:iteration items="{!v.ProductCategoryList}" var="result">
+                                <li role="presentation" class="slds-listbox__item" data-value="{!result}" onclick="{!c.clickHandler1}">
+                                    <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                                        <span class="slds-media__body">
+                                            <span class="slds-truncate" title="All Opportunities">
+                                                <span>{!result}</span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </li>
+                            </aura:iteration>
+                            <aura:if isTrue="{!empty(v.ProductCategoryList)}">
+                                <span>
+                                    <p class="blank-lst">
+                                        There Are No Product Category With This Name
+                                    </p>  
+                                </span>
+                            </aura:if>
+                        </ul>
+                    </div>
+                </aura:if>
+            </lightning:layoutItem>
             
-            <lightning:layoutItem padding="around-small" class="slds19">
+            <lightning:layoutItem padding="around-small" class="slds15">
                 <lightning:input autocomplete="off" type="search" placeholder="Search Product Type" variant="label-hidden" value="{!v.searchTypeFilter}" onfocus="{!c.searchProductType}" onkeyup="{!c.searchProductType}" />
                 <aura:if isTrue="{!v.displayTypeList}" >
                     <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
@@ -127,7 +161,7 @@
                 </aura:if>
             </lightning:layoutItem>
 
-            <lightning:layoutItem padding="around-small" class="slds19">
+            <lightning:layoutItem padding="around-small" class="slds15">
                 <lightning:input autocomplete="off" type="search" placeholder="Search Product Name" variant="label-hidden" value="{!v.searchNameFilter}" onfocus="{!c.searchProductName}" onkeyup="{!c.searchProductName}" />
                 <aura:if isTrue="{!v.displayNameList}" >
                     <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
@@ -155,7 +189,7 @@
                 </aura:if>
             </lightning:layoutItem>
 
-            <lightning:layoutItem padding="around-small" class="slds19">
+            <lightning:layoutItem padding="around-small" class="slds15">
                 <lightning:input autocomplete="off" type="search" placeholder="Search Manufacturer" variant="label-hidden" value="{!v.searchManufacturerFilter}" onfocus="{!c.searchManufacturer}" onkeyup="{!c.searchManufacturer}" />
                 <aura:if isTrue="{!v.displayManufacturerList}" >
                     <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">

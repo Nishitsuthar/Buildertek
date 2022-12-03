@@ -37,6 +37,10 @@ public with sharing class OptionUpgradeTest {
         prod.Family = 'Framing';
         prod.buildertek__Selection_Category_Lookup__c = section.Id;
         insert prod;
+
+        buildertek__Category__c category = new buildertek__Category__c();
+        category.Name = 'testing category';
+        insert category;
         
     }
 
@@ -50,12 +54,13 @@ public with sharing class OptionUpgradeTest {
 
         Test.startTest();
 
-        OptionUpgrade.getProductDetails(option.Id, 'a', 'b', 'c', 'd', 'e', true);
+        OptionUpgrade.getProductDetails(option.Id, 'a', 'b', 'c', 'd', 'e', 'f', true);
         OptionUpgrade.upgradeOption(option, prod);
         OptionUpgrade.getProductFamily('f');
         OptionUpgrade.getProductType('p');
         OptionUpgrade.getProductName('t');
         OptionUpgrade.getManufacturer('t');
+        OptionUpgrade.getProductCategory('t');
 		
         Test.stopTest();
 
@@ -68,12 +73,13 @@ public with sharing class OptionUpgradeTest {
 
         Test.startTest();
 
-        OptionUpgrade.getProductDetails(option.Id, 'a', 'b', 'c', 'd', 'e', false);
-        OptionUpgrade.getProductDetails(option.Id, '', '', '', '', '', true);
+        OptionUpgrade.getProductDetails(option.Id, 'a', 'b', 'c', 'd', 'e', 'f', false);
+        OptionUpgrade.getProductDetails(option.Id, '', '', '', '', '' , '', true);
         OptionUpgrade.getProductFamily('');
         OptionUpgrade.getProductType('');
         OptionUpgrade.getProductName('');
         OptionUpgrade.getManufacturer('');
+        OptionUpgrade.getProductCategory('');
 		
         Test.stopTest();
 

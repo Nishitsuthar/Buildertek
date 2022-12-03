@@ -20,8 +20,11 @@
                     helper.showToast("Error", "Error", "Product is missing in current record", "5000");
                 } else if(result[1].includes("Check Selected")){
                     helper.showToast("Error", "Error", "Selected field is not checked in record", "5000");
+                } else if(result[1].includes("STRING_TOO_LONG")){
+                    helper.showToast("Error", "Error", "Poduct name is too long", "5000");
                 } else {
-                    helper.showToast("Error", "Error", "Something Went Wrong", "5000");
+                    console.log('Error Message ==> '+result[1]);
+                    helper.showToast("Error", "Error", result[1], "5000");
                 }
             } else {
                 helper.showToast("Success", "Success", "New PO Line Created.", "5000");

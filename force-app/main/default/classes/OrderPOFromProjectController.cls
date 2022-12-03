@@ -508,7 +508,7 @@ public class OrderPOFromProjectController {
         List<buildertek__Purchase_Order__c> OrderedPOList =  new List<buildertek__Purchase_Order__c>();
 
 
-        List<contact> conlist = [select id,name from contact limit 1];
+        List<contact> conlist = [select id,name from contact WHERE Email != null limit 1];
 
         List<buildertek__ConfirmationPageSiteURL__c> confirmationurl = buildertek__ConfirmationPageSiteURL__c.getall().values();
         string SiteUrl;

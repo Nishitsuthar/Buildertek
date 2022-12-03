@@ -1,35 +1,56 @@
 public with sharing class OptionUpgrade {
 
     @AuraEnabled
-    public static optionWrapper getProductDetails(String recordId, String searchNameValue, String searchTypeValue, String searchManufacturerValue, String searchFamilyValue, String selectedPriceBook, Boolean priceBookFilter) {
+    public static optionWrapper getProductDetails(String recordId, String searchNameValue, String searchTypeValue, String searchManufacturerValue, String searchFamilyValue, String searchCategoryValue, String selectedPriceBook, Boolean priceBookFilter) {
         buildertek__Question__c option = [SELECT Id, Name, buildertek__Question_Group__c, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, 
                                             buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c, buildertek__Price_Book__c, 
                                             buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c FROM buildertek__Question__c WHERE Id =: recordId];
 
         List<Product2> productList = new List<Product2>();
 
-        if (option.buildertek__Section__c != null) {
-            String sectionId = option.buildertek__Section__c;
-            String queryList = 'SELECT Id, Name, buildertek__Selection_Category_Lookup__c, buildertek__Product_Type__r.Name, buildertek__Manufacturer__r.Name, Family, buildertek__Category__r.Name, (SELECT Id, Name, UnitPrice, Pricebook2.Id, Pricebook2.Name FROM PricebookEntries) FROM Product2 WHERE buildertek__Selection_Category_Lookup__c =: sectionId';
+        System.debug('-- option --');
+        // if (option.buildertek__Section__c != null) {
+            // String sectionId = option.buildertek__Section__c;
+            String queryList = 'SELECT Id, Name, buildertek__Selection_Category_Lookup__c, buildertek__Product_Type__r.Name, buildertek__Manufacturer__r.Name, Family, buildertek__Category__c, buildertek__Category__r.Name, (SELECT Id, Name, UnitPrice, Pricebook2.Id, Pricebook2.Name FROM PricebookEntries) FROM Product2';
             
             if (searchNameValue != null && searchNameValue != '') {
-                queryList = queryList + ' AND Name LIKE \'' + searchNameValue + '%\'';
+                queryList = queryList + ' WHERE Name LIKE \'' + searchNameValue + '%\'';
             }
     
             if (searchTypeValue != null && searchTypeValue != '') {
-                queryList = queryList + ' AND buildertek__Product_Type__r.Name LIKE \'' + searchTypeValue + '%\'';
+                if (queryList.contains('WHERE')) {
+                    queryList = queryList + ' AND buildertek__Product_Type__r.Name LIKE \'' + searchTypeValue + '%\'';
+                } else{
+                    queryList = queryList + ' WHERE buildertek__Product_Type__r.Name LIKE \'' + searchTypeValue + '%\'';
+                }
             }
     
             if (searchManufacturerValue != null && searchManufacturerValue != '') {
-                queryList = queryList + ' AND buildertek__Manufacturer__r.Name LIKE \'' + searchManufacturerValue + '%\'';
+                if (queryList.contains('WHERE')) {
+                    queryList = queryList + ' AND buildertek__Manufacturer__r.Name LIKE \'' + searchManufacturerValue + '%\'';
+                } else{
+                    queryList = queryList + ' WHERE buildertek__Manufacturer__r.Name LIKE \'' + searchManufacturerValue + '%\'';
+                }
             }
     
             if (searchFamilyValue != null && searchFamilyValue != '') {
-                queryList = queryList + ' AND Family LIKE \'' + searchFamilyValue + '%\'';
+                if (queryList.contains('WHERE')) {
+                    queryList = queryList + ' AND Family LIKE \'' + searchFamilyValue + '%\'';
+                } else{
+                    queryList = queryList + ' WHERE Family LIKE \'' + searchFamilyValue + '%\'';
+                }
             }
-            
+
+            if (searchCategoryValue != null && searchCategoryValue != '') {
+                if (queryList.contains('WHERE')) {
+                    queryList = queryList + ' AND buildertek__Category__r.Name LIKE \'' + searchCategoryValue + '%\'';
+                } else{
+                    queryList = queryList + ' WHERE buildertek__Category__r.Name LIKE \'' + searchCategoryValue + '%\'';
+                }
+            }
+
             productList = Database.query(queryList);
-        }
+        // }
 
         Set<ID> productsIds = new Set<ID>();
         for (Product2 product : productList) {
@@ -132,6 +153,25 @@ public with sharing class OptionUpgrade {
         }
         productFamilyList.sort();
         return productFamilyList;
+    }
+
+    @AuraEnabled
+    public static List<String> getProductCategory(String searchCategoryValue){
+        List<String> CategoryList = new List<String>();
+        List<buildertek__Category__c> allCategoryList = [SELECT Id, Name FROM buildertek__Category__c ORDER BY name ASC];
+
+        if(!String.isBlank(searchCategoryValue)){
+            for (buildertek__Category__c category : allCategoryList) {
+                if (category.Name.toLowerCase().contains(searchCategoryValue.toLowerCase())) {
+                    CategoryList.add(category.Name);
+                }
+            }
+        } else{
+            for (buildertek__Category__c category : allCategoryList) {
+                CategoryList.add(category.Name);
+            }
+        }
+        return CategoryList;
     }
 
     @AuraEnabled

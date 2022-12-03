@@ -393,17 +393,17 @@ export default base => class GanttToolbar extends base {
         }
     }
     onSaveClick(){
-        console.log(this.gantt.data)
         var data = this.gantt.data;
+        console.log('data from toolbar===',{data});
         console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
         console.log('Data => ',{data});
         var ganttRowData = [];
-        var taskData = JSON.parse(this.gantt.taskStore.json)
-        var dependenciesData = JSON.parse(this.gantt.dependencyStore.json)
-        var resourceData = JSON.parse(this.gantt.assignmentStore.json)
-        console.log('taskData-->',taskData)
-        console.log('dependenciesData-->',dependenciesData)
-        console.log('resourceData-->',resourceData)
+        var taskData = JSON.parse(this.gantt.taskStore.json);
+        var dependenciesData = JSON.parse(this.gantt.dependencyStore.json);
+        var resourceData = JSON.parse(this.gantt.assignmentStore.json);
+        console.log('taskData-->',taskData);
+        console.log('dependenciesData-->',dependenciesData);
+        console.log('resourceData-->',resourceData);
 
     //     var newtaskMap = []; 
     //    var taskzero = taskData[0];

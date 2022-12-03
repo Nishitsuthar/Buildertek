@@ -72,6 +72,8 @@
     <aura:attribute name="FileNameList" type="List" />
     <aura:attribute name="fileBody" type="string" access="global"/>
     <aura:attribute name="orgCurr" type="string" />
+
+    <aura:attribute name="disableOrder" type="Boolean" default="false" />
     
     
     <!--   Attributes to attach documents  End   -->
@@ -561,7 +563,7 @@
                 </div>
                 <footer class="slds-modal__footer">
                     <lightning:button variant="Neutral" class="slds-button" label="Close" onclick="{!c.closePOListPopUp}"/>
-                    <button class="slds-button slds-button--brand" onclick="{!c.confirmOrderPO}"> Yes</button>
+                    <button class="slds-button slds-button--brand" onclick="{!c.confirmOrderPO}" disabled="{!v.disableOrder}"> Yes</button>
                 </footer>
             </div>
             

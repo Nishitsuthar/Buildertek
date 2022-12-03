@@ -383,6 +383,20 @@
 			}
 		}
 
+		var disableBtn = false;
+		budgetIds.forEach(element => {
+			console.log('element.buildertek__Vendor__c ==> '+element.buildertek__Vendor__c);
+			if (element.buildertek__Vendor__c != null && element.buildertek__Vendor__c != '') {
+				if (element.buildertek__Vendor__r.buildertek__Email_Address__c == null || element.buildertek__Vendor__r.buildertek__Email_Address__c == '') {
+					disableBtn = true;
+				}
+			} else{
+				disableBtn = true;
+			}
+		});
+
+		component.set("v.disableOrder", disableBtn);
+
 		component.set("v.SelectedPurchaseOrders", budgetIds);
 
 		if (budgetIds.length > 0) {

@@ -901,7 +901,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   refreshGantt() {
     // this.phaseFunction();
 
-    console.log('refreshGantt');
+    console.log('refreshGantt***==');
 
     var that = this;
     getScheduleItemRecords({
@@ -912,7 +912,16 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         console.log({response});
         var records = response;
         var data = response.lstOfSObjs;
+
+		console.log('data**====',{data});
         this.scheduleItemsDataList = response.lstOfSObjs;
+
+
+		console.log('scheduleItemsDataList==');
+		var scheduleItemsDataList1 = this.scheduleItemsDataList;
+		console.log({scheduleItemsDataList1});
+
+
         this.scheduleData = response.scheduleObj;
         that.storeRes = response.filesandattacmentList;
         var scheduleItemsList = [];
@@ -1139,6 +1148,12 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   }
   saveeditRecord(event) {
     saveeditRecordMethod(event, this);
+	console.log('gettaskrecords will be called after save');
+    // this.refreshGantt();
+	// this.phaseFunction();
+	// this.gettaskrecords();
+	
+
   }
   showToast(theTitle, theMessage, theVariant) {
     const event = new ShowToastEvent({
@@ -1150,6 +1165,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   }
 
   phaseFunction(){
+	console.log('phaseFunction calleed===');
     //CODE ADDED TO GET PHASE DATES - 09-10
     getPhaseDates({
       scheduleId : this.recordId
@@ -1191,6 +1207,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     ])
       .then(() => {
         this.gettaskrecords();
+		console.log('getTaskrecords in rendered call back===');
         this.loadedChart = true;
       })
       .catch((error) => {
@@ -1400,6 +1417,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
   formatCustomResponse(response) {
     var data = response.lstOfSObjs;
+
+	console.log('formatCustomResponse called==', {data});
+	
     this.scheduleItemsDataList = response.lstOfSObjs;
     this.scheduleData = response.scheduleObj;
     this.hideuserSchedule = response.hideScheduleFromUser;

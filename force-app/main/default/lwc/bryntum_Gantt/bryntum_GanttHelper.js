@@ -11,6 +11,7 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
     var formattedData = {}
 
     var taskListForPhase = scheduleItemsDataList;
+    console.log('tasklist for Phase====',{taskListForPhase});
     var firstRowDup = {};
     firstRowDup["id"] = scheduleData.Id;
     firstRowDup["name"] = scheduleData.Name
@@ -70,6 +71,8 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                 if(scheduleItemIdsList.indexOf(taskListForPhase[i].Id) < 0){
                     scheduleItemIdsList.push(taskListForPhase[i].Id)
                 }
+                console.log('startDtae**=='+taskListForPhase[i].buildertek__Start__c);
+
                 rowChilObj["id"] = taskListForPhase[i].Id
                 rowChilObj["name"] = taskListForPhase[i].Name
                 rowChilObj["percentDone"] = taskListForPhase[i].buildertek__Completion__c
@@ -108,9 +111,10 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                 rowChilObj['notes'] = taskListForPhase[i].buildertek__Notes__c;
                 console.log('JUMBIO IN METHOD');
                 if(taskListForPhase[i].buildertek__Lag__c != undefined && taskListForPhase[i].buildertek__Lag__c != null && taskListForPhase[i].buildertek__Lag__c != 0){
+                  
                     var startDate = new Date(taskListForPhase[i].buildertek__Start__c);
                     // commented this line because it is adding extra lags in the backend data
-                    // commented by Nishit (MV Clouds)
+                    // commented by nishit (MV Clouds)
                     // startDate.setDate(startDate.getDate() + (taskListForPhase[i].buildertek__Lag__c));
                     rowChilObj["startDate"] = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
                 }
@@ -425,7 +429,9 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
             rowChilObj["name"] = taskListForPhase[i].Name
             rowChilObj["percentDone"] = taskListForPhase[i].buildertek__Completion__c
             rowChilObj["startDate"] = taskListForPhase[i].buildertek__Start__c
-
+            rowChilObj["endDate"] = taskListForPhase[i].buildertek__Finish__c;
+            console.log('endate final===='+taskListForPhase[i].buildertek__Finish__c);
+            
             
             rowChilObj['predecessor'] = taskListForPhase[i].buildertek__Dependency__c;
 
@@ -460,7 +466,7 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
             rowChilObj['notes'] = taskListForPhase[i].buildertek__Notes__c;
 
             if(taskListForPhase[i].buildertek__Lag__c != undefined && taskListForPhase[i].buildertek__Lag__c != null && taskListForPhase[i].buildertek__Lag__c != 0){
-            var startDate = new Date(taskListForPhase[i].buildertek__Start__c);
+            var startDate = new Date(taskListForPhase[i].buildertek__Start__c ) ;
             
             // commented this line because it is adding extra lag into child record
             // commented this by Nishit (MV Clouds)

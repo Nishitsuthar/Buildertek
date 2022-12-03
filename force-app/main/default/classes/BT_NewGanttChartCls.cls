@@ -25,6 +25,9 @@ public class BT_NewGanttChartCls{
 
     @AuraEnabled
     public static DataTableDetails getScheduleItemRecords(String objApi, string scheduleid){
+
+
+        System.debug('getScheduleItemRecords called===');
         List<Id> filesIdList = new List<Id>();
         Set<Id> notesIdList = new Set<Id>();
 
@@ -39,6 +42,7 @@ public class BT_NewGanttChartCls{
 
         dataTableDtls.lstOfSObjs = Database.query(strQuery);
 
+        System.debug('dataTableDtls**=='+JSON.serialize(dataTableDtls.lstOfSObjs));
         List<buildertek__Project_Task__c> projectTasksSorted = dataTableDtls.lstOfSObjs;
 
         String milestonequery = 'Select buildertek__Project__r.Name,buildertek__Schedule__r.Name, buildertek__Dependency__r.Finish__c,buildertek__Contractor_Resource__r.Name,buildertek__Contractor__r.Name,buildertek__Resource__r.Name, ' + BT_Utils.getQueryStringForObjectWithAllFields('Project_Task__c');
@@ -210,7 +214,10 @@ public class BT_NewGanttChartCls{
         //buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id,buildertek__Enable_Schedule_Items_Import__c from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'Schedule Configuration'];
         List<object> fileLenListCustom = new list<Object>();
         //fileLenListCustom.add(getnotesFilesLengthMap);
+
         dataTableDtls.lstOfSObjs = updatetaskList;
+        System.debug('updatetaskList===='+JSON.serialize(updatetaskList));
+
         dataTableDtls.filesandattacmentList = getnotesFilesLengthMap;
         dataTableDtls.hideScheduleFromUser = curruser.buildertek__Hide_Schedule__c;
         //dataTableDtls.importEnabled = adminInterfaceNodeConfigurations.buildertek__Enable_Schedule_Items_Import__c;
