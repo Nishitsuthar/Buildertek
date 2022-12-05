@@ -989,6 +989,23 @@
         component.set('v.openCreateProposalModal', false);
     },
 
+    createQuote: function(component, event, helper) {
+        console.log('createQuote');
+
+        var action = component.get("c.createQuoteMethod");
+        action.setParams({
+            "recordId": component.get("v.recordId")
+        });
+        action.setCallback(this, function(response) {
+            var status = response.getState();
+            console.log('status ==> '+status);
+            var result = response.getReturnValue();
+            console.log('result ==> '+result);
+        })
+        $A.enqueueAction(action);
+
+    }
+
 
 
 

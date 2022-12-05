@@ -4,6 +4,9 @@ declare module "@salesforce/apex/BT_NewGanttChartCls.getProject" {
 declare module "@salesforce/apex/BT_NewGanttChartCls.getObjectTypeName" {
   export default function getObjectTypeName(param: {recorId: any}): Promise<any>;
 }
+declare module "@salesforce/apex/BT_NewGanttChartCls.getholidays" {
+  export default function getholidays(): Promise<any>;
+}
 declare module "@salesforce/apex/BT_NewGanttChartCls.getPhaseDates" {
   export default function getPhaseDates(param: {scheduleId: any}): Promise<any>;
 }

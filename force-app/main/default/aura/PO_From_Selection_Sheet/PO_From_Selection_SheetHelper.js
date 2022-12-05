@@ -13,6 +13,7 @@
                 console.log('State => ' + state);
                 var result = response.getReturnValue().getOptionList;
                 component.set('v.projectId', response.getReturnValue().getProjectId);
+                console.log(' - * - * - * - * - * - * - * - * - ');
                 console.log('Result =>', { result });
                 console.log({ response });
                 console.log(response.getError());
@@ -20,11 +21,18 @@
 
                 if (state == "SUCCESS") {
                     component.set('v.columns', [
+                        // { label: 'Option Name', fieldName: 'Name', type: 'text', sortable: true },
+                         { label: 'Vendor', fieldName: 'ManufacturerName', type: 'text', sortable: true },
+                        // { label: 'Product', fieldName: 'ProductName', type: 'text', sortable: true },
+                        // { label: 'Quantity', fieldName: 'buildertek__Quantity__c', type: 'text' },
+                        // { label: 'Sales Price', fieldName: 'buildertek__Cost__c', type: 'currency', cellAttributes: { alignment: 'left' } }
+                    ]);
+                    component.set('v.columns1', [
                         { label: 'Option Name', fieldName: 'Name', type: 'text', sortable: true },
-                        { label: 'Vendor', fieldName: 'ManufacturerName', type: 'text', sortable: true },
-                        { label: 'Product', fieldName: 'ProductName', type: 'text', sortable: true },
-                        { label: 'Quantity', fieldName: 'buildertek__Quantity__c', type: 'text' },
-                        { label: 'Sales Price', fieldName: 'buildertek__Cost__c', type: 'currency', cellAttributes: { alignment: 'left' } }
+                        // { label: 'Vendor', fieldName: 'ManufacturerName', type: 'text', sortable: true },
+                       { label: 'Product', fieldName: 'ProductName', type: 'text', sortable: true },
+                       { label: 'Quantity', fieldName: 'buildertek__Quantity__c', type: 'text' },
+                       { label: 'Sales Price', fieldName: 'buildertek__Cost__c', type: 'currency', cellAttributes: { alignment: 'left' } }
                     ]);
 
                     result.forEach(element => {

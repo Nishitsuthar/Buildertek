@@ -30,7 +30,7 @@
             <!-- ==== Start Header ==== -->
             <header class="slds-modal__header">
                 <div class="" id="header" style="font-size:20px;">
-                    Create Purchase Order
+                    Create Purchase Orders
                 </div>
             </header>
             <!-- ==== End Header ==== -->
@@ -39,7 +39,36 @@
             <div>
                 <div style="margin: 15px 5px;">
                     <!-- ========== Display option list in to data table =========== -->
-                    <lightning:datatable columns="{! v.columns }" data="{! v.data }" keyField="id" maxRowSelection="{! v.maxRowSelection }" onrowselection="{! c.updateSelectedText }" onsort="{!c.updateColumnSorting}" />
+                    <!-- <lightning:datatable columns="{! v.columns }" data="{! v.data }" keyField="id" maxRowSelection="{! v.maxRowSelection }" onrowselection="{! c.updateSelectedText }" onsort="{!c.updateColumnSorting}" /> -->
+                    
+                    <div class="slds-modal__content slds-p-around_xx-small">
+                        <div class="slds slds-scope">
+                            <table class="slds-table slds-table_bordered slds-table_fixed-layout " role="grid">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <lightning:datatable columns="{! v.columns }" data="{! v.data }" keyField="id" onsort="{!c.updateColumnSorting}" />                                       
+                                        </th>
+                                    </tr>
+                                    <tr class="slds-text-heading--label slds-scrollable" style="line-height:20px">
+                                        <th class="subHeader">  </th> 
+                                        <th class="subHeader subData"> Option Name </th> 
+                                        <th class="subHeader subData"> Product </th> 
+                                        <th class="subHeader subData"> Quantity   </th> 
+                                        <th class="subHeader subData"> Sales Price </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                        abc
+                                        <lightning:datatable columns="{! v.columns1 }" data="{! v.data }" keyField="id" onsort="{!c.updateColumnSorting}" /></th>
+                                    </tr>
+                                    
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    
                     <aura:if isTrue="{!empty(v.data)}">
                         <div class="modalBodyDiv">
                             No Data Found

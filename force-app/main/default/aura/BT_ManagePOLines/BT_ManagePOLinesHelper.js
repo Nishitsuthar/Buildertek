@@ -2187,7 +2187,7 @@
                             }
     
                             // console.log('bomlineIdVsWCFee');
-                            console.log(bomlineIdVsWCFee.get(bomLineId));
+                            // console.log(bomlineIdVsWCFee.get(bomLineId));
                             if (bomLineId != null && bomLineId != '' && bomlineIdVsWCFee != null && bomlineIdVsWCFee != undefined) {
                                 if (bomlineIdVsWCFee.has(bomLineId) && bomlineIdVsWCFee.get(bomLineId) != null) {
                                     workrsCompFee = bomlineIdVsWCFee.get(bomLineId);
@@ -2226,7 +2226,7 @@
                                 }
                             }
     
-                            console.log('OCIP=='+OCIPVal);
+                            // console.log('OCIP=='+OCIPVal);
                             if (record[k].Key == "buildertek__Total_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'OCIP' ) {
                                 if (thisBuildPhaseName == 'Base' || thisBuildPhaseName == 'Option') {
                                     record[k].Value = parseFloat(OCIPVal).toFixed(2);

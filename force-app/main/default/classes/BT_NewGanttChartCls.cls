@@ -14,6 +14,14 @@ public class BT_NewGanttChartCls{
     }
 
     @AuraEnabled
+    public static List<Holiday> getholidays(){
+        List<Holiday> holidays = [Select StartTimeInMinutes,Name, ActivityDate
+				            From Holiday 
+				            Limit 50000];
+        return holidays;
+    }
+
+    @AuraEnabled
     public static List<AggregateResult> getPhaseDates(string scheduleId){
         List<AggregateResult> taskList = new List<AggregateResult>();
         taskList = [SELECT COUNT(Id), MIN(buildertek__Start__c), MAX(buildertek__Finish__c), buildertek__Phase__c
