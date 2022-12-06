@@ -1773,6 +1773,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                 "Nov",
                 "Dec",
               ];
+              console.log('record 1776===', {record});
               if(record.value && record.record._data.name == 'Milestone Complete'){
                 var endDate;
                 var endDate1 = new Date(record.record.startDate);
@@ -1791,10 +1792,29 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     endDate.getFullYear()
                     );
 
-                  }
+
                 }else{
+                  console.log('^record &* ',{record});
+                  console.log('1798==='+record.record._data.startDate);
+                  var sdate = new Date(record.record._data.startDate);
+                  return (
+                      months[sdate.getMonth()] +
+                      " " +
+                      Number(sdate.getDate()) +
+                      ", " +
+                      sdate.getFullYear()
+                    );
+                }
+              }else{
                 console.log('^record &* ',{record});
-                var sdate = new Date(record.record.originalData.startDate);
+                var sdate;
+                console.log('TYPE VALUE OF Name===>'+record.record._data.name);
+                console.log('TYPE VALUE OF PGHASE===>'+record.record.originalData.type);
+                if(record.record.originalData.startDate){
+                  sdate = new Date(record.record.originalData.startDate);
+                }else{
+                  sdate = new Date(record.record._data.startDate);
+                }
                 return (
                     months[sdate.getMonth()] +
                     " " +
