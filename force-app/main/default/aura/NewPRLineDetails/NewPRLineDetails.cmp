@@ -1,0 +1,71 @@
+<aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName" access="global" controller="NewPRLineDetails">
+
+	<aura:attribute name="Spinner" type="Boolean" default="false"/>
+	<aura:attribute name="PRLineDetails" type="Pricing_Request_Line_Details__c" default="{ 'sobjectType': 'Pricing_Request_Line_Details__c'}" />
+
+    <aura:attribute name="recordId" type="Id"/>
+
+	<lightning:workspaceAPI aura:id="workspace" />
+
+	<aura:html tag="style">
+		.slds-col{
+			padding: 0 10px;
+		}
+	</aura:html>
+
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+
+        <div class="slds-modal__container">
+			<header class="slds-modal__header">
+				<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"> New Pricing Request Line Detail </h2>
+			</header>
+
+			<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+
+				<lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Pricing_Request_Line_Details__c">
+					<div style="background-color: white;">
+						<div class="headingDiv"> Information </div>
+						<div class="slds-grid">
+							<div class="slds-col slds-size_1-of-2">
+								<lightning:inputField fieldName="buildertek__Price_Book__c" value="{!v.PRLineDetails.buildertek__Price_Book__c}" />
+								<lightning:inputField fieldName="buildertek__Product__c" value="{!v.PRLineDetails.buildertek__Product__c}" onchange="{!c.changeProduct}" />
+								<lightning:inputField fieldName="buildertek__Description__c" value="{!v.PRLineDetails.buildertek__Description__c}" />
+								<lightning:inputField fieldName="buildertek__Quantity__c" value="{!v.PRLineDetails.buildertek__Quantity__c}" />
+								<lightning:inputField fieldName="buildertek__Cost__c" value="{!v.PRLineDetails.buildertek__Cost__c}" />
+								<lightning:inputField fieldName="buildertek__Multiplier__c" value="{!v.PRLineDetails.buildertek__Multiplier__c}" />
+								<lightning:inputField fieldName="buildertek__Markup__c" value="{!v.PRLineDetails.buildertek__Markup__c}" />
+							</div>
+
+							<div class="slds-col slds-size_1-of-2">
+								<lightning:inputField fieldName="buildertek__Pricing_Request_Line__c" value="{!v.PRLineDetails.buildertek__Pricing_Request_Line__c}" />
+							</div>
+						</div>
+
+						<div class="headingDiv"> Related Items </div>
+						<div class="slds-grid">
+							<div class="slds-col slds-size_1-of-2">
+								<lightning:inputField fieldName="buildertek__RFQ__c" value="{!v.PRLineDetails.buildertek__RFQ__c}" />
+								<lightning:inputField fieldName="buildertek__RFQ_Lines__c" value="{!v.PRLineDetails.buildertek__RFQ_Lines__c}" />
+								<lightning:inputField fieldName="buildertek__Purchase_Order__c" value="{!v.PRLineDetails.buildertek__Purchase_Order__c}" />
+								<lightning:inputField fieldName="buildertek__Purchase_Order_Line__c" value="{!v.PRLineDetails.buildertek__Purchase_Order_Line__c}" />
+							</div>
+							<div class="slds-col slds-size_1-of-2">
+								<lightning:inputField fieldName="buildertek__Vendor__c" value="{!v.PRLineDetails.buildertek__Vendor__c}" />
+								<lightning:inputField fieldName="buildertek__Vendor_RFQ__c" value="{!v.PRLineDetails.buildertek__Vendor_RFQ__c}" />
+							</div>
+						</div>
+
+					</div>
+				</lightning:recordEditForm>
+			</div>
+
+			<footer class="slds-modal__footer">
+				<lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
+				<lightning:button name='SaveandNew' label='Save &amp; New' onclick='{!c.saveAndNew}' />
+				<lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRecord}"/>
+			</footer>
+		</div>
+	</section>
+	<div class="slds-backdrop slds-backdrop_open"></div>
+
+</aura:component>

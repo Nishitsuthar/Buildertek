@@ -1909,21 +1909,49 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
                       console.log(monthsv[eDate2.getMonth()]);
                       // Added By Ritu
-                      var edatedate = new Date(eDate2).getFullYear()+'-'+monthsv[eDate2.getMonth()]+'-'+new Date(eDate2).getDate();
-                      console.log('2669=='+edatedate);
+
                       // var test = this.holidays;
                       // console.log({test});
-                      console.log('holiday includes=='+holidayvalue.includes(edatedate));
 
-                    if (new Date(eDate2).getDay() == 0 ||  holidayvalue.includes(edatedate)) { // Added By Ritu
-                      console.log('1944--'+eDate2);
-                      eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
-                      console.log('1946--'+eDate2);
-                    }
-                    if (new Date(eDate2).getDay() == 6   ) {
-                      eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 2));
-                    }
-                    eDate2 = new Date(eDate2);
+                      eDate2 = new Date(eDate2);
+
+                      
+                      let counterNew = 1;
+                      for (let counter = 0; counter < counterNew; counter++) {
+                        var edatedate = new Date(eDate2).getFullYear()+'-'+monthsv[eDate2.getMonth()]+'-'+new Date(eDate2).getDate();
+                        if (new Date(eDate2).getDay() == 0 || new Date(eDate2).getDay() == 6 || holidayvalue.includes(edatedate)) {
+                          
+                          eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
+                          counterNew += 1;
+
+                          
+                        }
+                        
+                      }
+
+                    //   console.log('Record Day 1 ==> '+new Date(eDate2).getDay());
+                    // if (new Date(eDate2).getDay() == 6   ) {
+                    //   eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
+                    //   console.log('eDate2 1920 ==>'+eDate2);
+                    // }
+
+                    // console.log('Record Day 2 ==> '+new Date(eDate2).getDay());
+                    // if (new Date(eDate2).getDay() == 0  ) {
+                    //   eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
+                    //   console.log('eDate2 1926 ==>'+eDate2);
+                    // }
+
+
+                    // var edatedate = new Date(eDate2).getFullYear()+'-'+monthsv[eDate2.getMonth()]+'-'+new Date(eDate2).getDate();
+                    // console.log('holidayvalue ==> '+holidayvalue);
+                    // console.log(' edatedate 1934 ==>'+edatedate);
+                    // console.log('holiday includes==>'+holidayvalue.includes(edatedate));
+                    // if (holidayvalue.includes(edatedate)) { // Added By Ritu
+                    //   eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
+                    //   console.log('eDate2 1937 ==>'+eDate2);
+                    // }
+                    
+
                   }
                   endDate.setDate(endDate.getDate() - 1);
                   if (endDate.getTime() <= eDate2.getTime()) {

@@ -1,6 +1,7 @@
 <aura:component controller="PO_From_Selection_Sheet" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute name="Spinner" type="Boolean" default="false" />
+    <aura:attribute name="CheckChild" type="Boolean" default="false" />
 
     <aura:attribute name="data" type="Object" />
     <aura:attribute name="columns" type="List" />
@@ -81,8 +82,7 @@
                                     <aura:iteration items="{!v.optionWrapper}" var="optionWp">
                                         <tr>
                                             <th scope="col" class="tableData">
-                                                <!-- <lightning:input type="checkbox" aura:id="checkContractors" onchange="{!c.selectCheck}" checked="{!optionWp.selected}"/> -->
-                                                <ui:inputCheckbox aura:id="checkContractors" change="{!c.selectCheck}" value="{!optionWp.selected}"/>
+                                                <lightning:input type="checkbox" aura:id="checkContractors" onchange="{!c.selectCheck}" checked="{!optionWp.selected}"/>
                                             </th>
                                             <td class="vendorData" colspan="4">
                                                 {!optionWp.VendorData.Name}
@@ -90,8 +90,8 @@
                                         </tr>
                                         <aura:iteration items="{!optionWp.optionDataList}" var="option" >
                                             <tr>
-                                                <td class="tableData">{!option.selected}
-                                                    <ui:inputCheckbox aura:id="checkContractor" value="{!option.selected}" />
+                                                <td class="tableData">
+                                                    <lightning:input type="checkbox" aura:id="checkContractor" variant="label-hidden" checked="{!option.selected}" />
                                                 </td>
                                                 <!-- <td class="tableData"> {!option.option.Name} </td>
                                                 <td class="tableData"> {!option.option.buildertek__Product__r.Name} </td>

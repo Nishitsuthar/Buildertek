@@ -10,7 +10,7 @@
         });
         action.setCallback(this, function(response) {
             var state = response.getState();
-            console.log('State ---> ' + state);
+            console.log('State ---> ' + state);            
 
             if (state == "SUCCESS") {
 
@@ -114,7 +114,7 @@
                     component.set("v.Spinner", false);
                     $A.get("e.force:closeQuickAction").fire();
                 });
-                // $A.enqueueAction(action);
+                 $A.enqueueAction(action);
             } else {
                 component.set("v.Spinner", false);
                 helper.showToast("Error", "Error", "Please Select Options", "5000");
@@ -126,9 +126,8 @@
 
     selectAll: function(component, event, helper) {
         var optionWrapper = component.get("v.optionWrapper");
-
+        
         console.log('optionWrapper ==> ',{optionWrapper});
-        var selectedRowList = [];
         optionWrapper.forEach(optionList => {
                 optionList.optionDataList.forEach(optionData => {
                     console.log('optionData ==> ',optionData);
@@ -136,11 +135,12 @@
                     if (optionList.selected == true ) {
                         console.log('true ====> ');
                         console.log('optionList ==> ',optionList);
-                        //selectedRowList.push(optionData.option);
                         optionData.selected=true;
                     }
             });
             });
+            component.set("v.optionWrapper",optionWrapper);
+            console.log('End optionWrapper ==> ',{optionWrapper});
     },
 
     //===== Description:- This method is used to show toast message !!====

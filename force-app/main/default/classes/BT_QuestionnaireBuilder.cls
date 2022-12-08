@@ -1005,8 +1005,10 @@ public with sharing class BT_QuestionnaireBuilder{
 		query = query + ', (Select ' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Question_Group__c') + ' From Question_Groups__r ORDER BY Sort_Id__c, CreatedDate, Name ASC)';
 		if (!String.isBlank(sectionId)){
 			query = query + ' From buildertek__Section__c where Selection__c =:selectionSheetid AND Id =: sectionId ORDER BY Sort_Id__c, CreatedDate, Name ASC LIMIT 1';
+			System.debug('query=====>>>>>'+query);
 		} else{
 			query = query + ' From buildertek__Section__c where Selection__c =:selectionSheetid ORDER BY Sort_Id__c, CreatedDate, Name ASC LIMIT 1';
+			System.debug('query=====>>>>>'+query);
 		}
 
 		List<fieldset> otherQuestionFields = new List<fieldset>();
