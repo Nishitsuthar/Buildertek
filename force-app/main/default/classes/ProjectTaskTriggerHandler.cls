@@ -98,6 +98,7 @@ public class ProjectTaskTriggerHandler{
 		                                                            from Account
 		                                                            where id IN:accountIds]);
 		for (Project_Task__c updatedProjectTask : updatedProjectTasks){
+			System.debug('updatedProjectTask 101 ==> '+updatedProjectTask);
 			//Calculate Start Date And End Date with Weekends.
 			//system.debug(updatedProjectTask.buildertek__Start__c);
 
@@ -148,6 +149,7 @@ public class ProjectTaskTriggerHandler{
 				System.debug('duration in before outside condition ==> ' + duration + ' updatedProjectTask task id ' + updatedProjectTask.id);
 				updatedProjectTask.buildertek__Finish__c = finishDate;
 				updatedProjectTask.buildertek__Duration__c = duration;
+				System.debug('updatedProjectTask 152 ==> '+updatedProjectTask);
 			} else{
 
 			}
