@@ -130,12 +130,13 @@
             });
             $A.enqueueAction(action);
         }
-    }, 
+    },
 
     changePriceBookHelper: function(component, event, helper){
         console.log('changePriceBookHelper');
         var PRLineDetails = component.get('v.PRLineDetails');
         var priceBook = PRLineDetails.buildertek__Price_Book__c;
+        priceBook = String(priceBook);
 
         console.log('priceBook ==> '+priceBook);
 
@@ -145,6 +146,8 @@
                 "priceBookId": priceBook
             });
             action.setCallback(this, function(response) {
+                var state = response.getState();
+                console.log('state',{state});
                 var productList = response.getReturnValue();
                 console.log('productList ==> ',{productList});
             });
