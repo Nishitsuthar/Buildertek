@@ -13,6 +13,8 @@ public with sharing class CloneMeetingController {
             wrapmeet.meet=[Select Id, buildertek__Subject__c ,buildertek__Location__c, buildertek__Project__c,buildertek__Meeting_Date__c,buildertek__Opportunity__c,
             buildertek__Status__c,buildertek__Start_Time__c,buildertek__Duration__c,buildertek__End_Time__c From buildertek__Meeting__c where Id=:recordId LIMIT 1];
 
+            System.debug('wrapmeet.meet ==> '+wrapmeet.meet);
+
             // get List of Atendee whose parent Id(buildertek__Meeting__c) Present in recordId
             wrapmeet.Attendee=[Select Id ,Name,buildertek__Attendee_s_FirstName__c	,buildertek__Attendee_s_LastName__c	,CreatedById,CurrencyIsoCode,buildertek__Email_Address__c,LastModifiedById,buildertek__Meeting_Date__c,buildertek__Meeting_Subject__c	,buildertek__Phone__c	,buildertek__Present__c,buildertek__Role__c, buildertek__Meeting__c , buildertek__Contact__c from buildertek__Attendee__c where buildertek__Meeting__c=:recordId];
             System.debug(wrapmeet);

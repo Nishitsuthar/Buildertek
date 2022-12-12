@@ -16,12 +16,32 @@
                 console.log(response);
                 if (state === "SUCCESS") {
                     console.log(response.getReturnValue());
-                    component.set('v.oldMeeting', response.getReturnValue().meet);
+
+                    var resule = response.getReturnValue();
+                    var duration = resule.meet.buildertek__Start_Time__c;
+                    var minutes = Math.floor((duration / (1000 * 60)) % 60);
+                    var hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+                    
+                    hours = (hours < 10) ? "0" + hours : hours;
+                    minutes = (minutes < 10) ? "0" + minutes : minutes;
+                    var dateData = hours + ":" + minutes;
+                    resule.meet.buildertek__Start_Time__c = dateData;
+                    console.log('Start time',dateData);
+
+                    
+                    var duration1 = resule.meet.buildertek__End_Time__c;
+                    var minutes = Math.floor((duration1 / (1000 * 60)) % 60);
+                    var hours = Math.floor((duration1 / (1000 * 60 * 60)) % 24);
+
+                    hours = (hours < 10) ? "0" + hours : hours;
+                    minutes = (minutes < 10) ? "0" + minutes : minutes;
+                    var dateData1 = hours + ":" + minutes;
+                    resule.meet.buildertek__End_Time__c = dateData1;
+                    console.log('End time',dateData1);
+
+                    component.set('v.oldMeeting', resule.meet);
                     component.set('v.Atendee', response.getReturnValue().Attendee);
                     component.set('v.actionItemRec', response.getReturnValue().actionItem);
-
-
-
 
                 }
             });
@@ -62,10 +82,11 @@
                 action: component.get('v.actionItemRec')
             });
             action.setCallback(this, function(response) {
-                console.log(response);
+                console.log('Response----->',response);
                 var state = response.getState();
-                var result = response.getReturnValue();
-                if (state === "SUCCESS") {
+                var result = response.getReturnValue();                
+                if (state === "SUCCESS") {        
+                    console.log('save action');               
                     component.set("v.Spinner", false);
                     $A.get("e.force:closeQuickAction").fire();
                     var toastEvent = $A.get("e.force:showToast");

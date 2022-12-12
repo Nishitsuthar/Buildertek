@@ -20,9 +20,6 @@
     },
 
     doInit: function(component, event, helper) {
-
-        component.set('v.clickRejectBtn', true);
-
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getEnclosingTabId().then((response) => {
             let opendTab = response.tabId;
@@ -38,14 +35,6 @@
         });
 
         /*--------------------------------------------*/
-
-
-
-
-
-
-
-
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -91,16 +80,6 @@
         helper.getmulticur(component, event, helper);
         helper.setRejectedBtnColor(component, event, helper);
 
-
-        console.log("Hello : ", JSON.parse(JSON.stringify(component.get("v.TotalRecords"))));
-        /*if(component.find('expandCollapeseAllBtn')){
-                    if(component.find('expandCollapeseAllBtn').get('v.iconName')){
-                        component.find('expandCollapeseAllBtn').set("v.title", "Expand All");
-                    
-                        component.find('expandCollapeseAllBtn').set("v.iconName", "utility:add");
-                    }
-                     
-                }*/
         if (component.find('expandCollapeseAllBtn2')) {
             if (component.find('expandCollapeseAllBtn2').get('v.iconName')) {
                 component.find('expandCollapeseAllBtn2').set("v.title", "Collapse All");
@@ -166,10 +145,6 @@
         }
     },
     addProductFromGroup: function(component, event, helper) {
-        component.set('v.clickRejectBtn', true);
-
-        // debugger;
-        // component.set("v.Spinner",true);
         if (!component.get('v.isAddProductFromGroup')) {
             var groups = component.get('v.TotalRecords').groups;
             var quote = component.get('v.newQuote');
@@ -523,7 +498,6 @@
     },
 
     addRFQ: function(component, event, helper) {
-        component.set('v.clickRejectBtn', true);
         helper.createRFQPicker(component, event, helper);
     },
 
@@ -573,9 +547,6 @@
             });
     },
     saveQuoteRecord: function(component, event, helper) {
-        component.set('v.clickRejectBtn', true);
-
-
         console.log('========================Save method fire======================');
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
@@ -736,8 +707,6 @@
     },
 
     deleteSelectedQuoteItem: function(component, event, helper) {
-        component.set('v.clickRejectBtn', true);
-
         if (component.find("checkQuoteItem") != undefined) {
             $A.get("e.c:BT_SpinnerEvent").setParams({
                 "action": "SHOW"
@@ -1188,8 +1157,6 @@ $A.enqueueAction(action1);*/
     //additional functionallity for mass-update and duplicate records 
 
     onClickMassUpdateCancel: function(component, event, helper) {
-        component.set('v.clickRejectBtn', true);
-
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -1470,8 +1437,6 @@ $A.enqueueAction(action1);*/
         }
     },
     onClickMassDuplicate: function(component, event, helper) {
-        component.set('v.clickRejectBtn', true);
-
         if (component.find("checkQuoteItem") != undefined) {
             var QuoteIds = [];
             var getAllId = component.find("checkQuoteItem");
@@ -1511,8 +1476,6 @@ $A.enqueueAction(action1);*/
         }
     },
     onClickAddlines: function(component, event, helper) {
-        component.set('v.clickRejectBtn', true);
-
         var evt = $A.get("e.force:navigateToComponent");
         evt.setParams({
             componentDef: "c:BT_MassUpdateQuote",
@@ -1626,7 +1589,6 @@ $A.enqueueAction(action1);*/
             });
             $A.enqueueAction(action);
         }
-
     },
     closeDuplicateModel: function(component, event, helper) {
         // for Hide/Close Model,set the "isDuplicate" attribute to "Fasle"  
@@ -1666,7 +1628,6 @@ $A.enqueueAction(action1);*/
             });
             toastEvent.fire();
         }
-        component.set('v.clickRejectBtn', true);
 
 
         // 	var a = component.get("v.QuoteRec").Id;
@@ -1799,7 +1760,6 @@ helper.getQuoteInfo(component,event,helper);*/
         }).fire();
         var page = component.get("v.page") || 1;
         helper.getGroups(component, event, helper, page);
-
 
     },
     onInputChange: function(component, event, helper) {
@@ -2446,47 +2406,11 @@ return other.Id == current.Id
         $A.enqueueAction(action);
     },
 
-    showRejectedLines: function(component, event, helper) {
-        helper.showRejectedLines(component, event, helper);
-    },
-    goBack: function(component, event, helper) {
-
+    clickRejectLinesBtn: function(component, event, helper) {
         component.set('v.clickRejectBtn', true);
-    },
-    handleRowAction: function(component, event, helper) {
-        var action = event.getParam('action');
-        var row = event.getParam('row');
-        var recordId = row.Id;
-        switch (action.name) {
-            case 'copy':
-                component.set("v.currentId", recordId);
-                component.set("v.PopupHeader", "Duplicate Quote Line");
-                component.set("v.PopupDescription", "Are you sure you want to duplicate this Quote Line?");
-                component.set("v.isDuplicate", true);
-                break;
-            case 'edit':
-                var editRecordEvent = $A.get("e.force:editRecord");
-                editRecordEvent.setParams({
-                    "recordId": recordId
-                });
-                editRecordEvent.fire();
-                break;
-            case 'delete':
-                component.set("v.PopupHeader", "Delete Quote Line");
-                component.set("v.PopupDescription", "Are you sure you want to delete this Quote Line?");
-                component.set("v.isOpen", true);
-                component.set("v.quoteItemId", recordId);
-                break;
-        }
-        window.setTimeout(
-            $A.getCallback(function() {
-                helper.setRejectedBtnColor(component, event, helper)
-                helper.showRejectedLines(component, event, helper)
-            }), 3000
-        );
         $A.get('e.force:refreshView').fire();
-        console.log(component.get('v.rejectData'));
 
     }
+
 
 })

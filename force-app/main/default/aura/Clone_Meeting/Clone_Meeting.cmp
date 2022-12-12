@@ -48,15 +48,10 @@
             <lightning:layout multipleRows="true">
                 <lightning:outputField fieldName="Auto_Number__c" />
 
-                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                <!-- <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                     <label>Meeting Name</label>
                     <lightning:input type="text" autocomplete="off" variant="label-hidden" readonly="true" />
-                </lightning:layoutItem>
-
-                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                    <label>Location</label>
-                    <lightning:textarea name="input1" label="location" value="{!v.oldMeeting.buildertek__Location__c}" variant="label-hidden" />
-                </lightning:layoutItem>
+                </lightning:layoutItem> -->
 
                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                     <label>Subject</label>
@@ -64,10 +59,8 @@
                 </lightning:layoutItem>
 
                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                    <lightning:recordEditForm objectApiName="buildertek__Meeting__c">
-                        <lightning:messages />
-                        <lightning:inputField fieldName="buildertek__Project__c" value="{!v.oldMeeting.buildertek__Project__c}" />
-                    </lightning:recordEditForm>
+                    <label>Location</label>
+                    <lightning:textarea name="input1" label="location" value="{!v.oldMeeting.buildertek__Location__c}" variant="label-hidden" />
                 </lightning:layoutItem>
 
                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
@@ -78,11 +71,9 @@
                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                     <lightning:recordEditForm objectApiName="buildertek__Meeting__c">
                         <lightning:messages />
-                        <lightning:inputField fieldName="buildertek__Opportunity__c" value="{!v.oldMeeting.buildertek__Opportunity__c}" />
+                        <lightning:inputField fieldName="buildertek__Project__c" value="{!v.oldMeeting.buildertek__Project__c}" />
                     </lightning:recordEditForm>
                 </lightning:layoutItem>
-
-
 
                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                     <lightning:select label="Status" aura:id="statusPicklist" value="{!v.oldMeeting.buildertek__Status__c}" name="statusPicklist">
@@ -92,11 +83,13 @@
                         </aura:iteration>
                     </lightning:select>
                 </lightning:layoutItem>
-
+                
                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-
+                    <lightning:recordEditForm objectApiName="buildertek__Meeting__c">
+                        <lightning:messages />
+                        <lightning:inputField fieldName="buildertek__Opportunity__c" value="{!v.oldMeeting.buildertek__Opportunity__c}" />
+                    </lightning:recordEditForm>
                 </lightning:layoutItem>
-
 
                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                     <label>Start Time</label>
@@ -104,9 +97,8 @@
                 </lightning:layoutItem>
 
                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-
-                </lightning:layoutItem>
-
+                </lightning:layoutItem>      
+                
                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                     <lightning:select label="Duration (Minutes)" aura:id="durationPicklist" value="{!v.oldMeeting.buildertek__Duration__c}" name="durationPicklist">
                         <option value="">--None--</option>
@@ -115,13 +107,16 @@
                         </aura:iteration>
                     </lightning:select>
                 </lightning:layoutItem>
-                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
 
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                 </lightning:layoutItem>
 
                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                     <label>End Time</label>
                     <lightning:input type="time" value="{!v.oldMeeting.buildertek__End_Time__c}" autocomplete="off" variant="label-hidden" />
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                 </lightning:layoutItem>
             </lightning:layout>
             <!-- === End Input Field layout=== -->
