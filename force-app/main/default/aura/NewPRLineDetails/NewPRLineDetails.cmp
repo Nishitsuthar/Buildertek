@@ -27,8 +27,8 @@
 						<div class="headingDiv"> Information </div>
 						<div class="slds-grid">
 							<div class="slds-col slds-size_1-of-2">
-								<lightning:inputField fieldName="buildertek__Price_Book__c" value="{!v.PRLineDetails.buildertek__Price_Book__c}" />
-								<lightning:inputField fieldName="buildertek__Product__c" value="{!v.PRLineDetails.buildertek__Product__c}" onchange="{!c.changeProduct}" />
+								<lightning:inputField fieldName="buildertek__Price_Book__c" value="{!v.PRLineDetails.buildertek__Price_Book__c}" onchange="{!c.changePriceBook}"  />
+								<lightning:inputField fieldName="buildertek__Product__c" value="{!v.PRLineDetails.buildertek__Product__c}" />
 								<lightning:inputField fieldName="buildertek__Description__c" value="{!v.PRLineDetails.buildertek__Description__c}" />
 								<lightning:inputField fieldName="buildertek__Quantity__c" value="{!v.PRLineDetails.buildertek__Quantity__c}" />
 								<lightning:inputField fieldName="buildertek__Cost__c" value="{!v.PRLineDetails.buildertek__Cost__c}" />
