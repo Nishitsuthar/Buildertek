@@ -132,8 +132,10 @@
         }
     },
 
-    changePriceBookHelper: function(component, event, helper){
-        console.log('changePriceBookHelper');
+    searchProductHelper: function(component, event, helper){
+        console.log('searchProductHelper');
+        var searchProductValue = component.get("v.searchProductValue");
+    
         var PRLineDetails = component.get('v.PRLineDetails');
         var priceBook = PRLineDetails.buildertek__Price_Book__c;
         priceBook = String(priceBook);
@@ -143,18 +145,19 @@
         if (priceBook != null && priceBook != '') {
             var action = component.get("c.getProductDetails");
             action.setParams({
-                "priceBookId": priceBook
+                "priceBookId": String(priceBook),
+                "searchProductFilter": searchProductValue
             });
             action.setCallback(this, function(response) {
-                var state = response.getState();
-                console.log('state',{state});
                 var productList = response.getReturnValue();
                 console.log('productList ==> ',{productList});
+                component.set("v.productList",productList);
+                component.set("v.displayProduct", true);
             });
             $A.enqueueAction(action);
         } else{
             PRLineDetails.buildertek__Product__c = null;
-            component.set('v.PRLineDetails', PRLineDetails);
+            component.set("v.PRLineDetails", PRLineDetails);
         }
     }
 })

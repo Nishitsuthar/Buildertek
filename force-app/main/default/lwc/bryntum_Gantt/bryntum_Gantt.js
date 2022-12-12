@@ -32,13 +32,12 @@ import changeOriginalDates from "@salesforce/apex/BT_NewGanttChartCls.changeOrig
 import { formatData, saveeditRecordMethod } from "./bryntum_GanttHelper";
 
 import getRecordType from "@salesforce/apex/BT_NewGanttChartCls.getRecordType";
-import getholidays from "@salesforce/apex/BT_NewGanttChartCls.getholidays";
 import { getPicklistValues, getObjectInfo } from 'lightning/uiObjectInfoApi';
 
 export default class Gantt_component extends NavigationMixin(LightningElement) {
+  @api showpopup = false;
   @api holidays = [];
   @api monthsval = [];
-  @api showpopup = false;
   @api fileTaskId = "";
   @api showDeletePopup = false;
   @api showEditPopup = false;
@@ -450,7 +449,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         );
         if (duration) {
           endDate = new Date(stDate.setDate(stDate.getDate() + (duration - 1)));
-
           var Difference_In_Time = endDate.getTime() - stDate.getTime();
 
           // To calculate the no. of days between two dates
@@ -1180,27 +1178,11 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     this.phaseFunction();
   }
 
-
-  holidaydata() {
-    getholidays()
-      .then((result) => {
-          console.log('this.holidays--->',this.holidays);
-          for (let i = 0; i < result.length; i++) {
-            this.holidays.push(result[i].ActivityDate);
-            }
-      })
-      .catch((error) => {
-          console.log('Holidays Error',{error});
-      });
-  }
-
-
   renderedCallback() {
     if (this.bryntumInitialized) {
       return;
     }
     this.bryntumInitialized = true;
-    this.holidaydata();
 
     Promise.all([
       loadScript(this, GANTTModule), //GanttDup ,SchedulerPro GANTTModule,GANTT + "/gantt.lwc.module.js"
@@ -1603,9 +1585,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
         console.log("tasks  ==> ", { tasks });
 
-        var holidayvalue = this.holidays;
-        console.log('holidayvalue-->',{holidayvalue});
-
       const project = new bryntum.gantt.ProjectModel({
         //enableProgressNotifications : true,
         calendar: data.project.calendar,
@@ -1773,48 +1752,27 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                 "Nov",
                 "Dec",
               ];
-              console.log('record 1776===', {record});
               if(record.value && record.record._data.name == 'Milestone Complete'){
                 var endDate;
                 var endDate1 = new Date(record.record.startDate);
                 endDate1.setDate(endDate1.getDate() + record.record._data.durationMile);
                 if(record.record._parent._data.endDate != undefined){
-                  endDate = new Date(record.record._parent._data.endDate);
-                  endDate.setDate(endDate.getDate() - 1);
-                  endDate = new Date(endDate);
-                  //return record.value;
+                endDate = new Date(record.record._parent._data.endDate);
+                endDate.setDate(endDate.getDate() - 1);
+                endDate = new Date(endDate);
+                //return record.value;
 
-                  return (
-                    months[endDate.getMonth()] +
-                    " " +
-                    Number(endDate.getDate()) +
-                    ", " +
-                    endDate.getFullYear()
-                    );
+                return (
+                  months[endDate.getMonth()] +
+                  " " +
+                  Number(endDate.getDate()) +
+                  ", " +
+                  endDate.getFullYear()
+                );
 
-
-                }else{
-                  console.log('^record &* ',{record});
-                  console.log('1798==='+record.record._data.startDate);
-                  var sdate = new Date(record.record._data.startDate);
-                  return (
-                      months[sdate.getMonth()] +
-                      " " +
-                      Number(sdate.getDate()) +
-                      ", " +
-                      sdate.getFullYear()
-                    );
                 }
               }else{
-                console.log('^record &* ',{record});
-                var sdate;
-                console.log('TYPE VALUE OF Name===>'+record.record._data.name);
-                console.log('TYPE VALUE OF PGHASE===>'+record.record.originalData.type);
-                if(record.record.originalData.startDate){
-                  sdate = new Date(record.record.originalData.startDate);
-                }else{
-                  sdate = new Date(record.record._data.startDate);
-                }
+                var sdate = new Date(record.record.startDate);
                 return (
                     months[sdate.getMonth()] +
                     " " +
@@ -1851,10 +1809,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                 "Nov",
                 "Dec",
               ];
-
-              const monthsv = ["01","02","03","04","05","06","07","08","09","10","11","12"];
-
-
               if (record.value) {
 
                 // console.log('Record of endDate =>',{record});
@@ -1869,18 +1823,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     // console.log('In if conditon for enddate');
                   var start;
                   var endDate = new Date(record.value);
-                  // var start = new Date(record.record.startDate.getTime());
-                  var start;
-                  if(record.record.originalData.startDate){
-                    console.log('1856');
-                    let dd =new Date(record.record.originalData.startDate);
-                    console.log('ddd--',{dd});
-                    start = new Date(dd.getTime());
-                  } else {
-                    console.log('1859');
-                    start = new Date(record.record.startDate.getTime());
-                  }
-                  console.log('start---->'+start);
+                  var start = new Date(record.record.startDate.getTime());
                   var duration = record.record.duration;
                   var eDate = new Date(start);
                   var eDatebefore = endDate;
@@ -1896,62 +1839,14 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                       eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
                       // console.log("eDate2 els after=> " + "i = " + i + " " + eDate2);
                     }
-                    // if (new Date(eDate2).getDay() == 0) {
-                    //   eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
-                    // }
-                    // if (new Date(eDate2).getDay() == 6) {
-                    //   eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 2));
-                    // }
+                    if (new Date(eDate2).getDay() == 0) {
+                      eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
+                    }
+                    if (new Date(eDate2).getDay() == 6) {
+                      eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 2));
+                    }
                     //console.log('custom',eDate2)
-                    console.log('1884=='+eDate2);
-                      console.log('1909-->',holidayvalue);
-                      // console.log('this.monthsval-->',this.monthsval);
-
-                      console.log(monthsv[eDate2.getMonth()]);
-                      // Added By Ritu
-
-                      // var test = this.holidays;
-                      // console.log({test});
-
-                      eDate2 = new Date(eDate2);
-
-                      
-                      let counterNew = 1;
-                      for (let counter = 0; counter < counterNew; counter++) {
-                        var edatedate = new Date(eDate2).getFullYear()+'-'+monthsv[eDate2.getMonth()]+'-'+new Date(eDate2).getDate();
-                        if (new Date(eDate2).getDay() == 0 || new Date(eDate2).getDay() == 6 || holidayvalue.includes(edatedate)) {
-                          
-                          eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
-                          counterNew += 1;
-
-                          
-                        }
-                        
-                      }
-
-                    //   console.log('Record Day 1 ==> '+new Date(eDate2).getDay());
-                    // if (new Date(eDate2).getDay() == 6   ) {
-                    //   eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
-                    //   console.log('eDate2 1920 ==>'+eDate2);
-                    // }
-
-                    // console.log('Record Day 2 ==> '+new Date(eDate2).getDay());
-                    // if (new Date(eDate2).getDay() == 0  ) {
-                    //   eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
-                    //   console.log('eDate2 1926 ==>'+eDate2);
-                    // }
-
-
-                    // var edatedate = new Date(eDate2).getFullYear()+'-'+monthsv[eDate2.getMonth()]+'-'+new Date(eDate2).getDate();
-                    // console.log('holidayvalue ==> '+holidayvalue);
-                    // console.log(' edatedate 1934 ==>'+edatedate);
-                    // console.log('holiday includes==>'+holidayvalue.includes(edatedate));
-                    // if (holidayvalue.includes(edatedate)) { // Added By Ritu
-                    //   eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
-                    //   console.log('eDate2 1937 ==>'+eDate2);
-                    // }
-                    
-
+                    eDate2 = new Date(eDate2);
                   }
                   endDate.setDate(endDate.getDate() - 1);
                   if (endDate.getTime() <= eDate2.getTime()) {
@@ -1965,8 +1860,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     record.value.setDate(eDate2.getDate() + 1);
                   }
                   var eDateafter = endDate;
-                  console.log('^1909^==> '+endDate);
-                  console.log('endDate 22 ==> '+eDate2);
                   return (
                     months[endDate.getMonth()] +
                     " " +

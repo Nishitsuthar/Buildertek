@@ -1,5 +1,5 @@
 <!-- This Component Called From OptionUpgrade.cmp -->
-<aura:component controller="OptionUpgrade">
+<aura:component controller="OptionUpgrade" access="global">
 
     <lightning:workspaceAPI aura:id="workspace"/>
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -253,7 +253,7 @@
                                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.optionValue.buildertek__Manufacturer__c + '/view'}" target="_blank" label="{!v.optionValue.buildertek__Manufacturer__r.Name}" />
                                                 </td>
                                                 <td>
-                                                    <lightning:formattedNumber value="{!v.optionValue.buildertek__Cost__c}" style="currency" currencyCode="{!v.optionValue.CurrencyIsoCode}" currencyDisplayAs="code"/>
+                                                    <lightning:formattedNumber value="{!v.optionValue.buildertek__Cost__c}" style="currency" currencyCode="{!v.orgCurr}" currencyDisplayAs="code"/>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -281,7 +281,7 @@
                                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.productValue.buildertek__Manufacturer__c + '/view'}" target="_blank" label="{!v.productValue.buildertek__Manufacturer__r.Name}" />
                                                 </td>
                                                 <td>
-                                                    <lightning:formattedNumber value="{!v.optionValue.buildertek__Upgrade_Costs__c}" style="currency" currencyCode="{!v.optionValue.CurrencyIsoCode}" currencyDisplayAs="code"/>
+                                                    <lightning:formattedNumber value="{!v.optionValue.buildertek__Upgrade_Costs__c}" style="currency" currencyCode="{!v.orgCurr}" currencyDisplayAs="code"/>
                                                 </td>
                                             </tr>
                                         </tbody>

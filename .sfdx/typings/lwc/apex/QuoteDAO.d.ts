@@ -71,7 +71,7 @@ declare module "@salesforce/apex/QuoteDAO.updateGroupName" {
   export default function updateGroupName(param: {groupId: any, groupName: any}): Promise<any>;
 }
 declare module "@salesforce/apex/QuoteDAO.retrieveGroups" {
-  export default function retrieveGroups(param: {quoteId: any, pageNumber: any, recordToDisply: any}): Promise<any>;
+  export default function retrieveGroups(param: {quoteId: any, pageNumber: any, recordToDisply: any, status: any}): Promise<any>;
 }
 declare module "@salesforce/apex/QuoteDAO.getFieldSet" {
   export default function getFieldSet(param: {fieldSetName: any, objectName: any}): Promise<any>;
@@ -110,7 +110,7 @@ declare module "@salesforce/apex/QuoteDAO.deleteGroups" {
   export default function deleteGroups(param: {groups: any}): Promise<any>;
 }
 declare module "@salesforce/apex/QuoteDAO.deleteItem" {
-  export default function deleteItem(param: {Items: any, groupId: any, quoteId: any}): Promise<any>;
+  export default function deleteItem(param: {Items: any, groupId: any, quoteId: any, status: any}): Promise<any>;
 }
 declare module "@salesforce/apex/QuoteDAO.deleteLineItems" {
   export default function deleteLineItems(param: {quoteItemIds: any}): Promise<any>;
@@ -162,4 +162,7 @@ declare module "@salesforce/apex/QuoteDAO.priceBookInProject" {
 }
 declare module "@salesforce/apex/QuoteDAO.searchProdcutFamily" {
   export default function searchProdcutFamily(param: {searchedWord: any}): Promise<any>;
+}
+declare module "@salesforce/apex/QuoteDAO.getQuoteLines" {
+  export default function getQuoteLines(param: {recordId: any}): Promise<any>;
 }

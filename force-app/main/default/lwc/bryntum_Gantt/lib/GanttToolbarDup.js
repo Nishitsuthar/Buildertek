@@ -274,8 +274,7 @@ export default base => class GanttToolbar extends base {
                             ref        : 'saveDataButton',
                             icon       : 'b-fa b-fa-save',
                             text       : 'Save Changes',
-                            // onAction : 'up.onSaveClick'
-                            onAction : 'up.onSaveClickNew'
+                            onAction : 'up.onSaveClick'
                         }
                     ]
                 },
@@ -370,9 +369,6 @@ export default base => class GanttToolbar extends base {
             
             
         }
-    }
-    onSaveClickNew(){
-        window.location.reload();
     }
     onSaveClick(){
         console.log(this.gantt.data)

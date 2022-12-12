@@ -3,10 +3,12 @@ public with sharing class OptionUpgrade {
     @AuraEnabled
     public static optionWrapper getProductDetails(String recordId, String searchNameValue, String searchTypeValue, String searchManufacturerValue, String searchFamilyValue, String searchCategoryValue, String selectedPriceBook, Boolean priceBookFilter) {
         buildertek__Question__c option = [SELECT Id, Name, buildertek__Question_Group__c, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name,
-                                            buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c, buildertek__Price_Book__c, CurrencyIsoCode,
+                                            buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c, buildertek__Price_Book__c,
                                             buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c FROM buildertek__Question__c WHERE Id =: recordId];
 
         List<Product2> productList = new List<Product2>();
+
+        string orgCurr = UserInfo.getDefaultCurrency();
 
         System.debug('-- option --');
         // if (option.buildertek__Section__c != null) {
@@ -112,6 +114,7 @@ public with sharing class OptionUpgrade {
         }
         optionWrapperData.productWrapperList = prodWrapperList;
         optionWrapperData.productCount = prodCount;
+        optionWrapperData.orgCurr = orgCurr;
         return optionWrapperData;
     }
 
@@ -246,6 +249,8 @@ public with sharing class OptionUpgrade {
 
         @AuraEnabled
         public List<productWrapper> productWrapperList {get;set;}
+
+        @AuraEnabled public String orgCurr;
     }
 
     public class productWrapper{

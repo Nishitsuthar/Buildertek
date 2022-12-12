@@ -1,33 +1,16 @@
 ({
-    // Get picklist value dynamic 
-    getPicklist: function(component, event, helper) {
+    showToast: function(type, title, message, time) {
         try {
-            var action = component.get("c.getPickListValuesInMap");
-            action.setParams({
-
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                "title": title,
+                "type": type,
+                "message": message,
+                "duration": time
             });
-            action.setCallback(this, function(response) {
-
-                var durationResult = response.getReturnValue().durationOptions;
-                var statusResult = response.getReturnValue().statusOption;
-
-                var durationMap = [];
-                var statusMap = [];
-                for (var key in durationResult) {
-                    durationMap.push({ key: key, value: durationResult[key] });
-                }
-                component.set("v.getOption", durationMap);
-
-                for (var key in statusResult) {
-                    statusMap.push({ key: key, value: statusResult[key] });
-                }
-                component.set("v.getStatusOption", statusMap);
-
-            });
-            $A.enqueueAction(action);
-        } catch (e) {
-            console.log('OUTPUT : ', e);
+            toastEvent.fire();
+        } catch (error) {
+            console.log({ error });
         }
-
-    }
+    },
 })

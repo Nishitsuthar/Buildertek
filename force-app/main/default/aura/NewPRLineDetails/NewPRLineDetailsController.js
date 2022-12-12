@@ -20,7 +20,25 @@
         helper.createRecordHelper(component, event, helper);
     },
 
-    changePriceBook: function(component, event, helper) {
-        helper.changePriceBookHelper(component, event, helper);
-    }
+    clickHandler: function(component, event, helper) {
+        var record = event.currentTarget.dataset.value;
+        component.set("v.PRLineDetails.buildertek__Product__c", record);
+
+        var productList = component.get("v.productList");
+        productList.forEach(element => {
+            if (element.Id == record) {
+                component.set("v.searchProductValue", element.Name);
+            }
+        });
+        component.set("v.displayProduct", false);
+    }, 
+
+    searchProduct: function(component, event, helper) {
+        helper.searchProductHelper(component, event, helper);
+    }, 
+
+    closeSearchOption: function (component, event, helper){
+        component.set("v.displayProduct", false);
+    },
+    
 })
