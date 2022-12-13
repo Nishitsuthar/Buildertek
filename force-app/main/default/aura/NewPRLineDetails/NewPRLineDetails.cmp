@@ -45,7 +45,8 @@
 												<li role="presentation" class="slds-listbox__item" data-value="{!result.Id}" onclick="{!c.clickHandler}">
 													<div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
 														<span class="slds-media__body">
-															<span class="slds-truncate" title="All Opportunities">
+															<lightning:icon iconName="standard:product" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+															<span class="slds-truncate" style="padding-left: 5px;" >
 																<span>{!result.Name}</span>
 															</span>
 														</span>
