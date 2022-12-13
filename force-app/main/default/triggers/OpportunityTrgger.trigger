@@ -19,7 +19,6 @@ trigger OpportunityTrgger on Opportunity (before update,before insert) {
     for(Opportunity a : Trigger.new)
     {
         
-    
        if((Trigger.isInsert && Trigger.isBefore) || (Trigger.isBefore && Trigger.isUpdate && Trigger.oldMap.get(a.id).Support_Region__c != a.Support_Region__c || String.IsBlank(a.Sales_Director__c) ))
       
        //a.UserProfile__c != 'System Administrator'&&

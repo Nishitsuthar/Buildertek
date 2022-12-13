@@ -35,7 +35,6 @@ public with sharing class OpportunityTrigger_Test {
         opp.StageName = 'Closed Won';
         update opp;
         
-        
         try{
             delete quote;
         }catch(Exception e){
