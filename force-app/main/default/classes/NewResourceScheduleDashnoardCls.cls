@@ -880,7 +880,7 @@ SchedulerRec.ScheduleProjectId = equ.buildertek__Project__r.Id;*/
         string contactQuery = 'Select id,Name,Account.Name,AccountId,buildertek__Simultaneous_Tasks__c From Contact Where ';
         contactQuery += ' id != null ';
         if (slectedTradetypeId != null && slectedTradetypeId != ''){
-            contactQuery += ' AND Account.buildertek__Trade_Type_Lookup__c=: slectedTradetypeId And';
+            contactQuery += ' AND Account.buildertek__Trade_Type_Lookup__c=: slectedTradetypeId';
         }
         if(resourceSearch != null && resourceSearch != ''){
             contactQuery += ' AND (Name LIKE: resourceSearchVal) ';

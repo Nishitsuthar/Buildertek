@@ -1799,6 +1799,7 @@
                                     if (record[k].Key == "buildertek__SalesTax" && record[k].Value != null && record[k].Value != undefined &&
                                         thisBuildPhaseName != null && thisBuildPhaseName != undefined && thisBuildPhaseName != '' && thisBuildPhaseName == 'Base') {
                                         salestax = Math.round((parseFloat(salestax.toString()) + parseFloat(record[k].Value.toString())) * 100) / 100;
+                                        console.log('salestax :) -> ',salestax);
                                     }
         
                                     if (record[k].Key == "buildertek__Total_Cost" && record[k].Value != null && record[k].Value != undefined &&

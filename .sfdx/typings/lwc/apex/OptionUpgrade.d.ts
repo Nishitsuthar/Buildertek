@@ -19,3 +19,9 @@ declare module "@salesforce/apex/OptionUpgrade.getProductName" {
 declare module "@salesforce/apex/OptionUpgrade.getManufacturer" {
   export default function getManufacturer(param: {searchManufacturerValue: any}): Promise<any>;
 }
+declare module "@salesforce/apex/OptionUpgrade.getOptionRecord" {
+  export default function getOptionRecord(param: {recordId: any}): Promise<any>;
+}
+declare module "@salesforce/apex/OptionUpgrade.cloneOptionRecord" {
+  export default function cloneOptionRecord(param: {optionRec: any, recordId: any}): Promise<any>;
+}

@@ -234,6 +234,29 @@ public with sharing class OptionUpgrade {
         return ManufacturerList;
     }
 
+    @AuraEnabled
+    public static buildertek__Question__c getOptionRecord(String recordId){
+        buildertek__Question__c optRecord = [SELECT Id ,Name ,buildertek__Price_Book__c ,buildertek__Product__c,buildertek__Quantity__c,buildertek__Cost__c,
+                                                buildertek__Markup__c,buildertek__Upgrade_Costs__c,buildertek__Question_Group__c,buildertek__Manufacturer__c,
+                                                buildertek__Selected__c,buildertek__Default_Option__c,buildertek__Upgrade__c,buildertek__Original_Option__c,
+                                                buildertek__Date_Option_Upgraded__c FROM buildertek__Question__c WHERE Id =: recordId];
+        return optRecord;
+    }
+
+    @AuraEnabled
+    public static String cloneOptionRecord(buildertek__Question__c optionRec, String recordId){
+    
+        buildertek__Question__c optionClone  = optionRec.clone(false, false, false, false);
+        insert optionClone;
+
+        buildertek__Question__c getOption=[SELECT Id , buildertek__Original_Option__c, name FROM buildertek__Question__c WHERE Id =: recordId];
+        getOption.buildertek__Original_Option__c = optionClone.Id;
+        update getOption;
+
+        return optionClone.Id;
+         
+    }
+
     public class optionWrapper{
         @AuraEnabled
         public buildertek__Question__c option {get;set;}
