@@ -1,4 +1,6 @@
 ({
+    listOfBOMfield: [],
+    BOMLineobj: {},
     setColumns: function(component) {
         component.set("v.columns", [{
                 label: 'Name',
@@ -1019,6 +1021,7 @@
                             var testo1 = record[k];
                             if (record[k].Key == "Id") {
                                 bomLineId = record[k].Value;
+                                console.log('bomLineId :) -> ',bomLineId);
                             }
     
                             if (bomLineId != null && bomLineId != '' && bomIdVsUpgradedCost != null && bomIdVslistPrice != null) {
@@ -1388,6 +1391,11 @@
                             var testoId = testo.Id;
     
                             record[lastindex + 3] = JSON.parse('{"fieldType": "PERCENTAGE", "Key": "buildertek__Markup", "Value": "' + markupPercentage + '"}');
+                            this.BOMLineobj['markUp'] = record[lastindex + 3].Value;
+                            this.listOfBOMfield.push(this.BOMLineobj);
+
+                            // * here we got the markup for all the BOM lines
+                            console.log('record[lastindex + 3] :) -> ',record[lastindex + 3]);
     
                             //MarkUp Amount
                             console.log('service category====3 ++'+testo.buildertek__Location_Detail_Reference_1__c);
@@ -1515,6 +1523,10 @@
                             record[lastindex + 8] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Total_Cost", "Value": "' + parseFloat(totalCost).toFixed(2) + '"}');
                             //    record[lastindex + 6] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__SalesTax", "Value": "' + parseFloat(salestax).toFixed(2) + '"}');
                             record[lastindex + 7] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__SalesTax", "Value": "' + salestax + '"}');
+                            this.BOMLineobj['saleTax'] = record[lastindex + 7].Value;
+                            this.listOfBOMfield.push(this.BOMLineobj);
+                            //* here we got the salestax for all the BOM lines
+                            console.log('record[lastindex + 7] :) -> ',record[lastindex + 7]);
     
                             //Total Cost
     
@@ -1773,6 +1785,7 @@
                                         thisBuildPhaseName != null && thisBuildPhaseName != undefined && thisBuildPhaseName != '' && thisBuildPhaseName == 'Base') {
                                         console.log('markup value==='+record[k].Value.tostring);
                                         markup = Math.round((parseFloat(markup.toString()) + parseFloat(record[k].Value.toString())) * 100) / 100;
+
                                         let theMarkUp = parseFloat(record[k].Value.toString());
                                         // console.log('theMarkUp--',theMarkUp);
                                         if (theMarkUp != null && theMarkUp != undefined && theMarkUp != 0) {
@@ -2703,5 +2716,21 @@
     isNotPresentInSlab: function(value) {
 
         return !['Slab', 'Slab - Quartz', 'Slab - Granite', 'Slab - Porcelain'].includes(value);
-    }
+    },
+    quote: function(component, event, helper){
+        console.log('listOfBOMfield :) -> ',this.listOfBOMfield);
+    },
+    showToast1 : function(component, event, helper, title, message, type) {
+        console.log('title ', title);
+        console.log('messge ', message);
+        console.log('type ', type);
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "title": title,
+            "message": message,
+            "type": type,
+            "duration": 3000 
+        });
+        toastEvent.fire();
+    },
 })
