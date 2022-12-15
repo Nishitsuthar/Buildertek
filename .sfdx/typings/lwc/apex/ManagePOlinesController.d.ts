@@ -59,5 +59,5 @@ declare module "@salesforce/apex/ManagePOlinesController.getBomLineDetails" {
   export default function getBomLineDetails(param: {bomId: any}): Promise<any>;
 }
 declare module "@salesforce/apex/ManagePOlinesController.createQuoteMethod" {
-  export default function createQuoteMethod(param: {recordId: any}): Promise<any>;
+  export default function createQuoteMethod(param: {recordId: any, mapFieldData: any}): Promise<any>;
 }

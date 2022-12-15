@@ -1815,7 +1815,6 @@
                                     if (record[k].Key == "buildertek__SalesTax" && record[k].Value != null && record[k].Value != undefined &&
                                         thisBuildPhaseName != null && thisBuildPhaseName != undefined && thisBuildPhaseName != '' && thisBuildPhaseName == 'Base') {
                                         salestax = Math.round((parseFloat(salestax.toString()) + parseFloat(record[k].Value.toString())) * 100) / 100;
-                                        console.log('salestax :) -> ',salestax);
                                     }
         
                                     if (record[k].Key == "buildertek__Total_Cost" && record[k].Value != null && record[k].Value != undefined &&
@@ -2733,24 +2732,28 @@
                         var id = singleRecord[k].Value;
                     }
                     if (singleRecord[k].Key === "buildertek__SalesTax") {
-                        listOfLine.push(singleRecord[k].Value);
+                        listOfLine.push(String(singleRecord[k].Value));
                     }
                     if (singleRecord[k].Key === "buildertek__Markup") {
-                        listOfLine.push(singleRecord[k].Value);
+                        listOfLine.push(String(singleRecord[k].Value));
                     }
                     lineMap.set(id, listOfLine);
                 }
             }
         }
-        console.log('lineMap =--> ',{lineMap});
+        return lineMap;
     },
     quote: function(component, event, helper){
         console.log('listOfBOMfield :) -> ',this.listOfBOMfield);
-        helper.getfieldData(component, event, helper);
-        /* component.set("v.Spinner", true);
+        var myFieldMap = helper.getfieldData(component, event, helper);
+        var obj = Object.fromEntries(myFieldMap);
+        var jsonString = JSON.stringify(obj);
+        console.log('myFieldMap --> ',jsonString);
+        component.set("v.Spinner", true);
         var action = component.get("c.createQuoteMethod");
         action.setParams({
-            "recordId": component.get("v.recordId")
+            "recordId": component.get("v.recordId"),
+            "mapFieldData": jsonString
         });
         action.setCallback(this, function(response) {
             var status = response.getState();
@@ -2774,7 +2777,7 @@
             
             component.set("v.Spinner", false);
         })
-        $A.enqueueAction(action); */
+        $A.enqueueAction(action);
     },
     showToast1 : function(component, event, helper, title, message, type) {
         console.log('title ', title);
