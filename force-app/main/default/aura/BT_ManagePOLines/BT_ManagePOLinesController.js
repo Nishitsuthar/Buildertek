@@ -990,37 +990,7 @@
     },
 
     createQuote: function(component, event, helper) {
-        console.log('createQuote');
-        component.set("v.Spinner", true);
         helper.quote(component, event, helper);
-        var action = component.get("c.createQuoteMethod");
-        action.setParams({
-            "recordId": component.get("v.recordId")
-        });
-        action.setCallback(this, function(response) {
-            var status = response.getState();
-            console.log('status ==> '+status);
-            var result = response.getReturnValue();
-            console.log('result ==> '+result);
-            if (result[0] === 'Success' ) {
-                helper.showToast1(component, event, helper,'Success','Quote Created Successfully', 'success');
-                var navEvt = $A.get("e.force:navigateToSObject");
-                navEvt.setParams({
-                    "recordId": result[1],
-                    "slideDevName": "Detail"
-                });
-                navEvt.fire();
-            }else if(result[0] === 'null'){
-                helper.showToast1(component, event, helper,'No Lines','There are no BOMLines', 'info');
-            }else{
-                console.log('Error -> ',result);
-                helper.showToast1(component, event, helper,'Error','Something Went Wrong', 'error');
-            }
-            
-            component.set("v.Spinner", false);
-        })
-        $A.enqueueAction(action);
-
     }
 
 
