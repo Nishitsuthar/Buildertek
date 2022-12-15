@@ -223,8 +223,8 @@
                         <th class="tHeader" > PO # </th>
                         <th class="tHeader"> Status </th>
                         <th class="tHeader"> Projects </th>
-                        <th class="tHeader"> </th>
-                        <th class="tHeader"> </th>     
+                        <th class="tHeader"> Delivery Date</th>
+                        <th class="tHeader"> Lead Time</th>     
                         
                     </tr>
                 </thead>
@@ -301,8 +301,13 @@
                                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ record.poRecord.buildertek__Permit__c + '/view'}" target="_blank" label="{!record.poRecord.buildertek__Permit__r.Name}" />
                                                 </td> -->
 
-                                                <td> </td>
-                                                <td> </td>
+                                                <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Delivery_Date__c}"> 
+                                                    <ui:outputText value="{!record.poRecord.buildertek__Delivery_Date__c}" />  
+                                                </td>
+                                                
+                                                <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Lead_Time__c}">
+                                                    <ui:outputText value="{!record.poRecord.buildertek__Lead_Time__c}" />  
+                                                </td>
                                             </tr>
                                             <aura:set attribute="else">
                                                 <tr class="slds-hint-parent">
@@ -327,8 +332,14 @@
                                                     <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Project__c}" >
                                                         <ui:outputURL value="{!'/one/one.app?#/sObject/'+ record.poRecord.buildertek__Project__c + '/view'}" target="_blank" label="{!record.poRecord.buildertek__Project__r.Name}" />
                                                     </td> 
-                                                    <td> </td>
-                                                    <td> </td>
+                                                    
+                                                    <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Delivery_Date__c}">
+                                                        <ui:outputText value="{!record.poRecord.buildertek__Delivery_Date__c}" />  
+                                                    </td>
+                                                    
+                                                    <td role="gridcell" class="slds-truncate" title = "{!record.poRecord.buildertek__Lead_Time__c}">
+                                                        <ui:outputText value="{!record.poRecord.buildertek__Lead_Time__c}" />  
+                                                    </td>
                                                 </tr>
                                             </aura:set>
                                         </aura:if>

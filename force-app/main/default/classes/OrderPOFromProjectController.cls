@@ -20,6 +20,7 @@ public class OrderPOFromProjectController {
                 query = query+ ' or (Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
                 query = query+ ' or (buildertek__Status__c LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
                 query = query+ ' or (buildertek__Project__r.Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
+                query = query+ ' or (buildertek__Lead_Time__c LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
             }
             totalRecords = Database.countQuery(query);
             System.debug('END POFILTR');

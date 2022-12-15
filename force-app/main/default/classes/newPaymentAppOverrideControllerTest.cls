@@ -2,21 +2,6 @@
 public with sharing class newPaymentAppOverrideControllerTest {
     @TestSetup
     static void testData() {
-        Id pId = [select id from profile where name='System Administrator'].id;
-
-        User user = new User();
-        user.alias = 'test123';
-        user.email = 'test123@noemail.com';
-        user.emailencodingkey = 'UTF-8';
-        user.lastname = 'Testing';
-        user.languagelocalekey = 'en_US';
-        user.localesidkey = 'en_US';
-        user.profileid = pId;
-        user.country = 'United States';
-        user.IsActive = true;
-        user.timezonesidkey = 'America/Los_Angeles';
-        user.username = 'tester@noemail.com';
-        insert user;
 
         Account acc = new Account();
         acc.Name = 'Testing Account';
@@ -28,29 +13,14 @@ public with sharing class newPaymentAppOverrideControllerTest {
         con.email='test@test.com';
         insert con;
 
-        Blob bodyBlob=Blob.valueOf('Unit Test Attachment Body');
-        Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();
-        efa.setFileName('MSAForm.pdf');
-        efa.setBody(bodyBlob);
-
-        EmailTemplate emailTemplate = [SELECT Id FROM EmailTemplate LIMIT 1];
-        Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-        String[] sendTo = new String[]{'XXXXXXXXX@gmail.com'};
-        email.setToAddresses(sendTo);
-        email.setTemplateID(emailTemplate.Id);
-        email.setTargetObjectId(con.Id);
-        email.setHtmlBody(con.Name);
-        email.setFileAttachments(new Messaging.EmailFileAttachment[]{ efa });
-
-        Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email }); 
-
         buildertek__Project__c project = new buildertek__Project__c();
         project.Name = 'Testing Project';
         insert project;
 
         buildertek__SOV_Payment_Application__c app = new buildertek__SOV_Payment_Application__c();
         app.Name = 'Test app';
-        app.buildertek__Retainage__c = 10;
+        app.buildertek__Retainage__c = 2019260;
+        app.buildertek__Period_To__c = System.today();
         insert app;
 
         buildertek__SOV_Continuation__c sov = new buildertek__SOV_Continuation__c();
@@ -77,27 +47,32 @@ public with sharing class newPaymentAppOverrideControllerTest {
 
         buildertek__SOV_Continuation_Sheet_Lines__c sheetLine = new buildertek__SOV_Continuation_Sheet_Lines__c();
         sheetLine.Name = budgetItem.Name;
-        // sheetLine.buildertek__Budget_Grouping__c = 'Change Orders';
-        // sheetLine.buildertek__Is_Created_In_This_App__c = true;
         sheetLine.buildertek__Description_of_Work__c = budgetItem.Name;
         sheetLine.buildertek__SOV_Continuation_Sheet__c = sov.Id;
+        // sheetLine.buildertek__Status__c = 'Accepted';
         insert sheetLine;
 
+        // RecordType rt = [SELECT Id FROM RecordType WHERE sObjectType = 'buildertek__Schedule_of_Values__c' AND Name = 'Standard'];
         buildertek__Schedule_of_Values__c schedule = new buildertek__Schedule_of_Values__c();
         schedule.Name = 'Test';
+        schedule.buildertek__Status__c = 'Customer Approved';
+        //schedule.RecordTypeId = rt.Id;
         insert schedule;
 
         buildertek__Schedule_of_Value_Lines__c svLine = new buildertek__Schedule_of_Value_Lines__c();
-        svLine.buildertek__Item__c = 'testing';
+        svLine.buildertek__Item__c = '10';
+        svLine.buildertek__Status__c = 'Approved';
         svLine.buildertek__Schedule_of_Values__c = schedule.Id;
         svLine.buildertek__Item_New__c = 6;
         svLine.buildertek__Description_of_Work__c = 'test';
+        //svLine.buildertek__Old_Sov_Line_Ids_From_Project__c = 'TextArea';
         insert svLine;
     }
 
     @isTest
     static void testMethod1(){
-        buildertek__SOV_Payment_Application__c app = [SELECT id,Name,buildertek__Retainage__c FROM buildertek__SOV_Payment_Application__c LIMIT 1];
+
+        buildertek__SOV_Payment_Application__c app = [SELECT id,Name FROM buildertek__SOV_Payment_Application__c LIMIT 1];
 
         buildertek__SOV_Continuation__c sov = [SELECT Id,Name,buildertek__SOV_Payment_Application__c FROM buildertek__SOV_Continuation__c LIMIT 1];
 
@@ -114,7 +89,7 @@ public with sharing class newPaymentAppOverrideControllerTest {
         Test.startTest();
 
         newPaymentAppOverrideController.getRfqTo1();
-        // newPaymentAppOverrideController.GetSheetid(app.Id);
+        //newPaymentAppOverrideController.GetSheetid(sov.Id);
         newPaymentAppOverrideController.GetadmindetailsforPA();
         newPaymentAppOverrideController.Getadmindetails();
         newPaymentAppOverrideController.getUser();
@@ -125,6 +100,7 @@ public with sharing class newPaymentAppOverrideControllerTest {
         newPaymentAppOverrideController.updateSubmittedDate(sValue.Id);
         newPaymentAppOverrideController.isSovSubmitted(sValue.Id);
         newPaymentAppOverrideController.CheckSovType(sValue.Id);
+        //newPaymentAppOverrideController.createlines(app.Id, project.Id, recordTypeId);
         newPaymentAppOverrideController.getmasterScheduleOValues(2,3);
         newPaymentAppOverrideController.getListViews1();
         newPaymentAppOverrideController.getPaymentListViews();
@@ -144,17 +120,21 @@ public with sharing class newPaymentAppOverrideControllerTest {
         buildertek__Schedule_of_Values__c sValue = [SELECT Id, Name FROM buildertek__Schedule_of_Values__c LIMIT 1];
         List<String> sValueIdList = new List<String>{sValue.Id};
 
-        buildertek__SOV_Payment_Application__c app = [SELECT id,Name,buildertek__Retainage__c FROM buildertek__SOV_Payment_Application__c LIMIT 1];
+        buildertek__SOV_Payment_Application__c app = [SELECT id,Name FROM buildertek__SOV_Payment_Application__c LIMIT 1];
 
         buildertek__SOV_Continuation_Sheet_Lines__c sovLine = [SELECT Id, Name FROM buildertek__SOV_Continuation_Sheet_Lines__c LIMIT 1];
 
         Test.startTest();
 
+        ContinuationSheetLineTriggerHandler.blnSkipconSheetLineUpdateTrigger = true;
+        PaymentApplicationTriggerHandler.blnSkipPayAppInsertTrigger = true;
+
         newPaymentAppOverrideController.getVendorPaymentApps(project.Id);
         newPaymentAppOverrideController.importScheduleOfValueItems(sValueIdList, app.Id, false);
         newPaymentAppOverrideController.getCompanyApprovedScheduleOValues(project.Id);
+        newPaymentAppOverrideController.getCompanyApprovedScheduleOValues('');
         newPaymentAppOverrideController.getCustomerApprovedScheduleOValues(project.Id);
-        newPaymentAppOverrideController.importCompanyApprovedSOVLines(sValueIdList, app.Id);
+        //newPaymentAppOverrideController.importCompanyApprovedSOVLines(sValueIdList, app.Id);
         newPaymentAppOverrideController.importCustomerApprovedSOVLines(sValueIdList, app.Id);
         newPaymentAppOverrideController.getapprovedScheduleOfValue(1, 10, app.Id);
 
@@ -166,17 +146,18 @@ public with sharing class newPaymentAppOverrideControllerTest {
 
         buildertek__SOV_Payment_Application__c app = new buildertek__SOV_Payment_Application__c();
         app.Name = 'Test app';
-        app.buildertek__Retainage__c = 10;
+        app.buildertek__Retainage__c = 2019260;
+        app.buildertek__Period_To__c = System.today();
         insert app;
+        RecordType rt = [SELECT Id FROM RecordType WHERE sObjectType = 'buildertek__SOV_Payment_Application__c' AND Name = 'AR'];
 
         buildertek__Schedule_of_Values__c sValue = [SELECT Id, Name FROM buildertek__Schedule_of_Values__c LIMIT 1];
-        Id recordTypeId = (Schema.SObjectType.buildertek__SOV_Payment_Application__c.getRecordTypeInfosByName().get('AP').getRecordTypeId());
-        buildertek__Project__c project = [SELECT Id, Name FROM buildertek__Project__c LIMIT 1];
 
         List<String> sovAppIdList = new List<String>{app.Id};
 
         Test.startTest();
 
+        newPaymentAppOverrideController.getARSovType();
         newPaymentAppOverrideController.getParentProject(sValue.Id);
         newPaymentAppOverrideController.importPaymentApps(sovAppIdList, app.Id);
         newPaymentAppOverrideController.GivingSharingForMasterSov(sValue.Id);
@@ -184,7 +165,6 @@ public with sharing class newPaymentAppOverrideControllerTest {
         newPaymentAppOverrideController.getFieldSet('buildertek__Schedule_of_Values__c', 'testing set');
         newPaymentAppOverrideController.getDropDown('buildertek__Schedule_of_Values__c', 'buildertek__Status__c');
         newPaymentAppOverrideController.getPARecord(app.Id);
-        newPaymentAppOverrideController.createlines(app.Id, project.Id, recordTypeId);
         
         Test.stopTest();
     }
@@ -192,20 +172,82 @@ public with sharing class newPaymentAppOverrideControllerTest {
     @isTest
     static void testMethod4(){
 
+        ContinuationSheetLineTriggerHandler.blnSkipconSheetLineUpdateTrigger = true;
+        PaymentApplicationTriggerHandler.blnSkipPayAppInsertTrigger = true;
+
         Id recordTypeId = (Schema.SObjectType.buildertek__Schedule_of_Values__c.getRecordTypeInfosByName().get('Vendor').getRecordTypeId());
 
         buildertek__Schedule_of_Values__c sValue = [SELECT Id, Name FROM buildertek__Schedule_of_Values__c LIMIT 1];
         sValue.RecordTypeId = recordTypeId;
         update sValue;
 
+        RecordType rt = [SELECT Id FROM RecordType WHERE sObjectType = 'buildertek__SOV_Payment_Application__c' AND Name = 'AP'];
+
         List<String> sValueIdList = new List<String>{sValue.Id};
 
-        buildertek__SOV_Payment_Application__c app = [select id,Name,buildertek__Retainage__c from buildertek__SOV_Payment_Application__c LIMIT 1];
+        buildertek__SOV_Payment_Application__c app = [select id,Name from buildertek__SOV_Payment_Application__c LIMIT 1];
 
         Test.startTest();
         
         newPaymentAppOverrideController.importCompanyApprovedSOVLines(sValueIdList, app.Id);
+        newPaymentAppOverrideController.getSovType();
 
         Test.stopTest();
+
+    }
+    @isTest
+    static void testMethod5(){
+
+        ContinuationSheetLineTriggerHandler.blnSkipconSheetLineUpdateTrigger = true;
+        PaymentApplicationTriggerHandler.blnSkipPayAppInsertTrigger = true;
+        scheduleOfValueTriggerHandler.blnSkipSOVTrigger = true;
+
+        Id recordTypeId = (Schema.SObjectType.buildertek__Schedule_of_Values__c.getRecordTypeInfosByName().get('Standard').getRecordTypeId());
+
+        buildertek__Schedule_of_Value_Lines__c svLineOld = [SELECT Id, Name FROM buildertek__Schedule_of_Value_Lines__c LIMIT 1];
+
+        buildertek__Schedule_of_Values__c schedule = new buildertek__Schedule_of_Values__c();
+        schedule.Name = 'Test';
+        schedule.buildertek__Status__c = 'Customer Approved';
+        schedule.RecordTypeId = recordTypeId;
+        insert schedule;
+
+
+        buildertek__Schedule_of_Value_Lines__c svLine = new buildertek__Schedule_of_Value_Lines__c();
+        svLine.buildertek__Item__c = '10';
+        svLine.buildertek__Old_Sov_Line_Ids_From_Project__c = svLineOld.Id +','+svLineOld.Id;
+        svLine.buildertek__Schedule_of_Values__c = schedule.Id;
+        svLine.buildertek__Description_of_Work__c = 'test';
+        svLine.buildertek__Status__c = 'Customer Approved';
+        insert svLine;
+
+        buildertek__SOV_Payment_Application__c app = new buildertek__SOV_Payment_Application__c();
+        app.Name = 'Test app';
+        app.buildertek__Retainage__c = 2019260;
+        app.buildertek__Period_To__c = System.today();
+        insert app;
+
+        buildertek__SOV_Continuation__c sov = new buildertek__SOV_Continuation__c();
+        sov.Name = 'Test';
+        sov.buildertek__SOV_Payment_Application__c = app.Id;
+        insert sov;
+
+        buildertek__SOV_Continuation_Sheet_Lines__c sheetLine = new buildertek__SOV_Continuation_Sheet_Lines__c();
+        sheetLine.Name = 'testing';
+        sheetLine.buildertek__Description_of_Work__c = 'testing';
+        sheetLine.buildertek__SOV_Continuation_Sheet__c = sov.Id;
+        sheetLine.buildertek__Status__c = 'Accepted';
+        sheetLine.buildertek__Is_Imported__c = true;
+        insert sheetLine;
+
+        List<String> sValueIdList = new List<String>{schedule.Id};
+        List<String> idList = new List<String>{app.Id};
+
+        Test.startTest();
+        // newPaymentAppOverrideController.importCompanyApprovedSOVLines(sValueIdList, app.Id);
+        newPaymentAppOverrideController.importCustomerApprovedSOVLines(sValueIdList, app.Id);
+        newPaymentAppOverrideController.importPaymentApps(idList, app.Id);
+        Test.stopTest();
+
     }
 }
