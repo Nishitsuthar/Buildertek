@@ -1549,7 +1549,7 @@ public with sharing class ManagePOlinesController {
 
         try {
             List<buildertek__Select_Sheet__c> BOMLineList = new List<buildertek__Select_Sheet__c>();
-            Map<Id, buildertek__Quote_Item__c> qtLineMap = new Map<Id, buildertek__Quote_Item__c>();
+            List<buildertek__Quote_Item__c> qtLineList = new List<buildertek__Quote_Item__c>();
             BOMLineList = [SELECT Id, Name, buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c, buildertek__Selection_Sheet_Takeoff__c, buildertek__Selection_Sheet_Takeoff__r.Name  FROM buildertek__Select_Sheet__c WHERE buildertek__Selection_Sheet_Takeoff__c =:recordId];
             
             if (BOMLineList.size() > 0) {
@@ -1557,14 +1557,13 @@ public with sharing class ManagePOlinesController {
                 quote.Name = BOMLineList[0].buildertek__Selection_Sheet_Takeoff__r.Name;
                 // insert quote;
                 
-                BOMLineList[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__BT_Quote__c = quote.Id;
-                
-                
                 for (buildertek__Select_Sheet__c bomLine : BOMLineList) {
                     buildertek__Quote_Item__c qtLine = new buildertek__Quote_Item__c();
                     Decimal markUp;
                     String str = myMap.get(bomLine.Id)[0];
                     if (String.isNotBlank(str)) {
+                        System.debug('in loop');
+                        System.debug('str '+str);
                         markUp = decimal.valueOf(str);
                     }else{
                         markUp = 0;
@@ -1574,13 +1573,10 @@ public with sharing class ManagePOlinesController {
                     qtLine.buildertek__Unit_Price__c = bomLine.buildertek__BL_LIST_PRICE__c;
                     qtLine.buildertek__Quote__c = quote.Id;
                     qtLine.buildertek__Markup__c = markUp;
-                    qtLine.buildertek__Tax__c = bomLine.buildertek__Selection_Sheet_Takeoff__r.buildertek__Tax_Rate_1__c;
-                    qtLineMap.put(bomLine.Id,qtLine);
+                    // qtLine.buildertek__Tax_Amount__c = decimal.valueOf(myMap.get(bomLine.Id)[1]);
+                    qtLineList.add(qtLine);
                 }
-                // insert qtLineMap.values();
-                for (buildertek__Select_Sheet__c bomLine : BOMLineList) {
-                    bomLine.buildertek__BT_Quote_Line__c = qtLine.Id;
-                }
+                // insert qtLineList;
                 message.add('Success');
                 message.add(quote.Id);
             }else{
