@@ -1540,8 +1540,8 @@ public with sharing class ManagePOlinesController {
 
     }
 
-    //this method is used for creating quote and quotelines and associate it with the bom and bomlines
-    // also logic is added for creating new grouping if not available on the quotelines
+    /* this method is used for creating quote and quotelines and associate it with the bom and bomlines
+    also logic is added for creating new grouping if not available on the quotelines */
     @AuraEnabled
     public static List<String> createQuoteMethod(String recordId, String mapFieldData){
         List<String> message = new List<String>();
@@ -1553,7 +1553,6 @@ public with sharing class ManagePOlinesController {
         Map<Id, buildertek__Quote_Item__c> qtLineMap = new Map<Id, buildertek__Quote_Item__c>();
         
         Map<String,List<String>> myMap = (Map<String,List<String>>)JSON.deserialize(mapFieldData, Map<String,List<String>>.class);
-        System.debug('myMap --> '+myMap);
 
         try {
             bom = [SELECT ID, Name,buildertek__BT_Quote__c,buildertek__Tax_Rate_1__c, (SELECT Id,Name,buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c FROM buildertek__Selection_Sheet_Takeoff_Lines__r) FROM buildertek__Project_Selection_Sheet_Takeoff__c WHERE Id =:recordId];
@@ -1571,7 +1570,6 @@ public with sharing class ManagePOlinesController {
                         newQuoteLineGroupMap.put(qtLineGp.Name ,qtLineGp);
                     }
                 }
-                System.debug('newQuoteLineGroupMap -> '+newQuoteLineGroupMap);
                 insert newQuoteLineGroupMap.values();
             }
 
@@ -1587,10 +1585,7 @@ public with sharing class ManagePOlinesController {
                         Decimal markUp;
                         String str = myMap.get(bomLine.Id)[0];
                         String groupName = myMap.get(bomLine.Id)[1];
-                        System.debug('groupName -> '+groupName);
                         if (String.isNotBlank(str)) {
-                            System.debug('in loop');
-                            System.debug('str '+str);
                             markUp = decimal.valueOf(str);
                         }else{
                             markUp = 0;

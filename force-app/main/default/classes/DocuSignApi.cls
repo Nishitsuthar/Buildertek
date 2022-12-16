@@ -50,7 +50,7 @@ public class DocuSignApi {
         //Authorization header generating using DocuSign credentials. 
         
         String authorizationHeader = '<DocuSignCredentials><Username>'+userName+'</Username><Password>'+Password+'</Password><IntegratorKey>'+integratorKey+'</IntegratorKey></DocuSignCredentials>'; 
-        
+         
         req.setHeader('X-DocuSign-Authentication', authorizationHeader); 
         
         req.setHeader('Accept','application/json'); 
@@ -60,6 +60,8 @@ public class DocuSignApi {
         req.setHeader('Content-Type','application/json'); 
         
         req.setHeader('Content-Disposition','form-data'); 
+
+        
         
         
         
@@ -81,7 +83,7 @@ public class DocuSignApi {
             
             ' {'+ 
             
-            '"roleName": "Signer",'+ 
+            '"roleName": "Signers",'+ 
             
             '"name": "'+name+'",'+ 
             
