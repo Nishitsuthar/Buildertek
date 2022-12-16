@@ -2723,8 +2723,10 @@
     getfieldData: function(component, event, helper){
         var allData = this.storeAllData;
         var lineMap = new Map();
+        console.log('allData -> ',{allData});
         for (let i = 0; i < allData.length; i++) {
             const record = allData[i].groupedRecordsTmp;
+            var groupName = allData[i].groupName;
             for (let j = 0; j < record.length; j++) {
                 const singleRecord = record[j];
                 var listOfLine = []
@@ -2732,11 +2734,9 @@
                     if (singleRecord[k].Key === "Id") {
                         var id = singleRecord[k].Value;
                     }
-                    if (singleRecord[k].Key === "buildertek__SalesTax") {
-                        listOfLine.push(String(singleRecord[k].Value));
-                    }
                     if (singleRecord[k].Key === "buildertek__Markup") {
                         listOfLine.push(String(singleRecord[k].Value));
+                        listOfLine.push(String(groupName));
                     }
                     lineMap.set(id, listOfLine);
                 }
@@ -2749,7 +2749,8 @@
         var myFieldMap = helper.getfieldData(component, event, helper);
         var obj = Object.fromEntries(myFieldMap);
         var jsonString = JSON.stringify(obj);
-        console.log('myFieldMap --> ',jsonString);
+        console.log('myFieldMap --> ',{myFieldMap});
+        // console.log('myFieldMap --> ',jsonString);
         component.set("v.Spinner", true);
         var action = component.get("c.createQuoteMethod");
         action.setParams({
@@ -2769,7 +2770,9 @@
                     "slideDevName": "Detail"
                 });
                 navEvt.fire();
-            }else if(result[0] === 'null'){
+            }else if(result[0] == 'notNull'){
+                helper.showToast1(component, event, helper,'Quote Present','Quote is already Created on BOM', 'info');
+            }else if(result[0] == 'null'){
                 helper.showToast1(component, event, helper,'No Lines','There are no BOMLines', 'info');
             }else{
                 console.log('Error -> ',result);
