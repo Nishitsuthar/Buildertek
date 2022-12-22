@@ -133,6 +133,9 @@ declare module "@salesforce/apex/BudgetDAO.searchbudgetFilter" {
 declare module "@salesforce/apex/BudgetDAO.getBudgetData" {
   export default function getBudgetData(param: {pageNumber: any, pageSize: any, RecId: any}): Promise<any>;
 }
+declare module "@salesforce/apex/BudgetDAO.getTimeCardData" {
+  export default function getTimeCardData(param: {pageNumber: any, pageSize: any, RecId: any}): Promise<any>;
+}
 declare module "@salesforce/apex/BudgetDAO.getbudget" {
   export default function getbudget(param: {recordId: any}): Promise<any>;
 }
