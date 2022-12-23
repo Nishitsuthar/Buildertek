@@ -441,20 +441,20 @@ Throws [Exceptions]: NA
                                 User usrrec = vendorUserMap.get(rfqVendor.buildertek__Vendor__c);
                                 system.debug('usrrec--->'+usrrec); 
                                 /*  buildertek__RFQ__Share rfqshare=new buildertek__RFQ__Share();
-                                rfqshare.ParentId= rfqVendor.buildertek__RFQ__c;
-                                rfqshare.UserOrGroupId=usrrec.Id;
-                                rfqshare.AccessLevel= 'Edit';
-                                rfqshare.RowCause=Schema.buildertek__RFQ__Share.RowCause.Manual;             
-                                rfqshareList.add(rfqshare);
-                                system.debug('rfqshare--->'+rfqshare);*/
-                                                                
-                                                                /* buildertek__Project__Share prjshare=new buildertek__Project__Share();
-                                prjshare.ParentId= rfqVendor.buildertek__RFQ__r.buildertek__Project__c;
-                                prjshare.UserOrGroupId=usrrec.Id;
-                                prjshare.AccessLevel= 'Read'; 
-                                prjshare.RowCause=Schema.buildertek__Project__Share.RowCause.Manual;             
-                                prjctshareList.add(prjshare); 
-                                system.debug('prjshare--->'+prjshare);  */
+rfqshare.ParentId= rfqVendor.buildertek__RFQ__c;
+rfqshare.UserOrGroupId=usrrec.Id;
+rfqshare.AccessLevel= 'Edit';
+rfqshare.RowCause=Schema.buildertek__RFQ__Share.RowCause.Manual;             
+rfqshareList.add(rfqshare);
+system.debug('rfqshare--->'+rfqshare);*/
+                                
+                                /* buildertek__Project__Share prjshare=new buildertek__Project__Share();
+prjshare.ParentId= rfqVendor.buildertek__RFQ__r.buildertek__Project__c;
+prjshare.UserOrGroupId=usrrec.Id;
+prjshare.AccessLevel= 'Read'; 
+prjshare.RowCause=Schema.buildertek__Project__Share.RowCause.Manual;             
+prjctshareList.add(prjshare); 
+system.debug('prjshare--->'+prjshare);  */
                                 string toemailadd = usrrec.Email;
                                 Messaging.SingleEmailMessage message = new        Messaging.SingleEmailMessage();
                                 message.toAddresses = new String[] { toemailadd};
@@ -469,23 +469,23 @@ Throws [Exceptions]: NA
                                 List<Messaging.SingleEmailMessage> actualMessageList = new List<Messaging.SingleEmailMessage>();
                                 // loop through the previous message list and set the email fields
                                 /* for (Messaging.SingleEmailMessage email : messageList) {
-                                Messaging.SingleEmailMessage emailToSend = new Messaging.SingleEmailMessage();
-                                emailToSend.setToAddresses(email.getToAddresses());
-                                emailToSend.setHTMLBody(email.getHTMLBody());
-                                emailToSend.setSaveAsActivity(true);
-                                emailToSend.setFileAttachments(email.getFileAttachments());
-                                //emailToSend.setSubject(email.getSubject()+' - [ref:'+rfiRec1.Id+']');
-                                actualMessageList.add(emailToSend);
-                                } */
+Messaging.SingleEmailMessage emailToSend = new Messaging.SingleEmailMessage();
+emailToSend.setToAddresses(email.getToAddresses());
+emailToSend.setHTMLBody(email.getHTMLBody());
+emailToSend.setSaveAsActivity(true);
+emailToSend.setFileAttachments(email.getFileAttachments());
+//emailToSend.setSubject(email.getSubject()+' - [ref:'+rfiRec1.Id+']');
+actualMessageList.add(emailToSend);
+} */
                                 //Messaging.SendEmailResult [] serList = Messaging.sendEmail(actualMessageList);                         
                             }
                         }
                     }
-                                        /*  if(rfqshareList.size()>0){
-                    Database.SaveResult[] lsr = Database.insert(rfqshareList,false);
-                    Database.SaveResult[] prjlsr = Database.insert(prjctshareList,false);
-                    Database.SaveResult[] fillsr = Database.insert(btfileshareList,false);
-                    } */
+                    /*  if(rfqshareList.size()>0){
+Database.SaveResult[] lsr = Database.insert(rfqshareList,false);
+Database.SaveResult[] prjlsr = Database.insert(prjctshareList,false);
+Database.SaveResult[] fillsr = Database.insert(btfileshareList,false);
+} */
                 }
                 //End create sharing record to vendor
                 list<Id> accountids= new list<Id>();
@@ -671,8 +671,8 @@ Throws [Exceptions]: NA
             list<buildertek__RFQ__c> rfqreclst;
             list<buildertek__RFQ__c> rfqreclst1;
             /*if(Schema.sObjectType.buildertek__RFQ__c.fields.Id.isAccessible() &&
-            Schema.sObjectType.buildertek__RFQ__c.fields.Name.isAccessible() &&
-            Schema.sObjectType.buildertek__RFQ__c.fields.buildertek__RFQ_s_Sent__c.isAccessible()){*/
+Schema.sObjectType.buildertek__RFQ__c.fields.Name.isAccessible() &&
+Schema.sObjectType.buildertek__RFQ__c.fields.buildertek__RFQ_s_Sent__c.isAccessible()){*/
             rfqreclst = [select Id, Name, buildertek__RFQ_s_Sent__c
                          from buildertek__RFQ__c
                          where Id = :RfqId];
@@ -1275,12 +1275,12 @@ system.debug('results:::'+results);
                 if(contractlist.size()>0){
                     for(buildertek__Contract__c contactrec : contractlist){
                         contactrec.buildertek__Status__c = 'Draft';
-                        newcontractlist.add(contactrec);
+                        newcontractlist .add(contactrec);
                     }
                     update newcontractlist ;
                 }
                 list<buildertek__Contract__c> delcontractlist = [select id,Name,buildertek__RFQ__c,buildertek__Status__c from buildertek__Contract__c where buildertek__RFQ__c IN : RFQIdSet];
-                if(delcontractlist.size()>0){
+                if(delcontractlist .size()>0){
                     
                     delete delcontractlist;
                 }
