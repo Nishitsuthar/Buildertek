@@ -136,6 +136,12 @@ declare module "@salesforce/apex/BudgetDAO.getBudgetData" {
 declare module "@salesforce/apex/BudgetDAO.getTimeCardData" {
   export default function getTimeCardData(param: {pageNumber: any, pageSize: any, RecId: any}): Promise<any>;
 }
+declare module "@salesforce/apex/BudgetDAO.getInvioceData" {
+  export default function getInvioceData(param: {pageNumber: any, pageSize: any, RecId: any}): Promise<any>;
+}
+declare module "@salesforce/apex/BudgetDAO.updateLaborPrice" {
+  export default function updateLaborPrice(param: {recordId: any, budgeLineIds: any}): Promise<any>;
+}
 declare module "@salesforce/apex/BudgetDAO.getbudget" {
   export default function getbudget(param: {recordId: any}): Promise<any>;
 }

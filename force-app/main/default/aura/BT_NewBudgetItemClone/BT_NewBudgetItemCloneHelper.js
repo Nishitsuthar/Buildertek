@@ -107,6 +107,17 @@
         $A.enqueueAction(action);
     },
 
+    showToast : function(component, event, helper, title, message, type) {
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "title": title,
+            "message": message,
+            "type": type,
+            "duration": 3000
+        });
+        toastEvent.fire();
+    },
+
     addSelectedProducts: function (component, event, helper, items) {
         var action;
         action = component.get("c.createBudgetItem");
@@ -1192,7 +1203,7 @@
         });
         $A.enqueueAction(actions);
     },
-    doSave: function (component, event, helper) {
+    isExistingPo: function (component, event, helper) {
         debugger;
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
@@ -1395,6 +1406,36 @@
         });
         $A.enqueueAction(action);
     },
+    getInvoiceList: function (component, pageNumber, pageSize) {
+        console.log('method getInvoiceList calling ');
+        var recId = component.get("v.recordId");
+        var action = component.get("c.getInvioceData");
+        action.setParams({
+            pageNumber: pageNumber,
+            pageSize: pageSize,
+            RecId: recId
+        });
+        action.setCallback(this, function (result) {
+            var state = result.getState();
+            if (component.isValid() && state === "SUCCESS") {
+                var resultData = result.getReturnValue();
+                console.log('resultData --> ',{resultData});
+                for (var i in resultData.recordList) {
+                    resultData.recordList[i].budgetCheck = false;
+                }
+                component.set("v.recordList", resultData.recordList);
+                component.set("v.PageNumber", resultData.pageNumber);
+                component.set("v.TotalRecord", resultData.totalRecords);
+                component.set("v.RecordStart", resultData.recordStart);
+                component.set("v.RecordEnd", resultData.recordEnd);
+                component.set(
+                    "v.TotalPages",
+                    Math.ceil(resultData.totalRecords / pageSize)
+                );
+            }
+        });
+        $A.enqueueAction(action);
+    },
     gettcList: function (component, pageNumber, pageSize) {
         var recId = component.get("v.recordId");
         var action = component.get("c.getTimeCardData");
@@ -1407,6 +1448,7 @@
             var state = result.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var resultData = result.getReturnValue();
+                console.log('resultData --> ',{resultData});
                 for (var i in resultData.recordList) {
                     resultData.recordList[i].budgetCheck = false;
                 }
