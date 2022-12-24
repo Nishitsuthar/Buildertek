@@ -142,6 +142,9 @@ declare module "@salesforce/apex/BudgetDAO.getInvioceData" {
 declare module "@salesforce/apex/BudgetDAO.updateLaborPrice" {
   export default function updateLaborPrice(param: {recordId: any, budgeLineIds: any}): Promise<any>;
 }
+declare module "@salesforce/apex/BudgetDAO.updateInvoicePrice" {
+  export default function updateInvoicePrice(param: {recordId: any, budgeLineIds: any}): Promise<any>;
+}
 declare module "@salesforce/apex/BudgetDAO.getbudget" {
   export default function getbudget(param: {recordId: any}): Promise<any>;
 }

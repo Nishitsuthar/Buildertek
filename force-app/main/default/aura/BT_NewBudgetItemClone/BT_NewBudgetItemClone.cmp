@@ -1684,13 +1684,13 @@
                                                                          onchange="{!c.selectedSchedule}" /> -->
                                             </th>
                                             <th scope="col">
-                                                <div class="slds-truncate" title="Duration">TimeCard Name</div>
+                                                <div class="slds-truncate" title="Duration">Invoice Name</div>
                                             </th>
                                             <th scope="col">
                                                 <div class="slds-truncate" title="Project Description">Description</div>
                                             </th>
                                             <th scope="col">
-                                                <div class="slds-truncate" title="Project Description">Daily Expense</div>
+                                                <div class="slds-truncate" title="Project Description">Total Amount</div>
                                             </th>
                                             <!-- * commented this column becuase there is no vendor on the time card -->
                                             <!-- <th scope="col">
@@ -1723,7 +1723,7 @@
                                                         <lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="{!item.CurrencyIsoCode}" currencyDisplayAs="code"/>
                                                     </aura:if>
                                                     <aura:if isTrue='{!!v.multicurrency}'>-->
-                                                    <lightning:formattedNumber value="{!item.buildertek__Daily_Expense__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                    <lightning:formattedNumber value="{!item.buildertek__Total_Amount_With_Tax__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
                                                     <!--</aura:if>-->
                                                     <!--<lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="USD"/>-->
 

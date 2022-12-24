@@ -997,7 +997,7 @@
         var timeCardId = component.get("v.selectedExistingINVO");
         var selectedRecords = component.get('v.selectedRecs');
         selectedRecords = selectedRecords.toString();
-        var action = component.get("c.updateLaborPrice");
+        var action = component.get("c.updateInvoicePrice");
         action.setParams({
             recordId : timeCardId,
             budgeLineIds : selectedRecords
@@ -1009,12 +1009,12 @@
                 $A.get("e.c:BT_SpinnerEvent").setParams({
                     "action": "HIDE"
                 }).fire();
-                helper.showToast(component, event, helper, 'Success', 'Labor Price updated successfully', 'success');
+                helper.showToast(component, event, helper, 'Success', 'Invoice Price updated successfully', 'success');
             }else if (result === 'null'){
                 $A.get("e.c:BT_SpinnerEvent").setParams({
                     "action": "HIDE"
                 }).fire();
-                helper.showToast(component, event, helper, 'Error', 'Please Select Time Card', 'error');
+                helper.showToast(component, event, helper, 'Error', 'Please Select Invoice', 'error');
             }
             else{
                 $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -1022,7 +1022,7 @@
                 }).fire();
                 helper.showToast(component, event, helper, 'Error', 'something goes wrong', 'error');
             }
-            console.log('selectedRecords --> ',{selectedRecords});
+
         });
         $A.enqueueAction(action);
         
