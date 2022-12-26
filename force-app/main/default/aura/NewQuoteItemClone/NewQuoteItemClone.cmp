@@ -208,7 +208,10 @@
                     value="{!v.QuoteRec.buildertek__Total_Customer_Quote_Amount__c}" class="uiInputCss">
                 </ui:inputNumber>-->
 
-
+                <div class="slds-truncate" title="test1" style="padding: 10px 0px 0px 10px; width:110px;">
+                    Global Margin</div>
+                    <ui:inputNumber aura:id="testId" value="{!v.QuoteRec.buildertek__Gross_Margin__c}" class="uiInputCss">
+                    </ui:inputNumber>
                     <div class="slds-truncate" title="test1" style="padding: 10px 0px 0px 10px; width:110px;">
                         Global Markup</div>
                     <ui:inputNumber aura:id="testId" value="{!v.QuoteRec.buildertek__Markup__c}" class="uiInputCss">
