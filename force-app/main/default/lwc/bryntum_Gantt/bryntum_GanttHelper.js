@@ -27,7 +27,7 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
     var phIndex = -1;
     for(var i=0;i<taskListForPhase.length;i++){
         if(taskListForPhase[i].buildertek__Phase__c && taskPhaseRow){
-            console.log('method 1 in helper');
+            // console.log('method 1 in helper');
 
             if(taskPhaseRow['name'] != taskListForPhase[i].buildertek__Phase__c){
                 phIndex = phIndex+1;
@@ -106,7 +106,7 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                 }
 
                 rowChilObj['notes'] = taskListForPhase[i].buildertek__Notes__c;
-                console.log('JUMBIO IN METHOD');
+                // console.log('JUMBIO IN METHOD');
                 if(taskListForPhase[i].buildertek__Lag__c != undefined && taskListForPhase[i].buildertek__Lag__c != null && taskListForPhase[i].buildertek__Lag__c != 0){
                     var startDate = new Date(taskListForPhase[i].buildertek__Start__c);
                     // commented this line because it is adding extra lags in the backend data
@@ -220,7 +220,7 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                }
             //firstRowDup['children'].push(taskPhaseRow);
         }else if(taskListForPhase[i].buildertek__Phase__c && !taskPhaseRow){
-            console.log('method 2 in helper');
+            // console.log('method 2 in helper');
 
             taskPhaseRow = {};
             phIndex = phIndex+1;
@@ -294,7 +294,7 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                 
                 rowChilObj['notes'] = taskListForPhase[i].buildertek__Notes__c;
 
-                console.log('JUMBIO IN METHOD 2');
+                // console.log('JUMBIO IN METHOD 2');
                 if(taskListForPhase[i].buildertek__Lag__c != undefined && taskListForPhase[i].buildertek__Lag__c != null && taskListForPhase[i].buildertek__Lag__c != 0){
                 var startDate = new Date(taskListForPhase[i].buildertek__Start__c);
                 // startDate.setDate(startDate.getDate() + (taskListForPhase[i].buildertek__Lag__c));
@@ -398,7 +398,7 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                // console.log(taskPhaseRow)
                 newPhaseFlag = false;
         }else if(!taskListForPhase[i].buildertek__Phase__c){
-            console.log('method 3 in helper');
+            // console.log('method 3 in helper');
             phIndex = phIndex+1;
             var rowChilObj = {};
             rowChilObj["type"] = 'Task'

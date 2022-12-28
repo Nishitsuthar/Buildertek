@@ -133,7 +133,8 @@ public with sharing class BT_CreateProjectFromQuote {
                     BudgetLineRecord.buildertek__Quantity__c = quoteLine.buildertek__Quantity__c;
                     BudgetLineRecord.buildertek__Unit_Price__c = quoteLine.buildertek__Unit_Cost__c;
                     BudgetLineRecord.buildertek__Sales_Price__c = quoteLine.buildertek__Net_Total_Price__c; 
-                    BudgetLineRecord.buildertek__Budget_Line_Group__c = quoteLine.buildertek__Grouping__c;
+                    //BudgetLineRecord.buildertek__Budget_Line_Group__c = quoteLine.buildertek__Grouping__c;
+                    //BudgetLineRecord.buildertek__Group__c = quoteLine.buildertek__Grouping__c;
                     BudgetLineRecord.buildertek__Budget__c  =  Budget.Id;
                      BudgetLineRecord.buildertek__UOM__c = quoteLine.buildertek__UOM__c;
                     BudgetLineRecord.buildertek__Contractor__c = quoteLine.buildertek__Vendor__c;

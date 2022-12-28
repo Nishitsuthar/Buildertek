@@ -10,6 +10,8 @@
     <aura:attribute name="selectedLookUpRecordName" type="String" />
     <aura:attribute name="projectManager" type="String" />
     <aura:attribute name="contractDate" type="String" />
+    <!-- <aura:attribute name="Quote" type="buildertek__Quote__c" default="{ 'sobjectType': 'buildertek__Quote__c'}" /> -->
+
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
     
     
@@ -31,6 +33,7 @@
                             <lightning:inputField aura:id="accountId" fieldName="buildertek__Account__c" />
                             <lightning:inputField aura:id="projectManagerId" fieldName="buildertek__Project_Manager__c" />
                             <lightning:inputField aura:id="contractDateId" fieldName="buildertek__Contract_Date__c" />
+                            <!-- <lightning:inputField fieldName="Name" value="{!v.Quote.Name}" /> -->
                      </lightning:recordEditForm>        
                 </div>
                 <div class="slds-modal__footer">

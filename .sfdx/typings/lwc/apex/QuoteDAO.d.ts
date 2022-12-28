@@ -26,7 +26,7 @@ declare module "@salesforce/apex/QuoteDAO.createQuoteItem" {
   export default function createQuoteItem(param: {quoteItemsJSON: any}): Promise<any>;
 }
 declare module "@salesforce/apex/QuoteDAO.saveQuoteLineItemsValues" {
-  export default function saveQuoteLineItemsValues(param: {quoteRec: any, markupvalue: any}): Promise<any>;
+  export default function saveQuoteLineItemsValues(param: {quoteRec: any, markupvalue: any, marginvalue: any}): Promise<any>;
 }
 declare module "@salesforce/apex/QuoteDAO.insertQuoteLines" {
   export default function insertQuoteLines(param: {quoteLines: any}): Promise<any>;

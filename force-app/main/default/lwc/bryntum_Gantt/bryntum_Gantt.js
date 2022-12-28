@@ -163,6 +163,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   @track contractorname;
   @track showOriginalDateModal = false;
   @track blankPredecessor = false;
+  @track scheduleDataMap;
+  @track schedulePhaseMap;
+
 
   @wire(getRecordType) objRecordType;
 
@@ -1539,26 +1542,63 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       var scheduleDataList = this.scheduleItemsDataList;
       console.log('scheduleDataList ==> ', {scheduleDataList});
 
-      for (var key in scheduleDataList) {
-        if (scheduleDataList[key].buildertek__Milestone__c == true) {
-          for(var ph of phaseDateList){
-            if(scheduleDataList[key].buildertek__Phase__c == ph.label){
-              scheduleDataList[key].buildertek__Start__c = ph.value.expr1;
-              const date1 = new Date(ph.value.expr1);
-              const date2 = new Date(ph.value.expr2);
-              const diffTime = Math.abs(date2 - date1);
-              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-              // console.log(scheduleDataList[key].buildertek__Duration__c);
-              scheduleDataList[key].buildertek__Duration__c = diffDays;
-              // console.log(scheduleDataList[key].buildertek__Duration__c);
-              // console.log(scheduleDataList[key].buildertek__Phase__c);
-              // console.log('---------');
+      var scheduleDataMap = new Map();
+      var schedulePhaseMap = new Map();
 
+      let projectStartDate = new Date();
+      let projectEndDate = new Date();
+      let projectDuration = 0;
+
+      scheduleDataList.forEach(element => {
+        if (!element.buildertek__Milestone__c) {
+          projectDuration += element.buildertek__Duration__c;
+        }
+        if (new Date(projectStartDate).getTime() > new Date(element.buildertek__Start__c).getTime()) {
+          projectStartDate = element.buildertek__Start__c;
+        }
+        if (new Date(projectEndDate).getTime() < new Date(element.buildertek__Finish__c).getTime()) {
+          projectEndDate = element.buildertek__Finish__c;
+        }
+
+        scheduleDataMap.set(element.Id, element);
+        schedulePhaseMap.set(element.buildertek__Phase__c, '');
+      });
+      var projectDataMap = {
+        startDate : projectStartDate,
+        endDate : projectEndDate,
+        duration : projectDuration
+      }
+
+      for (let key of schedulePhaseMap.keys()) {
+        let totalDuration = 0;
+        let minStartDate = new Date();
+        let maxEndDate = new Date();
+        scheduleDataList.forEach(element => {
+          if (key == element.buildertek__Phase__c) {
+            if (!element.buildertek__Milestone__c){
+              totalDuration += element.buildertek__Duration__c;
+            }
+            if (new Date(minStartDate).getTime() > new Date(element.buildertek__Start__c).getTime()) {
+              minStartDate = element.buildertek__Start__c;
+            }
+            if (new Date(maxEndDate).getTime() < new Date(element.buildertek__Finish__c).getTime()) {
+              maxEndDate = element.buildertek__Finish__c;
             }
           }
-        }
+        });
+        let phaseData = {
+          startDate : new Date(minStartDate),
+          endDate : new Date(maxEndDate),
+          duration : totalDuration
+        };
+        schedulePhaseMap.set(key, phaseData);
       }
-      this.scheduleItemsDataList = scheduleDataList;
+
+      console.log('scheduleDataMap ==> ',{scheduleDataMap});
+      console.log('schedulePhaseMap ==> ',{schedulePhaseMap});
+      console.log('projectDataMap ==> ',{projectDataMap});
+      this.scheduleDataMap = scheduleDataMap;
+      this.schedulePhaseMap = schedulePhaseMap;
 
       var formatedSchData = formatData(
         this.scheduleData,
@@ -1567,29 +1607,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       );
       console.log('=== formatedSchData ===');
       console.log({formatedSchData});
-
-      // var refVar = formatedSchData;
-      // for(var key in refVar.rows[0].children){
-      //     for(var key2 in refVar.rows[0].children[key].children){
-      //         if(refVar.rows[0].children[key].children[key2].customtype == 'Milestone'){
-      //           for(var dd of phaseDateList){
-      //             if(dd.label == refVar.rows[0].children[key].name){
-      //               console.log('--'+refVar.rows[0].children[key].name);
-      //               console.log('-->'+dd.label);
-      //               console.log(refVar.rows[0].children[key].children[key2].startDate);
-
-      //               refVar.rows[0].children[key].children[key2].startDate == dd.value.expr1;
-
-      //               console.log(dd.value.expr1);
-      //               console.log(refVar.rows[0].children[key].children[key2].startDate);
-      //               console.log('----------');
-      //             }
-      //           }
-      //         }
-      //     }
-      // }
-      // console.log({refVar});
-      // formatedSchData = refVar;
 
       tasks["rows"] = formatedSchData["rows"];
       resources["rows"] = formatedSchData["resourceRowData"];
@@ -1602,6 +1619,34 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
         var holidayvalue = this.holidays;
         console.log('holidayvalue-->',{holidayvalue});
+
+        var calendar = data.project.calendar;
+        var tasksData = tasks.rows;
+        var dependenciesData = taskDependencyData;
+        var resourcesData = resourceRowData;
+        var assignmentsData = assignmentRowData;
+        var calendarsData = data.calendars.rows;
+
+        var holidayDateList = calendarsData[0].intervals;
+        holidayvalue.forEach(element => {
+          var holidayDate = new Date(element);
+          let holiData = {
+            isWorking : false,
+            startDate : new Date(holidayDate),
+            endDate   : new Date(holidayDate.setDate(holidayDate.getDate() + 1)),
+          };
+          holidayDateList.push(holiData);
+        });
+        calendarsData[0].intervals = holidayDateList;
+
+        console.log('**************************');
+        console.log('calendar ==> ',{calendar});
+        console.log('tasksData ==> ',{tasksData});
+        console.log('dependenciesData ==> ',{dependenciesData});
+        console.log('resourcesData ==> ',{resourcesData});
+        console.log('assignmentsData ==> ',{assignmentsData});
+        console.log('calendarsData ==>', {calendarsData});
+        console.log('**************************');
 
       const project = new bryntum.gantt.ProjectModel({
         //enableProgressNotifications : true,
@@ -1755,50 +1800,43 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           {
             type: "startdate",
             editor: true,
-            renderer: function(record){
-              var months = [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-              ];
-              if(record.value && record.record._data.name == 'Milestone Complete'){
-                var endDate;
-                var endDate1 = new Date(record.record.startDate);
-                endDate1.setDate(endDate1.getDate() + record.record._data.durationMile);
-                if(record.record._parent._data.endDate != undefined){
-                endDate = new Date(record.record._parent._data.endDate);
-                endDate.setDate(endDate.getDate() - 1);
-                endDate = new Date(endDate);
-                //return record.value;
+            renderer: function(record) {
 
-                return (
-                  months[endDate.getMonth()] +
-                  " " +
-                  Number(endDate.getDate()) +
-                  ", " +
-                  endDate.getFullYear()
-                );
+              // console.log('Record ==> ',{record});
 
+              // var recordData = record.record._data;
+              // console.log('RecordData ==> ',{recordData});
+      
+              const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+              var startDate = new Date(record.record._data.startDate);
+
+              if (record.record._data.id != undefined) {
+                if (scheduleDataMap.get(record.record._data.id) != undefined) {
+                  var schedulesData = scheduleDataMap.get(record.record._data.id);
+                  if (schedulesData.buildertek__Milestone__c) {
+                    startDate = new Date(schedulesData.buildertek__Finish__c);
+                  } else{
+                    startDate = new Date(schedulesData.buildertek__Start__c);
+                  }
+                  record.record._data.startDate = startDate;
                 }
-              }else{
-                var sdate = new Date(record.record.startDate);
-                return (
-                    months[sdate.getMonth()] +
-                    " " +
-                    Number(sdate.getDate()) +
-                    ", " +
-                    sdate.getFullYear()
-                  );
+                else if (record.record._data.type == 'Phase') {          
+                  startDate = new Date(schedulePhaseMap.get(record.record._data.name).startDate);
+                } 
+                else if (record.record._data.type == 'Project') {
+                  startDate = new Date(projectDataMap.startDate);
+                }
               }
+
+              return (
+                months[startDate.getMonth()] +
+                " " +
+                Number(startDate.getDate()) +
+                ", " +
+                startDate.getFullYear()
+              )
+      
             },
           },
           {
@@ -1808,208 +1846,65 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               if (record.rowElement) {
                 record.rowElement.draggable = true;
               }
-              var endDate;
+              const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",];
 
-              const map1 = new Map();
-              var count = 0;
+              var startDate = new Date(record.record._data.startDate);
+              var duration;
+              if (record.record._data.name == "Milestone Complete") {
+                duration = 1;
+              } else {
+                var duration = record.record._data.duration;
+              }
+      
+              var endDate = new Date(startDate);
+              endDate.setDate(startDate.getDate() + duration - 1);
+      
+              if (record.record._data.id != undefined) {
 
-              var months = [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-              ];
-              if (record.value) {
-
-                // console.log('Record of endDate =>',{record});
-                // console.log('duration>>>', record.record._data.duration);
-                // console.log('type>>>', record.record._data.type);
-                // console.log('name>>>', record.record._data.name);
-                if (
-                  record.record._data.duration >= 1 &&
-                  record.record._data.type == "Task" &&
-                  record.record._data.name != "Milestone Complete"
-                ) {
-                    // console.log('In if conditon for enddate');
-                  var start;
-                  var endDate = new Date(record.value);
-                  var start = new Date(record.record.startDate.getTime());
-                  var duration = record.record.duration;
-                  var eDate = new Date(start);
-                  var eDatebefore = endDate;
-                  // newly added
-                  var eDate2 = new Date(start);
-                  for (var i = 0; i < duration; i++) {
-                    if (i == 0) {
-                      // console.log("eDate2 before=> " + "i = " + i + " " + eDate2);
-                      eDate2 = new Date(start.setDate(start.getDate() + i));
-                      // console.log("eDate2 end=> " + "i = " + i + " " + eDate2);
-                    } else {
-                      // console.log("eDate2 else before=> " + "i = " + i + " " + eDate2);
-                      eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
-                      // console.log("eDate2 els after=> " + "i = " + i + " " + eDate2);
-                    }
-                    if (new Date(eDate2).getDay() == 0) {
-                      eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
-                    }
-                    if (new Date(eDate2).getDay() == 6) {
-                      eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 2));
-                    }
-                    //console.log('custom',eDate2)
-                    eDate2 = new Date(eDate2);
-                  }
-                  endDate.setDate(endDate.getDate() - 1);
-                  if (endDate.getTime() <= eDate2.getTime()) {
-                    record.value.setMonth(eDate2.getMonth());
-                    record.value.setFullYear(eDate2.getFullYear());
-                    record.value.setDate(eDate2.getDate() + 1);
-                    endDate = new Date(eDate2);
-                  } else if (endDate.getTime() <= start) {
-                    record.value.setMonth(eDate2.getMonth());
-                    record.value.setFullYear(eDate2.getFullYear());
-                    record.value.setDate(eDate2.getDate() + 1);
-                  }
-                  var eDateafter = endDate;
-                  return (
-                    months[endDate.getMonth()] +
-                    " " +
-                    Number(endDate.getDate()) +
-                    ", " +
-                    endDate.getFullYear()
-                  );
-                } else if (
-                  record.record._data.duration >= 1 &&
-                  record.record._data.type != "Task" &&
-                  record.record._data.name != "Milestone Complete"
-                ) {
-                //   console.log('In phase');
-                //   console.log({record});
-                    // console.log('In elseif(1) conditon for enddate');
-                    // console.log('rc val>>>',record.value);
-                  endDate = new Date(record.value);
-                  endDate.setDate(endDate.getDate() - 1);
-                  endDate = new Date(endDate);
-
-                  map1.set(count,endDate);
-                //   console.log({map1});
-                  return (
-                    months[endDate.getMonth()] +
-                    " " +
-                    Number(endDate.getDate()) +
-                    ", " +
-                    endDate.getFullYear()
-                  );
-                } else if (
-                  record.record._data.duration > -2 &&
-                  record.record._data.type == "Task" &&
-                  record.record._data.name != "Milestone Complete"
-                ) {
-                    // console.log('In elseif(-2) conditon for enddate');
-                  endDate = new Date(record.value);
-                  endDate.setDate(endDate.getDate() - 1);
-                  endDate = new Date(endDate);
-                  return (
-                    months[endDate.getMonth()] +
-                    " " +
-                    Number(endDate.getDate()) +
-                    ", " +
-                    endDate.getFullYear()
-                  );
-                } else {
-                  // console.log('start Date',record.record.startDate);
-                //   console.log('MileStone EndDate');
-                //   console.log({record});
-                  // console.log('-->'+record.record._data.name);
-
-                  //COMMENTED
-                  //endDate = new Date(record.value);
-
-                  // console.log('Milestone endDate *** ===>' + endDate);
-                  // console.log({record});
-                  // console.log('Milestone endDate *** ===>' + JSON.parse(JSON.stringify(record.value)));
-
-                  // console.log('Milestone End Date *** ===>' + months[endDate.getMonth()] +" " +Number(endDate.getDate()) +", " +endDate.getFullYear());
-                  // endDate = map1.get(count);
-
-
-
-
-                  // if(record.record._data.duration == 0){
-                  //   endDate = new Date(record.record.startDate);
-                  //   endDate.setDate(endDate.getDate() + record.record._data.durationMile);
-                  // }else{
-                    // console.log('--'+record.record._parent._data.endDate);
-                    // endDate = new Date(record.record._parent._data.endDate);
-                    if(record.record._parent._data.endDate != undefined) console.log('-|-'+record.record._parent._data.endDate.toString().substring(8,10));
-                    // console.log({endDate});
-
-                    // if(endDate != undefined && record.record._parent._data.endDate != undefined && record.record._parent._data.endDate.toString().substring(8,10) == endDate.getDate().toString()){
-                    //   endDate.setDate(endDate.getDate() - 1);
-                    // }else if(endDate != undefined && record.record._parent._data.endDate != undefined && record.record._parent._data.endDate.toString().substring(8,10) != endDate.getDate().toString()){
-                    //   endDate.setDate(endDate.getDate() + 1);
-                    // }
-                    // console.log({endDate});
-
-                    var endDate1 = new Date(record.record.startDate);
-                    endDate1.setDate(endDate1.getDate() + record.record._data.durationMile);
-                    // console.log({endDate1});
-
-                    endDate = new Date(record.record._parent._data.endDate);
-                    // console.log('1-'+endDate);
-                    endDate.setDate(endDate.getDate() - 1);
-                    // console.log('2-'+endDate);
-                    endDate = new Date(endDate);
-                    // console.log('3-'+endDate);
-
-
-                    // endDate.setDate(endDate.getDate() + record.record._parent._data.duration);
-                  // }
-
-
-                  return (
-                    months[endDate.getMonth()] +
-                    " " +
-                    Number(endDate.getDate()) +
-                    ", " +
-                    endDate.getFullYear()
-                  );
+                if (scheduleDataMap.get(record.record._data.id) != undefined) {
+                  endDate = new Date(scheduleDataMap.get(record.record._data.id).buildertek__Finish__c);
+                } 
+                else if (record.record._data.type == 'Phase') {          
+                  endDate = new Date(schedulePhaseMap.get(record.record._data.name).endDate);
+                } 
+                else if (record.record._data.type == 'Project') {
+                  endDate = new Date(projectDataMap.endDate);
                 }
               }
+      
+              return (
+                months[endDate.getMonth()] +
+                " " +
+                Number(endDate.getDate()) +
+                ", " +
+                endDate.getFullYear()
+              )
             },
-          },
+          },          
           {
             type: "duration",
             width: "5%",
             editor: true,
             renderer: (record) => {
+
               this.populateIcons(record);
-              // if(record.record._data.name == 'Milestone Complete'){
-              //   console.log({record});
-              //   console.log(record.value._magnitude);
-              // }
-              if (record.record._data.name == "Milestone Complete") {
-                var phasePercent = record.record.taskStore.storage.getBy(
-                  "_internalId",
-                  record.record._parent._internalId
-                ).percentDone;
-                if (phasePercent != record.record.percentDone) {
-                }
-              }
+
               if (record.value._magnitude > -1) {
                 if (record.value._magnitude == 0) {
                   return 1;
                 } else {
-                  return record.value._magnitude;
+                  if (record.record._data.type == 'Phase') {          
+                    return schedulePhaseMap.get(record.record._data.name).duration;
+                  } 
+                  else if (record.record._data.type == 'Project') {
+                    return projectDataMap.duration;
+                  } 
+                  else {
+                    return record.value._magnitude;
+                  }
                 }
               }
+
             },
           },
           {
@@ -2338,33 +2233,37 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               editorContext.column.field !== "percentDone" ||
               editorContext.record.isLeaf
             ) {
+              if (editorContext.column.field == "startDate") {
+  
+                var startDate = new Date(editorContext.value);
+
+                var scheduleDataMap = this.scheduleDataMap;
+
+                if (editorContext.record._data.id != undefined) {
+                  if (scheduleDataMap.get(editorContext.record._data.id) != undefined) {
+                    startDate = new Date(scheduleDataMap.get(editorContext.record._data.id).buildertek__Start__c);
+                  }
+                }
+
+                editorContext.value.setDate(startDate.getDate());
+                editorContext.value.setMonth(startDate.getMonth());
+                editorContext.value.setFullYear(startDate.getFullYear());
+              }
               if (editorContext.column.field == "endDate") {
-                var StartString =
-                  editorContext.record._data.startDate.getFullYear() +
-                  "-" +
-                  Number(editorContext.record._data.startDate.getMonth() + 1) +
-                  "-" +
-                  editorContext.record._data.startDate.getDate();
-                var that = this;
+
                 var start = new Date(
                   editorContext.record._data.startDate.getTime()
                 );
-                var duration = editorContext.record._data.duration;
                 var eDate = new Date(start);
-                for (var i = 0; i < duration; i++) {
-                  if (i == 0) {
-                    eDate = new Date(start.setDate(start.getDate() + i));
-                  } else {
-                    eDate = new Date(eDate.setDate(eDate.getDate() + 1));
+
+                var scheduleDataMap = this.scheduleDataMap;
+
+                if (editorContext.record._data.id != undefined) {
+                  if (scheduleDataMap.get(editorContext.record._data.id) != undefined) {
+                    eDate = new Date(scheduleDataMap.get(editorContext.record._data.id).buildertek__Finish__c);
                   }
-                  if (new Date(eDate).getDay() == 0) {
-                    eDate = new Date(eDate.setDate(eDate.getDate() + 1));
-                  }
-                  if (new Date(eDate).getDay() == 6) {
-                    eDate = new Date(eDate.setDate(eDate.getDate() + 2));
-                  }
-                  eDate = new Date(eDate);
                 }
+
                 editorContext.value.setDate(eDate.getDate());
                 editorContext.value.setMonth(eDate.getMonth());
                 editorContext.value.setFullYear(eDate.getFullYear());

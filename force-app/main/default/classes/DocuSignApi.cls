@@ -80,9 +80,38 @@ public class DocuSignApi {
             
             ' "emailBlurb": "Please View and Sign The Document. ",'+ 
             
-            ' "templateId": "'+templateID+'",'+ 
+            // ' "templateId": "'+templateID+'",'+ 
             
             ' "envelopeIdStamping": "false",'+ 
+            
+            ' "compositeTemplates": '+
+            '['+
+                '{'+
+                    '"serverTemplates": ['+
+                        '{'+
+                            '"sequence": "1",'+
+                            '"templateId": "'+templateID+'",'+
+                        '}'+
+                    '],'+
+                    '"inlineTemplates": ['+
+                        '{'+
+                            '"sequence": "1",'+
+                            '"customFields": {'+
+                                '"textCustomFields": ['+
+                                    '{'+
+                                        '"configurationType": "salesforce",'+
+                                        '"name": "Change Order",'+
+                                        '"required": "true",'+
+                                        '"show": "true",'+
+                                        '"value": "a1V1K000007SPukUAG"'+
+                                    '}'+
+                                ']'+
+                            '}'+
+                        '}'+
+                    ']'+
+                '}'+
+            ']'+
+
             
             ' "templateRoles": ['+ 
             
