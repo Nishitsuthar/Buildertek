@@ -1626,6 +1626,7 @@ $A.enqueueAction(action1);*/
                 mode: 'pester'
             });
             toastEvent.fire();
+            
     }
     },
     onMarkupChange: function(component, event, helper) {
@@ -1748,17 +1749,26 @@ $A.enqueueAction(action1);*/
         });
         actionLines.setCallback(this, function(response) {
             if (response.getState() == "SUCCESS") {
+                component.set("v.QuoteMargin","");
                 var result = response.getReturnValue();
                 component.set("v.TotalRecords", result);
                 $A.get('e.force:refreshView').fire();
                 var page = component.get("v.page") || 1
                 helper.getGroups(component, event, helper, page);
+
+                var PopupHeader = component.get('v.PopupHeader');
+                var msg = '';
+                if (PopupHeader == 'Update Markup') {
+                    msg = 'Markup';
+                } else if(PopupHeader == 'Update Margin'){
+                    msg = 'Margin'
+                }
                 window.setTimeout(
                     $A.getCallback(function() {
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             mode: 'sticky',
-                            message: 'Quote line markup(%) and Margin(%) are updated successfully.',
+                            message: 'Quote line ' + msg + '(%) is updated successfully.',
                             type: 'success',
                             duration: '10000',
                             mode: 'dismissible'

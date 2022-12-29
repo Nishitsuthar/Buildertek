@@ -1465,7 +1465,7 @@
         });
         $A.enqueueAction(action);
     },
-    /*  doSave: function (component, event, helper) {
+      doSave: function (component, event, helper) {
           debugger;
           $A.get("e.c:BT_SpinnerEvent").setParams({
               "action": "SHOW"
@@ -1615,7 +1615,7 @@
               $A.enqueueAction(action);
           }
   
-      },*/
+      },
     getUOMValues: function (component, event, helper) {
         var action = component.get("c.getProductUOM");
         var productId = component.get("v.productId");

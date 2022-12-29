@@ -1,9 +1,39 @@
 public with sharing class BT_CreateProjectFromQuote {
     @AuraEnabled
-    public static buildertek__Quote__c getQuote(String recordId){
+    public static buildertek__Quote__c getQuote(String recordId,String searchNameValue){
         buildertek__Quote__c opp;
         opp = [SELECT Id, Name from buildertek__Quote__c where Id =: recordId]; 
+        List<buildertek__Quote__c> productList = new List<buildertek__Quote__c>();
+        String queryList = 'SELECT Id, Name FROM buildertek__Quote__c';
+        if (searchNameValue != null && searchNameValue != '') {
+            queryList = queryList + ' WHERE Name LIKE \'' + searchNameValue + '%\'';
+        }
+        productList = Database.query(queryList);
+
+        Set<ID> productsIds = new Set<ID>();
+        for (buildertek__Quote__c product : productList) {
+            productsIds.add(product.Id);
+        }
         return opp;
+    }
+
+    @AuraEnabled
+    public static List<buildertek__Quote__c> getQuoteName1(String searchNameValue){
+        List<buildertek__Quote__c> QuoteList = new List<buildertek__Quote__c>();
+        List<buildertek__Quote__c> QtList = [SELECT Id, Name FROM buildertek__Quote__c ORDER BY name ASC];
+
+        if(!String.isBlank(searchNameValue)){
+            for (buildertek__Quote__c quote : QtList) {
+                if (quote.Name.toLowerCase().contains(searchNameValue.toLowerCase())) {
+                    QuoteList.add(quote);
+                }
+            }
+        } else{
+            for (buildertek__Quote__c quote : QtList) {
+                QuoteList.add(quote);
+            }
+        }
+        return QuoteList;
     }
     
     @AuraEnabled
@@ -33,6 +63,10 @@ public with sharing class BT_CreateProjectFromQuote {
                      where Id =: recordId];
         list<buildertek__Quote_Item__c> quoteItemList = new  list<buildertek__Quote_Item__c>();
         if(!quoteList.isEmpty()){
+
+            quoteList[0].buildertek__Project__c = project.Id;
+            update quoteList;
+            
             quoteItemList = [SELECT Id, 
                              Name, 
                              buildertek__Item_Name__c,

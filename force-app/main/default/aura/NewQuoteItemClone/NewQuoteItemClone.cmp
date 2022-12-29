@@ -7,7 +7,7 @@
     <aura:attribute name="productfamily" type="string" />
     <aura:attribute name="Description" type="string" />
     <aura:attribute name="UOMvalues" type="string" />
-    <aura:attribute name="quoteGroupName" type="string" />
+    <aura:attribute name="quoteGroupName" type="string" default=""/>
     <aura:attribute name="quoteGroupNameDescription" type="string" />
     <aura:attribute name="budgetGroupId" type="string" />
     <aura:attribute name="quoteGroupId" type="string" />
@@ -125,7 +125,7 @@
     <aura:attribute name="isMarkup" type="Boolean" default="false" />
     <aura:attribute name="isMargin" type="Boolean" default="false" />
     <aura:attribute name="QuoteRec" type="Quote__c" default="{ 'sobjectType':'Quote__c','buildertek__Markup__c':'0'}" access="global" />
-    <aura:attribute name="QuoteMargin" type="Integer" />
+    <aura:attribute name="QuoteMargin" type="Integer" default=""/>
     <aura:attribute name="isQuoteRecChange" type="Boolean" default="false" />
     <aura:attribute name="currentId" type="String" default="" />
 
