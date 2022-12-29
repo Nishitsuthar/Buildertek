@@ -1286,8 +1286,6 @@
                                                         <lightning:input name="input3" label="" value="{!item.buildertek__Description__c}" />
                                                     </td>
                                                     <td>
-
-
                                                         <lightning:select name="mySelect" label="" value="{!item.buildertek__Grouping__c}">
                                                             <option value="">No Grouping</option>
                                                             <aura:iteration items="{!v.quotelineRecords}" var="rec">

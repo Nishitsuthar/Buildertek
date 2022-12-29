@@ -2173,7 +2173,7 @@ component.set("v.StoreIdsOfDatatable2",'') */
                                     'buildertek__Grouping__c': row1.buildertek__Quote_Group__c,
                                     'buildertek__Quantity__c': '1',
                                     'buildertek__Additional_Discount__c': row1.PricebookEntries[0].buildertek__Discount__c ? row1.PricebookEntries[0].buildertek__Discount__c : 0,
-                                    'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : 0,
+                                    'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : row1.PricebookEntries[0].UnitPrice,
                                     'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
                                     'buildertek__Product__c': row1.Id,
                                     'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
@@ -2186,7 +2186,7 @@ component.set("v.StoreIdsOfDatatable2",'') */
                                     'buildertek__Grouping__c': '',
                                     'buildertek__Quantity__c': '1',
                                     'buildertek__Additional_Discount__c': row1.PricebookEntries[0].buildertek__Discount__c ? row1.PricebookEntries[0].buildertek__Discount__c : 0,
-                                    'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : 0,
+                                    'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : row1.PricebookEntries[0].UnitPrice,
                                     'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
                                     'buildertek__Product__c': row1.Id,
                                     'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
@@ -2352,7 +2352,7 @@ return other.Id == current.Id
             "Quotelines": listQlines,
             "QuoteId": component.get("v.recordId")
         });
-        console.log(component.get("v.recordId") + '---*****************');
+
         action10.setCallback(this, function(response) {
             component.set("v.openQuoteLineBox", false);
             $A.get("e.force:refreshView").fire();
