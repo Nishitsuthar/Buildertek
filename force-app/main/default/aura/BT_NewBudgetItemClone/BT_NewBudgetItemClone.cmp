@@ -1723,7 +1723,7 @@
                                                         <lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="{!item.CurrencyIsoCode}" currencyDisplayAs="code"/>
                                                     </aura:if>
                                                     <aura:if isTrue='{!!v.multicurrency}'>-->
-                                                    <lightning:formattedNumber value="{!item.buildertek__Total_Amount_With_Tax__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                    <lightning:formattedNumber value="{!item.buildertek__Total_Amount__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
                                                     <!--</aura:if>-->
                                                     <!--<lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="USD"/>-->
 

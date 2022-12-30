@@ -1269,11 +1269,11 @@
         });
         $A.enqueueAction(action);
     },
-    // doSave: function(component, event, helper) {
-    //     helper.doSave(component, event, helper);
-    //     $A.get('e.force:refreshView').fire();
-    //     component.set("v.budgetItemId", null);
-    // },
+    doSave: function(component, event, helper) {
+        helper.doSave(component, event, helper);
+        $A.get('e.force:refreshView').fire();
+        component.set("v.budgetItemId", null);
+    },
 
     newInvoice: function(component, event, helper) {
         var selectedRecs = component.get('v.selectedRecs');

@@ -96,7 +96,8 @@ public with sharing class BT_CreateProjectFromQuote {
                              buildertek__Net_Total_Price__c, 
                              buildertek__Notes__c,
                              buildertek__Additional_Discount__c,
-                             buildertek__Purchase_Order__c 
+                             buildertek__Purchase_Order__c,
+                             buildertek__Grouping__r.Name
                              FROM buildertek__Quote_Item__c
                              WHERE buildertek__Quote__c = :quoteList[0].Id]; 
         }
@@ -156,6 +157,34 @@ public with sharing class BT_CreateProjectFromQuote {
             Budget.buildertek__Type__c = quoteList[0].buildertek__Type__c;
             insert Budget;
             
+            List<buildertek__Budget_Line_Group__c> groupList = [SELECT Id, Name FROM buildertek__Budget_Line_Group__c];
+
+            Map<String, Id> groupMap = new Map<String, Id>();
+    
+            for (buildertek__Budget_Line_Group__c groupData : groupList) {
+                groupMap.put(groupData.Name, groupData.Id);
+            }
+    
+            List<buildertek__Budget_Line_Group__c> newGroupList = new List<buildertek__Budget_Line_Group__c>();
+            String groupId = Budget.Id;
+            for (buildertek__Quote_Item__c quoteLine : quoteItemList) {
+                if (quoteLine.buildertek__Grouping__c != null && quoteLine.buildertek__Grouping__c != groupId) {
+                    if (!groupMap.containsKey(quoteLine.buildertek__Grouping__r.Name)) {
+                        buildertek__Budget_Line_Group__c newGroup = new buildertek__Budget_Line_Group__c();
+                        newGroup.Name = quoteLine.buildertek__Grouping__r.Name;
+                        newGroupList.add(newGroup);
+                    }
+                    groupId = quoteLine.buildertek__Grouping__c;
+                }
+            }
+    
+            if (newGroupList.size() > 0) {
+                insert newGroupList;
+                for (buildertek__Budget_Line_Group__c groupData : newGroupList) {
+                    groupMap.put(groupData.Name, groupData.Id);
+                }
+            }
+
             List<buildertek__Budget_Item__c> BudgetLinesList  =  new List<buildertek__Budget_Item__c>();
             if(!quoteItemList.isEmpty()){
                 for(buildertek__Quote_Item__c quoteLine : quoteItemList){
@@ -168,7 +197,7 @@ public with sharing class BT_CreateProjectFromQuote {
                     BudgetLineRecord.buildertek__Unit_Price__c = quoteLine.buildertek__Unit_Cost__c;
                     BudgetLineRecord.buildertek__Sales_Price__c = quoteLine.buildertek__Net_Total_Price__c; 
                     //BudgetLineRecord.buildertek__Budget_Line_Group__c = quoteLine.buildertek__Grouping__c;
-                    //BudgetLineRecord.buildertek__Group__c = quoteLine.buildertek__Grouping__c;
+                    BudgetLineRecord.buildertek__Group__c = groupMap.get(quoteLine.buildertek__Grouping__r.Name);
                     BudgetLineRecord.buildertek__Budget__c  =  Budget.Id;
                      BudgetLineRecord.buildertek__UOM__c = quoteLine.buildertek__UOM__c;
                     BudgetLineRecord.buildertek__Contractor__c = quoteLine.buildertek__Vendor__c;

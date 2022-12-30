@@ -2107,12 +2107,12 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         System.debug('pageSize -> '+pageSize);
         System.debug('offset -> '+offset);
         if(UserInfo.isMultiCurrencyOrganization()){
-            string rfqrecords = 'SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__Description__c, buildertek__Budget_Line__c, buildertek__Budget__c, buildertek__Total_Amount_With_Tax__c '+
-                            ' FROM buildertek__Account_Payable_Item_Clone__c'+
+            string rfqrecords = 'SELECT Id, Name, buildertek__Project__c, buildertek__Budget__c, buildertek__Project__r.Name,buildertek__Description__c, buildertek__Budget_Line__c, buildertek__Total_Amount__c '+
+                            ' FROM buildertek__Account_Payable_Clone__c'+
                             ' where buildertek__Project__c =\'' +RFQRec.buildertek__Project__c+'\' and buildertek__Budget_Line__c = null and buildertek__Budget__c = null ORDER BY Name LIMIT :pageSize OFFSET :offset';
                objDT.recordList = Database.query(rfqrecords);
             }else{
-                objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Budget__c, buildertek__Project__r.Name,buildertek__Description__c, buildertek__Budget_Line__c, buildertek__Total_Amount_With_Tax__c FROM buildertek__Account_Payable_Item_Clone__c where buildertek__Project__c = :RFQRec.buildertek__Project__c and buildertek__Budget_Line__c = null and buildertek__Budget__c = null
+                objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Budget__c, buildertek__Project__r.Name,buildertek__Description__c, buildertek__Budget_Line__c, buildertek__Total_Amount__c FROM buildertek__Account_Payable_Clone__c WHERE buildertek__Project__c =: RFQRec.buildertek__Project__c and buildertek__Budget_Line__c = null and buildertek__Budget__c = null
                             ORDER BY Name
                             LIMIT :pageSize
                             OFFSET :offset];
@@ -2165,8 +2165,8 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         String response;
         if (String.isNotBlank(recordId)) {
             try {
-                buildertek__Account_Payable_Item_Clone__c invoiceAP = new buildertek__Account_Payable_Item_Clone__c();
-                invoiceAP = [SELECT Id, Name, buildertek__Total_Amount_With_Tax__c, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Account_Payable_Item_Clone__c WHERE Id =:recordId];
+                buildertek__Account_Payable_Clone__c invoiceAP = new buildertek__Account_Payable_Clone__c();
+                invoiceAP = [SELECT Id, Name, buildertek__Total_Amount__c, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Account_Payable_Clone__c WHERE Id =:recordId];
                 List<buildertek__Budget_Item__c> budgetItemList = new List<buildertek__Budget_Item__c>();
                 List<buildertek__Budget_Item__c> updateBudgetList = new List<buildertek__Budget_Item__c>();
                 budgetItemList = [SELECT Id, Name, buildertek__Invoice_total__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
@@ -2175,7 +2175,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                     invoiceAP.buildertek__Budget_Line__c = budgetItemList[0].Id;
                     update invoiceAP;
                     for (buildertek__Budget_Item__c bItem : budgetItemList) {
-                        bItem.buildertek__Invoice_total__c = invoiceAP.buildertek__Total_Amount_With_Tax__c;
+                        bItem.buildertek__Invoice_total__c = invoiceAP.buildertek__Total_Amount__c;
                         updateBudgetList.add(bItem);
                     }
                     update updateBudgetList;
@@ -2249,7 +2249,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         @AuraEnabled
         Public Boolean selectedTimeCards {get;set;}
         @AuraEnabled
-        public List<buildertek__Account_Payable_Item_Clone__c> recordList{ get; set; }
+        public List<buildertek__Account_Payable_Clone__c> recordList{ get; set; }
     }
     @AuraEnabled
     public static buildertek__Budget__c getbudget(String recordId){
