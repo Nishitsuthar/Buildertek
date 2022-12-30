@@ -102,8 +102,7 @@ public class DocuSignApi {
             
             ' "status": "sent"'+ 
             
-            '}'; 
-        
+            '}';         
         
         
         req.setBody(json); 
