@@ -323,6 +323,7 @@
                             class="sldsButtonGroup" /> -->
                                         <!-- commented on 26thmay DFL <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.newGroup}" label="Add Group" class="sldsButtonGroup"/>-->
                                         <!--<aura:if isTrue="{!v.groupListSize > 0}">-->
+                                        <lightning:button label="Add CO" onclick="{!c.addCO}" class="sldsButtonGroup" />
                                         <lightning:button label="Add PO" onclick="{!c.addPO}" class="sldsButtonGroup" />
                                         <lightning:button label="Add Invoice" onclick="{!c.addInvoice}" class="sldsButtonGroup" />
                                         <lightning:button label="Add Labor" onclick="{!c.addTimeCard}" class="sldsButtonGroup" />
@@ -332,7 +333,7 @@
                                         <!--createScheduleItem-->
                                         <!-- <lightning:button label="New Invoice" onclick="{!c.newInvoice}" class="sldsButtonGroup" /> -->
                                         <lightning:button label="New RFQ" onclick="{!c.newRFQ}" class="sldsButtonGroup" />
-                                        <!--     <lightning:button label="New CO" onclick="{!c.newCO}" class="sldsButtonGroup" /> -->
+                                            <!-- <lightning:button label="New CO" onclick="{!c.newCO}" class="sldsButtonGroup" /> -->
                                         <lightning:button label="New PO" onclick="{!c.newPO}" class="sldsButtonGroup" />
                                         <lightning:button label="New Expense" onclick="{!c.newExpense}" class="sldsButtonGroup" />
                                         <lightning:button label="Contingency" onclick="{!c.onContingency}" class="sldsButtonGroup" />
@@ -1723,7 +1724,7 @@
                                                         <lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="{!item.CurrencyIsoCode}" currencyDisplayAs="code"/>
                                                     </aura:if>
                                                     <aura:if isTrue='{!!v.multicurrency}'>-->
-                                                    <lightning:formattedNumber value="{!item.buildertek__Total_Amount_With_Tax__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                    <lightning:formattedNumber value="{!item.buildertek__Total_Amount__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
                                                     <!--</aura:if>-->
                                                     <!--<lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="USD"/>-->
 

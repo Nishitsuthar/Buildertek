@@ -330,23 +330,20 @@
                     
                 }).catch(function(error) {
                     component.set('v.massUpdateEnable', false);
-
-                    console.log(error);
+                    // console.log(error);
                     var navEvt = $A.get("e.force:navigateToSObject");
-                    console.log({navEvt});
-                    let op = component.get("v.recordId");
                     navEvt.setParams({
-                        "recordId": op,
+                        "recordId": component.get("v.recordId"),
                         "slideDevName": "Schedule Table"
                     });
-                    navEvt.fire();
-                    debugger;
+                    //navEvt.fire();
+                    history.back();
+                    //$A.get('e.force:refreshView').fire();
+                    component.set('v.isLoading', false);
                 });
             }else{
                 component.set('v.massUpdateEnable', false);
                 var navEvt = $A.get("e.force:navigateToSObject");
-                console.log({navEvt});
-                debugger;
                 navEvt.setParams({
                     "recordId": component.get("v.recordId"),
                     "slideDevName": "Schedule Table"

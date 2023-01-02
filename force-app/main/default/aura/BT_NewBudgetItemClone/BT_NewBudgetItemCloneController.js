@@ -1009,7 +1009,7 @@
                 $A.get("e.c:BT_SpinnerEvent").setParams({
                     "action": "HIDE"
                 }).fire();
-                helper.showToast(component, event, helper, 'Success', 'Invoice Price updated successfully', 'success');
+                helper.showToast(component, event, helper, 'Success', 'Budget Line update successfully', 'success');
             }else if (result === 'null'){
                 $A.get("e.c:BT_SpinnerEvent").setParams({
                     "action": "HIDE"
@@ -1269,11 +1269,11 @@
         });
         $A.enqueueAction(action);
     },
-    // doSave: function(component, event, helper) {
-    //     helper.doSave(component, event, helper);
-    //     $A.get('e.force:refreshView').fire();
-    //     component.set("v.budgetItemId", null);
-    // },
+    doSave: function(component, event, helper) {
+        helper.doSave(component, event, helper);
+        $A.get('e.force:refreshView').fire();
+        component.set("v.budgetItemId", null);
+    },
 
     newInvoice: function(component, event, helper) {
         var selectedRecs = component.get('v.selectedRecs');
@@ -3333,6 +3333,11 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         } else{
             helper.getBudgetGroups(component, event, helper, page);
         }
+
+    }, 
+
+    addCO: function(component, event, helper){
+        console.log('addCO');
 
     }
 

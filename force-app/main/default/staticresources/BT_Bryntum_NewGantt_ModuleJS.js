@@ -12999,6 +12999,7 @@
 		}
 		finalizeInit() {
 			const e = this;
+            console.log('element===',{e});
 			e.anchoredTo = e.forElement, e.initialAnchor = e.anchor, e.forElement && e.showOnClick && (e.initialConfig.autoShow || (e.autoShow = !1), Lr.on({
 				element: e.forElement,
 				click: "onElementUserAction",
@@ -14163,6 +14164,7 @@
 			this.itemSelector || (this.itemSelector = `.${this.ownerCmp.itemCls}`)
 		}
 		onKeyDown(e) {
+            console.log('14166===');
 			const t = this,
 				{
 					ownerCmp: n,
@@ -20401,6 +20403,7 @@
 			return this.cellLrPadding
 		}
 		getBarCellElement(e) {
+            console.log('20405==');
 			return this.element.querySelector(`[data-column-id="${e}"]`)
 		}
 	}
@@ -23878,6 +23881,7 @@
 			return t = t || e.startDate, e && !e.inactive && this.client.timeAxis.isTimeSpanInAxis(e) && (e.isInProgress || !e.isStarted && t < n || e.isCompleted && t > n)
 		}
 		calculateCoordinateForTask(e, t) {
+            console.log('23883==');
 			const {
 				client: n
 			} = this, r = n.getElementFromTaskRecord(e), i = e.milestone, s = i ? r : null == r ? void 0 : r.querySelector(".b-task-percent-bar");
@@ -25183,6 +25187,7 @@
 			super.onFocusOut(e), this.closeMenu()
 		}
 		openMenu(e) {
+            console.log('Menu==');
 			const t = this.menu;
 			!this.disabled && t && (t.focusOnToFront = e, t.show())
 		}
@@ -26633,6 +26638,7 @@
 			return e.map((e => Gi.create(_t.assign({}, t || {}, e))))
 		}
 		static openPopup(e, t) {
+            // console.log('26636==');
 			return Gi.create(_t.assign({
 				forElement: e
 			}, "string" == typeof t ? {
@@ -27823,6 +27829,7 @@
 			}
 		}
 		open() {
+            console.log('21827==');
 			this.getConfig("tooltip")
 		}
 		close() {
@@ -28372,6 +28379,7 @@
 			}), t.pickerHideShowListenersAdded = !0), n.autoClose = t.autoClose, n.show(), n.isVisible && e && t.focusPicker()
 		}
 		onPickerShow() {
+            console.log('28378==');
 			const e = this;
 			e.pickerVisible = !0, e.element.classList.add("b-open"), e.trigger("togglePicker", {
 				show: !0
@@ -28522,7 +28530,7 @@
 		}) {
 			const s = this;
 			switch (t) {
-				case "dataset":
+				case "dataset":  
 					return;
 				case "remove":
 					s.selected.remove(n);
@@ -29073,6 +29081,10 @@
 			super.value = e
 		}
 		changeValue(e, t) {
+            console.log('changeValue called==',{e});
+            console.log('t==',{t});
+            console.log('r==',this);
+            console.log('E equals T=='+e === t);
 			var n;
 			const r = this;
 			if (e === t) return void r.syncInputFieldValue(!0);
@@ -45180,6 +45192,7 @@
 			}
 		}
 		showFilterEditor(e, t) {
+            console.log('45185===');
 			const n = this,
 				{
 					store: r
@@ -70501,6 +70514,7 @@
 			this.setup()
 		}
 		async setup() {
+            console.log('70507==');
 			const e = this;
 			if (e.shadowRoot) return;
 			let t, n;
@@ -71667,7 +71681,9 @@
 			this.callWidgetHook("beforeSave")
 		}
 		afterSave() {
-			this.loadedRecord = n, this.callWidgetHook("afterSave")
+            // const n = this;
+            // console.log('afterSave called==',n);
+            this.loadedRecord = n, this.callWidgetHook("afterSave")
 		}
 		beforeCancel() {
 			this.callWidgetHook("beforeCancel")
@@ -71721,7 +71737,7 @@
             console.log('reset called==',this.record);
             console.log('71720==',this.incomingDeps);
             console.log('71721==',this.outgoingDeps);
-			//  this.record = null
+            this.record = null
 		}
 		beforeSave() {
             console.log('Before rSave Called===');
@@ -71729,7 +71745,7 @@
         }
 		afterSave() {
             console.log('afterSave Called===');
-            debugger;
+            //debuggerr;
 			this.resetData()
 		}
 		beforeCancel() {}
@@ -71744,9 +71760,13 @@
 	};
 	class wR extends(Cs.mixin(SR, yR)) {
 		static get $name() {
+            console.log('Get Name==');
+            ////////debuggerr;
 			return "EditorTab"
 		}
 		static get type() {
+            console.log('Get Type==');
+            ////////debuggerr;
 			return "editortab"
 		}
 		static get configurable() {
@@ -80378,8 +80398,11 @@
 			css: {}
 		}), n
 	}, e.SubGrid = Vl, e.SuccessorColumn = VT, e.SuccessorsTab = kR, e.Summary = GR, e.SynchronousCalculationStarted = Gm, e.Tab = Ih, e.TabBar = Ah, e.TabPanel = Lh, e.TableExporter = oS, e.TaskContextMenu = kM, e.TaskCopyPaste = IM, e.TaskDrag = FM, e.TaskDragCreate = AM, e.TaskEdit = OM, e.TaskEditor = PM, e.TaskEditorBase = CR, e.TaskMenu = MM, e.TaskModel = cM, e.TaskNavigation = Ik, e.TaskResize = LM, e.TaskStore = gM, e.TaskTooltip = $M, e.TemplateColumn = cC, e.TemplateHelper = pl, e.TextAreaField = $h, e.TextField = Lu, e.TimeAxis = Gw, e.TimeAxisColumn = YT, e.TimeAxisHeaderMenu = Ex, e.TimeAxisSubGrid = kE, e.TimeAxisViewModel = mE, e.TimeColumn = dC, e.TimeField = rh, e.TimePicker = nh, e.TimeRanges = xx, e.TimeSpan = qS, e.TimeSpanMenuBase = iD, e.TimeSpanRecordContextMenuBase = oD, e.Timeline = BR, e.TimelineBase = PE, e.TimelineBaseTag = Wx, e.TimelineDateMapper = fE, e.TimelineDomEvents = yE, e.TimelineEventRendering = DE, e.TimelineScroll = RE, e.TimelineSummary = gE, e.TimelineViewPresets = CE, e.TimelineZoomable = SE, e.Toast = kd, e.TombStone = Qm, e.Tool = $s, e.Toolable = so, e.Toolbar = So, e.Tooltip = $o, e.TooltipBase = aD, e.TotalSlackColumn = zT, e.Transaction = fc, e.TransactionCycleDetectionWalkContext = vp, e.TransactionSymbol = um, e.TransactionWalkDepth = yp, e.Tree = zC, e.TreeColumn = hC, e.TreeGrid = dS, e.TreeNode = ca, e.TrialButton = Yh, e.TrialPanel = Uh, e.UndoRedo = Vx, e.UndoRedoBase = Gu, e.UnitsVar = Cb, e.UnsafePreviousValueOf = e => Hm.new({
+        // console.log('80394==');
+        // ////////debuggerr;
 		identifier: e
-	}), e.UnsafePreviousValueOfEffect = Hm, e.UnsafePreviousValueOfSymbol = Bm, e.UnsafeProposedOrPreviousValueOf = jm, e.UnsafeProposedOrPreviousValueOfEffect = _m, e.UnsafeProposedOrPreviousValueOfSymbol = $m, e.UnspecifiedTimeIntervalModel = Lf, e.VISITED_TOPOLOGICALLY = zg, e.Variable = op, e.VariableC = ap, e.VariableWalkContext = Xg, e.VersionHelper = s, e.ViewPreset = Nw, e.WBSColumn = WT, e.WalkContext = Wg, e.WalkSource = Ng, e.WalkState = nm, e.Wbs = rM, e.WbsField = iM, e.Widget = Gi, e.WidgetColumn = rC, e.WidgetHelper = Id, e.Write = bm, e.WriteEffect = ym, e.WriteSeveral = e => Sm.new({
+	}),
+     e.UnsafePreviousValueOfEffect = Hm, e.UnsafePreviousValueOfSymbol = Bm, e.UnsafeProposedOrPreviousValueOf = jm, e.UnsafeProposedOrPreviousValueOfEffect = _m, e.UnsafeProposedOrPreviousValueOfSymbol = $m, e.UnspecifiedTimeIntervalModel = Lf, e.VISITED_TOPOLOGICALLY = zg, e.Variable = op, e.VariableC = ap, e.VariableWalkContext = Xg, e.VersionHelper = s, e.ViewPreset = Nw, e.WBSColumn = WT, e.WalkContext = Wg, e.WalkSource = Ng, e.WalkState = nm, e.Wbs = rM, e.WbsField = iM, e.Widget = Gi, e.WidgetColumn = rC, e.WidgetHelper = Id, e.Write = bm, e.WriteEffect = ym, e.WriteSeveral = e => Sm.new({
 		writes: e
 	}), e.WriteSeveralEffect = Sm, e.WriteSeveralSymbol = Cm, e.WriteSymbol = vm, e.XMLHelper = Fd, e.binarySearch = Df, e.bucket = Zp, e.build_proposed = zp, e.calculate = Np, e.combineCalendars = e => {
 		const t = Cf(e);
