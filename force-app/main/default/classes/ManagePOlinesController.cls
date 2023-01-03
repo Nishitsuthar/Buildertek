@@ -1559,7 +1559,7 @@ public with sharing class ManagePOlinesController {
         }
 
         try {
-            bom = [SELECT ID, Name,buildertek__BT_Quote__c,buildertek__Tax_Rate_1__c, (SELECT Id,Name,buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c FROM buildertek__Selection_Sheet_Takeoff_Lines__r) FROM buildertek__Project_Selection_Sheet_Takeoff__c WHERE Id =:recordId];
+            bom = [SELECT ID, Name,buildertek__BT_Quote__c,buildertek__Tax_Rate_1__c, (SELECT Id,Name,buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c, buildertek__Upgrade_Price__c FROM buildertek__Selection_Sheet_Takeoff_Lines__r) FROM buildertek__Project_Selection_Sheet_Takeoff__c WHERE Id =:recordId];
             buildPhaseList = [SELECT Id, Name FROM buildertek__Build_Phase__c];
             
             for (buildertek__Quote_Line_Group__c qtGroup : [SELECT Id, Name FROM buildertek__Quote_Line_Group__c]) {
@@ -1610,12 +1610,17 @@ public with sharing class ManagePOlinesController {
                         }
                         qtLine.Name = bomLine.Name;
                         qtLine.buildertek__Quantity__c = bomLine.buildertek__Quantity__c;
-                        qtLine.buildertek__Unit_Cost__c = bomLine.buildertek__BL_LIST_PRICE__c;
+                        if (bomLine.buildertek__Upgrade_Price__c != null) {
+                            qtLine.buildertek__Unit_Cost__c = bomLine.buildertek__Upgrade_Price__c;
+                        } else{
+                            qtLine.buildertek__Unit_Cost__c = bomLine.buildertek__BL_LIST_PRICE__c;
+                        }
                         qtLine.buildertek__Quote__c = quote.Id;
                         qtLine.buildertek__Markup__c = markUp;
                         qtLine.buildertek__Additional_Discount__c = discount;
                         qtLine.buildertek__Sales_Tax_Amount_Manual__c = salesTax;
                         qtLine.buildertek__Tax__c = bom[0].buildertek__Tax_Rate_1__c;
+                        qtLine.buildertek__BOM_Line__c = bomLine.Id;
 
                         // *check if the value come for first time then newQuoteLineGroupMap should have the values
                         if (newQuoteLineGroupMap.containsKey(groupName)) {

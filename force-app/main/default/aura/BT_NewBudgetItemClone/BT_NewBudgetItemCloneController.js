@@ -550,7 +550,6 @@
                             component.set("v.isExistingPo", true);
                             helper.getpoList(component, pageNumber, pageSize);
                         }
-
                     }
                 });
                 $A.enqueueAction(action);
@@ -1009,7 +1008,7 @@
                 $A.get("e.c:BT_SpinnerEvent").setParams({
                     "action": "HIDE"
                 }).fire();
-                helper.showToast(component, event, helper, 'Success', 'Budget Line update successfully', 'success');
+                helper.showToast(component, event, helper, 'Success', 'Invoice Price updated successfully', 'success');
             }else if (result === 'null'){
                 $A.get("e.c:BT_SpinnerEvent").setParams({
                     "action": "HIDE"
@@ -1520,6 +1519,8 @@
         component.set("v.addposection", false);
         component.set("v.addtcsection", false);
         component.set("v.addinvsection", false);
+        component.set("v.addcosection", false);
+
         component.set("v.showSelectSchedule", false);
         component.set("v.isNewExpense", false);
         component.set("v.duplicateExp", false);
@@ -1558,9 +1559,11 @@
         component.set("v.isExistingPo", false);
         component.set("v.isExistingTc", false);
         component.set("v.isExistingInvo", false);
+        
         component.set("v.addposection", false);
         component.set("v.addtcsection", false);
         component.set("v.addinvsection", false);
+        component.set("v.addcosection", false);
 
         // $A.get('e.force:refreshView').fire();
 
@@ -1597,7 +1600,6 @@ toastEvent.setParams({
 "message": "Budget Line Added succesfully.",
 "type": "success"
 });
-
 //$A.enqueueAction(component.get('c.doInit'));
 $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
 }
@@ -3337,9 +3339,53 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
     }, 
 
     addCO: function(component, event, helper){
-        console.log('addCO');
+        var selectedRecs = component.get('v.selectedRecs');
+        console.log('v.selectedRecs ==> ', { selectedRecs });
+        if (selectedRecs.length > 0){
+            helper.getcoList(component, event, helper);
+        } else{
+            component.find('notifLib').showNotice({
+                "variant": "error",
+                "header": "Please Select Budget Line!",
+                "message": "Please Select at least One Budget Line to Add CO.",
+                closeCallback: function() {}
+            });
+        }
+    }, 
 
-    }
+    saveSelectedCO: function(component, event, helper) {
+        var selectedCO = event.getSource().get("v.text");
+        console.log('selectedExistingCO --->'+selectedCO);
+        component.set("v.selectedExistingCO", selectedCO);
+    },
+
+    addNewCO: function(component, event, helper){     
+        var selectedRecords = component.get('v.selectedRecs');
+        selectedRecords = selectedRecords.toString();
+
+        var selectedCO = component.get("v.selectedExistingCO");   
+        var action = component.get("c.addCoToBudget");
+        action.setParams({
+            budgeLineIds: selectedRecords,
+            selectedCO: selectedCO
+        });
+        action.setCallback(this, function (result) {
+            var state = result.getState();
+            if (state === "SUCCESS") {
+                // add success toast
+            } else{
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    type: 'ERROR',
+                    message: 'Something Went Wrong',
+                    duration: '5000',
+                });
+                toastEvent.fire();
+            }
+            component.set("v.addcosection", false);
+        });
+        $A.enqueueAction(action);
+    }, 
 
 
 })

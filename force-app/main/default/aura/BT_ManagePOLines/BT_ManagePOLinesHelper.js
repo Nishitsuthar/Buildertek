@@ -3628,6 +3628,12 @@
   },
   quote: function (component, event, helper) {
     var myFieldMap = helper.getfieldData(component, event, helper);
+    console.log('************************************');
+    myFieldMap.forEach(element => {
+      // console.log('element ==> ',{element});
+      element[0] = Math.abs(element[0]).toFixed(2);
+    });
+    console.log('myFieldMap ===> ',{myFieldMap});
     var obj = Object.fromEntries(myFieldMap);
     var jsonString = JSON.stringify(obj);
     console.log("myFieldMap --> ", { myFieldMap });

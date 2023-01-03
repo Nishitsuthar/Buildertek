@@ -1961,7 +1961,33 @@
         }
         component.set("v.listOfRecords", listOfRecords);
         return listOfRecords;
-    }
+    },
+
+    getcoList: function (component, pageNumber, pageSize) {
+        var recId = component.get("v.recordId");
+        var action = component.get("c.getCoData");
+        action.setParams({
+            RecId: recId
+        });
+        action.setCallback(this, function (result) {
+            var state = result.getState();
+            if (state === "SUCCESS") {
+                var resultData = result.getReturnValue();
+                console.log("resultData ---> ", {resultData});
+                component.set("v.coRecordList", resultData);
+                component.set("v.addcosection", true);
+            } else{
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    type: 'ERROR',
+                    message: 'There are no project on Budget',
+                    duration: '5000',
+                });
+                toastEvent.fire();
+            }
+        });
+        $A.enqueueAction(action);
+    },
 
     
 })

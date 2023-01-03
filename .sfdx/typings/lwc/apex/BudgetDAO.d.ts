@@ -169,6 +169,12 @@ declare module "@salesforce/apex/BudgetDAO.updateMultipleBudgetLine" {
 declare module "@salesforce/apex/BudgetDAO.getProduct" {
   export default function getProduct(param: {coItems: any}): Promise<any>;
 }
+declare module "@salesforce/apex/BudgetDAO.getCoData" {
+  export default function getCoData(param: {RecId: any}): Promise<any>;
+}
+declare module "@salesforce/apex/BudgetDAO.addCoToBudget" {
+  export default function addCoToBudget(param: {budgeLineIds: any, selectedCO: any}): Promise<any>;
+}
 declare module "@salesforce/apex/BudgetDAO.addProductsToList" {
   export default function addProductsToList(param: {COItems: any, COItem: any, count: any}): Promise<any>;
 }

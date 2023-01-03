@@ -2041,6 +2041,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                             OFFSET :offset];*/
         return objDT;
     }
+
     @AuraEnabled
     public static BudgetDataTableWrapperClone getTimeCardData(Integer pageNumber, Integer pageSize, string RecId){
         buildertek__Budget__c RFQRec = [SELECT Id, Name, buildertek__Project__c
@@ -2458,6 +2459,33 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         }
         return COItemsClassList;
     }
+
+    @AuraEnabled
+    public static List<buildertek__Change_Order__c> getCoData(string RecId){
+        buildertek__Budget__c budgetRec = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c where Id = :RecId];
+        
+        List<buildertek__Change_Order__c> changeOrderList = new List<buildertek__Change_Order__c>();
+
+        changeOrderList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c, buildertek__Vendor__c, buildertek__Vendor__r.Name,
+                            buildertek__Total_Amount_Tax__c FROM buildertek__Change_Order__c
+                            WHERE buildertek__Project__c =: budgetRec.buildertek__Project__c AND buildertek__Status__c = 'Customer Approved'];
+                        
+        return changeOrderList;
+    }
+
+    @AuraEnabled
+    public static void addCoToBudget(String budgeLineIds, string selectedCO){
+        List<String> strList = budgeLineIds.split(',');
+
+        if (strList.size() > 0) {
+            List<buildertek__Budget_Item__c> budgetItem = new List<buildertek__Budget_Item__c>();
+            budgetItem = [SELECT Id, Name, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
+
+            buildertek__Change_Order__c co = [SELECT Id, Name FROM buildertek__Change_Order__c WHERE Id =: selectedCO];
+
+        }
+    }
+    
 
     
     public class multipleBudgetLinesClass{
