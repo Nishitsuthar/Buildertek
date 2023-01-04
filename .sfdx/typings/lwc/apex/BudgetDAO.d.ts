@@ -172,8 +172,14 @@ declare module "@salesforce/apex/BudgetDAO.getProduct" {
 declare module "@salesforce/apex/BudgetDAO.getCoData" {
   export default function getCoData(param: {RecId: any}): Promise<any>;
 }
+declare module "@salesforce/apex/BudgetDAO.getExpenseData" {
+  export default function getExpenseData(param: {RecId: any}): Promise<any>;
+}
 declare module "@salesforce/apex/BudgetDAO.addCoToBudget" {
   export default function addCoToBudget(param: {budgeLineIds: any, selectedCO: any}): Promise<any>;
+}
+declare module "@salesforce/apex/BudgetDAO.addExpenseToBudget" {
+  export default function addExpenseToBudget(param: {budgeLineIds: any, selectedExpense: any}): Promise<any>;
 }
 declare module "@salesforce/apex/BudgetDAO.addProductsToList" {
   export default function addProductsToList(param: {COItems: any, COItem: any, count: any}): Promise<any>;

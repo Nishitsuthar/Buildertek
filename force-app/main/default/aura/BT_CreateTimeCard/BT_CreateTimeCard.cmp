@@ -76,7 +76,7 @@
                 <p></p>
             </header>
             
-            <div class="slds-modal__content " id="modal-content-id-1" style= "height:25rem !important;">
+            <div class="slds-modal__content " id="modal-content-id-1" style= "height:21rem !important;">
                 <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Time_Cards__c"
                     onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}" onerror = "{!c.handleError}">
                     
@@ -100,7 +100,7 @@
                                             <aura:if isTrue="{!field.name =='buildertek__Resource__c'}" >   
                                                 <aura:html tag="style">
                                                     .slds-combobox .slds-dropdown_left{
-                                                        max-height: 7rem;
+                                                        max-height: 185px ;
                                                         overflow: auto;
                                                     }
                                                 </aura:html>
