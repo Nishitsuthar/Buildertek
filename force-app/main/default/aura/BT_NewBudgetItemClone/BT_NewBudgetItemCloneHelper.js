@@ -596,6 +596,7 @@
                                                 records.push(recordsMap);
                         
                                                 totalObj = helper.setTotalHelper(recordsList, totalObj);
+
                                             }
                                         });
                                         element['totals'] = totalObj;
