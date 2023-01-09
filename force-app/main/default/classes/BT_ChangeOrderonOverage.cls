@@ -16,4 +16,8 @@ public class BT_ChangeOrderonOverage {
         update adminInterfaceNodeConfigurations;
         ApexPages.addmessage(new ApexPages.message(ApexPages.severity.CONFIRM,'Updated Successfully'));
     }
+
+    public void changeOption(String myParam) {
+        System.debug('get boolean value --> '+myParam);
+    }
 }
