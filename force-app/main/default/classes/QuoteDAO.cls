@@ -1938,7 +1938,13 @@ public with sharing class QuoteDAO{
         for(buildertek__Quote_Item__c qql : Quotelines){
             System.debug('Record => ' + qql);
             buildertek__Quote_Item__c newQline = new    buildertek__Quote_Item__c();
-            newQline.Name = qql.Name;
+
+            if (qql.Name.length() > 80) {
+                string subStr = qql.Name.subString(0,76);
+                newQline.Name = subStr.subString(0, subStr.lastIndexOf(' ')) + '...';
+            } else {
+                newQline.Name = qql.Name;
+            }
             newQline.buildertek__Product__c = qql.buildertek__Product__c;
             if(qql.buildertek__Unit_Price__c != null){
                 newQline.buildertek__Unit_Price__c = qql.buildertek__Unit_Price__c;               
@@ -1991,31 +1997,25 @@ public with sharing class QuoteDAO{
         List<PriceBookEntry> pEntries;
          if(pbookId != null && pbookId != 'None'){
              System.debug('If');
-            pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,toLabel(Product2.Family), Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry WHERE Pricebook2Id=:pbookId AND IsActive = True];
-        }
-        else{
-               System.debug('else');
-            pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,toLabel(Product2.Family), Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry where IsActive = True];
+             pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,toLabel(Product2.Family), Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry WHERE Pricebook2Id=:pbookId AND IsActive = True];
+             List<Product2> products = new List<Product2>();
+             for (PriceBookEntry pEntry: pEntries) {
+                     Product2 aProduct = new Product2();
+                     aProduct.Id = pEntry.Product2Id;
+                     aProduct.Name = pEntry.Product2.Name;
+                     aProduct.ProductCode = pEntry.Product2.ProductCode;
+                     aProduct.Description = pEntry.Product2.Description;
+                     aProduct.Family = pEntry.Product2.Family;
+                     aProduct.IsActive = pEntry.Product2.IsActive;
+                     aProduct.buildertek__Available_Quantity__c = pEntry.UnitPrice;
+                     aProduct.buildertek__Size__c = pEntry.Pricebook2.Name;
+                     products.add(aProduct);
+             }
+             return products;
+        }else{
+            return null;
         }
 
-    List<Product2> products = new List<Product2>();
-    for (PriceBookEntry pEntry: pEntries) {
-        Product2 aProduct = new Product2();
-        aProduct.Id = pEntry.Product2Id;
-        aProduct.Name = pEntry.Product2.Name;
-            aProduct.ProductCode = pEntry.Product2.ProductCode;
-          aProduct.Description = pEntry.Product2.Description;
-         aProduct.Family = pEntry.Product2.Family;
-        aProduct.IsActive = pEntry.Product2.IsActive;
-     //   aProduct.buildertek__Available_Quantity__c = pEntry.buildertek__Unit_Cost__c;
-      aProduct.buildertek__Available_Quantity__c = pEntry.UnitPrice;
-        
-        aProduct.buildertek__Size__c = pEntry.Pricebook2.Name;
-        
-        // add any additional fields from your query.
-        products.add(aProduct);
-    }
-    return products;
 }
 
  @AuraEnabled

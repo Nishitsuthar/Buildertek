@@ -1160,9 +1160,9 @@
                                             <div style="padding-top:18px">
                                                 <ui:inputSelect value="{! v.pricebookName1 }" change="{!c.changeEvent1}" class="pricebook-class" aura:id="getPriceBookId">
                                                     <aura:iteration var="option" items="{! v.pricebookoptions }">
-                                                        <aura:if isTrue="{! option.key != 'None'}">
+                                                        <!-- <aura:if isTrue="{! option.key != 'None'}"> -->
                                                             <option value="{! option.value }" selected="{!option.value == v.pricebookName1}">{! option.key }</option>
-                                                        </aura:if>
+                                                        <!-- </aura:if> -->
                                                     </aura:iteration>
                                                 </ui:inputSelect>
                                             </div>

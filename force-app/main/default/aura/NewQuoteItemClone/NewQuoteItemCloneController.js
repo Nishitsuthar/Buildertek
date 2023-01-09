@@ -175,9 +175,11 @@
             var action4 = component.get("c.getProducts");
             action4.setCallback(this, function(response) {
                 //  alert("ok")
-                component.set("v.Spinner2", true)
-                if (response.getState() == "SUCCESS") {
-                    var rows = response.getReturnValue();
+                component.set("v.Spinner2", true);
+                var rows = response.getReturnValue();
+                console.log({rows});
+
+                if (response.getState() == "SUCCESS" && rows!= null) {
                     console.log('Rows =>', { rows });
                     for (var i = 0; i < rows.length; i++) {
                         var row = rows[i];
@@ -212,6 +214,7 @@
                                 var state = response.getState();
                                 if (state === 'SUCCESS') {
                                     var result = response.getReturnValue();
+                                    console.log({result});
                                     if (result != 'ERROR') {
                                         component.set("v.pricebookName1", result);
                                         component.set("v.data1", '');
@@ -2426,8 +2429,8 @@ return other.Id == current.Id
             "pbookId": x
         });
         action.setCallback(this, function(response) {
-            if (response.getState() == "SUCCESS") {
-                var rows = response.getReturnValue();
+            var rows = response.getReturnValue();
+            if (response.getState() == "SUCCESS" && rows != null) {
                 console.log("Rows : ", rows);
                 for (var i = 0; i < rows.length; i++) {
                     var row = rows[i];
